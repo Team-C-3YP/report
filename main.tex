@@ -128,8 +128,19 @@ From fast-food restaurants to road cycling, apps are everywhere. Their purpose c
 They encourage user-engagement by allowing users to track their progress through points and achievements, customise their profiles, and connect with friends. For example, popular birdwatching app "Birda" is used by users to log bird sightings. It rewards users with achievement badges when they complete objectives (for example, seeing ten different species), and integrates monthly challenges. It also connects birdwatchers through the "community" feature, allowing users to view their friends' activity and sightings by strangers in their area. 
 
 Companion apps also serve a functional purpose. Since (almost) everyone in the UK owns and uses a smartphone, they can be directly implemented into the experience. For example, popular budget UK pub chain JD Wetherspoon uses a companion app to allow patrons to order drinks and food directly to their table, without requiring them to break conversation and queue at a busy bar. 
-\subsection{Implementation}
-\subsection{I'll be needing a wee at this point in the presentation}
+\subsection{Implementation with existing game}
+When opened for the first time, the app prompts the user to create an account with a username and password. When completed, the app the first of five screens that are navigated using a bottom panel: the "Profile" screen, the "Leaderboard" screen, the "Achievements and Challenges" screen, the "Community" screen, and the "Play in Person" screen . The first four screens are engagement-based, and the fifth is functionality-based.
+\subsubsection{Engagement}
+The "Profile" screen displays the player's details (Player ID, name etc.), the score details (number of games played, number of kills and deaths, total score), and the player's social details (friends, friend requests). It also displays an optional profile picture, which is displayed to other players when viewing your profile in the leaderboard/community screens. The profile picture fosters the "community" feel of the app, and reduces confusion between multiple players with the same name.
+
+The "Leaderboard" screen displays a list of players in order of their total score. The app user can toggle between viewing a global leaderboard and a leaderboard of only their friends.
+
+The "Achievements and Challenges" screen displays all achievements (lifetime goals, for example "play ten games", "kill fifteen drones in one game", "be the last player alive in a death match" etc.), and monthly challenges (smaller achievements that reset and change every month). The inclusion of lifetime achievements allows for a long-term feeling of improvement, while the monthly challenges allow new players to compete with their more experienced friends.
+
+The "Community" screen toggles between displaying details of recent games played by the app user's friends, and displaying details of all recent games played. It also allows users to search for other players by name, or by Player ID, and to send each other friend requests. This allows players to track each other's progress, and allows players to feel connected to friends they may have made through playing the game in person.
+\subsubsection{Functionality}
+The "Play in Person" screen prompts the player to scan the QR codes on the top of the laser gun and the helmet they are given when playing in-person. This allows the server to attribute the correct number of kills and deaths (infra-red strikes on drones, encoded with ID of the gun, and infra-red strikes on helmet detector, communicated with server) to the correct player, making for a seamless user experience.
+\subsection{Technical Details}
 
 \section{Admin shit} % Mostly Ritchie
 \subsection{Risk Assessment}
