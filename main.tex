@@ -1,6 +1,8 @@
 \documentclass{report_template_oxford}
 
 \usepackage{float}
+\usepackage{tabularx}
+\usepackage{booktabs}
 
 \title{Laser Tag using a Multiagent Drone System}
 \subtitle{Report for the system and software design of a multiagent drone system to play Laser Tag}
@@ -37,6 +39,7 @@
 \addcontentsline{toc}{section}{Glossary}
 \newacronym{3yp}{3YP}{Third-Year Project}
 \newacronym{fov}{FoV}{Field of View}
+\newacronym{swapc}{SWaP-C}{Size, Weight, Power, and Cost}
 \printglossaries
 \newpage
 
@@ -87,10 +90,45 @@ In order to transition from the objectives to the physical implementation, we re
 
 Quadcopters are inherently underactuated mechanical systems [ref]; to achieve horizontal translation, the drone must pitch ($\theta$) or roll ($\phi$) in the direction of travel. If the visual sensor is rigidly mounted to the chassis, any forward acceleration pitches the sensor towards the floor, which may force the target out of the \gls{fov}. In order to resolve this, the sensor payload must be mounted to a 3-axis active gimbal. The gimbal acts as a kinematic decoupler, executing rotation transformations to maintain the camera frame at a fixed angle relative to the horizon, regardless of the drone's orientation.
 
-To achieve 3D spatial localisation of the target, the specific imaging hardware must be selected. This choice is governed by two constraints: SWaP-C (Size, Weight, Power, and Cost) for flight agility, as well as how well the imaging hardware integrates into the environment. A further requirement from the imaging hardware is its ability to extract the depth of the target. 
+With the camera isolated from the drone's tilt, the next step is to select the specific imaging hardware for 3D spatial localisation of the target. We evaluated four standard approaches based on \gls{swapc} constraints alongside their compatibility within the laser tag environment. 
 
+\begin{table}[htbp]
+    \centering
+    \caption{\gls{swapc} Evaluation of 3D Spatial Localisation Sensor Options [ref]}
+    \label{tab:sensor_swapc}
+    \small
+    \begin{tabularx}{\textwidth}{@{}llcccX@{}}
+        \toprule
+        \textbf{Sensor Type} & \textbf{Typical Hardware} & \textbf{Mass (g)} & \textbf{Power (W)} & \textbf{Cost (£)} & \textbf{Depth Mechanism} \\
+        \midrule
+        Micro LiDAR & RPLidar A1 & 170 & 0.5 & $\sim 100$ & Active ToF \\
+        \midrule
+        Active RGB-D & Orbbec Astra Mini Pro & 35 & 2.5 & $\sim 110$ & Structured Light \\
+        \midrule
+        Passive Stereo & OAK-D Lite & 61 & 2.5 -- 3.0 & $\sim 125$ & Passive Stereo Disparity \\
+        \midrule
+        Monocular RGB & RPi AI Camera & 24 & $< 1.5$ & $\sim 60$ & Software Estimation \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
+While LiDAR and active RGB-D cameras provide accurate native depth data, they were rejected due to their interference with the laser tag scoring system. 
 
+Both camera systems operate by emitting infrared (IR) light into the environment. For example, the Orbbec Astra Mini Pro is a structured light system and relies on an onboard IR projector to cast a dense grid pattern across the room to calculate depth. The laser tag scoring system relies on detecting specific IR pulses between the drones and players. In a confined maze environment, any IR projection from the cameras will likely reflect off walls (multipath interference) and also flood the players' hit receivers with noise and cause false registrations. Therefore, we deemed that any active payload would be incompatible with the game mechanics. 
+
+The decision between Monocular RGB and Passive Stereo requires a trade-off between \gls{swapc} efficiency and depth accuracy. 
+
+A monocular camera (for example, the Raspberry Pi AI Camera) offers the best \gls{swapc} profile since it weights 24g and draws less than 1.5W. This means that it has a negligible impact on the quadcopter's flight dynamics. However, a single lens cannot natively measure depth and to extract 3D coordinates from a 2D feed, the system must rely on a geometric prior. This can be done by assuming a standard geometric height for a human or similarly the area of the bounding box (which can then be fine tuned during implementation). A standard method assumes the physical cross-sectional area of the human target ($A_{prior}$) is constant. The distance $Z$ is then calculated using the focal length ($f$) and the pixel area of the bounding box ($A_{px}$):
+\begin{equation}
+    Z = f \cdot \sqrt{\frac{A_{prior}}{A_{px}}}
+\end{equation}
+Whilst this is computationally inexpensive, this method is fragile in dynamic environments. Since we have assumed a geometric prior, if the player crouches or turns sideways, their bounding box area ($A_{px}$) shrinks while their physical distance remains identical. This means that this will be misinterpreted as the player moving further away and cause the drone to accelerate forwards.
+
+On the other hand, a passive stereoscopic system, such as the Luxonis OAK-D Lite, resolves this posture vulnerability by extracting depth natively through pixel disparity. The camera uses two lenses separated by a known baseline distance $B$. When the system detects a player, it registers a specific visual feature (such as the centroid of the bounding box) on both the left and right image sensors. As the lenses are physically offset, this feature appears at slightly different horizontal pixel coordinates on each sensor. This horizontal shift is the disparity ($d$). The system then calculates the absolute depth ($Z$) using the camera's focal length ($f$) with the equation:
+\begin{equation}
+    Z = \frac{f \cdot B}{d}
+\end{equation}
+Geometrically, as the target moves closer to the sensors, the viewing angle from each lens becomes more acute. This leads to the feature shifting further apart horizontally across the two image planes and hence $d$ increases. Since this calculation relies entirely on the horizontal parallax of a specific coordinate rather than the total pixel area of the bounding box ($A_{px}$), the depth estimation remains stable even if the player turns sideways. Furthermore, since this disparity mapping relies purely on ambient light, it ensures zero infrared interference with the game mechanics. 
 
 %As a result, this section aims to justify the selection of the Raspberry Pi AI Camera as well as the integration of a 3-axis gimbal mounted underneath the drone.
 
