@@ -2,7 +2,9 @@
 
 \usepackage{float}
 \usepackage{tabularx}
+\usepackage{wrapfig}
 \usepackage{booktabs}
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
 
 \title{Laser Tag using a Multiagent Drone System}
 \subtitle{Report for the system and software design of a multiagent drone system to play Laser Tag}
@@ -40,6 +42,9 @@
 \newacronym{3yp}{3YP}{Third-Year Project}
 \newacronym{fov}{FoV}{Field of View}
 \newacronym{swapc}{SWaP-C}{Size, Weight, Power, and Cost}
+\newacronym{lidar}{LiDAR}{Light Detection and Ranging}
+\newacronym{rgbd}{RGB-D}{Red Green Blue-Depth}
+\newacronym{ir}{IR}{Infrared}
 \printglossaries
 \newpage
 
@@ -75,7 +80,7 @@ You can define them in the header of this file and they will appear in the gloss
 
 \section{Mid Level Control} % Tommy, Rishabh
 \subsection{Visual Perception and Player Tracking} % Rishabh
-\subsubsection{Subsystem Context}
+\subsubsection{Context}
 The fundamental objective of the autonomous multiagent system is to actively compete against human players in a dynamic laser environment. To play the game effectively, the drones require a reliable way to identify and track opponents whilst navigating through the maze environment. While pathfinding algorithms can navigate the fixed geometry of a maze, human players represent highly dynamic variables. Therefore, a real-time perception system is required to continuously locate the targets, maintain visual lock, and output kinematic commands to the drone's flight controller and gimbal.
 
 This section details the design and implementation of this perception system. To achieve these operational requirements, the subsystem is engineered around three core objectives:
@@ -85,12 +90,20 @@ This section details the design and implementation of this perception system. To
     \item Maintaining a continuous state estimate of the target's trajectory to handle temporary line-of-sight occlusions caused by walls and obstacles.
 \end{itemize}
 
-\subsubsection{Hardware Selection} % (Rishabh - can be moved somewhere else, just put it here to make sure it's covered)
+\subsubsection{Sensor Selection} % (Rishabh - can be moved somewhere else, just put it here to make sure it's covered)
+
+% To Do:
+% - check references
+% - include an image on stereo depth and maybe of the test setup
+% - a few sentences on why to focus on the depth mechanism
+% - interesting to note that relative depth estimation is possible using ml methods but it would fail due to the compute cost as well as its unreliability to retrieve exact depth metrics
+% - add distance measurements into inline equations
+
 In order to transition from the objectives to the physical implementation, we require a sensor payload that can provide high-fidelity data without compromising flight performance or game mechanics. 
 
 Quadcopters are inherently underactuated mechanical systems [ref]; to achieve horizontal translation, the drone must pitch ($\theta$) or roll ($\phi$) in the direction of travel. If the visual sensor is rigidly mounted to the chassis, any forward acceleration pitches the sensor towards the floor, which may force the target out of the \gls{fov}. In order to resolve this, the sensor payload must be mounted to a 3-axis active gimbal. The gimbal acts as a kinematic decoupler, executing rotation transformations to maintain the camera frame at a fixed angle relative to the horizon, regardless of the drone's orientation.
 
-With the camera isolated from the drone's tilt, the next step is to select the specific imaging hardware for 3D spatial localisation of the target. We evaluated four standard approaches based on \gls{swapc} constraints alongside their compatibility within the laser tag environment. 
+With the camera isolated from the drone's tilt, the next step is to select the specific imaging hardware for 3D spatial localisation of the target. While a standard 2D camera provides the line-of-sight data necessary to keep the drone facing the target, it lacks the absolute depth measurement ($Z$) required to establish a complete relative coordinate frame. Several of the evaluated hardware options are classified as \gls{rgbd} sensors, denoting that they capture standard colour video (RGB) alongside a depth map (D). We evaluated four standard approaches based on \gls{swapc} constraints alongside their compatibility within the laser tag environment. 
 
 \begin{table}[htbp]
     \centering
@@ -112,9 +125,9 @@ With the camera isolated from the drone's tilt, the next step is to select the s
     \end{tabularx}
 \end{table}
 
-While LiDAR and active RGB-D cameras provide accurate native depth data, they were rejected due to their interference with the laser tag scoring system. 
+While \gls{lidar} and active \gls{rgbd} cameras provide accurate native depth data, they were rejected due to their interference with the laser tag scoring system. 
 
-Both camera systems operate by emitting infrared (IR) light into the environment. For example, the Orbbec Astra Mini Pro is a structured light system and relies on an onboard IR projector to cast a dense grid pattern across the room to calculate depth. The laser tag scoring system relies on detecting specific IR pulses between the drones and players. In a confined maze environment, any IR projection from the cameras will likely reflect off walls (multipath interference) and also flood the players' hit receivers with noise and cause false registrations. Therefore, we deemed that any active payload would be incompatible with the game mechanics. 
+Both camera systems operate by emitting \gls{ir} light into the environment. For example, the Orbbec Astra Mini Pro is a structured light system and relies on an onboard \gls{ir} projector to cast a dense grid pattern across the room to calculate depth. The laser tag scoring system relies on detecting specific IR pulses between the drones and players. In a confined maze environment, any \gls{ir} projection from the cameras will likely reflect off walls (multipath interference) and also flood the players' hit receivers with noise and cause false registrations. Therefore, we deemed that any active payload would be incompatible with the game mechanics. 
 
 The decision between Monocular RGB and Passive Stereo requires a trade-off between \gls{swapc} efficiency and depth accuracy. 
 
@@ -122,16 +135,70 @@ A monocular camera (for example, the Raspberry Pi AI Camera) offers the best \gl
 \begin{equation}
     Z = f \cdot \sqrt{\frac{A_{prior}}{A_{px}}}
 \end{equation}
-Whilst this is computationally inexpensive, this method is fragile in dynamic environments. Since we have assumed a geometric prior, if the player crouches or turns sideways, their bounding box area ($A_{px}$) shrinks while their physical distance remains identical. This means that this will be misinterpreted as the player moving further away and cause the drone to accelerate forwards.
+Whilst this is computationally inexpensive, this method is fragile in dynamic environments. Since we have assumed a geometric prior, if the player crouches or turns sideways, their bounding box area ($A_{px}$) shrinks while their physical distance from the camera remains identical. This means that this will be misinterpreted as the player moving further away and cause the drone to accelerate forwards.
+
+It is worth noting that machine learning (ML) architectures can estimate depth from a monocular feed without relying on geometric priors. However these methods are rejected due to \gls{swapc} limitations as running real-time inference whist achieving a high frame rate incurs a high computational cost. Moreover, these models typically output relative depth rather than the absolute depth that is required.
 
 On the other hand, a passive stereoscopic system, such as the Luxonis OAK-D Lite, resolves this posture vulnerability by extracting depth natively through pixel disparity. The camera uses two lenses separated by a known baseline distance $B$. When the system detects a player, it registers a specific visual feature (such as the centroid of the bounding box) on both the left and right image sensors. As the lenses are physically offset, this feature appears at slightly different horizontal pixel coordinates on each sensor. This horizontal shift is the disparity ($d$). The system then calculates the absolute depth ($Z$) using the camera's focal length ($f$) with the equation:
 \begin{equation}
     Z = \frac{f \cdot B}{d}
 \end{equation}
-Geometrically, as the target moves closer to the sensors, the viewing angle from each lens becomes more acute. This leads to the feature shifting further apart horizontally across the two image planes and hence $d$ increases. Since this calculation relies entirely on the horizontal parallax of a specific coordinate rather than the total pixel area of the bounding box ($A_{px}$), the depth estimation remains stable even if the player turns sideways. Furthermore, since this disparity mapping relies purely on ambient light, it ensures zero infrared interference with the game mechanics. 
+Geometrically, as the target moves closer to the sensors, the viewing angle from each lens becomes more acute. This leads to the feature shifting further apart horizontally across the two image planes and hence $d$ increases. Since this calculation relies entirely on the horizontal parallax of a specific coordinate rather than the total pixel area of the bounding box ($A_{px}$), the depth estimation remains stable even if the player turns sideways. Furthermore, since this disparity mapping relies purely on ambient light, it ensures that there is no infrared interference with the game mechanics.
 
-%As a result, this section aims to justify the selection of the Raspberry Pi AI Camera as well as the integration of a 3-axis gimbal mounted underneath the drone.
+To compare the performance of monocular and stereo depth estimation under geometric transformations, we constructed a simulation environment of the proposed hardware in Unity. The cameras were configured with a 1920x1080 resolution, with a 60$\textdegree$ \gls{fov}, a focal length of 935.31px, and a stereo baseline of 0.075m. We used a cuboid measuring 0.5m wide, 1.8m tall, and 0.2m deep to represent an average player. The objective was to observe how both camera architectures respond to changes in the target across three scenarios.
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figs/DepthEstimationTests.pdf}
+    \caption{Overview of the experimental setup comparing monocular and stereo depth estimation under geometric transformations.}
+    \label{fig:depth_estimation_test}
+\end{figure}
+
+
+\textbf{(1) Linear Movement}
+
+We began with a baseline calibration and translated the target linearly from 5m to 15m along the Z-axis. Within this scenario, the target's physical dimensions and orientation remained fixed. As demonstrated in Figure \ref{fig:linear_translation}, both the monocular camera system and stereo camera system accurately map the physical ground truth. This establishes that both approaches are viable for tracking rigid bodies under ideal conditions.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figs/LinearTranslation_Plot.pdf}
+    \caption{Comparison of monocular and stereo depth estimation against physical ground truth during linear translation from 5m to 15m}
+    \label{fig:linear_translation}
+\end{figure}
+
+\newpage
+
+\textbf{(2) Changes in Target Orientation}
+
+In a practical laser tag environment, players are unlikely to follow linear trajectories. To evaluate how the depth tracking systems handle changes in orientation, we simulate a player turning sideways by rotating the target from $0^\circ$ to $90^\circ$ on its yaw axis. As the target rotates around its 5.1m centroid, the physical ground truth, which is represented by the closest physical surface, shifts from 5.0m down to 4.85m. 
+
+As illustrated in Figure \ref{fig:yaw_rotation}, there is a slight discrepancy between the physical ground truth and the stereo estimation during the turn. While the ground truth tracks the foremost surface, the stereo algorithm calculates the depth based on the centroid of the 2D bounding box. This means that during the rotation, the stereo estimate settles at the $5.1 \text{ m}$ centre of mass and as the rotation reaches $90^\circ$, the camera's view is restricted to the 0.2m side profile and this causes the stereo centroid calculation to fall to the 4.85m ground truth. 
+
+As the target turns, its 2D profile narrows and the monocular algorithm, which is reliant on the pixel area, misinterprets this narrowing as the target moving further away.  This means that the depth estimate from the monocular camera diverges from the ground truth. This specific scenario highlights a limitation of the monocular approach, as the system cannot distinguish between a change in the target's orientation and its actual distance. 
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figs/YawRotation_Plot.pdf}
+    \caption{Comparison of depth estimation models during target yaw rotation from $0^\circ$ to $90^\circ$ at a nominal 5.0 m depth.}
+    \label{fig:yaw_rotation}
+\end{figure}
+
+\textbf{(3) Changes in Target Posture}
+
+We also evaluated the systems against a reduction in the target's vertical height, to simulate the motion of crouching. Similar to the changes in the target's orientation, the monocular algorithm misinterprets the shrinking of the target as an increase in depth, leading to the depth overestimation seen in Figure \ref{fig:crouch_deformation}. 
+
+This scenario highlights the advantage of the stereo system with the stereo estimate accurately tracking the ground truth. This confirms that the geometric baseline approach of the stereo model is robust to physical deformation, whereas the area approach of the monocular model will fail when the target's posture changes. 
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figs/CrouchDeformation_Plot.pdf}
+    \caption{Comparison of depth estimation models during crouching at a constant physical depth}
+    \label{fig:crouch_deformation}
+\end{figure}
+
+Consequently, the passive stereoscopic system is selected for the sensor payload attached to the drone's gimbal. While the monocular camera presents a favourable \gls{swapc} profile, the simulations demonstrate that area-based depth estimation is insufficient for reliable depth estimation. The system cannot reliably distinguish between a change in the target posture or orientation from a change in physical depth. 
+
+The passive stereo system resolves this by estimating depth via horizontal pixel disparity ($d$) and provides a robust depth estimate. Crucially, its reliance on ambient light means that there will be no interference with the infrared game mechanics.  
 
 \newpage
 \subsection{Trajectory tracking} % Tommy
