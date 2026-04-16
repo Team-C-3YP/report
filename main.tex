@@ -45,6 +45,8 @@
 \newacronym{lidar}{LiDAR}{Light Detection and Ranging}
 \newacronym{rgbd}{RGB-D}{Red Green Blue-Depth}
 \newacronym{ir}{IR}{Infrared}
+\newacronym{yolo}{YOLO}{You Only Look Once}
+\newacronym{cnn}{CNN}{Convolutional Neural Network}
 \printglossaries
 \newpage
 
@@ -199,6 +201,14 @@ This scenario highlights the advantage of the stereo system with the stereo esti
 Consequently, the passive stereoscopic system is selected for the sensor payload attached to the drone's gimbal. While the monocular camera presents a favourable \gls{swapc} profile, the simulations demonstrate that area-based depth estimation is insufficient for reliable depth estimation. The system cannot reliably distinguish between a change in the target posture or orientation from a change in physical depth. 
 
 The passive stereo system resolves this by estimating depth via horizontal pixel disparity ($d$) and provides a robust depth estimate. Crucially, its reliance on ambient light means that there will be no interference with the infrared game mechanics.  
+
+\subsubsection{Computer Vision}
+To satisfy the first objective of reliably distinguishing a human player from the background, the system must transform the raw visual data into spatial data. The passive stereoscopic sensor outputs a continuous stream of RGB images, which are essentially high-dimensional pixel arrays. To interpret these frames, an object detection model is required to ingest this raw data and output bounding boxes around valid targets. This process effectively maps visual features to 2D coordinates within the image frame.
+
+For this task, the \gls{yolo} framework was selected. It provides an extremely fast multi-object detection algorithm that uses a \gls{cnn} to detect and identify objects. \gls{yolo} evaluates the entire image in a single computational pass to predict bounding box coordinates and this approach ensures low latency of the model. Because the drone's flight controller takes actions based on the visual feed, it must receive the most up-to-date target data to ensure the control loops remain responsive. Furthermore, the streamlined nature of this architecture is well-suited to the limited computer resources available the drone's onboard hardware. 
+
+The maturity of the \gls{yolo} architecture, combined with its extensive Python support and documention, streamlines the training process and provides a reliable pipleine for deploying the model within the project.
+
 
 \newpage
 \subsection{Trajectory tracking} % Tommy
