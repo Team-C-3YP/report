@@ -47,6 +47,7 @@
 \newacronym{ir}{IR}{Infrared}
 \newacronym{yolo}{YOLO}{You Only Look Once}
 \newacronym{cnn}{CNN}{Convolutional Neural Network}
+\newacronym{coco}{COCO}{Common Objects in Context}
 \printglossaries
 \newpage
 
@@ -202,12 +203,34 @@ Consequently, the passive stereoscopic system is selected for the sensor payload
 
 The passive stereo system resolves this by estimating depth via horizontal pixel disparity ($d$) and provides a robust depth estimate. Crucially, its reliance on ambient light means that there will be no interference with the infrared game mechanics.  
 
-\subsubsection{Computer Vision}
+\subsubsection{Computer Vision and Architecture Selection}
 To satisfy the first objective of reliably distinguishing a human player from the background, the system must transform the raw visual data into spatial data. The passive stereoscopic sensor outputs a continuous stream of RGB images, which are essentially high-dimensional pixel arrays. To interpret these frames, an object detection model is required to ingest this raw data and output bounding boxes around valid targets. This process effectively maps visual features to 2D coordinates within the image frame.
 
-For this task, the \gls{yolo} framework was selected. It provides an extremely fast multi-object detection algorithm that uses a \gls{cnn} to detect and identify objects. \gls{yolo} evaluates the entire image in a single computational pass to predict bounding box coordinates and this approach ensures low latency of the model. Because the drone's flight controller takes actions based on the visual feed, it must receive the most up-to-date target data to ensure the control loops remain responsive. Furthermore, the streamlined nature of this architecture is well-suited to the limited computer resources available the drone's onboard hardware. 
+For this task, the YOLOv8-nano (YOLOv8n) framework was selected which is part of the wider \gls{yolo} framework. It provides an extremely fast multi-object detection algorithm that uses a \gls{cnn} to detect and identify objects. \gls{yolo} evaluates the entire image in a single computational pass to predict bounding box coordinates and this approach ensures low latency of the model. Because the drone's flight controller takes actions based on the visual feed, it must receive the most up-to-date target data to ensure the control loops remain responsive. 
 
-The maturity of the \gls{yolo} architecture, combined with its extensive Python support and documention, streamlines the training process and provides a reliable pipleine for deploying the model within the project.
+The nano variant was chosen because it has the lowest parameter count out of the YOLOv8 models and this makes it the lightest and fastest model available. The streamlined nature of this architecture is well-suited to the limited computer resources available on the drone's onboard hardware. 
+
+The maturity of the \gls{yolo} architecture, combined with its extensive Python support and documentation, streamlines the training process and provides a reliable pipeline for deploying the model within the project.
+
+\subsubsection{Data Preprocessing}
+To accelerate the training process, we utilised a pre-trained \gls{yolo} model initialised using baseline weights on the \gls{coco} dataset. Leveraging a pre-trained model provides the neural network with a foundational understanding on geometric features such as edges and spatial gradients. This drastically reduces the time required for the network to converge. However, these standard weights are insufficient for our case because the \gls{coco} dataset consists primarily of eye-level photography whilst we require aerial imagery. To achieve reliable target locking from the drone's pitch angles, the model required fine-tuning on specific drone imagery. As a result, the VisDrone2019-DET dataset was selected to provide this top-down perspective.
+
+The VisDrone dataset contains numerous additional classes such as vehicles and bicycles. Training the network to recognise these would waste computational resources and risk introducing false positives during operation. To optimise the dataset for the laser tag environment, a preprocessing script was developed to filter the dataset. The script parsed every annotation file and discarded all bounding box data that did not correspond to Class 0 (pedestrian) or Class 1 (people). As a result, the network can allocate its full capacity to identifying human targets only.
+
+While the VisDrone dataset allows us to be able to identify humans from the air, it consists entirely of outdoor footage. To bridge the gap between daylight photography and the artificial lighting conditions of the laser tag maze, a synthetic dataset was generated within the Unity engine by randomly spawning 3D player models under varying lighting conditions, postures and camera angles. Fine-tuning the YOLO model on this synthetic dataset ensures high detection accuracy within the simulation by exposing the network to the specific textures it will encounter during operation.
+
+For future physical development, this pipeline can be transitioned from synthetic data to empirical data. Rather than relying on Unity generation, the physical drone could be flown manually through the laser tag area to record video footage. Frames extracted from this footage would be labelled to capture the ambient lighting, wall geometry and physical equipment worn by the players. Performing this final fine-tuning pass essentially brings the simulation closer to the real world and guarantees that the network is calibrated to the operational environment.
+
+\subsubsection{Model Training and Deployment}
+Following data preparation, the pre-trained YOLOv8n model was fine-tuned on the filtered VisDrone dataset. This initial pass allows the network to recognise human targets from high-pitch aerial perspectives. After that, a second fine-tuning pass was performed using the synthetic Unity dataset. This exposes the network to the artitificial lighting profiles and textures it will encounter in the laser tag maze.
+
+Both training phases were configured using a $640 \times 640$ pixel input resolution. This specific resolution provides a balance between maintaining high detection accuracy while respecting the VRAM limitations of the hardware.
+
+Following the training phases, the final model was exported to the Open Neural Network Exchange (ONNX) format. This export format is required to ensure compatability with Unity Sentis, the tensor engine used to run neural networks natively within the simulated environment.
+
+
+
+
 
 
 \newpage
