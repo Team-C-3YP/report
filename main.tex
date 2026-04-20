@@ -47,7 +47,7 @@
 \newacronym{ir}{IR}{Infrared}
 \newacronym{yolo}{YOLO}{You Only Look Once}
 \newacronym{cnn}{CNN}{Convolutional Neural Network}
-\newacronym{coco}{COCO}{Common Objects in Context}]
+\newacronym{coco}{COCO}{Common Objects in Context}
 \newacronym{onnx}{ONNX}{Open Neural Network Exchange}
 \printglossaries
 \newpage
@@ -377,7 +377,7 @@ The following 2D graphs flatten the 3D hemispherical sweeps shown in Figure \ref
         \includegraphics[width=\textwidth]{figs/VisDrone_F_Light_Classification.pdf}
         \caption{TP / FP / FN categorisation}
     \end{subfigure}
-    \caption{Orbital benchmark performance under Daylight Conditions.}
+    \caption{Orbital benchmark under Daylight Conditions.}
     \label{fig:benchmark_daylight}
 \end{figure}
 
@@ -399,7 +399,7 @@ Under daylight conditions (Figure \ref{fig:benchmark_daylight}), the model demon
         \caption{TP / FP / FN categorisation}
         \label{fig:benchmark_lowlight_classification}
     \end{subfigure}
-    \caption{Orbital benchmark performance under Low-light Conditions.}
+    \caption{Orbital benchmark under Low-light Conditions.}
     \label{fig:benchmark_lowlight}
 \end{figure}
 
@@ -408,7 +408,45 @@ In contrast, testing under low-light conditions (Figure \ref{fig:benchmark_lowli
 \subsubsection{Synthetic Dataset Generation}
 To resolve the domain gap identified during baseline evaluation, an automated data generation pipeline was developed within the Unity simulation. The objective was to algorithmically render and annotate a dataset consisting of 5,000 frames tailored to the lighting constraints and textures of the laser tag arena.
 
-To prevent the model from overfitting to specific synthetic visual patterns, domain randomisation was applied to each frame. 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/SyntheticDatasetOverview.pdf}
+    \caption{Sample of the generated synthetic dataset. Note the variation in camera altitude, target pose, environmental lighting intensity, and maze textures.}
+    \label{fig:synthetic_overview}
+\end{figure}
+
+To prevent the model from overfitting to specific synthetic visual patterns, domain randomisation was applied to every frame. The data generation script dynamically alters spatial, kinematic, and environmental variables prior to each capture:
+
+\begin{itemize}
+    \item \textbf{Camera Positioning:} The virtual camera was spawned at a random coordinate within a 3.0 to 8.0-metre radius of the target, with an altitude between 1.0 and 5.0 metres.
+    \item \textbf{Target Kinematics:} The player model was randomly rotated and given a spatial offset. To ensure a diverse dataset of physical poses, the model was also placed in a discrete animation state (e.g., aiming, sprinting, or transitioning to prone).
+    \item \textbf{Environmental Conditions:} To replicate the target arena, ambient lighting was minimised. The primary directional light was scaled to a relative intensity between 20\% and 60\% of standard simulated daylight. Furthermore, different materials and textures were dynamically applied to the surrounding walls and props.
+\end{itemize}
+
+In a laser tag arena, players are rarely out in the open and are frequently occluded by cover. To address this, an occlusion system was implemented. The script utilises a prop pool containing varied 3D barricades and wall segments. For each generated frame, up to three of these structures are spawned at random cardinal coordinates around the target. This allows for the generation of partially occluded targets and hence the model can be trained to identify partial geometric features (such as an isolated head or arm) rather than relying on full body silhouettes.
+
+To generate the ground truth annotations, the labelling process was automated to calculate the bounding boxes. The 3D geometry of the target in its current pose is captured and a representative sample of points across the target's surface are projected onto the 2D plane of the virtual camera. 
+
+To ensure the resulting bounding boxes only encompass visually exposed regions, a raycast is fired from the virtual camera's focal point to every sampled target vertex. If this ray intersects with an object other than the target, the specific vertex is classified as hidden and discarded. The system then calculates the minimum and maximum 2D screen coordinates of only the fully visible pixels, generating a bounding box that ignores occluded body parts. These coordinate bounds are then normalised into the standard YOLO format (centre X, centre Y, width, height) and written to a text file alongside the rendered image. 
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/RaycastSceneView.png}
+        \caption{3D Scene Environment}
+        \label{fig:raycast_scene}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/RaycastGameView.png}
+        \caption{2D Simulated Camera Output}
+        \label{fig:raycast_game}
+    \end{subfigure}
+    \caption{Visualisation of the automated annotation and occlusion logic. Left (a): The 3D spatial environment demonstrating the raycasts, where red lines indicate vertices blocked by physical cover. Right (b): The corresponding 2D rendered frame, demonstrating bounding boxes that encapsulate only the unoccluded geometry.}
+    \label{fig:raycast_validation}
+\end{figure}
 
 \newpage
 
