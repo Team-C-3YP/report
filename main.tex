@@ -47,7 +47,8 @@
 \newacronym{ir}{IR}{Infrared}
 \newacronym{yolo}{YOLO}{You Only Look Once}
 \newacronym{cnn}{CNN}{Convolutional Neural Network}
-\newacronym{coco}{COCO}{Common Objects in Context}
+\newacronym{coco}{COCO}{Common Objects in Context}]
+\newacronym{onnx}{ONNX}{Open Neural Network Exchange}
 \printglossaries
 \newpage
 
@@ -67,7 +68,7 @@ You can define them in the header of this file and they will appear in the gloss
 \section{Literature Review}
 \newpage
 
-\section{System Architecture and Integration} % Everyone
+\section{System Architecture and Integration} \label{system} % Everyone
 \newpage
 
 \section{Hardware} % Rickie
@@ -82,6 +83,7 @@ You can define them in the header of this file and they will appear in the gloss
 \newpage
 
 \section{Mid Level Control} % Tommy, Rishabh
+\fancyhead[C]{Rishabh Luthra}
 \subsection{Visual Perception and Player Tracking} % Rishabh
 \subsubsection{Context}
 The fundamental objective of the autonomous multiagent system is to actively compete against human players in a dynamic laser environment. To play the game effectively, the drones require a reliable way to identify and track opponents whilst navigating through the maze environment. While pathfinding algorithms can navigate the fixed geometry of a maze, human players represent highly dynamic variables. Therefore, a real-time perception system is required to continuously locate the targets, maintain visual lock, and output kinematic commands to the drone's flight controller and gimbal.
@@ -101,6 +103,10 @@ This section details the design and implementation of this perception system. To
 % - a few sentences on why to focus on the depth mechanism
 % - interesting to note that relative depth estimation is possible using ml methods but it would fail due to the compute cost as well as its unreliability to retrieve exact depth metrics
 % - add distance measurements into inline equations
+% - check acronyms like rgb
+% - section on Unity simulation environment (map generation, why Unity is beneficial, reference synthetic data generation)
+% - maybe move the rgb and stereo images to be horizontal on the page above and then sensor architecture standalone on the page after
+% - reference Figure 6
 
 In order to transition from the objectives to the physical implementation, we require a sensor payload that can provide high-fidelity data without compromising flight performance or game mechanics. 
 
@@ -203,42 +209,108 @@ Consequently, the passive stereoscopic system is selected for the sensor payload
 
 The passive stereo system resolves this by estimating depth via horizontal pixel disparity ($d$) and provides a robust depth estimate. Crucially, its reliance on ambient light means that there will be no interference with the infrared game mechanics.  
 
-\subsubsection{Computer Vision and Architecture Selection}
-To satisfy the first objective of reliably distinguishing a human player from the background, the system must transform the raw visual data into spatial data. The passive stereoscopic sensor outputs a continuous stream of RGB images, which are essentially high-dimensional pixel arrays. To interpret these frames, an object detection model is required to ingest this raw data and output bounding boxes around valid targets. This process effectively maps visual features to 2D coordinates within the image frame.
+\subsubsection{Computer Vision Architecture}
+The hardware of this system is comprised of a camera array consisting of three cameras. It features a high-resolution central RGB camera with two greyscale sensors either side that are dedicated to computing the stereoscopic disparity depth map. These visual streams are sequentially processed to meet both the tracking objectives described above: reliably distinguishing a human player from the background to lock onto the correct target, and calculating the target's 3D Cartesian coordinates relative to the drone's local frame. Together, these stages form the sensor pipeline (Figure \ref{fig:pipeline_diagram}). 
 
-For this task, the YOLOv8-nano (YOLOv8n) framework was selected which is part of the wider \gls{yolo} framework. It provides an extremely fast multi-object detection algorithm that uses a \gls{cnn} to detect and identify objects. \gls{yolo} evaluates the entire image in a single computational pass to predict bounding box coordinates and this approach ensures low latency of the model. Because the drone's flight controller takes actions based on the visual feed, it must receive the most up-to-date target data to ensure the control loops remain responsive. 
+\newpage
 
-The nano variant was chosen because it has the lowest parameter count out of the YOLOv8 models and this makes it the lightest and fastest model available. The streamlined nature of this architecture is well-suited to the limited computer resources available on the drone's onboard hardware. 
+To satisfy the first objective, the system must transform the raw visual data into spatial data. The central RGB sensor outputs a continuous stream of frames, which are essentially high-dimensional pixel arrays. To interpret these, an object detection model is required to ingest this raw data and output bounding boxes around valid targets. This process effectively maps visual features to 2D semantic coordinates within the image frame, ensuring the system can reliably distinguish the player from the background. 
 
-The maturity of the \gls{yolo} architecture, combined with its extensive Python support and documentation, streamlines the training process and provides a reliable pipeline for deploying the model within the project.
+For this task, the YOLOv8-nano (YOLOv8n) framework was selected. It provides an extremely fast multi-object detection algorithm that uses a \gls{cnn} to detect and identify objects. \gls{yolo} evaluates the entire image in a single computational pass to predict bounding box coordinates and this approach ensures low latency of the model. Because the drone's flight controller takes actions based on the visual feed, it must receive the most up-to-date target data to ensure the control loops remain responsive. 
+
+The nano variant was chosen because it has the lowest parameter count out of the YOLOv8 models and this makes it the lightest and fastest model available. The streamlined nature of this architecture is well-suited to the limited computer resources available on the drone's onboard hardware. Furthermore, the maturity of the \gls{yolo} architecture, combined with its extensive Python support and documentation, facilitates the training process and provides a reliable pipeline for deploying the model within the project.
+
+To achieve the second objective, the system performs sensor fusion. The predicted 2D bounding box defines a region of interest (Figure \ref{fig:rgb_data}), which is projected onto the synchronised stereo disparity map (Figure \ref{fig:depth_data}). This allows the system to extract the absolute depth ($Z$) of the target by sampling depth data across the pixels within this region, effectively bridging 2D visual recognition with 3D spatial tracking. 
+
+Note that the visualisations in Figure \ref{fig:perception_system_overview} were generated within the Unity simulation environment (detailed in Section \ref{system}), utilising Ground Truth bounding boxes. 
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[c]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/sensor_pipeline.pdf}
+        \caption{Sensor fusion architecture}
+        \label{fig:pipeline_diagram}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.48\textwidth}
+        \centering
+        \includegraphics[width=0.85\textwidth]{figs/1_RGB.png}
+        \caption{Monocular RGB stream with ground truth bounding box}
+        \label{fig:rgb_data}
+        
+        \vspace{0.5cm}
+        
+        \includegraphics[width=0.85\textwidth]{figs/2_DepthMap.png}
+        \caption{Synchronised depth map with projected bounding box}
+        \label{fig:depth_data}
+    \end{subfigure}
+    
+    \caption{The data flow in (\subref{fig:pipeline_diagram}) alongside the corresponding RGB bounding box (\subref{fig:rgb_data}) and spatial depth mapping (\subref{fig:depth_data}).}
+    \label{fig:perception_system_overview}
+\end{figure}
+
 
 \subsubsection{Data Preprocessing}
-To accelerate the training process, we utilised a pre-trained \gls{yolo} model initialised using baseline weights on the \gls{coco} dataset. Leveraging a pre-trained model provides the neural network with a foundational understanding on geometric features such as edges and spatial gradients. This drastically reduces the time required for the network to converge. However, these standard weights are insufficient for our case because the \gls{coco} dataset consists primarily of eye-level photography whilst we require aerial imagery. To achieve reliable target locking from the drone's pitch angles, the model required fine-tuning on specific drone imagery. As a result, the VisDrone2019-DET dataset was selected to provide this top-down perspective.
+To accelerate the training process, we utilised a pre-trained \gls{yolo} model initialised using baseline weights on the \gls{coco} dataset. Leveraging a pre-trained model provides the neural network with a foundational understanding on geometric features such as edges and spatial gradients. This drastically reduces the time required for the network to converge. However, these standard weights are insufficient for our case because the \gls{coco} dataset consists primarily of eye-level photography whereas the drone requires aerial imagery. To achieve reliable target locking from the drone's pitch angles, the model required fine-tuning on specific drone imagery. As a result, the VisDrone2019-DET dataset was selected to provide this top-down perspective.
 
-The VisDrone dataset contains numerous additional classes such as vehicles and bicycles. Training the network to recognise these would waste computational resources and risk introducing false positives during operation. To optimise the dataset for the laser tag environment, a preprocessing script was developed to filter the dataset. The script parsed every annotation file and discarded all bounding box data that did not correspond to Class 0 (pedestrian) or Class 1 (people). As a result, the network can allocate its full capacity to identifying human targets only.
+The VisDrone dataset contains numerous additional classes such as vehicles and bicycles. Training the network to recognise these would waste computational resources and risk introducing false positives during operation. To optimise the dataset for the laser tag environment, a preprocessing script was developed to filter the dataset. The script parsed every annotation file and discarded all bounding box data that did not correspond to Class 0 (pedestrian) or Class 1 (people). As a result, the network can allocate its full capacity to identifying human targets only. Subsequently, these two remaining classes were merged into a single class. Distinguishing between a pedestrian and a person provides no operational advantage for our system. 
 
-While the VisDrone dataset allows us to be able to identify humans from the air, it consists entirely of outdoor footage. To bridge the gap between daylight photography and the artificial lighting conditions of the laser tag maze, a synthetic dataset was generated within the Unity engine by randomly spawning 3D player models under varying lighting conditions, postures and camera angles. Fine-tuning the YOLO model on this synthetic dataset ensures high detection accuracy within the simulation by exposing the network to the specific textures it will encounter during operation.
+% While the VisDrone dataset allows us to be able to identify humans from the air, it consists entirely of outdoor footage. To bridge the gap between daylight photography and the artificial lighting conditions of the laser tag maze, a synthetic dataset was generated within the Unity engine by randomly spawning 3D player models under varying lighting conditions, postures and camera angles. Fine-tuning the YOLO model on this synthetic dataset ensures high detection accuracy within the simulation by exposing the network to the specific textures it will encounter during operation.
 
-For future physical development, this pipeline can be transitioned from synthetic data to empirical data. Rather than relying on Unity generation, the physical drone could be flown manually through the laser tag area to record video footage. Frames extracted from this footage would be labelled to capture the ambient lighting, wall geometry and physical equipment worn by the players. Performing this final fine-tuning pass essentially brings the simulation closer to the real world and guarantees that the network is calibrated to the operational environment.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/visdrone-dataset-cover.jpg}
+    \caption{Sample labelled image from the VisDrone dataset demonstrating the aerial perspective}
+    \label{fig:visdrone}
+\end{figure}
+
+% For future physical development, this pipeline can be transitioned from synthetic data to empirical data. Rather than relying on Unity generation, the physical drone could be flown manually through the laser tag area to record video footage. Frames extracted from this footage would be labelled to capture the ambient lighting, wall geometry and physical equipment worn by the players. Performing this final fine-tuning pass essentially brings the simulation closer to the real world and guarantees that the network is calibrated to the operational environment.
 
 \subsubsection{Model Training and Deployment}
-Following data preparation, the pre-trained YOLOv8n model was fine-tuned on the filtered VisDrone dataset. This initial pass allows the network to recognise human targets from high-pitch aerial perspectives. After that, a second fine-tuning pass was performed using the synthetic Unity dataset. This exposes the network to the artitificial lighting profiles and textures it will encounter in the laser tag maze.
+Following data preparation, the pre-trained YOLOv8n model was fine-tuned on the filtered VisDrone dataset. Training was conducted via Google Colab, utilising an NVIDIA T4 Tensor Core GPU. The training phase was configured using a $640 \times 640$ pixel input resolution to ensure a balance between the detail necessary for target detection and maintaining low-latency inference on the drone's onboard hardware.
 
-Both training phases were configured using a $640 \times 640$ pixel input resolution. This specific resolution provides a balance between maintaining high detection accuracy while respecting the VRAM limitations of the hardware.
+Once the network had converged, the final weights were exported to the \gls{onnx} format that allowed the model trained in Python to be imported directly into Unity. Within the simulation, the model is executed using Unity Sentis, a tensor engine used to run neural networks natively within the simulated environment.
 
-Following the training phases, the final model was exported to the Open Neural Network Exchange (ONNX) format. This export format is required to ensure compatability with Unity Sentis, the tensor engine used to run neural networks natively within the simulated environment.
+To quantify the model's convergence during training, loss and precision metrics were tracked across 50 epochs. As visualised in Figure  \ref{fig:visdrone_training_results}, both the training and validation losses steadily decreased and plateaued towards the end of the run. This indicates that the neural network converged successfully and learned the dataset's features without overfitting. 
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/visdrone_training_results.png}
+    \caption{Training and validation loss metrics across 50 epochs.}
+    \label{fig:visdrone_training_results}
+\end{figure}
 
+To determine the most effective confidence threshold for deployment, the F1-Confidence curve was evaluated (Figure \ref{fig:visdrone_f1_curve}). The F1 score represents the harmonic mean of precision and recall. The figure shows that the model reaches its peak F1 score of 0.53 at a confidence threshold of 0.272. Hence, we set the system to this specific threshold in order to achieve the best operational balance between ignoring background noise (False Positives) and reliably tracking valid targets (False Negatives).
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.65\linewidth]{figs/visdrone_BoxF1_curve.png}
+    \caption{F1 score across confidence thresholds for the validation set.}
+    \label{fig:visdrone_f1_curve}
+\end{figure}
+
+While an F1 score of 0.53 and an mAP50 of approximately 0.49 are lower than typical detection models, these lower results are likely as a result of the environment. As seen in the validation sample predictions (Figure \ref{fig:visdrone_val_preds}), the human targets occupy a few pixels in area due to the high-altitude aerial perspective. Visual inspection of the sample predictions confirms that the model has successfully adapted to consistently draw bounding boxes around these low-resolution targets.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/visdrone_val_batch0_pred.jpg}
+    \caption{Sample bounding box predictions from the VisDrone validation set.}
+    \label{fig:visdrone_val_preds}
+\end{figure}
+
+\subsubsection{Baseline Evaluation}
 
 
 
 \newpage
+
 \subsection{Trajectory tracking} % Tommy
 \subsection{Searching} % Maybe Tommy
 \subsection{Hiding} % Not implemented but talk about it
 
 \section{Low Level Control} % Tommy, Rishabh
+\fancyhead[C]{Student3 author of section}
 \subsection{Conversion Matrix}
 \newpage
 
