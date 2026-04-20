@@ -99,13 +99,13 @@ This section details the design and implementation of this perception system. To
 
 % To Do:
 % - check references
-% - include an image on stereo depth and maybe of the test setup
+% - include an image on stereo depth and maybe of the test setup [done]
 % - a few sentences on why to focus on the depth mechanism
 % - interesting to note that relative depth estimation is possible using ml methods but it would fail due to the compute cost as well as its unreliability to retrieve exact depth metrics
 % - add distance measurements into inline equations
 % - check acronyms like rgb
 % - section on Unity simulation environment (map generation, why Unity is beneficial, reference synthetic data generation)
-% - maybe move the rgb and stereo images to be horizontal on the page above and then sensor architecture standalone on the page after
+% - maybe move the rgb and stereo images to be horizontal on the page above and then sensor architecture standalone on the page after [done]
 % - reference Figure 6
 
 In order to transition from the objectives to the physical implementation, we require a sensor payload that can provide high-fidelity data without compromising flight performance or game mechanics. 
@@ -212,6 +212,36 @@ The passive stereo system resolves this by estimating depth via horizontal pixel
 \subsubsection{Computer Vision Architecture}
 The hardware of this system is comprised of a camera array consisting of three cameras. It features a high-resolution central RGB camera with two greyscale sensors either side that are dedicated to computing the stereoscopic disparity depth map. These visual streams are sequentially processed to meet both the tracking objectives described above: reliably distinguishing a human player from the background to lock onto the correct target, and calculating the target's 3D Cartesian coordinates relative to the drone's local frame. Together, these stages form the sensor pipeline (Figure \ref{fig:pipeline_diagram}). 
 
+\begin{figure}[htbp]
+    \centering
+    
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=0.6\textwidth]{figs/sensor_pipeline.pdf}
+        \caption{Sensor fusion architecture}
+        \label{fig:pipeline_diagram}
+    \end{subfigure}
+
+    \vspace{0.75cm}
+
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=0.7\textwidth]{figs/1_RGB.png}
+        \caption{Monocular RGB stream with ground truth bounding box}
+        \label{fig:rgb_data}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=0.7\textwidth]{figs/2_DepthMap.png}
+        \caption{Synchronised depth map with projected bounding box}
+        \label{fig:depth_data}
+    \end{subfigure}
+    
+    \caption{The data flow in (\subref{fig:pipeline_diagram}) alongside the corresponding RGB bounding box (\subref{fig:rgb_data}) and spatial depth mapping (\subref{fig:depth_data}).}
+    \label{fig:perception_system_overview}
+\end{figure}
+
 \newpage
 
 To satisfy the first objective, the system must transform the raw visual data into spatial data. The central RGB sensor outputs a continuous stream of frames, which are essentially high-dimensional pixel arrays. To interpret these, an object detection model is required to ingest this raw data and output bounding boxes around valid targets. This process effectively maps visual features to 2D semantic coordinates within the image frame, ensuring the system can reliably distinguish the player from the background. 
@@ -224,31 +254,31 @@ To achieve the second objective, the system performs sensor fusion. The predicte
 
 Note that the visualisations in Figure \ref{fig:perception_system_overview} were generated within the Unity simulation environment (detailed in Section \ref{system}), utilising Ground Truth bounding boxes. 
 
-\begin{figure}[H]
-    \centering
-    \begin{subfigure}[c]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{figs/sensor_pipeline.pdf}
-        \caption{Sensor fusion architecture}
-        \label{fig:pipeline_diagram}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[c]{0.48\textwidth}
-        \centering
-        \includegraphics[width=0.85\textwidth]{figs/1_RGB.png}
-        \caption{Monocular RGB stream with ground truth bounding box}
-        \label{fig:rgb_data}
+% \begin{figure}[H]
+%     \centering
+%     \begin{subfigure}[c]{0.48\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{figs/sensor_pipeline.pdf}
+%         \caption{Sensor fusion architecture}
+%         \label{fig:pipeline_diagram}
+%     \end{subfigure}
+%     \hfill
+%     \begin{subfigure}[c]{0.48\textwidth}
+%         \centering
+%         \includegraphics[width=0.85\textwidth]{figs/1_RGB.png}
+%         \caption{Monocular RGB stream with ground truth bounding box}
+%         \label{fig:rgb_data}
         
-        \vspace{0.5cm}
+%         \vspace{0.5cm}
         
-        \includegraphics[width=0.85\textwidth]{figs/2_DepthMap.png}
-        \caption{Synchronised depth map with projected bounding box}
-        \label{fig:depth_data}
-    \end{subfigure}
+%         \includegraphics[width=0.85\textwidth]{figs/2_DepthMap.png}
+%         \caption{Synchronised depth map with projected bounding box}
+%         \label{fig:depth_data}
+%     \end{subfigure}
     
-    \caption{The data flow in (\subref{fig:pipeline_diagram}) alongside the corresponding RGB bounding box (\subref{fig:rgb_data}) and spatial depth mapping (\subref{fig:depth_data}).}
-    \label{fig:perception_system_overview}
-\end{figure}
+%     \caption{The data flow in (\subref{fig:pipeline_diagram}) alongside the corresponding RGB bounding box (\subref{fig:rgb_data}) and spatial depth mapping (\subref{fig:depth_data}).}
+%     \label{fig:perception_system_overview}
+% \end{figure}
 
 
 \subsubsection{Data Preprocessing}
@@ -300,6 +330,98 @@ While an F1 score of 0.53 and an mAP50 of approximately 0.49 are lower than typi
 \end{figure}
 
 \subsubsection{Baseline Evaluation}
+
+To evaluate the operational viability of the VisDrone trained model against the system's design requirements, an automated orbital benchmark script was developed for the Unity simulation. The script positioned a virtual camera in a spherical coordinate system around a human target, sweeping through a series of yaw angles ($0^\circ$ to $360^\circ$) and pitch angles ($0^\circ$ to $80^\circ$). At each coordinate, the network's prediction was compared to the Ground Truth bounding box (derived from the target's vertex projections) to classify the result as a True Positive (TP), False Positive (FP), or False Negative (FN) based on standard Intersection over Union (IoU) and confidence thresholds.
+
+The benchmark was executed on two distinct simulation conditions:
+\begin{enumerate}
+    \item \textbf{Daylight Conditions:} A bright outdoor environment featuring a concrete floor and a high-luminance skybox, replicating the daylight aerial photograph of the VisDrone dataset.
+    \item \textbf{Low-Light Conditions:} A dark indoor environment featuring minimal ambient lighting, representing the laser tag arena.
+\end{enumerate}
+
+% #A7C1EA used for camera background for daylight and #191B1D for lowlight 
+
+\newpage
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/env_daylight.png}
+        \caption{Daylight Conditions}
+        \label{fig:env_daylight}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.325\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/env_lowlight.png}
+        \caption{Low-light Conditions}
+        \label{fig:env_lowlight}
+    \end{subfigure}
+    
+    \caption{A visual comparison of the simulated lighting environments used during the automated orbital benchmark.}
+    \label{fig:orbital_benchmarks}
+\end{figure}
+
+Under daylight conditions (Figure \ref{fig:benchmark_daylight}), the model demonstrates robust player detection. The confidence contour map indicates sustained detections across the majority of the orbital grid with a high probability. 
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/VisDrone_F_Light_Confidence.pdf}
+        \caption{Confidence score distribution}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/VisDrone_F_Light_Classification.pdf}
+        \caption{TP / FP / FN categorisation}
+    \end{subfigure}
+    \caption{Orbital benchmark performance under Daylight Conditions.}
+    \label{fig:benchmark_daylight}
+\end{figure}
+
+\newpage
+
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/VisDrone_F_Dark_Confidence.pdf}
+        \caption{Confidence score distribution}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/VisDrone_F_Dark_Classification.pdf}
+        \caption{TP / FP / FN categorisation}
+    \end{subfigure}
+    \caption{Orbital benchmark performance under Low-light Conditions.}
+    \label{fig:benchmark_lowlight}
+\end{figure}
+
+
+\newpage
+\newpage
+
+
+% \begin{figure}[htbp]
+%     \centering
+%     \begin{subfigure}[b]{0.48\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{figs/VisDrone_F_Light_Confidence.pdf}
+%         \caption{Confidence score distribution}
+%     \end{subfigure}
+%     \hfill
+%     \begin{subfigure}[b]{0.48\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{figs/VisDrone_F_Light_Classification.pdf}
+%         \caption{TP / FP / FN categorisation}
+%     \end{subfigure}
+%     \caption{Orbital benchmark performance under Daylight Conditions.}
+%     \label{fig:benchmark_ideal}
+% \end{figure}
 
 
 
