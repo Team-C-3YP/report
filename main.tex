@@ -154,7 +154,7 @@ On the other hand, a passive stereoscopic system, such as the Luxonis OAK-D Lite
 \end{equation}
 Geometrically, as the target moves closer to the sensors, the viewing angle from each lens becomes more acute. This leads to the feature shifting further apart horizontally across the two image planes and hence $d$ increases. Since this calculation relies entirely on the horizontal parallax of a specific coordinate rather than the total pixel area of the bounding box ($A_{px}$), the depth estimation remains stable even if the player turns sideways. Furthermore, since this disparity mapping relies purely on ambient light, it ensures that there is no infrared interference with the game mechanics.
 
-To compare the performance of monocular and stereo depth estimation under geometric transformations, we constructed a simulation environment of the proposed hardware in Unity. The cameras were configured with a 1920x1080 resolution, with a 60$\textdegree$ \gls{fov}, a focal length of 935.31px, and a stereo baseline of 0.075m. We used a cuboid measuring 0.5m wide, 1.8m tall, and 0.2m deep to represent an average player. The objective was to observe how both camera architectures respond to changes in the target across three scenarios.
+To compare the performance of monocular and stereo depth estimation under geometric transformations, we constructed a simulation environment of the proposed hardware in Unity. The cameras were configured with a 1920x1080 resolution, with a $60^\circ$ \gls{fov}, a focal length of 935.31px, and a stereo baseline of 0.075m. We used a cuboid measuring 0.5m wide, 1.8m tall, and 0.2m deep to represent an average player. The objective was to observe how both camera architectures respond to changes in the target across three scenarios.
 
 \begin{figure}[htbp]
     \centering
@@ -311,7 +311,7 @@ To quantify the model's convergence during training, loss and precision metrics 
     \label{fig:visdrone_training_results}
 \end{figure}
 
-To determine the most effective confidence threshold for deployment, the F1-Confidence curve was evaluated (Figure \ref{fig:visdrone_f1_curve}). The F1 score represents the harmonic mean of precision and recall. The figure shows that the model reaches its peak F1 score of 0.53 at a confidence threshold of 0.272. Hence, we set the system to this specific threshold in order to achieve the best operational balance between ignoring background noise (False Positives) and reliably tracking valid targets (False Negatives).
+To determine the most effective confidence threshold for deployment, the F1-Confidence curve was evaluated (Figure \ref{fig:visdrone_f1_curve}). The F1 score represents the harmonic mean of precision and recall. The figure shows that the model reaches its peak F1 score of 0.53 at a confidence threshold of 0.272. Hence, we set the system to this specific threshold in order to achieve the best operational balance between minimising false positives (incorrectly classifying background noise as a player) and preventing false negatives (failing to detect a valid target).         
 
 \begin{figure}[htbp]
     \centering
@@ -320,7 +320,7 @@ To determine the most effective confidence threshold for deployment, the F1-Conf
     \label{fig:visdrone_f1_curve}
 \end{figure}
 
-While an F1 score of 0.53 and an mAP50 of approximately 0.49 are lower than typical detection models, these lower results are likely as a result of the environment. As seen in the validation sample predictions (Figure \ref{fig:visdrone_val_preds}), the human targets occupy a few pixels in area due to the high-altitude aerial perspective. Visual inspection of the sample predictions confirms that the model has successfully adapted to consistently draw bounding boxes around these low-resolution targets.
+While an F1 score of 0.53 and an mAP50 of 0.49 are lower than typical detection models, these lower results are likely as a result of the environment. As seen in the validation sample predictions (Figure \ref{fig:visdrone_val_preds}), the human targets occupy a few pixels in area due to the high-altitude aerial perspective. Visual inspection of the sample predictions confirms that the model has successfully adapted to consistently draw bounding boxes around these low-resolution targets and the suppressed mAP score reflects the inherent difficulty of drawing precise bounding boxes around them. 
 
 \begin{figure}[htbp]
     \centering
@@ -362,7 +362,7 @@ The benchmark was executed on two distinct simulation conditions:
     \label{fig:orbital_benchmarks}
 \end{figure}
 
-Under daylight conditions (Figure \ref{fig:benchmark_daylight}), the model demonstrates robust player detection. The confidence contour map indicates sustained detections across the majority of the orbital grid with a high probability. 
+The following 2D graphs flatten the 3D hemispherical sweeps shown in Figure \ref{fig:orbital_benchmarks}. The polar axis represents the drone's yaw and the radial axis represents the camera's pitch. The centre point ($0^\circ$) denotes a horizontal, eye-level view while the outer edge ($80^\circ$) represents a top-down perspective. 
 
 \begin{figure}[htbp]
     \centering
@@ -381,7 +381,7 @@ Under daylight conditions (Figure \ref{fig:benchmark_daylight}), the model demon
     \label{fig:benchmark_daylight}
 \end{figure}
 
-\newpage
+Under daylight conditions (Figure \ref{fig:benchmark_daylight}), the model demonstrates robust player detection. The confidence contour map indicates sustained detections across majority of the orbital grid, highlighting peak probability zones at steep pitch angles between $50^\circ$ and $80^\circ$. This spatial bias is expected given that the VisDrone training dataset consists primarily of high-altitude aerial perspectives. The classification plot confirms this trend, displaying a ring of True Positives around the outer edge. Consequently, the model performs well when looking down at the target from above. This also validates the fidelity of the environment itself since a neural network trained exclusively on real-world photographic data can successfully detect a synthetic target within Unity. Hence, we can verify that the simulation environment has been configured correctly.
 
 
 \begin{figure}[htbp]
@@ -390,21 +390,27 @@ Under daylight conditions (Figure \ref{fig:benchmark_daylight}), the model demon
         \centering
         \includegraphics[width=\textwidth]{figs/VisDrone_F_Dark_Confidence.pdf}
         \caption{Confidence score distribution}
+        \label{fig:benchmark_lowlight_confidence}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/VisDrone_F_Dark_Classification.pdf}
         \caption{TP / FP / FN categorisation}
+        \label{fig:benchmark_lowlight_classification}
     \end{subfigure}
     \caption{Orbital benchmark performance under Low-light Conditions.}
     \label{fig:benchmark_lowlight}
 \end{figure}
 
+In contrast, testing under low-light conditions (Figure \ref{fig:benchmark_lowlight}) reveals a clear limitation in the model. The confidence contour map (Figure \ref{fig:benchmark_lowlight_confidence}) shows generally low prediction certainty across the grid. The classification scatter plot (Figure \ref{fig:benchmark_lowlight_classification}) reflects this drop in performance with a high concentration of False Negatives replacing the True Positives seen in the daylight benchmark. This indicates that the model struggles to identify the target when ambient lighting is reduced. For the scope of this project, this confirms that the baseline VisDrone model is unsuitable for the target laser tag arena. To resolve this lighting gap, a synthetic dataset must be generated to train a model on the specific environment conditions it will face. 
+
+\subsubsection{Synthetic Dataset Generation}
+To resolve the domain gap identified during baseline evaluation, an automated data generation pipeline was developed within the Unity simulation. The objective was to algorithmically render and annotate a dataset consisting of 5,000 frames tailored to the lighting constraints and textures of the laser tag arena.
+
+To prevent the model from overfitting to specific synthetic visual patterns, domain randomisation was applied to each frame. 
 
 \newpage
-\newpage
-
 
 % \begin{figure}[htbp]
 %     \centering
