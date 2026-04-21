@@ -307,7 +307,7 @@ To quantify the model's convergence during training, loss and precision metrics 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.7\linewidth]{figs/visdrone_training_results.png}
-    \caption{Training and validation loss metrics across 50 epochs.}
+    \caption{Training and validation loss metrics across 50 epochs for the VisDrone dataset.}
     \label{fig:visdrone_training_results}
 \end{figure}
 
@@ -406,6 +406,8 @@ Under daylight conditions (Figure \ref{fig:benchmark_daylight}), the model demon
 In contrast, testing under low-light conditions (Figure \ref{fig:benchmark_lowlight}) reveals a clear limitation in the model. The confidence contour map (Figure \ref{fig:benchmark_lowlight_confidence}) shows generally low prediction certainty across the grid. The classification scatter plot (Figure \ref{fig:benchmark_lowlight_classification}) reflects this drop in performance with a high concentration of False Negatives replacing the True Positives seen in the daylight benchmark. This indicates that the model struggles to identify the target when ambient lighting is reduced. For the scope of this project, this confirms that the baseline VisDrone model is unsuitable for the target laser tag arena. To resolve this lighting gap, a synthetic dataset must be generated to train a model on the specific environment conditions it will face. 
 
 \subsubsection{Synthetic Dataset Generation}
+% maybe mention the lack of publicly available datasets of laser tag footage
+
 To resolve the domain gap identified during baseline evaluation, an automated data generation pipeline was developed within the Unity simulation. The objective was to algorithmically render and annotate a dataset consisting of 5,000 frames tailored to the lighting constraints and textures of the laser tag arena.
 
 \begin{figure}[htbp]
@@ -449,6 +451,29 @@ To ensure the resulting bounding boxes only encompass visually exposed regions, 
 \end{figure}
 
 \newpage
+
+\subsubsection{Synthetic Model Training and Deployment}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/synthetic_training_results.png}
+    \caption{Training and validation loss metrics across 50 epochs for the Synthetic dataset.}
+    \label{fig:synthetic_training_results}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.65\linewidth]{figs/synthetic_BoxF1_curve.png}
+    \caption{F1 score across confidence thresholds for the validation set.}
+    \label{fig:synthetic_f1_curve}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/synthetic_val_batch0_pred.jpg}
+    \caption{Sample bounding box predictions from the Synthetic validation set.}
+    \label{fig:synthetic_val_preds}
+\end{figure}
 
 % \begin{figure}[htbp]
 %     \centering
