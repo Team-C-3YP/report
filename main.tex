@@ -106,7 +106,7 @@ This section details the design and implementation of this perception system. To
 % - check acronyms like rgb
 % - section on Unity simulation environment (map generation, why Unity is beneficial, reference synthetic data generation)
 % - maybe move the rgb and stereo images to be horizontal on the page above and then sensor architecture standalone on the page after [done]
-% - reference Figure 6
+% - reference Figure 6, 13, 14 (check all figures are referenced)
 
 In order to transition from the objectives to the physical implementation, we require a sensor payload that can provide high-fidelity data without compromising flight performance or game mechanics. 
 
@@ -406,7 +406,7 @@ Under daylight conditions (Figure \ref{fig:benchmark_daylight}), the model demon
 In contrast, testing under low-light conditions (Figure \ref{fig:benchmark_lowlight}) reveals a clear limitation in the model. The confidence contour map (Figure \ref{fig:benchmark_lowlight_confidence}) shows generally low prediction certainty across the grid. The classification scatter plot (Figure \ref{fig:benchmark_lowlight_classification}) reflects this drop in performance with a high concentration of False Negatives replacing the True Positives seen in the daylight benchmark. This indicates that the model struggles to identify the target when ambient lighting is reduced. For the scope of this project, this confirms that the baseline VisDrone model is unsuitable for the target laser tag arena. To resolve this lighting gap, a synthetic dataset must be generated to train a model on the specific environment conditions it will face. 
 
 \subsubsection{Synthetic Dataset Generation}
-% maybe mention the lack of publicly available datasets of laser tag footage
+% maybe mention the lack of publicly available datasets of laser tag footage and hence this bolsters the requirement of a synthetic dataset
 
 To resolve the domain gap identified during baseline evaluation, an automated data generation pipeline was developed within the Unity simulation. The objective was to algorithmically render and annotate a dataset consisting of 5,000 frames tailored to the lighting constraints and textures of the laser tag arena.
 
@@ -454,12 +454,24 @@ To ensure the resulting bounding boxes only encompass visually exposed regions, 
 
 \subsubsection{Synthetic Model Training and Deployment}
 
+To quantify the performance of the synthetic data pipeline and ensure that the network had successfully learned the target features, training metres were monitored across the 50 epoch run. The resulting loss and performance curves are detailed in Figure \ref{fig:synthetic_training_results}.
+
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.7\linewidth]{figs/synthetic_training_results.png}
     \caption{Training and validation loss metrics across 50 epochs for the Synthetic dataset.}
     \label{fig:synthetic_training_results}
 \end{figure}
+
+The training and validation curves indicate highly stable convergence. The training and validation losses both descend and this confirms that the model hasn't overfit to the synthetic data. 
+
+% maybe a comment on the 40-epoch drop but perhaps best made for the visdrone training and a brief mention here
+
+The performance metrics corroborate the successful convergence. The mean Average Precision at an Intersection over Union threshold of 0.50 (mAP50) plateaus at 0.96 and the mAP50-95 metric climbs to above 0.80. These exceptionally high metrics are a direct characteristic of synthetic datasets. Unlike human-annotated real-world data, which inherently suffers from subjective or loose labelling, the Unity pipeline generates mathematically perfect ground-truth coordinates. Furthermore, evaluating the network against validation data drawn from the exact same simulated distribution naturally yields higher accuracy. Ultimately, these theoretical metrics prove the network successfully extracted the features of the simulated human targets,
+
+Beyond theoretical convergence, we determined the operational threshold for the deployment of the synthetic model. The F1-Confidence curve was evaluated to identify this balance for the simulation environment (Figure \ref{fig:synthetic_f1_curve}).
+
+\newpage
 
 \begin{figure}[htbp]
     \centering
@@ -468,12 +480,18 @@ To ensure the resulting bounding boxes only encompass visually exposed regions, 
     \label{fig:synthetic_f1_curve}
 \end{figure}
 
+The curve demonstrates that the synthetic model reaches a peak F1 score of 0.94 at a confidence threshold of 0.524. Because the synthetic pipeline generates mathematically consistent features and ground-truth coordinates, the network achieves a high peak confidence within its own domain. Consequently, the deployment inference threshold within the Unity Sentis tensor engine was configured to this 0.524 value. Setting the threshold at this peak ensures the system effectively balances the detection of valid targets against the rejection of simulated background noise.
+
+Finally, a visual inspection of the validation holdout set was conducted. As demonstrated in the sample validation predictions (Figure \ref{fig:synthetic_val_preds}), the model successfully adapts to the severe algorithmic occlusions and varied lighting conditions generated by the Unity pipeline.
+
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\linewidth]{figs/synthetic_val_batch0_pred.jpg}
+    \includegraphics[width=0.5\linewidth]{figs/synthetic_val_batch0_pred.jpg}
     \caption{Sample bounding box predictions from the Synthetic validation set.}
     \label{fig:synthetic_val_preds}
 \end{figure}
+
+Unlike the baseline VisDrone model, which relied on high-altitude silhouettes, the synthetic model consistently draws precise bounding boxes around the exposed targets. The model accurately detects players with high confidence even when the player is prone or obscured by walls and props. This confirms that the randomisation techniques employed during dataset generation successfully produced a detection model tailored to the constraints of the simulated arena.
 
 % \begin{figure}[htbp]
 %     \centering
