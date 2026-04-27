@@ -49,6 +49,7 @@
 \newacronym{cnn}{CNN}{Convolutional Neural Network}
 \newacronym{coco}{COCO}{Common Objects in Context}
 \newacronym{onnx}{ONNX}{Open Neural Network Exchange}
+\newacronym{imu}{IMU}{Inertial Measurement Unit}
 \printglossaries
 \newpage
 
@@ -336,7 +337,7 @@ To evaluate the operational viability of the VisDrone trained model against the 
 The benchmark was executed on two distinct simulation conditions:
 \begin{enumerate}
     \item \textbf{Daylight Conditions:} A bright outdoor environment featuring a concrete floor and a high-luminance skybox, replicating the daylight aerial photograph of the VisDrone dataset.
-    \item \textbf{Low-Light Conditions:} A dark indoor environment featuring minimal ambient lighting, representing the laser tag arena.
+    \item \textbf{Low-light Conditions:} A dark indoor environment featuring minimal ambient lighting, representing the laser tag arena.
 \end{enumerate}
 
 % #A7C1EA used for camera background for daylight and #191B1D for lowlight 
@@ -495,28 +496,57 @@ Unlike the baseline VisDrone model, which relied on high-altitude silhouettes, t
     \label{fig:synthetic_val_preds}
 \end{figure}
 
+
 \subsubsection{Synthetic Model Evaluation and Comparison to VisDrone Model}
 
-% \begin{figure}[htbp]
-%     \centering
-%     \begin{subfigure}[b]{0.48\textwidth}
-%         \centering
-%         \includegraphics[width=\textwidth]{figs/VisDrone_F_Light_Confidence.pdf}
-%         \caption{Confidence score distribution}
-%     \end{subfigure}
-%     \hfill
-%     \begin{subfigure}[b]{0.48\textwidth}
-%         \centering
-%         \includegraphics[width=\textwidth]{figs/VisDrone_F_Light_Classification.pdf}
-%         \caption{TP / FP / FN categorisation}
-%     \end{subfigure}
-%     \caption{Orbital benchmark performance under Daylight Conditions.}
-%     \label{fig:benchmark_ideal}
-% \end{figure}
+To evaluate the synthetic model, we conducted a low-light orbital benchmark that is identical to the one completed for the VisDrone model. This test replicates the environmental constraints under which the VisDrone model experienced detection failure.
+
+The results for the synthetic model are visualised in Figure \ref{fig:benchmark_synthetic_lowlight}. The confidence score distribution (Figure \ref{fig:benchmark_synthetic_lowlight_confidence}) indicates consistent detection, maintaining confidence levels above 0.85 across the majority of yaw and pitch angles. However, a slight degradation occurs at extreme pitch angles. 
+
+This stability is supported by the TP/FP/FN categorisation (Figure \ref{fig:benchmark_synthetic_lowlight_classification}). The synthetic model records zero False Negatives (FN) across the hemisphere and a few False Positives (FP) at a high pitch angle between $135^\circ$ and $180^\circ$ yaw. When contrasted with the VisDrone model, the synthetic model performs significantly better in low light conditions and is therefore more reliable in identifying the target under arena-specific illumination.
+
+\newpage 
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/Synthetic_F_Dark_Confidence.pdf}
+        \caption{Confidence score distribution}
+        \label{fig:benchmark_synthetic_lowlight_confidence}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/Synthetic_F_Dark_Classification.pdf}
+        \caption{TP / FP / FN categorisation}
+        \label{fig:benchmark_synthetic_lowlight_classification}
+    \end{subfigure}
+    \caption{Orbital benchmark performance for Synthetic model under Low-light Conditions.}
+    \label{fig:benchmark_synthetic_lowlight}
+\end{figure}
+
+Alongside low-light performance, the physical geometry of a laser tag maze introduces a second operational constraint of frequent target occlusion. Players actively utilise walls and barricades for cover, meaning the drone's perception system will rarely have an unobstructed view of a complete human silhouette. To quantify how effectively each model detects partially hidden targets, a sliding occlusion test was conducted. Figure \ref{fig:occlusion_test} plots the detection confidence of both models as the percentage of the obscured target area increases.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figs/Occlusion_Test.pdf}
+    \caption{Comparing the VisDrone and Synthetic Models under occlusion}
+    \label{fig:occlusion_test}
+\end{figure}
+
+As shown in the detection curve (Figure \ref{fig:occlusion_test}), the VisDrone model experiences a decrease in confidence when the target is partially obscured. It falls below a 0.5 confidence threshold after 20\% occlusion, fluctuating before dropping to zero at approximately 40\% occlusion. This indicates that the baseline model, having been trained primarily on high-altitude pedestrian datasets, relies heavily on the complete humanoid silhouette to make a positive classification.
+
+In contrast, the synthetic model demonstrates a more stable detection decay curve. It maintains a confidence score above 0.9 up to 35\% occlusion and crosses the 0.5 threshold at approximately 68\% occlusion. This data suggests that the synthetic domain randomisation pipeline trained the neural network to classify partial human geometry. By learning to identify isolated features, such as an exposed shoulder or an extended arm, the synthetic model addresses the occlusion limitations observed in the Visdrone model, offering greater reliability for deployment in environments with physical barricades.
+
+
+
 
 
 
 \newpage
+
+
 
 \subsection{Trajectory tracking} % Tommy
 \subsection{Searching} % Maybe Tommy
