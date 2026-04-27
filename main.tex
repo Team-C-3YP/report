@@ -539,6 +539,92 @@ As shown in the detection curve (Figure \ref{fig:occlusion_test}), the VisDrone 
 
 In contrast, the synthetic model demonstrates a more stable detection decay curve. It maintains a confidence score above 0.9 up to 35\% occlusion and crosses the 0.5 threshold at approximately 68\% occlusion. This data suggests that the synthetic domain randomisation pipeline trained the neural network to classify partial human geometry. By learning to identify isolated features, such as an exposed shoulder or an extended arm, the synthetic model addresses the occlusion limitations observed in the Visdrone model, offering greater reliability for deployment in environments with physical barricades.
 
+\subsubsection{3D Coordinates via Sensor Fusion}
+We use sensor fusion in order to bridge the gap between the 2D \gls{yolo} bounding box and the stereoscopic depth map to resolve the 3D Cartesian coordinates of the player. We begin with the geometric centroid ($x_i, y_i$) of the bounding box in pixel coordinates. Because the central RGB camera and stereo cameras are synchronised, this coordinate corresponds to a point on the depth map. 
+
+If this centroid lies on a gap in the target's posture, a single pixel sample of the depth map may erroneously return the distance to the background wall rather than the player itself. In order to prevent this, the system samples a $N \times N$ kernel of pixels around the centroid and a median filter is applied to ensure that the output reflects the true target distance. 
+
+Using the depth $z_c$, the system performs an inverse pinhole camera projection to obtain the physical horizontal ($x_c$) and vertical ($y_c$) distances in the camera frame. The geometry of this projection is illustrated in Figure \ref{fig:projection_side} and Figure \ref{fig:projection_3d}.
+
+The image plane coordinates are related to the 3D spatial coordinates via the focal length $f$:
+
+\begin{equation}
+    x_i = f \frac{x_c}{z_c}, \quad y_i = f \frac{y_c}{z_c}
+\end{equation}
+
+and by rearranging these equations, the 3D position vector in the camera's frame ($P_c$) is obtained:
+
+\begin{equation}
+P_c = \begin{bmatrix} x_c \\ y_c \\ z_c \end{bmatrix} = \begin{bmatrix} \frac{x_i \cdot z_c}{f} \\ \frac{y_i \cdot z_c}{f} \\ z_c \end{bmatrix}
+\end{equation}
+
+\newpage
+
+\begin{figure}[htbp]
+     \centering
+     \begin{subfigure}[b]{0.48\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/CameraProjection_SimilarTriangles.png}
+         \caption{Similar triangles for the y-axis projection.}
+         \label{fig:projection_side}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.48\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/CameraProjection.png}
+         \caption{3D perspective view relating the camera coordinate frame and image plane.}
+         \label{fig:projection_3d}
+     \end{subfigure}
+     \caption{Geometry of the perspective projection model from 3D spatial coordinates to the 2D image plane.}
+     \label{fig:camera_geometry}
+\end{figure}
+
+In order to interface with Tommy's path following algorithm as well as Ritchie's high level controller, the vector $P_c$ in the camera's local coordinate frame must be converted into the global world frame $P_w$.
+
+This transformation is achieved using a series of rotation matrices which are defined for Pitch ($\theta$), Yaw($\psi$) and Roll ($\phi$):
+\begin{equation}
+    \resizebox{0.85\textwidth}{!}{%
+        $R_x(\theta) = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos(\theta) & -\sin(\theta) \\ 0 & \sin(\theta) & \cos(\theta) \end{bmatrix}, \quad
+        R_y(\psi) = \begin{bmatrix} \cos(\psi) & 0 & \sin(\psi) \\ 0 & 1 & 0 \\ -\sin(\psi) & 0 & \cos(\psi) \end{bmatrix}, \quad
+        R_z(\phi) = \begin{bmatrix} \cos(\phi) & -\sin(\phi) & 0 \\ \sin(\phi) & \cos(\phi) & 0 \\ 0 & 0 & 1 \end{bmatrix}$%
+    }
+\end{equation}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figs/CameraLocalToWorld.png}
+    \caption{The local coordinate frame of the drone's camera.}
+    \label{fig:camera_to_world}
+\end{figure}
+
+To ensure compatibility with the Unity simulation environment, we adopt a left-handed coordinate system where the positive direction of rotation is defined as clockwise when looking down the axis of rotation.
+
+Initially we query the gimbal's encoders to obtain the real-time mechanical pitch ($\theta_g$) and roll ($\phi_g$) of the camera relative to the drone's chasis. These can be combined into the rotation matrix ($R_g$) that rotates the camera vector into alignment with the drone's body: 
+
+\begin{equation}
+    R_g = R_x(\theta_g) \cdot R_z(\phi_g)
+\end{equation}
+
+Although strictly we also need to take into account the translation vector for the physical displacement of the gimbal mount with the drone's centre of mass, this offset has been removed for simplicity. 
+
+Next we read the drone's onboard \gls{imu} to acquire the drone's yaw ($\psi$), pitch ($\theta$), and roll ($\phi$). 
+
+These attitudes dictate the drone's rotation matrix $R_d$:
+\begin{equation}
+    R_d = R_y(\psi) \cdot R_x(\theta) \cdot R_z(\phi)
+\end{equation}
+
+Finally, we can add the drone's own position vector within the maze ($D_w$), which is continuously updated, and this allows us to formulate the target's 3D coordinate in the world frame ($P_w$) as:
+\begin{equation}
+    P_w = R_d \cdot (R_g \cdot P_c) + D_w
+\end{equation}
+
+which can be expressed in matrix representation as:
+\begin{equation}
+    \resizebox{0.65\textwidth}{!}{%
+        $P_w = \big( R_y(\psi) R_x(\theta) R_z(\phi) \big) \cdot \Big( \big( R_x(\theta_g) R_z(\phi_g) \big) \begin{bmatrix} x_c \\ y_c \\ z_c \end{bmatrix} \Big) + \begin{bmatrix} X_{d} \\ Y_{d} \\ Z_{d} \end{bmatrix}$%
+    }
+\end{equation}
 
 
 
