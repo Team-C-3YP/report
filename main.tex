@@ -610,7 +610,7 @@ Initially we query the gimbal's encoders to obtain the real-time mechanical pitc
     R_g = R_x(\theta_g) \cdot R_z(\phi_g)
 \end{equation}
 
-Although strictly we also need to take into account the translation vector for the physical displacement of the gimbal mount with the drone's centre of mass, this offset has been removed for simplicity. 
+Although strictly we also need to take into account the translation vector for the physical displacement of the gimbal mount with the drone's centre of mass, this offset has been removed for simplicity. % or because it is negligible
 
 Next we read the drone's onboard \gls{imu} to acquire the drone's yaw ($\psi$), pitch ($\theta$), and roll ($\phi$). 
 
@@ -634,10 +634,63 @@ which can be expressed in matrix representation as:
 \subsubsection{State Estimation and Predictive Tracking}
 Although we are able to obtain the 3D global coordinates of the player ($P_w$) using the kinematic transformations above, the raw measurements will be inherently noisy due to stereoscopic depth jitter and \gls{yolo} bounding box fluctuations. In addition, the arena contains physical walls and objects that can cause temporary occlusions. As a result, we cannot rely solely on the raw visual data and must maintain a state estimate of the player's position.
 
-In order to achieve this, we can implement a Linear Kalman Filter to maintain a continuous, smoothed estimate of the player's position. The filter operates on a constant velocity model, allowing us to project the player's trajectory during periods of occlusion.
+In order to achieve this, we implemented a Linear Kalman Filter to maintain a continuous, smoothed estimate of the player's position. The filter operates on a constant velocity model, allowing us to project the player's trajectory during periods of occlusion.
 
+\newpage
 
+The filter maintains an internal state vector ($X_k$) representing the target's 3D position and velocity:
 
+\begin{equation}
+    X_k = \begin{bmatrix} x & y & z & \dot{x} & \dot{y} & \dot{z} \end{bmatrix}^T
+\end{equation}
+
+The measurement vector ($Z_k$) consists of the raw 3D position coordinates provided by the perception pipeline, as instantaneous velocity is unobservable from a single frame:
+
+\begin{equation}
+    Z_k = \begin{bmatrix} x_{m} & y_{m} & z_{m} \end{bmatrix}^T
+\end{equation}
+
+The system dynamics are governed by the state transition matrix ($F$), which applies standard Newtonian kinematics over the sampling interval ($\Delta t$), and the observation matrix ($H$), which maps the 6-dimensional state space to the 3-dimensional measurement space:
+
+\begin{equation}
+    \resizebox{0.75\textwidth}{!}{%
+        $F = \begin{bmatrix} 1 & 0 & 0 & \Delta t & 0 & 0 \\ 0 & 1 & 0 & 0 & \Delta t & 0 \\ 0 & 0 & 1 & 0 & 0 & \Delta t \\ 0 & 0 & 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 0 & 0 & 1 \end{bmatrix}, \quad
+        H = \begin{bmatrix} 1 & 0 & 0 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0 & 0 & 0 \end{bmatrix}$%
+    }
+\end{equation}
+
+In the predict phase, the state estimate ($\hat{X}$) and error covariance ($P$) are projected forward in time from step $k$ to $k+1$:
+
+\begin{equation}
+    \hat{X}_{k+1|k} = F \hat{X}_{k|k}
+\end{equation}
+\begin{equation}
+    P_{k+1|k} = F P_{k|k} F^T + Q
+\end{equation}
+
+The process noise covariance matrix ($Q$) accounts for unmodelled accelerations, such as the player dodging or sprinting. Here we adopt a Discrete White Noise Acceleration (DWNA) model. Under this piecewise constant assumption, the noise gain vector ($\Gamma$) maps a scalar acceleration jump into both position and velocity changes:
+
+\begin{equation}
+    \Gamma = \begin{bmatrix} \frac{1}{2}\Delta t^2 \\ \Delta t \end{bmatrix}
+\end{equation}
+
+The covariance matrix for a single 1D axis is then calculated as the expectation of this vector scaled by the variance of the human's maximum expected physical acceleration ($\sigma_v^2$):
+
+\begin{equation}
+    Q = \Gamma \sigma_v^2 \Gamma^T = \sigma_v^2 \begin{bmatrix} \frac{\Delta t^4}{4} & \frac{\Delta t^3}{2} \\ \frac{\Delta t^3}{2} & \Delta t^2 \end{bmatrix}
+\end{equation}
+
+When the perception pipeline returns a valid \gls{yolo} detection, the update phase executes. The Kalman Gain ($K_{k+1}$) is calculated using the measurement noise covariance ($R$), which is a diagonal matrix containing the empirical variances of the depth sensor and bounding box. The state is then corrected based on the residual between the actual and predicted measurement at step $k+1$:
+
+\begin{equation}
+    K_{k+1} = P_{k+1|k} H^T (H P_{k+1|k} H^T + R)^{-1}
+\end{equation}
+\begin{equation}
+    \hat{X}_{k+1|k+1} = \hat{X}_{k+1|k} + K_{k+1} (Z_{k+1} - H \hat{X}_{k+1|k})
+\end{equation}
+\begin{equation}
+    P_{k+1|k+1} = (I - K_{k+1} H) P_{k+1|k}
+\end{equation}
 
 \newpage
 
