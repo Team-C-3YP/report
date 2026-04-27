@@ -69,6 +69,10 @@ You can define them in the header of this file and they will appear in the gloss
 \section{Literature Review}
 \newpage
 
+\section{Gameplay} % Ritchie
+\subsection{Rules and Play}
+\subsection{Technological Implementation}
+
 \section{System Architecture and Integration} \label{system} % Everyone
 \newpage
 
@@ -649,24 +653,96 @@ In order to achieve this, we can implement a Linear Kalman Filter to maintain a 
 
 
 \section{App} % Ritchie
+\fancyhead[C]{Richard Usherwood}
 \subsection{Motivation}
 From fast-food restaurants to road cycling, apps are everywhere. Their purpose can be separated into two categories: Engagement and Functionality.
 
 They encourage user-engagement by allowing users to track their progress through points and achievements, customise their profiles, and connect with friends. For example, popular birdwatching app "Birda" is used by users to log bird sightings. It rewards users with achievement badges when they complete objectives (for example, seeing ten different species), and integrates monthly challenges. It also connects birdwatchers through the "community" feature, allowing users to view their friends' activity and sightings by strangers in their area. 
 
 Companion apps also serve a functional purpose. Since (almost) everyone in the UK owns and uses a smartphone, they can be directly implemented into the experience. For example, popular budget UK pub chain JD Wetherspoon uses a companion app to allow patrons to order drinks and food directly to their table, without requiring them to break conversation and queue at a busy bar. 
-\subsection{Implementation with existing game}
-When opened for the first time, the app prompts the user to create an account with a username and password. When completed, the app the first of five screens that are navigated using a bottom panel: the "Profile" screen, the "Leaderboard" screen, the "Achievements and Challenges" screen, the "Community" screen, and the "Play in Person" screen . The first four screens are engagement-based, and the fifth is functionality-based.
+\subsection{Overview}
+When opened for the first time, the app prompts the user to create an account with a username and password. If the user has already created a login, they will instead be prompted to enter their user name and password. This is shown in Figure \ref{fig:0_Login_Screen}. When completed, the app the first of five screens that are navigated using a bottom panel: the "Profile" screen, the "Leaderboard" screen, the "Achievements and Challenges" screen, the "Community" screen, and the "Play in Person" screen . The first four screens are engagement-based, and the fifth is functionality-based.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\linewidth]{figs/App_Screenshots/0_Login_Screen.jpg}
+    \caption{Login Screen}
+    \label{fig:0_Login_Screen}
+\end{figure}
+
 \subsubsection{Engagement}
-The "Profile" screen displays the player's details (Player ID, name etc.), the score details (number of games played, number of kills and deaths, total score), and the player's social details (friends, friend requests). 
+The "Profile" screen displays the player's details (Player ID, name etc.), the score details (number of games played, number of kills and deaths, total score), and the player's social details (friends, friend requests). This is shown in Figure \ref{fig:1_Profile_Screen}. 
 
-The "Leaderboard" screen displays a list of players in order of their total score. The app user can toggle between viewing a global leaderboard and a leaderboard of only their friends.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\linewidth]{figs/App_Screenshots/1_Profile_Screen.jpg}
+    \caption{Profile Screen}
+    \label{fig:1_Profile_Screen}
+\end{figure}
 
-The "Achievements and Challenges" screen displays all achievements (lifetime goals, for example "play ten games", "kill fifteen drones in one game", "be the last player alive in a death match" etc.), and monthly challenges (smaller achievements that reset and change every month). The inclusion of lifetime achievements allows for a long-term feeling of improvement, while the monthly challenges allow new players to compete with their more experienced friends.
+The "Leaderboard" screen displays a list of players in order of their total score. The app user can toggle between viewing a global leaderboard and a leaderboard of only their friends. This is shown in Figures \ref{fig:2_1_All} and \ref{fig:2_2_Friends}.
 
-The "Community" screen toggles between displaying details of recent games played by the app user's friends, and displaying details of all recent games played. It also allows users to search for other players by name, or by Player ID, and to send each other friend requests. This allows players to track each other's progress, and allows players to feel connected to friends they may have made through playing the game in person.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\linewidth]{figs/App_Screenshots/2_1_Leaderboard_All.jpg}
+    \caption{Leaderboard Screen - Global}
+    \label{fig:2_1_All}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\linewidth]{figs/App_Screenshots/2_2_1_Leaderboard_Friends_No_Alice.jpg}
+    \caption{Leaderboard Screen - Friends Only}
+    \label{fig:2_2_Friends}
+\end{figure}
+
+The "Achievements and Challenges" screen displays all achievements (lifetime goals, for example "play ten games", "kill fifteen drones in one game", "be the last player alive in a death match" etc.), shown in Figure \ref{fig:3_1_Lifetime}, and monthly challenges (smaller achievements that reset and change every month), shown in figure \ref{fig:3_2_Monthly}. The inclusion of lifetime achievements allows for a long-term feeling of improvement, while the monthly challenges allow new players to compete with their more experienced friends.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\linewidth]{figs/App_Screenshots/3_1_Achievements_Lifetime.jpg}
+    \caption{Achievements Screen - Lifetime}
+    \label{fig:3_1_Lifetime}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\linewidth]{figs/App_Screenshots/3_2_Achievements_Monthly.jpg}
+    \caption{Achievements Screen - Monthly Challenges}
+    \label{fig:3_2_Monthly}
+\end{figure}
+
+The "Community" screen toggles between displaying details of recent games played by the app user's friends, and displaying details of all recent games played. It also allows users to search for other players by name, or by Player ID, and to send each other friend requests. Figure \ref{fig:4_2_Receiving} shows a screen displayed when the player "Alice" has made a friend request to the player logged into the app. Figure \ref{fig:4_2_Sending} shows a screen displayed when the player logged into the app is sending a friend request to the player "Bob". This system allows players to track each other's progress, and allows players to feel connected to friends they may have made through playing the game in person.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\linewidth]{figs/App_Screenshots/4_1_Community_Friends.jpg}
+    \caption{Community Screen - Friends}
+    \label{fig:4_1_Friends}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\linewidth]{figs/App_Screenshots/4_2_1_Community_Requests_Receiving.jpg}
+    \caption{Community Screen - Friend Requests, Receiving}
+    \label{fig:4_2_Receiving}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\linewidth]{figs/App_Screenshots/4_2_1_Community_Requests_Receiving.jpg}
+    \caption{Community Screen - Friend Requests, Sending}
+    \label{fig:4_2_Sending}
+\end{figure}
+
 \subsubsection{Functionality}
-The "Play in Person" screen prompts the player to scan the QR codes on the top of the laser gun and the helmet they are given when playing in-person. This allows the server to attribute the correct number of kills and deaths (infra-red strikes on drones, encoded with ID of the gun, and infra-red strikes on helmet detector, communicated with server) to the correct player, making for a seamless user experience.
+The "Play in Person" screen prompts the player to scan the QR codes on the top of the laser gun and the helmet they are given when playing in-person. This allows the server to attribute the correct number of kills and deaths (infra-red strikes on drones, encoded with ID of the gun, and infra-red strikes on helmet detector, communicated with server) to the correct player, making for a seamless user experience. The "Play in Person" screen is shown in Figure \ref{fig:5_PiP_Screen}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\linewidth]{figs/App_Screenshots/5_Play_In_Person.jpg}
+    \caption{Play in Person Screen}
+    \label{fig:5_PiP_Screen}
+\end{figure}
+
 \subsection{Technical Details}
 
 \section{Commercialisation, Safety and Project Management} % Mostly Ritchie
@@ -674,7 +750,7 @@ The "Play in Person" screen prompts the player to scan the QR codes on the top o
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{figs/risk-assessment}
-    \caption{Quantitative Risk Assessment.}
+    \caption{Quantitative Risk Assessment}
     \label{fig:risk-assessment}
 \end{figure}
 
