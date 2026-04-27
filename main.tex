@@ -1,5 +1,6 @@
 \documentclass{report_template_oxford}
 
+
 \usepackage{float}
 \usepackage{tabularx}
 \usepackage{wrapfig}
@@ -754,8 +755,64 @@ The "Play in Person" screen prompts the player to scan the QR codes on the top o
     \label{fig:risk-assessment}
 \end{figure}
 
-A quantitative risk assessment has been completed, and is shown in figure \ref{fig:risk-assessment}. As shown, the most significant initial risks were the the contact between guns and players' eyes, and players running into each other. After the necessary control measures, they are still most significant residual risks, along with trips and falls. This demonstrates that there is not an undue risk associated with playing the game, since trips and falls, player-on-player collision and impact with instruments used for playing (such as laser-guns, squash raquets etc.) are risks associated with traditional laser-tag, as well as many common sports. 
-\subsection{Financing}
+A quantitative risk assessment has been completed, and is shown in figure \ref{fig:risk-assessment}. As shown, the most significant initial risks were the the contact between guns and players' eyes, and players running into each other. After the necessary control measures, they are still most significant residual risks, along with trips and falls. This demonstrates that there is not an undue risk associated with playing the game, since trips and falls, player-on-player collision and impact with instruments used for playing (such as laser-guns, squash raquets, etc.) are risks associated with traditional laser-tag, as well as many common sports. 
+\subsection{Financial Modeling}
+\subsection{Setup}
+A discounted cash flow model was created. The purpose of this was to track cash flow, apply a discount rate into the future (to capture the fact that £100 now is worth more to an investor than £100 in 10 years), and to calculate the Net Present Value (NPV) of a company which provides the game as a commercial enterprise.
+\subsection{Numerical Estimations}
+% Utility
+It is supposed that the first year will be spent producing hardware, advertising the business, and decorating the playing area (a warehouse). The first year (Year 0) is therefore assumed not to make any revenue from gameplay. As the business establishes itself, and as it continues to invest in advertising, its utility (games per year) is modeled to increase up to a plateau in the third year of operation (Year 3). As a first estimation, the increase is modeled as shown in table \ref{tab:utility}:
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+Year & Percentage of Maximum Utility\\
+\hline
+0 & 0\% \\
+1 & 50\% \\
+2 & 75\% \\
+3 & 100\% \\
+4 & 100\% \\
+\vdots & \vdots \\
+\hline
+\end{tabular}
+\caption{Utility evolution with time}
+\label{tab:utility}
+\end{table}
+
+It was lastly imagined as a first approximation that the maximum number of games per year would be 2000, this corresponding to 10 hour-long games on Saturday and Sunday, and four hour-long games every day during the week, for 50 weeks per year.
+
+% Warehouse Hiring
+The game is imagined to be played in a converted warehouse. The size of warehouse required for gameplay was thought to be comparable to that of a large school hall (circa. 5000 square feet). Including enough space for a reception area, a small office and a break room for staff, between 6000 and 7000 square feet was thought to be an appropriate size. It was considered important that the warehouse be within a short drive of a large city. A 6800 square foot warehouse in London was found for £2000 pcm \cite{rightmoveCheckThis}. The cost of hiring the warehouse is therefore estimated to be £25000 per annum.
+
+% Employee Costs
+It was thought that the minimum equivalent number of full-time employees required would be two. It was furthermore imagined that the number of full-time employees would increase with increased utility, up to a maximum of four. It was thought that the number of employees would increase with utility as shown in table \ref{tab:employees}:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+Year & Percentage of Maximum Utility & Equivalent Number of Full-Time Employees\\
+\hline
+0 & 0\% & 2\\
+1 & 50\% & 2\\
+2 & 75\% & 3\\
+3 & 100\% & 4\\
+4 & 100\% & 4\\
+\vdots & \vdots & \vdots \\
+\hline
+\end{tabular}
+\caption{Number of employees with time}
+\label{tab:employees}
+\end{table}
+
+Lastly, it was estimated that the cost of hiring a single full-time employee (or equivalent in part-time workers) would be £50000. This includes their salary, their training, their sick cover, their annual bonus etc.
+
+% Revenue
+Research was conducted on the pricing structure of laser-tag. It was found that the cost of hiring exclusive usage of a laser-tag facility is commonly around £15-£20 per person per hour. For example, LASERGAMING OXFORD charges £29.50 per person for sole use of their facilities \cite{outdoorlaserLasergamingEXCLUSIVE}. It was thought that a drone-based experience could afford to charge two to three times this fee, once the the novelty value has been taken into account. The game is designed to be played by three to eight people at once. The cost per game is therefore projected to be £200 per hour game per group, as a first estimate.
+
+
+
 \subsection{Wake up the audience who've fallen asleep}
 \newpage
 
@@ -764,9 +821,6 @@ A quantitative risk assessment has been completed, and is shown in figure \ref{f
 % Essential content that interrupts the flow of the document can be placed here, e.g. technical drawings, detailed lists of equations used, etc.
 \addcontentsline{toc}{section}{Appendix}
 \section*{Appendix}
-\newpage
-
-\printbibliography{biblio}
 \newpage
 
 
