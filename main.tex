@@ -69,10 +69,169 @@ You can define them in the header of this file and they will appear in the gloss
 \newpage
 
 \section{System Architecture and Integration} \label{system} % Everyone
+
+\subsection{Simulation Representation of the Hardware} %Rickie
+\subsubsection{Geometric and Physical Abstraction}
+\subsubsection{Propulsion and Motion Representation}
+\subsubsection{Collision and Sensor Simplifications}
+
 \newpage
 
-\section{Hardware} % Rickie
-\subsection{CAD Design}
+%%%%%%%%%----------------End of System Architecture---------------%%%%%%%%%
+
+\section{Hardware and Electronics Design} % Rickie
+\fancyhead[C]{Shing Hei Rickie Chan}
+
+\subsection{Context}
+
+The project decision was to develop a custom drone hardware design in preference to using an existing commercial platform. This was motivated by the need to co-design the airframe, electronics, sensing equipment, and game-specific payload around the requirements of an indoor multi-agent laser-tag system. Various options may offer good flight performance and easy maintenance, but are generally optimized for less intense activities and outdoor environments, and therefore provide limited flexibility for integrating custom sensing, weapon-tagged hardware, and protective structures. 
+
+In addition, commercial drones tend to be quite closed off in terms of hardware and software access - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed more freedom to choose components, organize the internal layout, and include additional features necessary to the gameplay.
+
+% - add additional references to an investigation into commercial platforms
+% - conduct a pros and cons list for the final decision
+% - include references
+% - ensure overall flow makes sense
+
+\subsection{Design Objectives and Constraints}
+\subsubsection{Operational Requirements}
+
+At core level, the drone design must be able to achieve basic drone operations for gameplay - being able to function as a usable aerial game platform within an indoor environment:
+\begin{itemize}
+    \item sufficient thrust for stable flight
+    \item reliable movement for indoor environment
+    \item have required electronics and payload onboard platform
+    \item enough battery-life for meaningful gameplay
+\end{itemize}
+
+\subsubsection{Safety Constraints}
+
+As the drone is intended to operate indoors in relative proximity to players during gameplay, safety became a top priority. It was vital to reduce risks associated with collisions, exposed components, poor landings, and potential failure during operation. This led to a number of safety related constraints that influenced the overall drone design and the way the game is played:
+\begin{itemize}
+    \item \textbf{Operation around players: } The drone is intended to operate in an indoor environment rather than large spacious areas. This drastically increases the proximity between players and drones which poses as an immediate safety concern.
+    \item \textbf{Close proximity to obstacles: } The environment itself introduces additional safety concerns. The drone would need to move around walls, corners, and other potential obstacles - which increases the risk of potential collisions during normal gameplay.
+    \item \textbf{Protection for components: } One major safety constraint was reducing the risk of exposed components such as propellers and wires. The blade guards became an important part of the design, both to reduce the chance of injury and to risk disabling the drone with minor collisions.
+    \item \textbf{Stable recovery and landing: } It was vital for the drone to be able to return to its post (or battery recharging station) reliably, and land safely after being disabled or encounter an error. The landing structure had to be considered from a safety point of view - hence a stable geometry would help reduce the chance of drone damage.
+\end{itemize}
+
+\subsubsection{Gameplay Requirements}
+
+ The drone needs to be a capable opponent - able to dodge, attack and wander throughout the arena - and able to support the systems needed for the overall project itself (which includes being cost-effective). This led to several requirements that influences the size, layout, performance, and maintainability of the final design.
+\begin{itemize}
+    \item \textbf{Indoor Movement: } Contrary to the safety requirement, the drone must also be a capable opponent rather than a still target. This means the design must be able to allow for navigation and some form of evasive movement. This poses as a tradeoff between gameplay and safety.
+    \item \textbf{Visibility and challenge: } The drone had to be large and visible enough for players to clearly recognize the target during gameplay, while still being agile enough to move around. A design too small would be difficult to engage while a design too large or too slow would reduce gameplay quality.
+    \item \textbf{Supporting game systems and battery: } The drone needs to carry additional hardware required for gameplay, such as IR transmitters and receivers, cameras, sensors, and onboard computing. These systems add weight and take up internal space. In addition, the design needs to allow for enough operating time for meaningful gameplay.
+    \item \textbf{Easy maintenance and replaceability: } Given the game is a multi-agent system rather than a single platform, the design needs to remain practical to maintain, to repair, and to replace. Minor damage during operation should not require a whole drone to be rebuilt, so replaceable parts and a maintainable layout becomes an important constraint.
+\end{itemize}
+
+\subsubsection{Simulation Scope and General Design Assumptions}
+
+The project is was carried out mainly through simulation, the hardware design was developed as a realistic engineering model rather than as a fully built and tested prototype. This means the design was based on CAD modeling, component data sheets, and estimated performance values through online data and program testing. The simulation provided a means to present how the drone would be integrated into the wider system consistently. As a result, some real-world effects such as full electronics integration, dynamic flight behavior, and measured sensor performance were simplified or left as future work.
+
+\subsection{Mechanical Design Development}
+\subsubsection{Early Concepts and Design choices}
+
+The early stages of development was used for brainstorming what kind of drone platform would be most suitable for the project - deciding what the key design features must be. The aim was not to produce a final airframe immediately but to identify a workable overall configuration for an indoor multi-agent laser-tag system. Several minor experiments were conducted, including testing on quadrotor design, investigation into 6-DOF drones and hexarotor drones. A quadrotor layout was taken as a practical starting point as it offered a good balance between mechanical simplicity, controllability, and maneuverability for indoor use. Existing commercial drones were used as a reference for proportions and rotor designs but was not adopted in terms of onboard systems such as sensing, computing, communication, and game-specific payloads. This meant the design had to sway from smaller commercial designs to larger custom platforms with additiona volume and structure for gameplay. 
+
+Several key design choices were made:
+\begin{itemize}
+    \item \textbf{Quadrotor Configuration} - enough thrust for 4kg weight
+    \begin{itemize}
+        \item A four-rotor layout kept the design simple
+        \item Allowed for smaller design layout to ensure room for agile motion
+    \end{itemize}
+    \item \textbf{Turret configuration}
+    \begin{itemize}
+        \item Camera and laser(infrared) could be mounted on the same mechanism and aimed together
+        \item Compact 2-DOF mount would be required, and supported the choice of small servos such as MG90S during concept development
+    \end{itemize}
+    \item \textbf{Larger Main Body layout} - below 4kg and total diameter of 700mm
+    \begin{itemize}
+        \item Larger body size would provide easier gameplay - drones would remain visible to players
+        \item Drone required to carry a number of onboard equipment including computing, sensing, and other game-specific hardware.
+    \end{itemize}
+    \item \textbf{Feasibility and Cost} - between 200-500 pounds per unit.
+    \begin{itemize}
+        \item Cost must be low enough to allow for replacement of potentially disabled drone
+        \item Parts must be replaceable and easy to produce - especially given the high-risk environment for potential damage.
+    \end{itemize}
+\end{itemize}
+
+The most important outcome of the early concepts was that the internal space quickly became a dominant issue. Initial CAD attempts were useful for exploring body shape, turret position, and landing geometry, but once realistic component dimensions were introduced it became clear that internal space was far more limited than first expected. Particularly the battery, onboard computer, wiring, and the control electronics could not be treated as secondary additions to an outer shell due to the minimum usable volume of the airframe. In addition, it was figured that the outer shell parts would be developed using 3D printing material such as PLA - hence would be cheap to replace. However, the internal components were far more expensive which led to higher priority for internal component safety and structural integrity. The early concepts were valuable as they allowed for further investigation and identification on the main constraints that shaped the rest of the hardware development.
+
+\subsubsection{Set Design Criteria}
+
+Table 1 provides the main design parameters that will shape the  development of the drone.
+
+\begin{table}[h]
+    \centering
+    \caption{Hardware design criteria and target specifications}
+    \begin{tabularx}{\textwidth}{@{} l X @{}}
+    \toprule
+    \textbf{Design Parameter} & \textbf{Target / Requirements} \\
+    \midrule
+    Configuration & Quadrotor (4 motors/ 4 propellers) \\
+    Maximum mass & $\leq 4.0$ kg \\
+    Maximum overall width & $\leq 700$ mm \\
+    Target cost per drone & \pounds200--\pounds500 \\
+    Target match duration & 15 min \\
+    Estimated endurance & 5--10 min at $\sim 60\%$ power \\
+    Battery specification & 3S, 5000 mAh, 1 pack \\
+    Motor / propeller specification & F2806.5 motor with 8'' propeller \\
+    Thrust per motor & $\sim 2$ kg \\
+    Total available thrust & $\sim 8$ kg \\
+    Derived thrust-to-weight target & $\sim 2{:}1$ at 4.0 kg mass limit \\
+    Turret requirement & 2 DOF/Gimble \\
+    Servo count for turret & 2 servos/Gimble \\
+    Internal payload requirement & 1 battery, 1 Raspberry Pi, 4 ESCs, 1 PDB, 1 buck converter, camera, IMU, ToF sensors, IR hardware \\
+    Propeller protection & 4 propeller blade guards \\
+    Landing arrangement &  stable landing structure \\
+    Operating environment & Indoor arena, max design, close to players and obstacles \\
+\bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsubsection{Design Iterations and Key improvements}
+
+\textbf{First Iteration}
+
+As stated previously, the goal of the first iteration was for brainstorming ideas on overall body layout, turret or gimbal positioning, electronic configurations and other system designs. The design explored the external form of the drone and basic rotor arrangements, but once the electronics were considered in more detail, several major issues became clear. There was not enough room for the battery, onboard computing, wiring, and support electronics - the main body lack sufficient room. This version therefore showed that the airframe could not simply be designed around an outer shape, but had to be built around the internal components of the system.
+
+%Include images and size specifications of the first attempt
+
+\textbf{Second Iteration}
+
+
+
+\textbf{Third Iteration}
+
+%discuss third iteration in more detail
+
+\subsubsection{Final Airframe}
+
+\subsection{Electronics Design and Component Selection}
+\subsubsection{Propulsion System}
+\subsubsection{Power System}
+\subsubsection{Onboard Computing and Communication}
+\subsubsection{Sensors and Game-Specific Electronics}
+
+\subsection{Complete CAD Integration and Packaging}
+\subsubsection{Internal Component Layout}
+\subsubsection{Maintainability}
+\subsubsection{Safety Features}
+
+\subsection{Preliminary Engineering Evaluation}
+\subsubsection{Mass, Thrust, and Endurance Estimates}
+\subsubsection{Structural Assessment of Critical Components}
+\subsubsection{Feasibility of the Final Design}
+
+\subsection{Limitations and Future Physical Implementation}
+
+
+\newpage
+
+%%%%%%%%%----------------end of Hardware---------------%%%%%%%%%
+
 
 \section{Sensor Processing} % Tommy, Rishabh
 \subsection{Player detection} % Rishabh
@@ -86,6 +245,7 @@ You can define them in the header of this file and they will appear in the gloss
 \fancyhead[C]{Rishabh Luthra}
 \subsection{Visual Perception and Player Tracking} % Rishabh
 \subsubsection{Context}
+
 The fundamental objective of the autonomous multiagent system is to actively compete against human players in a dynamic laser environment. To play the game effectively, the drones require a reliable way to identify and track opponents whilst navigating through the maze environment. While pathfinding algorithms can navigate the fixed geometry of a maze, human players represent highly dynamic variables. Therefore, a real-time perception system is required to continuously locate the targets, maintain visual lock, and output kinematic commands to the drone's flight controller and gimbal.
 
 This section details the design and implementation of this perception system. To achieve these operational requirements, the subsystem is engineered around three core objectives:
