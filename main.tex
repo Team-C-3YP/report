@@ -760,8 +760,9 @@ A quantitative risk assessment has been completed, and is shown in figure \ref{f
 \subsection{Setup}
 A discounted cash flow model was created. The purpose of this was to track cash flow, apply a discount rate into the future (to capture the fact that £100 now is worth more to an investor than £100 in 10 years), and to calculate the Net Present Value (NPV) of a company which provides the game as a commercial enterprise.
 \subsection{Numerical Estimations}
-% Utility
+\subsubsection{Utility}
 It is supposed that the first year will be spent producing hardware, advertising the business, and decorating the playing area (a warehouse). The first year (Year 0) is therefore assumed not to make any revenue from gameplay. As the business establishes itself, and as it continues to invest in advertising, its utility (games per year) is modeled to increase up to a plateau in the third year of operation (Year 3). As a first estimation, the increase is modeled as shown in table \ref{tab:utility}:
+
 \begin{table}[h]
 \centering
 \begin{tabular}{|c|c|c|}
@@ -780,12 +781,12 @@ Year & Percentage of Maximum Utility\\
 \label{tab:utility}
 \end{table}
 
-It was lastly imagined as a first approximation that the maximum number of games per year would be 2000, this corresponding to 10 hour-long games on Saturday and Sunday, and four hour-long games every day during the week, for 50 weeks per year.
+It was lastly imagined as a first approximation that the maximum number of games per year would be 2000, this corresponding to 10 hour-long games on Saturday and Sunday, and four hour-long games every day during the week, for 50 weeks per year. NB this "maximum utility" refers to the value at which utility is modeled to plateau, not a fundamental limit.
 
-% Warehouse Hiring
+\subsubsection{Warehouse Hiring}
 The game is imagined to be played in a converted warehouse. The size of warehouse required for gameplay was thought to be comparable to that of a large school hall (circa. 5000 square feet). Including enough space for a reception area, a small office and a break room for staff, between 6000 and 7000 square feet was thought to be an appropriate size. It was considered important that the warehouse be within a short drive of a large city. A 6800 square foot warehouse in London was found for £2000 pcm \cite{rightmoveCheckThis}. The cost of hiring the warehouse is therefore estimated to be £25000 per annum.
 
-% Employee Costs
+\subsubsection{Employee Costs}
 It was thought that the minimum equivalent number of full-time employees required would be two. It was furthermore imagined that the number of full-time employees would increase with increased utility, up to a maximum of four. It was thought that the number of employees would increase with utility as shown in table \ref{tab:employees}:
 
 \begin{table}[h]
@@ -807,13 +808,75 @@ Year & Percentage of Maximum Utility & Equivalent Number of Full-Time Employees\
 \end{table}
 
 Lastly, it was estimated that the cost of hiring a single full-time employee (or equivalent in part-time workers) would be £50000. This includes their salary, their training, their sick cover, their annual bonus etc.
+\subsubsection{Advertising}
+The advertising budget is very large. This is because early revenue has a huge affect on NPV (discussed in section [SECTION NUMBER HERE]), so it is desirable to invest heavily in advertising initially, with the hope of spending as little time as possible operating below maximum utility. Advertising will continue even when maximum utility has been reached. This will be necessary if the business is to keep reaching new audiences, and if it is to advertise new features that are developed. The assumption is made that advertising costs are constant throughout business operation. This may be slightly unrealistic, but it is assumes for the sake of making a conservative estimate % waiting for Global to return call
+\subsubsection{Heating and Lighting}
+The 
+% heat loss equation stuff
 
-% Revenue
-Research was conducted on the pricing structure of laser-tag. It was found that the cost of hiring exclusive usage of a laser-tag facility is commonly around £15-£20 per person per hour. For example, LASERGAMING OXFORD charges £29.50 per person for sole use of their facilities \cite{outdoorlaserLasergamingEXCLUSIVE}. It was thought that a drone-based experience could afford to charge two to three times this fee, once the the novelty value has been taken into account. The game is designed to be played by three to eight people at once. The cost per game is therefore projected to be £200 per hour game per group, as a first estimate.
+\subsubsection{Warehouse Decoration and Maintenance}
+The purpose of Year 0 is, among other things, to decorate the warehouse and make it suitable for playing drone laser-tag. From year 1 onward, the infrastructure will already exist, and the purpose of the budget is for wear-and-tear and maintenance. Hence, the Year 0 budget for decoration and maintenance will be much higher than for subsequent years. 
+Chaboun Construction (a London-based building services provider) quotes £50000 as a typical cost for a complete, but basic, 3-bedroom house renovation \cite{chabounconstructionMuchDoes}. However, a great deal of this cost is in the kitchen and the bathrooms, and in rewiring/replumbing. None of this applies to our warehouse, and (certainly to begin), non-premium materials will suffice. However, the warehouse is much larger than a 3-bedroom house. Therefore, £30000 was selected as a reasonable price of Year 0 decoration. £10000 was selected as the budget for redecoration and maintenance. This is probably higher than strictly realistic, but is designed to take into account the fact that a complete redecoration will be necessary every few years. The cost of decoration and maintenance therefore varies with time as shown in table \ref{tab:decoration}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+Year & Warehouse Decoration and Maintenance Cost\\
+\hline
+0 & £30000 \\
+1 & £10000 \\
+2 & £10000 \\
+\vdots & \vdots \\
+\hline
+\end{tabular}
+\caption{Warehouse Decoration and Maintenance Cost with time}
+\label{tab:decoration}
+\end{table}
+
+\subsubsection{Hardware}
+The drones themselves cost a little under £500 to produce, of which 10 are required. Including all other hardware (laser-guns and helmets), the model used assumes the total cost is £10000. This is a slight overestimate, but is used for the sake of a conservative estimate. 
+The hardware will get slightly damaged during operation. Some components (such as blades) are likely to need replacing often, whereas some (such as laser-guns) are likely to require replacing hardly ever. For simplicity, the model assumes that a full hardware replacement is required every 500 games, after a full set is fabricated in Year 0.
+
+\subsubsection{Revenue}
+Research was conducted on the pricing structure of laser-tag. It was found that the cost of hiring exclusive usage of a laser-tag facility is commonly around £15-£20 per person per hour. For example, LASERGAMING OXFORD charges £29.50 per person for sole use of their facilities \cite{outdoorlaserLasergamingEXCLUSIVE}. It was thought that a drone-based experience could afford to charge two to three times this fee, once the novelty value has been taken into account. The game is designed to be played by three to eight people at once. The cost per game is therefore projected to be £200 per hour game per group, as a first estimate.
+
+\subsubsection{Aggrigate}
+Hence, the total Income \& Expenditure table, not including tax or external financing (such as bank loans, equity etc.) is shown in table \ref{tab:IE}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c| c c c c c c|}
+\hline
+Year & 0 & 1 & 2 & 3 & 4 & \dots \\
+\hline
+Warehouse Hire & 25 & 25 & 25 & 25 & 25 & \dots \\
+Warehouse Heating \& Lighting & 20 & 20 & 20 & 20 & 20 & \dots \\
+Warehouse Decorating \& Maintenance & 30 & 10 & 10 & 10 & 10 & \dots \\
+Employees & 100 & 100 & 150 & 200 & 200 & \dots \\
+Advertising & 30 & 30 & 30 & 30 & 30 & \dots \\
+Hardware & 10 & 20 & 30 & 40 & 40 & \dots \\
+\hline
+Revenue (Game Fees) & 0 & 200 & 300 & 400 & 400 & \dots \\
+\hline \hline
+Profit & -215 & -5 & 35 & 75 & 75 & \dots \\
+\hline
+\end{tabular}
+\caption{Income \& Expenditure projection - all values in £k}
+\label{tab:IE}
+\end{table}
+
+It is observed that the annual non-discounted profit stabilises at £75000. 
+
+\subsection{Modeling of Debt}
 
 
+\subsection{Discount Rate}
 
-\subsection{Wake up the audience who've fallen asleep}
+\subsection{Tax}
+
+\subsection{Analyses}
+
 \newpage
 
 
