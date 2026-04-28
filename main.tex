@@ -894,7 +894,7 @@ The hardware will get slightly damaged during operation. Some components (such a
 \subsubsection{Revenue}
 Research was conducted on the pricing structure of laser-tag. It was found that the cost of hiring exclusive usage of a laser-tag facility is commonly around £15-£20 per person per hour. For example, LASERGAMING OXFORD charges £29.50 per person for sole use of their facilities \cite{outdoorlaserLasergamingEXCLUSIVE}. It was thought that a drone-based experience could afford to charge two to three times this fee, once the novelty value has been taken into account. The game is designed to be played by three to eight people at once. The cost per game is therefore projected to be £200 per hour game per group, as a first estimate.
 
-\subsubsection{Aggrigate}
+\subsubsection{Aggregate}
 Hence, the total Income \& Expenditure table, not including tax or external financing (such as bank loans, equity etc.) is shown in table \ref{tab:IE}.
 
 \begin{table}[h]
@@ -921,12 +921,142 @@ Profit & -215 & -5 & 35 & 75 & 75 & \dots \\
 
 It is observed that the annual non-discounted profit stabilises at £75000. 
 
-\subsection{Modeling of Debt}
+\subsection{Initial Capital Investment}
 
+It is observed that, in year 0, £215k of capital is required to offset initial costs. This will be provided by equity (seeking investors) and bank loans. Both have their own advantages and disadvantages. 
+For example, bank loans are much more "unforgiving", that is to say, regardless of how the company performs, it is obliged to make monthly/annual repayments. If the company fails to do this, it must declare bankruptcy. Private investment requires no such repayments. Investors make money on their investments in two ways: (i) the company makes enough money to pay dividends to shareholders and (ii) the company performs well financially, so their shares increase in value, and can be sold for a profit. 
+However, because investors have no guaranteed repayments, they tend to require a higher interest rate than bank loans (discussed in section [SECTIONHERE]). Because of this, the greater the proportion of initial investment sourced by equity financing is, the greater the effective discount rate is, which reduces the effect of future revenue on Net Present Value.
+Because of this, the business is seeking £100k in bank loans and £115k in equity financing. 
 
 \subsection{Discount Rate}
+\subsubsection{Overview}
+The discount rate is required for investors to decide whether or not to invest in the business. It is assumed that an investor could make interest on capital, by not investing in a business, at annual interest rate (or discount rate) \(d\). So, the value of their capital \(P_0\) after \(t\) years, \(P(t)\), should they have chosen not to invest, is given by:
+
+\begin{equation}
+    P(t)=P_0(1+d)^t
+\end{equation}
+
+so the "present value" \(P_0\) of money \(P(t)\) that is projected to be made \(P(t)\) years in the future, should they have chosen not to invest in the business, is given by:
+\begin{equation}
+    P_0=\frac{P(t)}{(1+d)^t}
+\end{equation}
+
+So the projected payback on investments must exceed \(\frac{P(t)}{(1+d)^t}\) if the business is to be considered a profitable investment.
+
+The choice of discount rate is made by investors when choosing whether or not to invest. It depends hugely on the perceived level of risk. Investing in a small start-up is much higher risk than investing in a large, established business. Hence the applied discount rate tends to be very high for start-ups (around 15-30\%).
+
+\subsubsection{Terminal Value}
+The "left-over" value of a business after a fixed term of \(t\) years is named the "Terminal Value", and is given by \(\text{TV}_t\). If the cash flow (positive cash flow corresponding to profit) in year k is given by \(\text{CF}_k\), the terminal value is given by:
+\begin{equation}
+    \text{TV}_t=\frac{\text{CF}_{t+1}}{1+d}+\frac{\text{CF}_{t+2}}{(1+d)^2}+\frac{\text{CF}_{t+3}}{(1+d)^3}+\dots
+\end{equation}
+If it can be assumed that annual cash flow \(\text{CF}\) is constant after \(t\) years, 
+\begin{equation}
+    \text{CF}_{t+1}=\text{CF}_{t+2}=\text{CF}_{t+3}=\dots=\text{CF}
+\end{equation}
+then the terminal value is given by:
+
+\begin{equation}
+    \text{TV}_t=\frac{\text{CF}}{1+d}+\frac{\text{CF}}{(1+d)^2}+\frac{\text{CF}}{(1+d)^3}+\dots = \sum_{k=1}^\infty \frac{\text{CF}}{(1+d)^k}
+\end{equation}
+which can be rearranged to:
+\begin{equation}
+    \text{TV}_t=\frac{\text{CF}}{d}
+\end{equation}
+NB: This is the undiscounted Terminal Value; to get the present value of \(\text{TV}_t\), it must be multiplied by \(\frac1{(1+d)^t}\).
+\begin{equation}
+    \text{TV}_{t, \text{discounted}}=\frac{\text{CF}}{d}\times \frac 1{(1+d)^t}
+    \label{equ:DTV}
+\end{equation}
+\subsubsection{Net Present Value}
+A running total cash flow is tabulated. This is discounted according to the year in which the money is made. The Net Present Value (NPV) at a given year is given by the discounted cumulative cash flow (a measure of capital) up to that year added to the discounted terminal value of the business at that year. It is observed, and can be proven, that according to this model, the NPV of a business is constant with time (it is a single value based on modelling assumptions), if tax is ignored. Tax introduces non-linearity into the model, and will be discussed at greater length in a later section.
+\subsubsection{Modelling Discount Rate}
+There are two common approaches to model discount rate. These are: Equity-Only Discount Rate, and Weighted Average Cost of Capital (WACC).
+\paragraph{Equity-Only Discount Rate} \(\)\newline
+When modelling using an Equity-Only Discount Rate, the discount rate applied to future cash flows is determined exclusively by investors. The equity-only discount rate \(r_e\) is typically in the range 15-30\% for small start-ups. 
+However, this does not take into account debt interest from the bank.  It can be shown that the annual repayment \(A\) on a loan of initial size \(P\) over a term \(N\) years that gathers interest at annual rate \(r_d\) is given by the amortisation formula:
+\begin{equation}
+    A=\frac{Pr_d}{1-(1+r_d)^{-N}}
+    \label{equ:amortisation}
+\end{equation}
+
+and the remaining capital remaining to be repayed after \(t\) years \(B_t\) is given by:
+
+\begin{equation}
+    B_t=P(1+r_d)^t-A\frac{(1+r_d)^t-1}r{}
+\end{equation}
+When modelling using an equity-only discount rate, the initial capital injection of the loan must be included in the cash flow in Year 0, and the annual debt repayments must be included in the cash flow from Year 1 onwards. Additionally, the terminal value must take the remaining capital of the loan into account as a liability.
+\paragraph{Weight Averaged Cost of Capital (WACC)} \(\) \newline
+Another method of modelling the discount rate is by weight-averaging the loan interest rate \(r_d\) and the equity-only discount rate \(r_e\) to produce an "effective" discount rate used in NPV calculations. The effective discount rate is given by:
+\begin{equation}
+    \text{WACC}=\frac{D}{D+E}r_d+\frac{E}{D+E}r_e
+\end{equation}
+where \(D\) is the initial capital of a the loan taken with a bank, and \(E\) is the capital investment from equity financing. 
+
+When modelling using WACC it is not necessary to model the inital capital of the loan, the annual debt repayments and the remaining capital of the loan as either cash flows or liabilities; these are all taken into account by the effective discount rate. 
+
+For these reasons, WACC is used in this model, with rates:
+\begin{equation}
+    r_d=15\%
+\end{equation}
+\begin{equation}
+    r_e=20\%
+\end{equation}
+\paragraph{Limitations} \(\) \newline
+For simplicity, it is assumed that a constant WACC discount rate is applied over time. This is based on three simplifying assumption: Firstly, it is assumed that the debt held with the bank is constant, and the business is only paying the interest on the loan; in reality, the loan would likely be paid off after \(N\) years in annual installments according to equation \ref{equ:amortisation}. Secondly, it is assumed that both the Equity-Only Discount Rate and the Loan Interest Rates are constant; in reality, it is likely that they would decrease over time as the business becomes more established to reflect a decreased risk in investing in the business. Thirdly, it is assumed that only the capital investments in Year 0 need to be financed. As can be seen in table \ref{tab:IE}, Year 1 is projected to run at a small loss, which must also be financed. This is neglected for simplicity, and is insignificant compared with other assumptions made in this model.
+
 
 \subsection{Tax}
+Tax is modelled according to UK corporation tax laws. Over a given year, the taxable income is the corporation's total income (revenue subtract allowable business expenses). Allowable business expenses include the cost of hiring employees, advertising, property hiring costs etc.). Depending on the terms of the loan, interest payments are sometimes included in allowable business expenses. For the sake of simplicity, and for the sake of creating a conservative estimate, this is not included in the model used. Annual taxable income up to £50000 is taxed at 19\%, and annual taxable income above £250000 is taxed at 25\%. Tax rate increases linearly with annual income between £50000 and £250000 from 19\% to 25\%. Hence the tax payed \(T\) on annual income \(I\) is given by:
+\begin{equation}
+    T=
+    \begin{cases} 
+        0.19I & I\le 50000\\
+        0.25I-(250000-I)\times \frac 3{200} \quad \quad & 50000\le I \le 250000 \\
+        0.25I  & I\ge 250000
+    \end{cases}
+\end{equation}
+
+NB: This linearly increasing tax rate applies to all income, not just income between £50000 and £250000, like personal income tax would.
+
+UK corporation tax laws also allows losses in one year to be carried over to the next. For example, if a business makes a loss of £20000 in Year \(n\), and makes a profit of £60000 in Year \(n+1\), its taxable income in Year \(n+1\) is £40000. Losses can be carried over arbitrarily many years into the future.
+\subsection{Full Model}
+According to the assumptions and models, the full financial model is summarised in table \ref{tab:model}
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c| c c c c c c c c c|}
+\hline
+Year & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & \dots \\
+\hline
+Warehouse Hire & 25 & 25 & 25 & 25 & 25 & 25 & 25 & 25 & \dots \\
+Heating \& Lighting & 20 & 20 & 20 & 20 & 20 & 20 & 20 & 20 & \dots \\
+Decorating \& Maintenance & 30 & 10 & 10 & 10 & 10 & 10 & 10 & 10 & \dots \\
+Employees & 100 & 100 & 150 & 200 & 200 & 200 & 200 & 200 & \dots \\
+Advertising & 30 & 30 & 30 & 30 & 30 & 30 & 30 & 30 &\dots \\
+Hardware & 10 & 20 & 30 & 40 & 40 & 40 & 40 & 40 & \dots \\
+Revenue (Game Fees) & 0 & 200 & 300 & 400 & 400 & 400 & 400 & 400 & \dots \\
+
+\hline \hline
+Cumulative Losses & 215 & 220 & 185 & 110 & 35 & 0 & 0 & 0 & \dots \\
+Taxable Income & 0 & 0 & 0 & 0 & 0 & 40 & 75 & 75 & \dots \\
+Tax & 0 & 0 & 0 & 0 & 0 & 7.6 & 16.125 & 16.125 & \dots \\
+\hline \hline
+Cash Flow (CF) &-215&-5&35&75&75&67.4&58.875&58875&\dots \\
+Cumulative CF (CCF) &-215&-220&-185&-110&-35&32.4&91.275&150.15&\dots \\
+\hline \hline
+Discount & 1 & 0.850 & 0.722 & 0.614 & 0.522 & 0.443 & 0.377 & 0.320 & \dots \\
+
+\hline \hline
+Discounted CCF& -215&-219&-194&-148&-109&-79.0&-56.8&-37.9& \dots \\
+\hline
+\end{tabular}
+\caption{Income \& Expenditure projection - all values in £k}
+\label{tab:model}
+\end{table}
+
+The Discouted Cumulative Cash Flow becomes positive in Year 10 (known as payback, discussed at greater length in analyses). After calculating the discounted Terminal Value once tax has stabalised according to equation \ref{equ:DTV}, it is found that the Net Current Value (NPV) is £68669. In other words, the business is viable under current assumptions.
 
 \subsection{Analyses}
 
