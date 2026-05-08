@@ -92,7 +92,7 @@ You can define them in the header of this file and they will appear in the gloss
 
 The project decision was to develop a custom drone hardware design in preference to using an existing commercial platform. This was motivated by the need to co-design the airframe, electronics, sensing equipment, and game-specific payload around the requirements of an indoor multi-agent laser-tag system. Various options may offer good flight performance and easy maintenance, but are generally optimized for less intense activities and outdoor environments, and therefore provide limited flexibility for integrating custom sensing, weapon-tagged hardware, and protective structures. 
 
-In addition, commercial drones tend to be quite closed off in terms of hardware and software access - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed more freedom to choose components, organize the internal layout, and include additional features necessary to the gameplay.
+In addition, commercial drones tend to be quite closed off in terms of hardware and software access - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed more freedom to choose components, organize the internal layout, and include additional features necessary to the game-play.
 
 % - add additional references to an investigation into commercial platforms
 % - conduct a pros and cons list for the final decision
@@ -102,32 +102,32 @@ In addition, commercial drones tend to be quite closed off in terms of hardware 
 \subsection{Design Objectives and Constraints}
 \subsubsection{Operational Requirements}
 
-At core level, the drone design must be able to achieve basic drone operations for gameplay - being able to function as a usable aerial game platform within an indoor environment:
+At core level, the drone design must be able to achieve basic drone operations for game-play - being able to function as a usable aerial game platform within an indoor environment:
 \begin{itemize}
     \item sufficient thrust for stable flight
     \item reliable movement for indoor environment
     \item have required electronics and payload onboard platform
-    \item enough battery-life for meaningful gameplay
+    \item enough battery-life for meaningful game-play
 \end{itemize}
 
 \subsubsection{Safety Constraints}
 
-As the drone is intended to operate indoors in relative proximity to players during gameplay, safety became a top priority. It was vital to reduce risks associated with collisions, exposed components, poor landings, and potential failure during operation. This led to a number of safety related constraints that influenced the overall drone design and the way the game is played:
+As the drone is intended to operate indoors in relative proximity to players during game-play, safety became a top priority. It was vital to reduce risks associated with collisions, exposed components, poor landings, and potential failure during operation. This led to a number of safety related constraints that influenced the overall drone design and the way the game is played:
 \begin{itemize}
     \item \textbf{Operation around players: } The drone is intended to operate in an indoor environment rather than large spacious areas. This drastically increases the proximity between players and drones which poses as an immediate safety concern.
-    \item \textbf{Close proximity to obstacles: } The environment itself introduces additional safety concerns. The drone would need to move around walls, corners, and other potential obstacles - which increases the risk of potential collisions during normal gameplay.
+    \item \textbf{Close proximity to obstacles: } The environment itself introduces additional safety concerns. The drone would need to move around walls, corners, and other potential obstacles - which increases the risk of potential collisions during normal game-play.
     \item \textbf{Protection for components: } One major safety constraint was reducing the risk of exposed components such as propellers and wires. The blade guards became an important part of the design, both to reduce the chance of injury and to risk disabling the drone with minor collisions.
     \item \textbf{Stable recovery and landing: } It was vital for the drone to be able to return to its post (or battery recharging station) reliably, and land safely after being disabled or encounter an error. The landing structure had to be considered from a safety point of view - hence a stable geometry would help reduce the chance of drone damage.
 \end{itemize}
 
-\subsubsection{Gameplay Requirements}
+\subsubsection{Game-play Requirements}
 
  The drone needs to be a capable opponent - able to dodge, attack and wander throughout the arena - and able to support the systems needed for the overall project itself (which includes being cost-effective). This led to several requirements that influences the size, layout, performance, and maintainability of the final design.
 \begin{itemize}
-    \item \textbf{Indoor Movement: } Contrary to the safety requirement, the drone must also be a capable opponent rather than a still target. This means the design must be able to allow for navigation and some form of evasive movement. This poses as a tradeoff between gameplay and safety.
-    \item \textbf{Visibility and challenge: } The drone had to be large and visible enough for players to clearly recognize the target during gameplay, while still being agile enough to move around. A design too small would be difficult to engage while a design too large or too slow would reduce gameplay quality.
-    \item \textbf{Supporting game systems and battery: } The drone needs to carry additional hardware required for gameplay, such as IR transmitters and receivers, cameras, sensors, and onboard computing. These systems add weight and take up internal space. In addition, the design needs to allow for enough operating time for meaningful gameplay.
-    \item \textbf{Easy maintenance and replaceability: } Given the game is a multi-agent system rather than a single platform, the design needs to remain practical to maintain, to repair, and to replace. Minor damage during operation should not require a whole drone to be rebuilt, so replaceable parts and a maintainable layout becomes an important constraint.
+    \item \textbf{Indoor Movement: } Contrary to the safety requirement, the drone must also be a capable opponent rather than a still target. This means the design must be able to allow for navigation and some form of evasive movement. This poses as a tradeoff between game-play and safety.
+    \item \textbf{Visibility and challenge: } The drone had to be large and visible enough for players to clearly recognize the target during game-play, while still being agile enough to move around. A design too small would be difficult to engage while a design too large or too slow would reduce game-play quality.
+    \item \textbf{Supporting game systems and battery: } The drone needs to carry additional hardware required for gameplay, such as IR transmitters and receivers, cameras, sensors, and onboard computing. These systems add weight and take up internal space. In addition, the design needs to allow for enough operating time for meaningful game-play.
+    \item \textbf{Easy maintenance and replace-ability: } Given the game is a multi-agent system rather than a single platform, the design needs to remain practical to maintain, to repair, and to replace. Minor damage during operation should not require a whole drone to be rebuilt, so replaceable parts and a maintainable layout becomes an important constraint.
 \end{itemize}
 
 \subsubsection{Simulation Scope and General Design Assumptions}
@@ -137,7 +137,7 @@ The project is was carried out mainly through simulation, the hardware design wa
 \subsection{Mechanical Design Development}
 \subsubsection{Early Concepts and Design choices}
 
-The early stages of development was used for brainstorming what kind of drone platform would be most suitable for the project - deciding what the key design features must be. The aim was not to produce a final airframe immediately but to identify a workable overall configuration for an indoor multi-agent laser-tag system. Several minor experiments were conducted, including testing on quadrotor design, investigation into 6-DOF drones and hexarotor drones. A quadrotor layout was taken as a practical starting point as it offered a good balance between mechanical simplicity, controllability, and maneuverability for indoor use. Existing commercial drones were used as a reference for proportions and rotor designs but was not adopted in terms of onboard systems such as sensing, computing, communication, and game-specific payloads. This meant the design had to sway from smaller commercial designs to larger custom platforms with additiona volume and structure for gameplay. 
+The early stages of development was used for brainstorming what kind of drone platform would be most suitable for the project - deciding what the key design features must be. The aim was not to produce a final airframe immediately but to identify a workable overall configuration for an indoor multi-agent laser-tag system. Several minor experiments were conducted, including testing on quadrotor design, investigation into 6-DOF drones and hexarotor drones. A quadrotor layout was taken as a practical starting point as it offered a good balance between mechanical simplicity, controllability, and maneuverability for indoor use. Existing commercial drones were used as a reference for proportions and rotor designs but was not adopted in terms of onboard systems such as sensing, computing, communication, and game-specific payloads. This meant the design had to sway from smaller commercial designs to larger custom platforms with additional volume and structure for game-play. 
 
 Several key design choices were made:
 \begin{itemize}
@@ -207,7 +207,7 @@ As stated previously, the goal of the first iteration was for brainstorming idea
 
 \textbf{Second Iteration}
 
-
+%Include images and size specification of second concept
 
 \textbf{Third Iteration}
 
