@@ -242,11 +242,111 @@ As stated previously, the goal of the first iteration was for brainstorming idea
 \section{Sensor Processing} % Tommy, Rishabh
 \subsection{Player detection} % Rishabh
 \subsection{Drone pose tracking} % Tommy
-
-
-\section{High Level Control} % Ritchie
 \newpage
 
+
+
+
+\section{Network and Communications}
+\fancyhead[C]{Richard Usherwood} % Ritchie
+\subsection{Overview}
+Network and Communications is not strictly necessary. It is theoretically possible for all of the drones to achieve a common goal without either the need for the ability to communicate with each other, or the ability to communicate with a central server. In this case, each drone would act according the the information that it had gathered (location of the players, location of other drones etc.), and would not have access to the information that other players had gathered. An analogy can be used between a football team (no central server) and a human playing table football.\newline
+There are a couple of advantages to handling information without a central server, which are listed below: 
+\begin{itemize}
+    \item Perceived Fairness: the drones will not have access to information they have not gathered themselves, just like the human players.
+    \item Robustness: if each drone acts individually, there is no single thing that can go wrong that would entirely derail the game (the way a central server crash would).
+\end{itemize}
+
+However, this method of handling information also has some significant disadvantages, which are listed below:
+\begin{itemize}
+    \item Complexity: it is much easier to create a program that, with access to all of the available information, controls the drones in the desired manner than it is to create a program that, with different drones following the same program with differing levels of information, will have the same desired effect.
+    \item Hardware Costs: if the central high-level decision making is done locally on the processer of each drone, rather than in a central server, not only will a higher-powered processer be needed in the drone, but a larger battery will be needed to power it, so more powerful motors will be required to lift the batter, and so on, driving up hardware costs.
+\end{itemize}
+
+It was decided, considering the pros and cons listed above, to use a central server to carry out high-level decision making. Different methods of handling communications between the drones and the server are discussed below.
+
+\subsection{Bluetooth}
+Bluetooth is a short-ranged wireless communication system, which is designed for low-power device-to-device communications. It uses 79 channels, \(1\text{MHz}\) apart, from 2.402 to 2.480 GHz, hopping between them constantly - that is to say, information is sent by changes in frequency as opposed to changes in amplitude or phase. The signal is decoded wither using Frequency Hopping Spread Spectrum (FHSS, used in Classic Bluetooth), or Gaussian Frequency Shift Keying (GFSK, in Bluetooth Low Energy, BLE). In any given connection, one device acts as a "master", and up to seven devices act as "slaves". During connection, Time-Division-Duplexing is used to avoid collisions. Time is split into \(625\mu\text{s}\) divisions. The master communicated in even slots, and the slaves communicate in odd slots. The public technical information website GeeksForGeeks gives an overview of Bluetooth Data transfer \cite{geeksforgeeksBluetoothFrameStructure}; each data packet or "frame" is structured as follows:
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/Bluetoothframestructure-660x253.png}
+    \caption{Bluetooth Information Packet Structure}
+    \label{fig:BlueStruct}
+\end{figure}
+A bluetooth connection requires very little power. However, a bluetooth connection has a fairly low bit rate compared with a Wi-Fi connection (1-10 \(\text{Mbps}\)). It is also much less reliable than a Wi-Fi connection. Connection drop-out and communication failures are common in Bluetooth connections. Furthermore the maximum number of seven slaves connected to a single master will pose a problem since it will be necessary for up to 10 drones to be connected to the server at a time, requiring a secondary server, the purpose of which is to manage communication between some drones and the server. This would be possible, but inconvenient and prone to fault.
+
+\subsection{Wi-Fi}
+Wi-Fi medium-ranged wireless communication system, designed for fast transfer of data and reliable server-to-device communication. It typically runs at frequencies of \(\textasciitilde\)2.4\(\text{GHz}\), \(\textasciitilde\)5\(\text{GHz}\) or \(\textasciitilde\)6\(\text{GHz}\), transferring data over 3, 25 or 60 non-overlapping channels of bandwidth 20\(\text{MHz}\) respectively, and Orthogonal Frequency Division Multiplexing (OFDM) is used to decode signals. HowIWiFi.com, an information page dedicated to Wi-Fi, gives an overview of Frame Types and Formats \cite{key}; each data packet or "frame" is structured as follow:
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/frame-format.png}
+    \caption{Wi-Fi Information Packet Structure}
+    \label{fig:Wi-FiStruct}
+\end{figure}
+
+A Wi-Fi connection has much lower latency than Bluetooth, and has a much higher maximum bitrate than Bluetooth. However, the data that is likely to be needed is small enough that this will not be important. However, Wi-Fi is much more reliable than Bluetooth, and this is especially true at distances above ten meters; Bluetooth was designed for low bitrate, low power, short-range communication between a small number of devices, whereas Wi-Fi was designed for high bitrate, medium power, medium-range communication between a large number of devices.
+
+For these reasons, Wi-Fi is selected as the networking medium between the drones and the server. The server will be a desktop computer (with Wi-Fi capability), and the drones, helmets and vests all contain a ASK RICKIE ABOUT RASPBERRY PI with Wi-Fi capability.
+
+\newpage
+\section{High Level Control} % Ritchie
+The objective of the High Level Control Protocol is to create a series of algorithms which take game states (positions of human players, positions of drones etc.) as their inputs, and outputs a high-level behaviour of a drone. This is achieved through splitting the drones' behaviour into several "states", in which information can be TALK TO TEAM ABOUT WHAT IS DONE ONBOARD/OFFBOARD
+\subsection{Drone States}
+A set of drone "states" or "modes", describing the drone's behaviour, are shown below in Figure \ref{fig:StatesList}. \newline
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/High-Level/StatesList.png}
+    \caption{A List of Drone States}
+    \label{fig:StatesList}
+\end{figure} \newline
+An overview of the purpose of each state is given below.
+\subsubsection{Dormant Mode}
+This is the "default mode" of the drones, designed for waiting between rounds or games on standby, when not actively involved in the game - it is triggered by the end of a round, or by the powering on of the drone.
+\subsubsection{Search Mode}
+This is the initial mode of a drone upon entering a game. In this mode, the drone is exploring an area of the map decided by the central server, looking for a target. The flow diagram describing the conditions under which the drone will change out of Search Mode is shown below, in Figure \ref{fig:FlowSearch}.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/High-Level/SearchMode.png}
+    \caption{Flow Chart Describing Mode Changes, centred on Search Mode}
+    \label{fig:FlowSearch}
+\end{figure}
+\subsubsection{Track Mode}
+This is the mode the drone is in when is has seen a human player which is not within shooting range. In this mode, the drone's objective is to get close enough to the player to shoot them. The flow diagram describing the conditions under which the drone will change out of Track Mode is shown below, in Figure \ref{fig:FlowTrack}.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/High-Level/TrackMode.png}
+    \caption{Flow Chart Describing Mode Changes, centred on Track Mode}
+    \label{fig:FlowTrack}
+\end{figure}
+\subsubsection{Shoot Mode}
+This is the mode the drone is in when it has identified a player within shooting range of itself. In this mode, the drone will try to shoot the player. The flow diagram describing the conditions under which the drone will change out of Shoot Mode is shown below, in Figure \ref{fig:FlowShoot}.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/High-Level/ShootMode.png}
+    \caption{Flow Chart Describing Mode Changes, centred on Shoot Mode}
+    \label{fig:FlowShoot}
+\end{figure}
+\subsubsection{Movement Mode}
+This is the mode the drone is in when it has been "called for help" - something that happens when a drone detects that more than one player is within shooting range of itself. This mode can only be reached from Search Mode.
+\subsubsection{Collision Avoidance}
+This mode is triggered either when the drone detects it is about to collide into a wall, or when the server detects it is about to collide into another drone. This mode can be accessed from any mode (except Dormant Mode).
+
+\subsection{Logic}
+A flow chart describing when and how the drone will change between modes is shown below in Figure \ref{fig:FlowBig}. It is worth noting that Dormant Mode and Collision Avoidance Mode have been omitted for the sake of readability. Since these two states are "above" the rest, each decision branch should include the questions: "Am I about to crash?" and "Has the game ended?".
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/High-Level/Flow2.png}
+    \caption{Flow Chart Describing Mode Changes}
+    \label{fig:FlowBig}
+\end{figure}
+
+
+\subsection{Information Responsibility}
+
+
+
+\newpage
 \section{Mid Level Control} % Tommy, Rishabh
 \fancyhead[C]{Rishabh Luthra}
 \subsection{Visual Perception and Player Tracking} % Rishabh
@@ -879,7 +979,7 @@ When opened for the first time, the app prompts the user to create an account wi
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.3\linewidth]{figs/App_Screenshots/0_Login_Screen.jpg}
+    \includegraphics[width=0.25\linewidth]{figs/App_Screenshots/0_Login_Screen.jpg}
     \caption{Login Screen}
     \label{fig:0_Login_Screen}
 \end{figure}
@@ -889,7 +989,7 @@ The "Profile" screen displays the player's details (Player ID, name etc.), the s
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.3\linewidth]{figs/App_Screenshots/1_Profile_Screen.jpg}
+    \includegraphics[width=0.25\linewidth]{figs/App_Screenshots/1_Profile_Screen.jpg}
     \caption{Profile Screen}
     \label{fig:1_Profile_Screen}
 \end{figure}
@@ -899,14 +999,14 @@ The "Leaderboard" screen displays a list of players in order of their total scor
 
 \begin{figure}[htbp]
      \centering
-     \begin{subfigure}[b]{0.3\textwidth}
+     \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/2_1_Leaderboard_All.jpg}
          \caption{Leaderboard Screen - Global Leaderboard Tab}
          \label{fig:lea-glo}
      \end{subfigure}
      \hfill
-     \begin{subfigure}[b]{0.3\textwidth}
+     \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/2_2_1_Leaderboard_Friends_No_Alice.jpg}
          \caption{Leaderboard Screen - Friends Only Tab}
@@ -922,14 +1022,14 @@ The "Achievements and Challenges" screen displays all achievements (lifetime goa
 
 \begin{figure}[htbp]
      \centering
-     \begin{subfigure}[b]{0.3\textwidth}
+     \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/3_1_Achievements_Lifetime.jpg}
          \caption{Achievements Screen - Lifetime Achievements}
          \label{fig:ach-lif}
      \end{subfigure}
      \hfill
-     \begin{subfigure}[b]{0.3\textwidth}
+     \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/3_2_Achievements_Monthly.jpg}
          \caption{Achievements Screen - Monthly Challenges}
@@ -945,21 +1045,21 @@ The "Community" screen toggles between displaying details of recent games played
 
 \begin{figure}[htbp]
      \centering
-     \begin{subfigure}[b]{0.3\textwidth}
+     \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/4_1_Community_Friends.jpg}
          \caption{Community Screen - Friends Tab}
          \label{fig:com-friends}
      \end{subfigure}
      \hfill
-     \begin{subfigure}[b]{0.3\textwidth}
+     \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/4_2_1_Community_Requests_Receiving.jpg}
          \caption{Community Screen - receiving friend request}
          \label{fig:com-rec}
      \end{subfigure}
      \hfill
-     \begin{subfigure}[b]{0.3\textwidth}
+     \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/4_2_2_Community_Requests_Making.jpg}
          \caption{Community Screen - sending friend request}
@@ -974,12 +1074,25 @@ The "Play in Person" screen prompts the player to scan the QR codes on the top o
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.3\linewidth]{figs/App_Screenshots/5_Play_In_Person.jpg}
+    \includegraphics[width=0.25\linewidth]{figs/App_Screenshots/5_Play_In_Person.jpg}
     \caption{Play in Person Screen}
     \label{fig:5_PiP_Screen}
 \end{figure}
 
 \subsection{Technical Details}
+\subsubsection{Overview}
+The app was created using Expo. Expo is a development framework built to create React Native apps. React Native is a framework that allows mobile apps to be built using React. Finally, React is a JavaScript library built for user interface design. 
+\subsubsection{Project Structure}
+When the app is run, it opens a "package.json" file which sets the rest of the app in motion. From here, it exectutes index.js which imports App.js, which opens MainContainer.js. MainContainer.js serves as the app's navigation hub. MainContainer.js decides which "navigation flow" to show, based on whether the app is in state "Auth" or "Main" (whether the user is signed in or not). From here, MainContainer.js accesses each of the displayed screens, each of which has a dedicates JavaScript file in the "screens" subfolder.
+\subsubsection{State Management}
+The app uses a hybrid strategy. That is to say, not all states are stored centrally ("All-Global State Management"), and not all states are managed independently by an individual screen ("All-Local State Management"). 
+
+
+
+
+
+
+
 
 \section{Commercialisation, Safety and Project Management} % Mostly Ritchie
 \subsection{Risk Assessment}
