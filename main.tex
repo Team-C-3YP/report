@@ -134,7 +134,35 @@ As the drone is intended to operate indoors in relative proximity to players dur
 
 The project was carried out mainly through simulation; the hardware design was developed as a realistic engineering model rather than as a fully built and tested prototype. This means that the design was based on CAD modeling, component data sheets, and estimated performance values through online data and program testing. The simulation provided a means of presenting how the drone would be integrated into the wider system consistently. As a result, some real-world effects, such as full electronics integration, dynamic flight behavior, and measured sensor performance, were simplified or left for future work.
 
-\subsubsection{Summarized Design Criteria and Target Specification}
+\subsubsection{Summarized Table for Design Criteria}
+
+\begin{table}[htbp]
+\centering
+\caption{Summarised starter design criteria for the drone platform.}
+\label{tab:starter_design_criteria}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l X @{}}
+\toprule
+\textbf{Design Parameter} & \textbf{Target / Requirement} \\
+\midrule
+Operating environment & Indoor arena with close proximity to players, walls, and obstacles \\
+Operational role & Stable and manoeuvrable aerial platform for indoor gameplay \\
+Configuration & Compact quadrotor platform \\
+Maximum mass & $\leq 4.0$ kg \\
+Maximum width & $\leq 600$ mm \\
+Target cost per unit & \pounds300--\pounds500 \\
+Target game duration & 45 min \\
+Target drone endurance & 8-10 min before recharge \\
+Visibility requirement & Large enough to be clearly visible for indoor game-play \\
+Internal space requirement & Sufficient internal volume for onboard electronics \\
+Safety requirement & Safe indoor operation, protected moving parts, and stable landing capability \\
+Maintainability requirement & Easy maintenance with cheap replaceable damaged parts \\
+Structural requirement & Airframe must support normal flight loads and minor impact conditions \\
+Game-play requirement & Agile enough to act as a believable and challenging in-game opponent \\
+Simulation requirement & Geometry and physical assumptions suitable for representation in simulation \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \subsection{Electronics Design and Component Selection}
 \subsubsection{Propulsion System}
