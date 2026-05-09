@@ -1085,13 +1085,18 @@ The app was created using Expo. Expo is a development framework built to create 
 \subsubsection{Project Structure}
 When the app is run, it opens a "package.json" file which sets the rest of the app in motion. From here, it exectutes index.js which imports App.js, which opens MainContainer.js. MainContainer.js serves as the app's navigation hub. MainContainer.js decides which "navigation flow" to show, based on whether the app is in state "Auth" or "Main" (whether the user is signed in or not). From here, MainContainer.js accesses each of the displayed screens, each of which has a dedicates JavaScript file in the "screens" subfolder.
 \subsubsection{State Management}
-The app uses a hybrid strategy. That is to say, not all states are stored centrally ("All-Global State Management"), and not all states are managed independently by an individual screen ("All-Local State Management"). 
+The app uses a hybrid state management strategy. That is to say, not all states are stored centrally ("All-Global State Management"), and not all states are managed independently by an individual screen ("All-Local State Management"). The direct React Context including AuthContext (whether or not a user is logged in) and DataContext (cached API data) is stored centrally, however each screen also stores its own data including the user's name and password (in login screen), the data of the user's friends' last games (in leaderboard screen) etc. This hybrid style of state management has several advantages. For example, the fact that low-level data is stored in the JavaScript file corresponding to the screen it is needed in allows for good "separation of concerns", meaning that, if the project were bigger than it is now, several developers could be editing different parts of the software without interfering. Additionally, by having some data stored separately, such as API cached data, each screen can "reach in" to this file and get what it needs, rather than the same data having to be stored in many different places.
+\subsubsection{API Integration}
+The App uses Supabase as its backend API, to access an SQL database hosted through Supabase. This API is handled through a single client "db.js" - after the app is loaded, the data is cached in datacache.js to avoid unnecessary loading times, especially when being used with poor internet connections. A screenshot of the database is shown below in Figure \ref{fig:Database}.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/Database_Screenshot.png}
+    \caption{Screenshot of SQL Database}
+    \label{fig:Database}
+\end{figure}
 
-
-
-
-
+A specific format had to be created for this data to be stored. For example, Game Data is stored in a format (A, B, C, \dots),(D, E, F, \dots),(G, H, I, \dots). This game data is equivalent to "Players A, B, C, \dots played a game in which they got D, E, F, \dots kills and died G, H, I, \dots times, respectively". Furthermore the "score" is defined as "number of kills squared divided by number of deaths" in a game, and the friend requests are stored as CSVs. When a change to the data is made in the app (for example sending or accepting a friend request), the database is automatically updated by API. However, the database must also be updated after every game. This will be handled automatically by the server. However, for now it is handled by a script that allows the user to input the results of the game (who was playing, how many kills they got, how many times they died etc.), and updates the database accordingly. In the real system, this would be integrated into a system that counts communications with drones and helmets.
 
 
 \section{Commercialisation, Safety and Project Management} % Mostly Ritchie
