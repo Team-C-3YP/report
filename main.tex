@@ -5,6 +5,9 @@
 \usepackage{tabularx}
 \usepackage{wrapfig}
 \usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{fontspec}
+\usepackage{amsmath}
 \usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
 
 \title{Laser Tag using a Multiagent Drone System}
@@ -159,13 +162,202 @@ Safety requirement & Safe indoor operation, protected moving parts, and stable l
 Maintainability requirement & Easy maintenance with cheap replaceable damaged parts \\
 Structural requirement & Airframe must support normal flight loads and minor impact conditions \\
 Game-play requirement & Agile enough to act as a believable and challenging in-game opponent \\
-Simulation requirement & Geometry and physical assumptions suitable for representation in simulation \\
+Simulation requirement & Geometry suitable for representation in simulation \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \subsection{Electronics Design and Component Selection}
 \subsubsection{Propulsion System}
+
+Since the drone was intended to operate in relatively confined spaces and act as an active game-play opponent, the propulsion system needed enough thrust for stable flight while allowing rapid responsive movement. A four-rotor configuration was selected as the most practical solution in avoiding the additional mechanical and control complexity that would come with more unusual multi-rotor arrangements.
+
+\paragraph{Motor Selection}
+
+The motor is required to provide a large thrust margin while remaining compact enough to fit in a tight rotor-arm layout. From the design criteria, the drone mass was limited to 4.0kg which corresponds to a weight of approximately
+\[
+W = mg = 4.0 \times 9.81 = 39.2~\text{N}.
+\]
+For a quadrotor configuration with a target thrust-to-weight ratio of approximately 2:1, the total thrust was therefore around 78.5 N, or around 19.6 N per motor.
+
+\begin{table}[htbp]
+\centering
+\caption{Motor specifications. Data adapted from the BrotherHobby Avenger 2806.5 manufacturer specification \cite{brotherhobby_avenger28065}.}
+\label{tab:motor_specifications}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l l X @{}}
+\toprule
+\textbf{Parameter} & \textbf{Value} & \textbf{Design relevance} \\
+\midrule
+Selected motor & BrotherHobby Avenger 2806.5 1300KV & Main propulsion motor \\
+Motor type & Brushless & Suitable for multirotor propulsion \\
+KV rating & 1300KV & Suitable for thrust-focused operation \\
+Mass & 41 g & Four motors contribute approximately 164g \\
+Cell compatibility & 4--6S LiPo & Sets the required battery range for the final power system \\
+Bolt & M3, 19 mm $\times$ 19 mm & Defines the motor mounting interface \\
+Wire specification & 18 AWG, 20 cm &  ESC and wiring  \\
+Target thrust per motor & $\approx 19.6$ N & 4 motors provides approximately 78.5 N \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%%%%% FIGURE: Manufacturer image/ specification drawing of the BrotherHobby Avenger 2806.5 motor
+
+The Avenger 2806.5 was selected because it provided a strong thrust margin without requiring an excessively large motor. Each motors has 41g mass, keeping the four-motor set reasonably light at 164g before propellers and mounting hardware. Its 19mm x 19mm mounting pattern also gave clear interface for motor mount design.
+
+\paragraph{Propeller Choice}
+
+The propeller was selected based on geometry as it directly affects the thrust, clearance, and overall rotor-arm design. The propeller was required to provide enough lift when paired with the selected motor, while remaining sizeable for an indoor drone platform. 
+
+We selected using an 8x4x3 propeller, where the notation refers to 8 inch diameter, 4 inch pitch, and 3-blade configuration. A manufacturer dataset for an HQProp 8x4x3 propeller was used as a reference for dimensions and mass, which formed the basis for the certain assumptions related to the rotor-arm design.
+
+\begin{table}[htbp]
+\centering
+\caption{Representative 8$\times$4$\times$3 propeller specifications used for the propulsion design. Data adapted from an HQProp 8$\times$4$\times$3 propeller dataset \cite{hqprop_8x4x3}.}
+\label{tab:propeller_specifications}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l l X @{}}
+\toprule
+\textbf{Parameter} & \textbf{Reference Value} & \textbf{Design Relevance} \\
+\midrule
+Propeller geometry & 8$\times$4$\times$3 & Defines the intended propeller size and type \\
+Diameter & 8 inch & Sets swept area and required clearance from the airframe \\
+Pitch & 4 inch & Moderate pitch suitable for thrust-focused operation \\
+Blade count & 3 blades & Provides higher thrust capability than a comparable 2-blade propeller \\
+Reference material & Polycarbonate & Representative lightweight multirotor propeller material \\
+Reference mass & 13 g & Four propellers contribute approximately 52 g \\
+Rotation requirement & 2 CW + 2 CCW & Required for balanced quadrotor operation \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%%%%% FIGURE: Representative 8×4×3 propeller geometry used for sizing and clearance assumptions. Manufacturer data from an HQProp 8×4×3 propeller was used as a reference dataset for mass, hub dimensions, and shaft compatibility.
+
+The 8x4x3 propeller geometry was chosen as this motor-prop configuration matched the thrust specifications of the design while also remaining within a practical size range for the airframe. The 8-inch diameter increased the swept area while the 3-blade configuration helped support higher thrust within a limited diameter - which improved lift capability without excessive propeller span in an indoor environment.
+
+\paragraph{Validity Check for Motor-Prop Configuration}
+
+To check whether the assumed thrust of the motor-propeller configuration was physically reasonable, a static propeller thrust coefficient estimate was used. For a propeller operating in static conditions, the thrust can be approximated using:
+
+\[
+T = C_T \rho n^2 D^4
+\]
+
+where \(T\) is thrust, \(C_T\) is thrust coefficient, \(\rho\) is air density, \(n\) is rotational speed (revolutions per second), \(D\) is propeller diameter. \cite{mit_propeller_performance}.
+
+From the selected propeller geometry, the diameter was
+\[
+D = 8~\text{in} = 0.2032~\text{m}
+\]
+
+The standard sea-level air density was assumed as
+\[
+\rho = 1.225~\text{kg m}^{-3}.
+\]
+
+The target thrust per motor was taken as previously calculated
+\[
+T = 19.6~\text{N},
+\]
+
+Rearranging the equations for n gives
+
+\[
+n = \sqrt{\frac{T}{C_T \rho D^4}}.
+\]
+
+The ideal no-load speed of the motor can be estimated from the motor \(K_V\) rating:
+
+\[
+RPM_0= K_V V
+\]
+
+For the selected 1300KV motor on a 4S LiPo supply,
+
+\[
+RPM_0 = 1300 \times 14.8 = 19240~\text{rpm}.
+\]
+
+However, this is an ideal case. In practice, the motor will not reach this speed when driving the propeller as the propeller applies aerodynamic load. A factor is included to account for this:
+
+\[
+RPM_{\text{loaded}} = \eta_{\text{rpm}} RPM_0,
+\]
+
+where \(\eta_{\text{rpm}}\) represents the fraction of no-load speed achieved under propeller load. As a quick estimate, factors between 0.75 and 0.90 (in increments of 0.05) were considered.
+
+\begin{table}[htbp]
+\centering
+\caption{Estimated loaded motor speeds for different assumed loaded RPM factors.}
+\label{tab:loaded_rpm_factors}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{} c c @{}}
+\toprule
+\textbf{Loaded RPM Factor, \(\eta_{\text{rpm}}\)} & \textbf{Loaded RPM} \\
+\midrule
+0.75 & 14,430 rpm \\
+0.80 & 15,392 rpm \\
+0.85 & 16,354 rpm \\
+0.90 & 17,316 rpm \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+As there was no given exact thrust coefficients, we estimated using 0.100, 0.125, and 0.150
+
+\begin{table}[htbp]
+\centering
+\caption{Estimated thrust per motor for different loaded RPM factors and assumed thrust coefficients.}
+\label{tab:motor_prop_validity_check}
+\renewcommand{\arraystretch}{1.15}
+\small
+\begin{tabular}{@{} c c c c c @{}}
+\toprule
+\textbf{\(\eta_{\text{rpm}}\)} & \textbf{Loaded RPM} & \textbf{\(T\), \(C_T=0.100\)} & \textbf{\(T\), \(C_T=0.125\)} & \textbf{\(T\), \(C_T=0.150\)} \\
+\midrule
+0.75 & 14,430 rpm & 12.1 N & 15.1 N & 18.1 N \\
+0.80 & 15,392 rpm & 13.7 N & 17.2 N & 20.6 N \\
+0.85 & 16,354 rpm & 15.5 N & 19.4 N & 23.3 N \\
+0.90 & 17,316 rpm & 17.4 N & 21.7 N & 26.1 N \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+From the table 4 and 5, the target thrust of approximately \(19.6~\text{N}\) per motor is not achieved under the most conservative assumptions(where \(C_T = 0.100\)). However, it becomes achievable for higher thrust coefficient values. For \(C_T = 0.125\), the combination reaches approximately \(19.4~\text{N}\) at 85\% of the no-load speed. For \(C_T = 0.150\), the target exceeded at around 80\% no load speed.
+
+This suggests that the target max thrust of \(19.6~\text{N}\) is theoretically plausible for this motor-propeller configuration on a 4S supply - but only when the real thrust coefficient is closer to mid-range values and the motor can maintain between 80--85\% of its no-load speed under load. This calculation does not experimentally validate the propulsion system as the real thrust would depend on a number of other factors such as ESC behavior and battery voltage sag. 
+
+However, the target max value is not the same as minimum thrust required for flight. Given the total weight is approximately \(39.2~\text{N}\), the hover thrust required per motor is \(9.8~\text{N}\) for a quadrotor configuration. This means the selected propulsion configuration has a massive theoretical margin above the hover requirement. Even if the real thrust is lower than the assumed \(19.6~\text{N}\), the drone should still perform admirably, though additional margin would be needed for maneuvering, disturbance rejection, and stable control. However, this proves that the 2:1 thrust-to-weight ratio gives a large and safe tolerance.
+
+\paragraph{ESC Selection}
+
+The ESC is used to control the speed of each motor and provide fast response to throttle commands from the flight controller. Since the propulsion system uses four motors, the design requires one ESC per motor. The selected ESC was the LittleBee Spring 40A.
+
+\begin{table}[htbp]
+\centering
+\caption{Selected ESC specifications for the propulsion system. Data adapted from available supplier specifications \cite{littlebee_spring_40a}.}
+\label{tab:esc_specifications}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l l X @{}}
+\toprule
+\textbf{Parameter} & \textbf{Manufacturer / Supplier Specification} & \textbf{Design Relevance} \\
+\midrule
+Selected ESC & LittleBee Spring 40A & Speed controller for each brushless motor \\
+Input voltage & 2--6S LiPo & Compatible with the intended multirotor power range \\
+Continuous current & 40 A & Provides current capacity for high-throttle motor operation \\
+Size & Approximately 35 mm $\times$ 17 mm & Compact \\
+Weight & Approximately 12 g with wires & Low mass \\
+Supported protocols & OneShot, MultiShot, DShot & Suitable for fast multirotor throttle control \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+As shown in the table 6, the available LittleBee Spring 40A specifications list 2-6S LiPo input, 40A continuous current, with compact dimensions.
+
+%%%%%Figure: LittleBee Spring 40A ESC selected for motor speed control. Its compact size and 2–6S input range made it suitable for integration with the quadrotor propulsion system.
+
+This ESC was chosen as it matched the propulsion system requirements while remaining compact enough to fit within the airframe. However, as the ESC has no built-in BEC, the lower voltage electronics must be powered through a separate voltage regulation stage, which is addressed in the power system design.
+
 \subsubsection{Power System}
 \subsubsection{Onboard Computing and Communication}
 \subsubsection{Sensors and Game-Specific Electronics}
@@ -995,7 +1187,6 @@ The "Achievements and Challenges" screen displays all achievements (lifetime goa
 
 
 The "Community" screen toggles between displaying details of recent games played by the app user's friends, and displaying details of all recent games played. It also allows users to search for other players by name, or by Player ID, and to send each other friend requests. Figure \ref{fig:4_2_Receiving} shows a screen displayed when the player "Alice" has made a friend request to the player logged into the app. Figure \ref{fig:4_2_Sending} shows a screen displayed when the player logged into the app is sending a friend request to the player "Bob". This system allows players to track each other's progress, and allows players to feel connected to friends they may have made through playing the game in person.
-
 
 \begin{figure}[htbp]
      \centering
