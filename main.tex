@@ -359,6 +359,123 @@ As shown in the table 6, the available LittleBee Spring 40A specifications list 
 This ESC was chosen as it matched the propulsion system requirements while remaining compact enough to fit within the airframe. However, as the ESC has no built-in BEC, the lower voltage electronics must be powered through a separate voltage regulation stage, which is addressed in the power system design.
 
 \subsubsection{Power System}
+
+The power system must be designed to supply both the high-current propulsion system and the lower-voltage onboard electronics. The propulsion system requires direct battery power for the four ESCs and brushless motors. Meanwhile, the onboard computer, sensors, and game-specific electronics must receive regulated lower-voltage supplies. As a result, the power system will be split into two main parts: a high power battery path and a regulated path using voltage conversion.
+
+\paragraph{Battery Selection}
+
+The battery selection was driven by the propulsion system as it was expected the motors and ESCs would consume significantly more power than other onboard electronics. The battery had to provide a suitable voltage and discharge capability for the hardware, while also remaining practical in terms of mass, size and internal packaging. A 3S LiPo option was initially considered as earlier propulsion combinations included 3S-compatible specifications. However, once the final motor-propeller configuration was selected, the 3S option was disregarded for a more suitable 4S 5000 mAH LiPo battery. This provided nominal voltage for \(14.8~\text{V}\), matching the motor and ESC requirements more appropriately, while maintaining a target capacity for approximately 10 minutes of drone operation before recharge.
+\begin{table}[htbp]
+\centering
+\caption{Representative 4S 5000 mAh LiPo battery specifications used for the power-system design. Data adapted from commercially available Tattu and Gens Ace battery specifications \cite{tattu_bashing_4s_5000mah, gensace_4s_5000mah}.}
+\label{tab:battery_specifications}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l l X @{}}
+\toprule
+\textbf{Parameter} & \textbf{Representative Specification} & \textbf{Design Relevance} \\
+\midrule
+Battery type & LiPo battery pack & Suitable for high-current drone propulsion \\
+Cell count & 4S / 4 cells & Matches propulsion requirements \\
+Nominal voltage & 14.8 V & Used for motor speed and power-system calculations \\
+Capacity & 5000 mAh / 5 Ah & Supports the target endurance before recharge \\
+Representative mass range & 390--589 g & Gives a realistic range for mass \\
+Representative dimensions & 32 $\times$ 42 $\times$ 132 mm to 138 $\times$ 46 $\times$ 50 mm & realistic range for battery bay sizing and packaging \\
+Battery count & 1 pack per drone & Simplifies packaging and recharge \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%%%%%FIGURE:4S 5000mAH Battery - Power system modeled after selected Battery choice
+
+This battery was selected as a representative design choice as it matched the voltage requirements of the final propulsion system. The 14.8V voltage is suitable for the selected ESC and motor configuration while the 5000mAH also provided the target 10 minutes of drone operation before recharge. The mass range of 390-589g was also acceptable, leaving more than enough mass capacity for other components of the drone. 
+
+\paragraph{Proving Endurance}
+
+To prove the 5000mAH capacity can theoretically last around 10 minutes of flight time before recharge, we may use the representative data.
+
+For a 4S 5000 mAh LiPo battery, the nominal voltage is \(14.8~\text{V}\) and the capacity is \(5~\text{Ah}\). The nominal battery energy is therefore
+\[
+E=VC = 14.8 \times 5 = 74~\text{Wh}
+\]
+
+In practice, it is not recommended to fully discharge a LiPo battery as doing so may reduce its lifespan. We may assume that 80\% of the nominal capacity is usable, the available energy becomes
+\[
+E_{\text{usable}} = 0.8 \times 74 = 59.2~\text{Wh}
+\]
+
+As per the requirement, the target endurance before recharge was approximately 10 minutes, or 
+\[
+t = \frac{10}{60} = 0.167~\text{h}
+\]
+
+The maximum average power draw is therefore
+\[
+P_{\text{avg,max}} = \frac{E_{\text{usable}}}{t}
+\]
+\[
+P_{\text{avg,max}} = \frac{59.2}{0.167} \approx 355~\text{W}.
+\]
+
+The corresponding current draw is
+\[
+I_{\text{avg}} = \frac{P_{\text{avg,max}}}{V}
+\]
+\[
+I_{\text{avg}} = \frac{355}{14.8} \approx 24~\text{A}.
+\]
+
+The theoretical continuous current capability of the battery can be estimated from its C-rating. Consider a 50C discharge rating:
+
+\[
+I_{\text{max}} = 5 \times 50 = 250~\text{A}.
+\]
+
+This suggests that the battery is theoretically capable of supplying the required current for the propulsion system, as the estimated average current is much lower than the continuous discharge limit. However, the main limiting factor is not the maximum current capability, but the total available energy. Therefore, achieving the 10 minute target depends on the average power consumption of all onboard electronics - keeping below approximately \(355~\text{W}\).
+
+\paragraph{Power distribution}
+
+We require a component for power distribution used to route the main battery output to the four ESCs safely and with enough current margin. Since each motor is driven by a separate ESC, a PDB must be able to supply the combined current demand of all propulsion channels.
+
+Given the ESCs are rated 40A each, hence the combined theoretical maximum ESC demand is:
+
+\[
+4\times40=160\text{A}
+\]
+
+We require a high-current PDB, which was chosen to be the Holybro Power Distribution Board 300A. It is specified with a 300A continuous current rating, 1000A burst rating, 10 oz copper PCB design, and XT90/XT30 connector options. The 300A continuous rating gives a clear margin above the theoretical maximum ESC demand
+
+\begin{table}[htbp]
+\centering
+\caption{Selected power distribution board specifications. Data adapted from the Holybro PDB 300A specification \cite{holybro_pdb_300a}.}
+\label{tab:pdb_specifications}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l l X @{}}
+\toprule
+\textbf{Parameter} & \textbf{Manufacturer / Supplier Specification} & \textbf{Design Relevance} \\
+\midrule
+Selected PDB & Holybro Power Distribution Board 300A & Main  PDB \\
+Continuous current rating & 300 A & Provides margin above theoretical maximum \\
+Burst current rating & 1000 A & Provides tolerance for short-duration spikes \\
+PCB design & 10 oz copper & Safe method of wiring \\
+Connector options & XT90 and XT30 options available & Main connection route \\
+Mounting holes & M3 mounting holes & Main attachment to drone hull \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%%%%%Figure X: Holybro Power Distribution Board 300A selected for high-current battery-to-ESC power distribution.
+
+It should be noted that the PDB is responsible for distributing the main battery power. Other components such as the onboard computer, sensors and other electronics may require regulated lower-voltage supplies. Direct connection may cause damage to the components.
+
+
+\paragraph{Voltage Regulation}
+
+
+
+\paragraph{Power-system Summary}
+
+
+
 \subsubsection{Onboard Computing and Communication}
 \subsubsection{Sensors and Game-Specific Electronics}
 
