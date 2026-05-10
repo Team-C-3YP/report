@@ -74,9 +74,21 @@ You can define them in the header of this file and they will appear in the gloss
 \newpage
 
 \section{Gameplay} % Ritchie
+\fancyhead[C]{Richard Usherwood}
 \subsection{Rules and Play}
+\subsubsection{Overview}
+Players are equipped with "Laser Guns" (Infrared emitters that fire encoded data), and helmets and vests containing Infrared sensors. The drones are equipped with "Laser Guns" and Infrared sensors as well. When they are not flying, they are dormant in a "standby location" where they can have batteries replaced by employees if required. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If the player is hit, they must take a 10 second timeout in a designated "timeout" area of the map, in which they are safe from the drones. The player's gun and helmet/vest sensors are connected, so, when a player is hit, the server will send a signal to the gun which tells it to disactivate until another signal (triggered by the player shooting a receiver in the timeout zone and waiting 10 seconds) is sent to the gun. Play takes place in a maze built in a converted warehouse. The drones fly overhead (in fact they are separated from players by a net at three metres height, for safety).\newline
+
+
+
+Two "game modes" exist: "Wave Mode" and "Objective Mode".
+\subsubsection{Wave Mode}
+In "Wave Mode", the players must attempt to defeat a number of drones, released in an order designed to be both challenging and engaging. When the drone is hit, it returns to its standby location. If all of the players are timing out at the same time (having been hit), they lose. If all of the drones have been hit, they win. This constitutes a single wave. If the players defeat the drones in a wave, the next wave will be more challenging than the last. If the players are defeated by the drones, the next wave will be the same as the last, until they are successful.\newline
+
+"Wave Mode" gives players a simple overall objective: beat the hardest wave possible. It encourages players to try again next week, giving them a long-term target to 
 \subsection{Technological Implementation}
 
+\newpage
 \section{System Architecture and Integration} \label{system} % Everyone
 
 \subsection{Simulation Representation of the Hardware} %Rickie
