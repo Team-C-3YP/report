@@ -225,7 +225,7 @@ We selected using an 8x4x3 propeller, where the notation refers to 8 inch diamet
 
 \begin{table}[htbp]
 \centering
-\caption{Representative 8$\times$4$\times$3 propeller specifications used for the propulsion design. Data adapted from an HQProp 8$\times$4$\times$3 propeller dataset \cite{hqprop_8x4x3}.}
+\caption{8$\times$4$\times$3 propeller specifications. Data from an HQProp 8$\times$4$\times$3 propeller dataset \cite{hqprop_8x4x3}.}
 \label{tab:propeller_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -300,7 +300,7 @@ where \(\eta_{\text{rpm}}\) represents the fraction of no-load speed achieved un
 
 \begin{table}[htbp]
 \centering
-\caption{Estimated loaded motor speeds for different assumed loaded RPM factors.}
+\caption{Estimated loaded motor speeds for different loaded RPM factors.}
 \label{tab:loaded_rpm_factors}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabular}{@{} c c @{}}
@@ -315,11 +315,11 @@ where \(\eta_{\text{rpm}}\) represents the fraction of no-load speed achieved un
 \end{tabular}
 \end{table}
 
-As there was no given exact thrust coefficients, we estimated using 0.100, 0.125, and 0.150
+As there was no given exact thrust coefficients,therefore we tested using 0.100, 0.125, and 0.150
 
 \begin{table}[htbp]
 \centering
-\caption{Estimated thrust per motor for different loaded RPM factors and assumed thrust coefficients.}
+\caption{Estimated thrust per motor for different loaded RPM factors and thrust coefficients.}
 \label{tab:motor_prop_validity_check}
 \renewcommand{\arraystretch}{1.15}
 \small
@@ -347,7 +347,7 @@ The ESC is used to control the speed of each motor and provide fast response to 
 
 \begin{table}[htbp]
 \centering
-\caption{Selected ESC specifications for the propulsion system. Data adapted from available supplier specifications \cite{littlebee_spring_40a}.}
+\caption{ESC specifications. Data from available supplier specifications \cite{littlebee_spring_40a}.}
 \label{tab:esc_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -364,7 +364,7 @@ Supported protocols & OneShot, MultiShot, DShot & Suitable for fast multirotor t
 \end{tabularx}
 \end{table}
 
-As shown in the table 6, the available LittleBee Spring 40A specifications list 2-6S LiPo input, 40A continuous current, with compact dimensions.
+As shown in the table 6, the available LittleBee Spring 40A specifications list \(2-6~\text{S}\) LiPo input, \(40~\text{A}\) continuous current, with compact dimensions.
 
 %%%%%Figure: LittleBee Spring 40A ESC selected for motor speed control. Its compact size and 2–6S input range made it suitable for integration with the quadrotor propulsion system.
 
@@ -379,7 +379,7 @@ The power system must be designed to supply both the high-current propulsion sys
 The battery selection was driven by the propulsion system as it was expected the motors and ESCs would consume significantly more power than other onboard electronics. The battery had to provide a suitable voltage and discharge capability for the hardware, while also remaining practical in terms of mass, size and internal packaging. A 3S LiPo option was initially considered as earlier propulsion combinations included 3S-compatible specifications. However, once the final motor-propeller configuration was selected, the 3S option was disregarded for a more suitable 4S 5000 mAH LiPo battery. This provided nominal voltage for \(14.8~\text{V}\), matching the motor and ESC requirements more appropriately, while maintaining a target capacity for approximately 10 minutes of drone operation before recharge.
 \begin{table}[htbp]
 \centering
-\caption{Representative 4S 5000 mAh LiPo battery specifications used for the power-system design. Data adapted from commercially available Tattu and Gens Ace battery specifications \cite{tattu_bashing_4s_5000mah, gensace_4s_5000mah}.}
+\caption{4S 5000 mAh LiPo Battery specifications. Data adapted from commercially viable sources \cite{tattu_bashing_4s_5000mah, gensace_4s_5000mah}.}
 \label{tab:battery_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -399,7 +399,7 @@ Battery count & 1 pack per drone & Simplifies packaging and recharge \\
 
 %%%%%FIGURE:4S 5000mAH Battery - Power system modeled after selected Battery choice
 
-This battery was selected as a representative design choice as it matched the voltage requirements of the final propulsion system. The 14.8V voltage is suitable for the selected ESC and motor configuration while the 5000mAH also provided the target 10 minutes of drone operation before recharge. The mass range of 390-589g was also acceptable, leaving more than enough mass capacity for other components of the drone. 
+This battery was selected as a representative design choice as it matched the voltage requirements of the final propulsion system. The \(14.8~\text{V}\) is suitable for the selected ESC and motor configuration while the \(5000~\text{mAh}\) also provided the target \(10~\text{minutes}\) of drone operation before recharge. The mass range of \(390-589~\text{g}\) was also acceptable, leaving more than enough mass capacity for other components of the drone. 
 
 \paragraph{Proving Endurance}
 
@@ -436,7 +436,7 @@ I_{\text{avg}} = \frac{P_{\text{avg,max}}}{V}
 I_{\text{avg}} = \frac{355}{14.8} \approx 24~\text{A}.
 \]
 
-The theoretical continuous current capability of the battery can be estimated from its C-rating. Consider a 50C discharge rating:
+The theoretical continuous current capability of the battery can be estimated from its C-rating. Consider a \(50~\text{C}\) discharge rating:
 
 \[
 I_{\text{max}} = 5 \times 50 = 250~\text{A}.
@@ -448,17 +448,17 @@ This suggests that the battery is theoretically capable of supplying the require
 
 We require a component for power distribution used to route the main battery output to the four ESCs safely and with enough current margin. Since each motor is driven by a separate ESC, a PDB must be able to supply the combined current demand of all propulsion channels.
 
-Given the ESCs are rated 40A each, hence the combined theoretical maximum ESC demand is:
+Given the ESCs are rated \(40~\text{A}\) each, hence the combined theoretical maximum ESC demand is:
 
 \[
 4\times40=160\text{A}
 \]
 
-We require a high-current PDB, which was chosen to be the Holybro Power Distribution Board 300A. It is specified with a 300A continuous current rating, 1000A burst rating, 10 oz copper PCB design, and XT90/XT30 connector options. The 300A continuous rating gives a clear margin above the theoretical maximum ESC demand
+We require a high-current PDB, which was chosen to be the Holybro Power Distribution Board 300A. It is specified with a \(300~\text{A}\) continuous current rating, \(1000~\text{A}\) burst rating,\(10~\text{oz}\) copper PCB design, and XT90/XT30 connector options. The \(300~\text{A}\)continuous rating gives a clear margin above the theoretical maximum ESC demand
 
 \begin{table}[htbp]
 \centering
-\caption{Selected power distribution board specifications. Data adapted from the Holybro PDB 300A specification \cite{holybro_pdb_300a}.}
+\caption{PDB specifications. Data from the Holybro PDB 300A specification \cite{holybro_pdb_300a}.}
 \label{tab:pdb_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -479,16 +479,70 @@ Mounting holes & M3 mounting holes & Main attachment to drone hull \\
 
 It should be noted that the PDB is responsible for distributing the main battery power. Other components such as the onboard computer, sensors and other electronics may require regulated lower-voltage supplies. Direct connection may cause damage to the components.
 
+\newpage
 
 \paragraph{Voltage Regulation}
 
+Voltage regulation is vital for ensuring the integrity of more sensitive electronics. The 4S LiPo battery supplies \(14.8~\text{V}\) which is suitable for the propulsion system but is too high for onboard electronics which require \(5~\text{V}\). For this reason, we require a dedicated step-down regulator to separate the low-voltage electronics from the high-voltage system. A good regulator considered is the Pololu D24V90F5 \(5~\text{V}\) regulator which could be used in a real prototype, as its input voltage range is compatible with the 4S battery system.
 
+\begin{table}[htbp]
+\centering
+\caption{ 5 V step-down regulator specifications. Data from Pololu D24V90F5 manufacturer  \cite{pololu_d24v90f5}.}
+\label{tab:voltage_regulator_specifications}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l l X @{}}
+\toprule
+\textbf{Parameter} & \textbf{Manufacturer Specification} & \textbf{Design Relevance} \\
+\midrule
+Regulator & Pololu D24V90F5 & 5 V step-down regulator \\
+Regulator type & Step-down / buck regulator & steps down the higher 4S battery voltage \\
+Input voltage range & 5--38 V & Compatible with the 14.8 V 4S LiPo battery \\
+Output voltage & Fixed 5 V & Suitable for the Raspberry Pi and other 5 V electronics \\
+Efficiency & 80--95\% & Reduces power loss and heating \\
+Size & 40.6 mm $\times$ 20.3 mm $\times$ 7.6 mm & Sizable for integration into drone electronics circuit \\
+Weight & Approximately 4.8 g & Low mass contribution to the overall drone design \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%%%%%FIGURE: 5V, 9A Step-Down Voltage Regulator D24V90F5
+
+Pololu D24V90F5 serves as a suitable regulator as it can step the \(14.8~\text{V}\) 4S battery Voltage down to a stable \(5~\text{V}\) voltage. It has an input range of \(5-38~\text{V}\) which is compatible with the main battery while the current output is suitable for the Raspberry Pi, sensors, and other electronics.
 
 \paragraph{Power-system Summary}
 
+The final power system will be divided into two main sections: An high-current propulsion path and a low-voltage electronics path. The propulsion path directly draws power from the battery into the ESCs and motors, while the electronics path step-down the \(14.8~\text{V}\) Battery voltage to \(5~\text{V}\) for onboard computer and other voltage sensitive electronics. 
 
+\begin{table}[htbp]
+\centering
+\caption{Summary of the drone power-system architecture.}
+\label{tab:power_system_summary}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l l X @{}}
+\toprule
+\textbf{Power System Component} & \textbf{Selected Choice} & \textbf{Main Role} \\
+\midrule
+Main battery & 4S 5000 mAh LiPo & Supplies the entire electronic system \\
+High-current distribution & Holybro PDB 300A & Distributes battery power to the four ESCs \\
+Motor control & 4 $\times$ LittleBee Spring 40A ESCs & Controls power delivery to each brush-less motor \\
+Propulsion loads & 4 $\times$ brush-less motors & Generate lift and maneuvering thrust \\
+Voltage regulation & Pololu D24V90F5 5 V regulator & Steps battery voltage down to a regulated 5 V \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%%%%%Figure: Perhaps include an image of the power system layout
 
 \subsubsection{Onboard Computing and Communication}
+
+\paragraph{Onboard Computer}
+
+\paragraph{Communication Interface}
+
+\paragraph{Interface with Sensors and Control Hardware}
+
+\paragraph{Summary of Onboard Computing and Communication}
+
 \subsubsection{Sensors and Game-Specific Electronics}
 
 \subsection{Mechanical Design Development}
