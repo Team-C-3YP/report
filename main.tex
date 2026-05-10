@@ -516,7 +516,7 @@ Pololu D24V90F5 serves as a suitable regulator as it can step the \(14.8~\text{V
 
 \paragraph{Power-system Summary}
 
-The final power system will be divided into two main sections: An high-current propulsion path and a low-voltage electronics path. The propulsion path directly draws power from the battery into the ESCs and motors, while the electronics path step-down the \(14.8~\text{V}\) Battery voltage to \(5~\text{V}\) for onboard computer and other voltage sensitive electronics. 
+The final power system will be divided into two main sections: A high-current propulsion path and a low-voltage electronics path. The propulsion path directly draws power from the battery into the ESCs and motors, while the electronics path step-down the \(14.8~\text{V}\) Battery voltage to \(5~\text{V}\) for onboard computer and other voltage sensitive electronics. 
 
 \begin{table}[htbp]
 \centering
@@ -540,7 +540,13 @@ Voltage regulation & Pololu D24V90F5 5 V regulator & Steps battery voltage down 
 
 \subsubsection{Onboard Computing and Communication}
 
+Before investigating deeper into the topic of onboard computing and communication, it is vital to define its role within the overall drone system. Each drone is required to have a local processing unit that handles specific tasks that needed to happen directly on the drone, such as sensor processing, low-to mid-level control, and execution of pre-trained control or perception models during game-play. This includes responding to sensor inputs, player tracking, and carrying out motion commands in real time.
+
+However, as explained in other sections, the drone is not intended to make all these decisions independently onboard. High-level control (i.e. game logic and multi-drone coordination) will be handled via a central server housed outside the arena. The onboard computer would therefore be required to communicate drones state, sensor information, and status updates to the server while receiving instructions. This meant that the onboard companion computer needed to provide more capability than a simple micro-controller, while still needs to remain light, compact and inexpensive.
+
 \paragraph{Onboard Computer}
+
+
 
 \paragraph{Communication Interface}
 
