@@ -631,6 +631,7 @@ For these reasons, Wi-Fi is selected as the networking medium between the drones
 
 \newpage
 \section{High Level Control} % Ritchie
+\fancyhead[C]{Richard Usherwood} % Ritchie
 The objective of the High Level Control Protocol is to create a series of algorithms which take game states (positions of human players, positions of drones etc.) as their inputs, and outputs a high-level behaviour of a drone. This is achieved through splitting the drones' behaviour into several "states", in which information can be TALK TO TEAM ABOUT WHAT IS DONE ONBOARD/OFFBOARD
 \subsection{Drone States}
 A set of drone "states" or "modes", describing the drone's behaviour, are shown below in Figure \ref{fig:StatesList}. \newline
@@ -680,10 +681,11 @@ A flow chart describing when and how the drone will change between modes is show
     \caption{Flow Chart Describing Mode Changes}
     \label{fig:FlowBig}
 \end{figure}
+\newpage
 
 
 \subsection{Information Responsibility}
-
+\fancyhead[C]{Thomas August} % Tommy
 
 
 \newpage
@@ -1501,13 +1503,19 @@ Year & Percentage of Maximum Utility & Equivalent Number of Full-Time Employees\
 
 Lastly, it was estimated that the cost of hiring a single full-time employee (or equivalent in part-time workers) would be £50000. This includes their salary, their training, their sick cover, their annual bonus etc.
 \subsubsection{Advertising}
-The advertising budget is very large. This is because early revenue has a huge affect on NPV (discussed in section [SECTION NUMBER HERE]), so it is desirable to invest heavily in advertising initially, with the hope of spending as little time as possible operating below maximum utility. Advertising will continue even when maximum utility has been reached. This will be necessary if the business is to keep reaching new audiences, and if it is to advertise new features that are developed. The assumption is made that advertising costs are constant throughout business operation. This may be slightly unrealistic, but it is assumes for the sake of making a conservative estimate % waiting for Global to return call
+The advertising budget is very large. This is because early revenue has a huge affect on NPV, since the discount rate is so large, so it is desirable to invest heavily in advertising initially, with the hope of spending as little time as possible operating below maximum utility. Advertising will continue even when maximum utility has been reached. This will be necessary if the business is to keep reaching new audiences, and if it is to advertise new features that are developed. The assumption is made that advertising costs are constant throughout business operation. This may be slightly unrealistic, but it is assumed for the sake of making a conservative estimate. Having been in touch with Global (the advertising agency responsible for Transport for London), the cost of a "small-scale advertising campaign" involving one-to-two posters in several small, outer-London underground stations and a small presence in carriage poster advertising is around £2000 per month. The cost of 1000 views for a social media advertising campaign is around £10 for Facebook, Instagram, and TikTok (a range of social media designed to reach a range of generations: young professionals as well as parents of teenagers). So, for £500 per month, 50000 views of social media advertising can be bought. These can be localised, meaning only users in London will be shown advertising. \newline
+
+Therefore, the projected required advertising budget is given by 
+\begin{equation}
+    \label{equ:advertising}
+    \text{Cost [£/Year]} = \left (2000\text{ £/month} + 500\text{ £/month}\right ) \times 12\text{ months/year} = £30000\text{ £/year}
+\end{equation}
 \subsubsection{Heating and Lighting}
 The heating power required to heat a building is given by:
 \begin{equation}
     \dot Q=U_wA_w\Delta T+U_rA_r\Delta T+U_fA_f\Delta T +\text{ACH}\cdot \frac{\rho c_p V\Delta T}{3600}
 \end{equation}
-where \(U,A,\Delta T\) denote the U-Value (thermal transmittance), area and temperature difference between indoors and outdoors, and subcripts \(w,r,f\) denote the walls, roof and floor respectively. \(\text{ACH}, \rho, c_p, V\) denote the equivalent number of complete air changes per hour, air density, air specific heat capacity (constant pressure), and volume respectively. As a rough assumption, it is assumed that the warehouse is poorly insulates, with U-Values three times worse than the maximum specified for newly built houses under UK law \cite{UValueRegs}. This is summarised in table \ref{tab:U-Values}.
+where \(U,A,\Delta T\) denote the U-Value (thermal transmittance), area and temperature difference between indoors and outdoors, and subcripts \(w,r,f\) denote the walls, roof and floor respectively. \(\text{ACH}, \rho, c_p, V\) denote the equivalent number of complete air changes per hour, air density, air specific heat capacity (constant pressure), and volume respectively. As a rough assumption, it is assumed that the warehouse is poorly insulates, with U-Values three times worse than the maximum specified for newly built houses under UK law \cite{UValueRegs}. This is summarised in Table \ref{tab:U-Values}.
 \begin{table}[h]
 \centering
 \begin{tabular}{|c|c|c|}
@@ -1527,7 +1535,22 @@ It is also assumed that, when a new set of players enters the warehouse, 50\% of
 
 We will further assume that the height of the warehouse is 6 metres, and that the warehouse is square (for the purpose of calculating wall heights). 
 
-As demonstrated in \ref{app:heating-calcs}, we find that the total heating power required to hold the warehouse at a temperature of \(20^\circ C\) is 17.6 kJ.
+As demonstrated in equation \ref{app:heating-calcs}, we find that the total heating power required to hold the warehouse at a temperature of \(20^\circ C\) is 17.6 kW.
+\newline
+
+To calculate the lighting costs, it is assumed the warehouse requires fifty 100W equivalent LEDs, each drawing 15W of power (the maze needs lots of lighting to avoid dark shadows in corners). However, since the game is designed to be played in darkness, the lights will only be required in between play sessions. Each game is designed to last 45 minutes, with 15 minute breaks between them, so the lights will only be "on" one quarter of the time. Therefore the effective power of the lighting is given by \(\dot Q = \frac 14 \times 50\times100W = 1.3kW\) to the nearest \(100W\).
+
+The other electricity costs include charging the batteries and powering computers used by employees. It is assumed that the batteries and computers are both charged by \(65W\) USB-C chargers. There are assumed to be 20 batteries in total, including computers and drone batteries, and (for the sake of a conservative estimate) it is assumed they are all charging whenever the centre is open. Therefore, the effective power draw of charging batteries is given by \(\dot Q=20\times 65W=1.3kW\).
+
+Therefore the total power draw of the operational warehouse is approximated to \(17.6kW+1.3kW=1.3kW=20.2kW\)
+
+The warehouse is assumed to be heated electrically. According to Department for Energy Security and Net Zero's Q2 2025 Energy Prices report \cite{EnergyPrices}, the average electricity cost to non-domestic users (including Climate Change Levy) over the last three years is around 25p/kWh. This will be used to calculate an annual electricity cost. It is also assumed that the warehouse will need to be open 3000 hours per year (for 2000 hour-long games per year), to include unbooked game slots and the time required for the air to heat before the warehouse is warm enough to allow players in. The final electricity cost is therefore given in Equation \ref{equ:eleccost}
+\begin{equation}
+    \label{equ:eleccost}
+    \text{Electricity Cost [£/Year]}=20.2\text{kW}\times3000\text{ hours/year} \times 0.25 \text{ £/kWh}=£15150/\text{year}
+\end{equation}
+
+To keep the estimate conservative, to allow for fluctuations in electricity price and to allow for unforeseen costs (employees boiling a kettle, for example), this value will be rounded up to a final electricity cost of £20k/year.
 
 \subsubsection{Warehouse Decoration and Maintenance}
 The purpose of Year 0 is, among other things, to decorate the warehouse and make it suitable for playing drone laser-tag. From year 1 onward, the infrastructure will already exist, and the purpose of the budget is for wear-and-tear and maintenance. Hence, the Year 0 budget for decoration and maintenance will be much higher than for subsequent years. 
@@ -1845,7 +1868,6 @@ In general, one or more variables was changed, and another was observed, while a
 % Essential content that interrupts the flow of the document can be placed here, e.g. technical drawings, detailed lists of equations used, etc.
 \addcontentsline{toc}{section}{Appendix}
 \section*{Appendix}
-\label{app:heating-calcs}
 \begin{equation}
     \dot Q=U_wA_w\Delta T+U_rA_r\Delta T+U_fA_f\Delta T +\text{ACH}\cdot \frac{\rho c_p V\Delta T}{3600}
 \end{equation}
@@ -1868,8 +1890,9 @@ Assuming the average daytime temperature in London is \(10 ^\circ C\), and the d
 \end{equation}
 \begin{equation}            =0.78\times603\times10+0.48\times632\times10+0.54\times632\times10+0.5\cdot \frac{1.225\times1005\times3792\times10}{3600}
 \end{equation}
-\begin{equation}            
-    =17.6\text{kJ}
+\begin{equation}  
+    \label{app:heating-calcs}
+    =17.6\text{kW}
 \end{equation}
 \newpage
 
