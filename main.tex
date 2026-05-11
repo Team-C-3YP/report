@@ -76,23 +76,20 @@ You can define them in the header of this file and they will appear in the gloss
 \section{Gameplay} % Ritchie
 \fancyhead[C]{Richard Usherwood}
 \subsection{Overview}
-Players are equipped with "Laser Guns" (Infrared emitters that fire encoded data), and helmets and vests containing Infrared sensors. The drones are equipped with "Laser Guns" and Infrared sensors as well. When they are not flying, they are dormant in a "standby location" where they can have batteries replaced by employees if required. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If the player is hit, they must take a 10 second timeout in a designated "timeout" area of the map, in which they are safe from the drones. The player's gun and helmet/vest sensors are connected, so, when a player is hit, the server will send a signal to the gun which tells it to disactivate until another signal (triggered by the player shooting a receiver in the timeout zone and waiting 10 seconds) is sent to the gun. Play takes place in a maze built in a converted warehouse. The drones fly overhead (in fact they are separated from players by a net at three metres height, for safety).\newline
+Players are equipped with "Laser Guns" (Infrared emitters that fire encoded data), and helmets and vests containing Infrared sensors. The drones are equipped with "Turrets" that fire emit Infrared radiation (see Section \ref{Turret} and Infrared sensors as well. When they are not flying, they are dormant in a "standby location" where they can have batteries replaced by employees if required. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If the player is hit, they must navigate to a designated "timeout" area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun will not work until their timeout has been completed (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at three metres height for safety, see Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
 
 
-
-Two "game modes" exist: "Wave Mode" and "Objective Mode".
+Two "game modes" exist: "Wave Mode" and "Objective Mode". These are summarised in the following sections.
 \subsection{Wave Mode}
-In "Wave Mode", the players must attempt to defeat a number of drones, released in an order designed to be both challenging and engaging. When the drone is hit, it returns to its standby location. If all of the players are timing out at the same time (having been hit), they lose. If all of the drones have been hit, they win. This constitutes a single wave. If the players defeat the drones in a wave, the next wave will be more challenging than the last. If the players are defeated by the drones, the next wave will be the same as the last, until they are successful.\newline
+In "Wave Mode", the players must attempt to defeat a number of drones, released in an order designed to be both challenging and engaging. When the drone is hit, it returns to its standby location, where it will remain. If all of the players are timing out at the same time (having been hit), they lose. If all of the drones have been hit, they win. This constitutes a single wave. The players can choose from a catalogue of waves (in future accessible through the companion app, see Section \ref{app}), ranging from tutorial level to advanced. Each level will be marked with a numerical difficulty rating. This allows a team to end a game with an understandable, clear metric of how well they performed: the difficulty rating of the hardest wave in which they won. This will also serve as a clear metric of a team's improvement with time, encouraging them to return. In future, this will be displayed in the companion app, allowing players to compare metrics with their friends.
 
-This gives players a simple overall objective: beat the hardest wave possible. It encourages players to try again next week, giving them a long-term target increase the number of waves they can survive. While it is not yet implemented, this could easily be added as a statistic displayed in the app, allowing players to compare with their friends achieve a sense of progress.
 \subsection{Objective Mode}
-In "Objective Mode", the players must attempt to navigate the maze to complete objectives, such as "Hold this button for 5 seconds", or "Shoot this target on the wall", which will be communicated to the players via CHECK WITH RICKIE. They must complete all objectives within a defined time to "pass" the level. While they are completing these objectives, the drones are flying overhead and attempting to shoot at the players, just as in Wave Mode. Similarly, the players must timeout for 10 seconds in a particular area of the maze if hit, and the drones will exit the game if hit, but will return after a short timeout. If all players timeout at once, they lose; if they exceed the time limit for the level, they lose; if they complete all objectives, they win. If they win, they will progress to a harder level. \newline
+In "Objective Mode", the players must attempt to navigate the maze to complete objectives, such as "Hold this button for 5 seconds", or "Shoot this target on the wall", which will be communicated to the players via speakers (in future they will be communicated via a LED display embedded in the Laser-Guns). They must complete all objectives within a defined time to "pass" the level. While they are completing these objectives, the drones are flying overhead and attempting to shoot at the players, just as in Wave Mode. Similarly, the players must timeout for 10 seconds in a particular area of the maze if hit, and the drones will exit the game if hit, but will return after a short timeout. If all players timeout at once, they lose; if they exceed the time limit for the level, they lose; if they complete all objectives, they win. If they win, they will progress to a harder level. Just as in "Wave Mode", the levels will be designed and play-tested to be both challenging, engaging; a catalogue of levels marked with a numerical difficulty can be selected in-app.\newline
 
-Just as in "Wave Mode", this gives players a simple overall objective: to pass the hardest level they can. This can be displayed in their player profile in the companion app.
 \subsection{Difficulty Scaling}
-Since the levels increase in difficulty, there is little need to scale difficulty according to a players' skill: if the players are inexperienced, they will only play easy levels, and levels will be designed to suit players of all skill levels. However, there may need to change the difficulty of the levels according to the number of players. This can be achieved in a number of ways. For example, the number of drones could be adjusted, the top speed of the drones could be capped, and artificial inaccuracy could be added to the shooting of the drones. \newline
+Since the levels increase in difficulty, there is little need to scale difficulty according to a players' skill: if the players are inexperienced, they will only play easy levels, and there will be levels to suit players of all skill levels. However, the difficulty of the levels may need to change according to the number of players in a team. This can be achieved in a number of ways. For example, the number of drones could be adjusted, the top speed of the drones could be capped, and artificial inaccuracy could be added to the shooting of the drones. \newline
 
-It is very difficult to know which methods of adjusting difficulty will result in a game that is enjoyable, and balanced, for a range of numbers of people. Hence, deciding exactly how to perform this adjustment will require play-testing, in the arena, once it has been created.
+It is very difficult to know which methods of adjusting difficulty will result in a game that is both enjoyable and balanced, for a range of numbers of people. Hence, deciding exactly how to perform this adjustment will require play-testing, in the arena, once it has been created.
 \newpage
 \section{System Architecture and Integration} \label{system} % Everyone except Ritchie
 
@@ -562,6 +559,7 @@ However, as explained in other sections, the drone is not intended to make all t
 \subsubsection{Rotor Arm and Motor Mount Design}
 \subsubsection{Landing Gear Design}
 \subsubsection{Turret Design Process}
+\label{Turret}
 
 \subsection{Final Drone Assembly and Packaging}
 \subsubsection{Overall Airframe Configuration}
@@ -632,16 +630,30 @@ For these reasons, Wi-Fi is selected as the networking medium between the drones
 \newpage
 \section{High Level Control} % Ritchie
 \fancyhead[C]{Richard Usherwood} % Ritchie
-The objective of the High Level Control Protocol is to create a series of algorithms which take game states (positions of human players, positions of drones etc.) as their inputs, and outputs a high-level behaviour of a drone. This is achieved through splitting the drones' behaviour into several "states", in which information can be TALK TO TEAM ABOUT WHAT IS DONE ONBOARD/OFFBOARD
-\subsection{Drone States}
-A set of drone "states" or "modes", describing the drone's behaviour, are shown below in Figure \ref{fig:StatesList}. \newline
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.7\linewidth]{figs/High-Level/StatesList.png}
-    \caption{A List of Drone States}
-    \label{fig:StatesList}
-\end{figure} \newline
-An overview of the purpose of each state is given below.
+\subsection{Context}
+The objective of the High Level Control Protocol is to create a series of algorithms which take game states (positions of human players, positions of drones etc.) as their inputs, and give a high-level behaviour of a drone as their output. This is achieved through splitting the drones' behaviour into several "modes", in which some information and computing is performed in the server, and transmitted to the drones via Wi-Fi, and some information storage and computing is performed onboard the drone, according to an Information Responsibility Protocol.
+% \subsection{Drone States}
+% A set of drone "states" or "modes", describing the drone's behaviour, are shown below in Figure \ref{fig:StatesList}. \newline
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.7\linewidth]{figs/High-Level/StatesList.png}
+%     \caption{A List of Drone States}
+%     \label{fig:StatesList}
+% \end{figure} \newline
+% An overview of the purpose of each state is given below.
+
+\subsection{Drone Modes}
+A set of drone "modes" or "states", describing the drone's high-level behaviour, have been defined. They are:
+\begin{itemize}
+    \item Dormant Mode
+    \item Search Mode
+    \item Movement Mode
+    \item Track Mode
+    \item Shoot Mode
+    \item Collision Avoidance Mode
+\end{itemize}
+An overview of the purpoe of each state is given below.
+
 \subsubsection{Dormant Mode}
 This is the "default mode" of the drones, designed for waiting between rounds or games on standby, when not actively involved in the game - it is triggered by the end of a round, or by the powering on of the drone.
 \subsubsection{Search Mode}
@@ -674,13 +686,8 @@ This is the mode the drone is in when it has been "called for help" - something 
 This mode is triggered either when the drone detects it is about to collide into a wall, or when the server detects it is about to collide into another drone. This mode can be accessed from any mode (except Dormant Mode).
 
 \subsection{Logic}
-A flow chart describing when and how the drone will change between modes is shown below in Figure \ref{fig:FlowBig}. It is worth noting that Dormant Mode and Collision Avoidance Mode have been omitted for the sake of readability. Since these two states are "above" the rest, each decision branch should include the questions: "Am I about to crash?" and "Has the game ended?".
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.7\linewidth]{figs/High-Level/Flow2.png}
-    \caption{Flow Chart Describing Mode Changes}
-    \label{fig:FlowBig}
-\end{figure}
+The flow charts shown in Figures \ref{fig:FlowSearch}, \ref{fig:FlowTrack} and \ref{fig:FlowShoot} are section of a larger flowchart describing the state change logic of the drones, shown in Figure \ref{fig:FlowBig}, in the appendix. The red boxes denote information shared between drones (managed by the server via Wi-Fi). It is worth noting that Dormant Mode and Collision Avoidance Mode have been omitted for the sake of readability. Since these two states are considered "higher-priority" than the others, each decision chain implicitly contains the question boxes: "Am I about to crash?" and "Has the wave ended?".
+
 \newpage
 
 
@@ -1309,15 +1316,19 @@ When the perception pipeline returns a valid \gls{yolo} detection, the update ph
 
 
 \section{App} % Ritchie
+\label{app}
 \fancyhead[C]{Richard Usherwood}
-\subsection{Motivation}
+\subsection{Context}
 From fast-food restaurants to road cycling, apps are everywhere. Their purpose can be separated into two categories: Engagement and Functionality.
 
-They encourage user-engagement by allowing users to track their progress through points and achievements, customise their profiles, and connect with friends. For example, popular birdwatching app "Birda" is used by users to log bird sightings. It rewards users with achievement badges when they complete objectives (for example, seeing ten different species), and integrates monthly challenges. It also connects birdwatchers through the "community" feature, allowing users to view their friends' activity and sightings by strangers in their area. 
+\paragraph{Engagement} \(\) \newline
+Companion apps encourage user-engagement by allowing users to track their progress through points and leaderboards, track achievements, and connect with friends. For example, popular birdwatching app "Birda" is used by users to log bird sightings. It rewards users with achievement badges when they complete objectives (for example, having logged ten different species), and integrates monthly challenges. It also connects birdwatchers through the "community" feature, allowing users to view their friends' activity and sightings by strangers in their area. 
 
-Companion apps also serve a functional purpose. Since (almost) everyone in the UK owns and uses a smartphone, they can be directly implemented into the experience. For example, popular budget UK pub chain JD Wetherspoon uses a companion app to allow patrons to order drinks and food directly to their table, without requiring them to break conversation and queue at a busy bar. 
+\paragraph{Functionality} \(\) \newline
+Companion apps also serve a functional purpose. Since effectively everyone in the UK owns and uses a smartphone, they can be directly implemented into the experience of an existing product. For example, popular budget UK pub chain JD Wetherspoon uses a companion app to allow patrons to order drinks and food directly to their table, without requiring them to break conversation and queue at a busy bar. 
+
 \subsection{Overview}
-When opened for the first time, the app prompts the user to create an account with a username and password. If the user has already created a login, they will instead be prompted to enter their user name and password. This is shown in Figure \ref{fig:0_Login_Screen}. When completed, the app the first of five screens that are navigated using a bottom panel: the "Profile" screen, the "Leaderboard" screen, the "Achievements and Challenges" screen, the "Community" screen, and the "Play in Person" screen . The first four screens are engagement-based, and the fifth is functionality-based.
+When opened for the first time, the app prompts the user to create an account with a username and password. If the user has already created a login, they will instead be prompted to enter their user name and password. This is shown in Figure \ref{fig:0_Login_Screen}. When completed, the app the first of five screens that are navigated using a bottom panel: the "Profile" screen, the "Leaderboard" screen, the "Achievements and Challenges" screen, the "Community" screen, and the "Play in Person" screen . The first four screens are engagement-based, and the fifth is functionality-based. 
 
 \begin{figure}[H]
     \centering
@@ -1419,6 +1430,29 @@ The "Play in Person" screen prompts the player to scan the QR codes on the top o
     \caption{Play in Person Screen}
     \label{fig:5_PiP_Screen}
 \end{figure}
+\subsection{Usability Design Choices}
+In 2010, Lee et al \cite{LEE201090} identified several "Principles for General System Design", with respect to complex 3D architectural design and engineering tools. While this use-case is not identical to that of Lee et al, the principles are still relevant. The following are examples of the identified "Principles":
+\subsubsection{Visibility}
+Lee et al describe the use of visibility in UI design as "Making relevant information conspicuous and easily detectable to the user". This has been achieved by the large panel at the bottom of the app, visible at all times, as shown in Figure \ref{fig:App-Panel}. Furthermore, the open-source React icons encourage faster visual recognition from the user, increasing the visibility of the relevant information (in this case the purpose of each screen).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/App_Screenshots/Bottom_Panel.png}
+    \caption{Bottom Panel}
+    \label{fig:App-Panel}
+\end{figure}
+\subsubsection{Feedback}
+Lee et al describe the use of feedback in UI design as "Response of the system to the user’s actions in order to provide information regarding the internal state of the system". As an example of this principle in the design of this app, the icon in the bottom panel corresponding to the screen currently being displayed is filled in (a variant of the React icon is displayed), and is red. When a user changes screen, the "internal state" of the app is reflected by the change of icon displayed in red. As another example, when a friend request is made, the user receiving the request sees a box with two buttons: "Accept" and "Decline", as shown in Figure \ref{fig:App-Friend_Request}. When the user selects one of these options, the box disappears. While this is not required for the functionality of the system, the change to the external state of the app (the box disappearing) reinforces instinctively to the user of a change to the internal state of the app (the friends associated with a player in the database). 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{figs/App_Screenshots/Fried_Request_Box.png}
+    \caption{Box displayed when receiving a friend request}
+    \label{fig:App-Friend_Request}
+\end{figure}
+\subsubsection{Consistency}
+Lee et al describe the use of consistency in UI design as "Uniformity of system semantics across similar situations". In this context, "system semantics" refers to the method the user is expected to use when interacting with the UI, as well as the use of language, technical or otherwise. As an example, the app uses a dark grey and red colour scheme, in which, across pages, red is used to mean "active/on" and dark grey is used to mean "passive/off". This is seen in the bottom panel (Figure \ref{fig:App-Panel}) and top panel in the achievements (Figure \ref{fig:ach-screen}) and community (Figure \ref{fig:com-screen}) screens, in which the screen being displayed in shown in red. It is also seen in the player profile (Figure \ref{fig:0_Login_Screen} and login (Figure \ref{fig:1_Profile_Screen} screens, in which the Login/Logout buttons are coloured red. It is shown in the box displayed when receiving a friend request (Figure \ref{fig:App-Friend_Request}) in which the "Accept" button, which changes the user's list of friends, is coloured red, and the "Decline" button, which leaves the user's list of friends as it is, is shown in dark grey.
+
+
 
 \subsection{Technical Details}
 \subsubsection{Overview}
@@ -1437,51 +1471,42 @@ The App uses Supabase as its backend API, to access an SQL database hosted throu
     \label{fig:Database}
 \end{figure}
 
-A specific format had to be created for this data to be stored. For example, Game Data is stored in a format (A, B, C, \dots),(D, E, F, \dots),(G, H, I, \dots). This game data is equivalent to "Players A, B, C, \dots played a game in which they got D, E, F, \dots kills and died G, H, I, \dots times, respectively". Furthermore the "score" is defined as "number of kills squared divided by number of deaths" in a game, and the friend requests are stored as CSVs. When a change to the data is made in the app (for example sending or accepting a friend request), the database is automatically updated by API. However, the database must also be updated after every game. This will be handled automatically by the server. However, for now it is handled by a script that allows the user to input the results of the game (who was playing, how many kills they got, how many times they died etc.), and updates the database accordingly. In the real system, this would be integrated into a system that counts communications with drones and helmets.
+A specific format had to be created for this data to be stored. For example, Game Data is stored in a format (A, B, C, \dots),(D, E, F, \dots),(G, H, I, \dots). This game data is equivalent to "Players A, B, C, \dots played a game in which they got D, E, F, \dots kills and died G, H, I, \dots times, respectively". Furthermore the "score" is defined as "number of kills squared divided by number of deaths" in a game, and the friend requests are stored as CSVs. When a change to the data is made in the app (for example sending or accepting a friend request), the database is automatically updated by API. However, the database must also be updated after every game. In the real system, this would be integrated into a system that counts communications with drones and helmets, and updates the database automatically. However, for now it is handled by a script that allows the user to input the results of the game (who was playing, how many kills they got, how many times they died etc.), and updates the database accordingly. 
 
 
 \section{Commercialisation, Safety and Project Management} % Mostly Ritchie
 \subsection{Risk Assessment}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\linewidth]{figs/risk-assessment}
-    \caption{Quantitative Risk Assessment}
-    \label{fig:risk-assessment}
-\end{figure}
 
-A quantitative risk assessment has been completed, and is shown in figure \ref{fig:risk-assessment}. As shown, the most significant initial risks were the the contact between guns and players' eyes, and players running into each other. After the necessary control measures, they are still most significant residual risks, along with trips and falls. This demonstrates that there is not an undue risk associated with playing the game, since trips and falls, player-on-player collision and impact with instruments used for playing (such as laser-guns, squash raquets, etc.) are risks associated with traditional laser-tag, as well as many common sports. 
+
+A quantitative risk assessment has been completed, and is shown in Figure \ref{fig:risk-assessment}, in the appendix. The most significant initial risks (before mitigations) were the the contact between guns and players' eyes, and players running into each other. After the necessary control measures, they are still most significant residual risks, along with trips and falls. This demonstrates that there is not an undue risk associated with playing the game, since trips and falls, player-on-player collision and impact with instruments used for playing (such as laser-guns, squash raquets, etc.) are risks associated with traditional laser-tag, as well as many common sports. 
 \subsection{Financial Modeling}
 \subsection{Setup}
-A discounted cash flow model was created. The purpose of this was to track cash flow, apply a discount rate into the future (to capture the fact that £100 now is worth more to an investor than £100 in 10 years), and to calculate the Net Present Value (NPV) of a company which provides the game as a commercial enterprise.
+A discounted cash flow model was created. The model was used to track cash flow, apply a discount rate to future revenue, and to calculate the Net Present Value (NPV) of a company providing the game as a commercial enterprise.
 \subsection{Numerical Estimations}
 \subsubsection{Utility}
-It is supposed that the first year will be spent producing hardware, advertising the business, and decorating the playing area (a warehouse). The first year (Year 0) is therefore assumed not to make any revenue from gameplay. As the business establishes itself, and as it continues to invest in advertising, its utility (games per year) is modeled to increase up to a plateau in the third year of operation (Year 3). As a first estimation, the increase is modeled as shown in table \ref{tab:utility}:
+It is assumed that the first year (Year 0) will be spent producing hardware, advertising the business, and decorating the playing area (a warehouse). Year 0 is therefore assumed to generate no revenue from gameplay. As the business becomes more established, its utility (games per year) is modelled to increase up to a plateau in Year 3. The modelled increase in utility is shown in Table \ref{tab:utilityandemployees}:
 
-\begin{table}[h]
-\centering
-\begin{tabular}{|c|c|c|}
-\hline
-Year & Percentage of Maximum Utility\\
-\hline
-0 & 0\% \\
-1 & 50\% \\
-2 & 75\% \\
-3 & 100\% \\
-4 & 100\% \\
-\vdots & \vdots \\
-\hline
-\end{tabular}
-\caption{Utility evolution with time}
-\label{tab:utility}
-\end{table}
+% \begin{table}[h]
+% \centering
+% \begin{tabular}{|c|c c c c c c|}
+% \hline
+% Year & \qquad 0 & \quad 1 & \quad 2 & \quad 3 & \quad 4 & \quad \dots\\
+% \hline
+% Percentage of Maximum Utility & \qquad 0\% & \quad 50\% & \quad 75\% & \quad 100\% & \quad 100\% & \quad \dots \\
+% \hline
+% \end{tabular}
+% \caption{Utility evolution with time}
+% \label{tab:utility}
+% \end{table}
 
-It was lastly imagined as a first approximation that the maximum number of games per year would be 2000, this corresponding to 10 hour-long games on Saturday and Sunday, and four hour-long games every day during the week, for 50 weeks per year. NB this "maximum utility" refers to the value at which utility is modeled to plateau, not a fundamental limit.
+As a first approximation, the maximum number of games per year was assumed to be 2000, corresponding to 10 hour-long games on Saturday and Sunday, and four hour-long games on weekdays, for 50 weeks per year. Note that this "maximum utility" refers to the value at which utility plateaus, not a fundamental limit. \newline
 
-\subsubsection{Warehouse Hiring}
-The game is imagined to be played in a converted warehouse. The size of warehouse required for gameplay was thought to be comparable to that of a large school hall (circa. 5000 square feet). Including enough space for a reception area, a small office and a break room for staff, between 6000 and 7000 square feet was thought to be an appropriate size. It was considered important that the warehouse be within a short drive of a large city. A 6800 square foot warehouse in London was found for £2000 pcm \cite{rightmoveCheckThis}. The cost of hiring the warehouse is therefore estimated to be £25000 per annum.
+The effect of a variation in utility is analysed in Section \ref{PriceAnal}.
+
+
 
 \subsubsection{Employee Costs}
-It was thought that the minimum equivalent number of full-time employees required would be two. It was furthermore imagined that the number of full-time employees would increase with increased utility, up to a maximum of four. It was thought that the number of employees would increase with utility as shown in table \ref{tab:employees}:
+The minimum equivalent number of full-time employees required was thought to be two. The number of full-time employees was assumed to increase with utility, up to a maximum of four, as shown in Table \ref{tab:utilityandemployees}:
 
 \begin{table}[h]
 \centering
@@ -1497,25 +1522,31 @@ Year & Percentage of Maximum Utility & Equivalent Number of Full-Time Employees\
 \vdots & \vdots & \vdots \\
 \hline
 \end{tabular}
-\caption{Number of employees with time}
-\label{tab:employees}
+\caption{Utility and Number of Employees with time}
+\label{tab:utilityandemployees}
 \end{table}
 
-Lastly, it was estimated that the cost of hiring a single full-time employee (or equivalent in part-time workers) would be £50000. This includes their salary, their training, their sick cover, their annual bonus etc.
+It was also estimated that the cost of employing one full-time employee (or equivalent in part-time workers) would be £50000. This includes salaries, company computers, training, sick cover, annual bonuses etc.
+\subsubsection{Warehouse Hiring}
+The game is assumed to be played in a converted warehouse. The size of warehouse required for the game was thought to be comparable to that of a large school hall (circa. 5000 square feet). Including space for a reception area, a small office and a break room for staff, between 6000 and 7000 square feet was thought to be an appropriate size. The warehouse should be within a short drive of a large city. A 6800 square foot warehouse in London was identified at £2000 pcm \cite{rightmoveCheckThis}. The cost of hiring the warehouse is therefore estimated at £25000 per annum.
 \subsubsection{Advertising}
-The advertising budget is very large. This is because early revenue has a huge affect on NPV, since the discount rate is so large, so it is desirable to invest heavily in advertising initially, with the hope of spending as little time as possible operating below maximum utility. Advertising will continue even when maximum utility has been reached. This will be necessary if the business is to keep reaching new audiences, and if it is to advertise new features that are developed. The assumption is made that advertising costs are constant throughout business operation. This may be slightly unrealistic, but it is assumed for the sake of making a conservative estimate. Having been in touch with Global (the advertising agency responsible for Transport for London), the cost of a "small-scale advertising campaign" involving one-to-two posters in several small, outer-London underground stations and a small presence in carriage poster advertising is around £2000 per month. The cost of 1000 views for a social media advertising campaign is around £10 for Facebook, Instagram, and TikTok (a range of social media designed to reach a range of generations: young professionals as well as parents of teenagers). So, for £500 per month, 50000 views of social media advertising can be bought. These can be localised, meaning only users in London will be shown advertising. \newline
+The advertising budget is large, because early revenue has a disproportionate affect on NPV due to the large discount rate. It is therefore desirable to invest heavily in advertising initially, spending as little time as possible operating below maximum utility. Advertising will continue even when maximum utility has been reached. This is necessary to keep the business reaching new audiences, and if it is to advertise new features. It is assumed that advertising costs are constant throughout operation. This may be unrealistic, but produces a conservative estimate. After conversations with Global (the advertising agency responsible for Transport for London), the cost of a "small-scale advertising campaign" involving one-to-two posters in several small, outer-London underground stations and a small presence in carriage poster advertising is around £2000 per month. The cost of 1000 views for a social media advertising campaign is around £10 for Facebook, Instagram, and TikTok. So, for £500 per month, 50000 views of social media advertising can be bought. These can be localised so only users in London will be shown advertising. \newline
 
 Therefore, the projected required advertising budget is given by 
 \begin{equation}
     \label{equ:advertising}
     \text{Cost [£/Year]} = \left (2000\text{ £/month} + 500\text{ £/month}\right ) \times 12\text{ months/year} = £30000\text{ £/year}
 \end{equation}
-\subsubsection{Heating and Lighting}
-The heating power required to heat a building is given by:
+
+
+
+\subsubsection{Electricity}
+\paragraph{Heating} \(\) \newline
+The warehouse is assumed to be heated electrically. The heating power is given by:
 \begin{equation}
     \dot Q=U_wA_w\Delta T+U_rA_r\Delta T+U_fA_f\Delta T +\text{ACH}\cdot \frac{\rho c_p V\Delta T}{3600}
 \end{equation}
-where \(U,A,\Delta T\) denote the U-Value (thermal transmittance), area and temperature difference between indoors and outdoors, and subcripts \(w,r,f\) denote the walls, roof and floor respectively. \(\text{ACH}, \rho, c_p, V\) denote the equivalent number of complete air changes per hour, air density, air specific heat capacity (constant pressure), and volume respectively. As a rough assumption, it is assumed that the warehouse is poorly insulates, with U-Values three times worse than the maximum specified for newly built houses under UK law \cite{UValueRegs}. This is summarised in Table \ref{tab:U-Values}.
+where \(U,A,\Delta T\) denote the U-Value (thermal transmittance), area and the indoor-outdoor temperature difference, and subscripts \(w,r,f\) the walls, roof and floor respectively. \(\text{ACH}, \rho, c_p, V\) denote the equivalent number of complete air changes per hour, air density, air specific heat capacity (constant pressure), and volume respectively. As a rough estimate, the warehouse is assumed to have U-Values three times greater (less well insulated) than the maximum specified for newly built houses under UK law \cite{UValueRegs}. This is summarised in Table \ref{tab:U-Values}.
 \begin{table}[h]
 \centering
 \begin{tabular}{|c|c|c|}
@@ -1527,30 +1558,33 @@ Roof (pitched)& 0.16 & 0.48 \\
 Floor & 0.18 & 0.54 \\
 \hline
 \end{tabular}
-\caption{Maximum U-Values for newly build residential properties and assumed U-Values for the warehouse}
+\caption{Maximum U-Values for newly built residential properties and assumed U-Values for the warehouse}
 \label{tab:U-Values}
 \end{table}
 
-It is also assumed that, when a new set of players enters the warehouse, 50\% of the air is evacuated and replaced, and no air is evacuated when the game is being played. The first assumption is likely a significant overestimate, and the second a modest underestimate, resulting in a slightly inflated heating power requirement.\newline
+It is also assumed that, when players enters the warehouse every hour, 50\% of the air is evacuated and replaced, and no air is evacuated when the game is being played. The first assumption is likely a significant overestimate, and the second a modest underestimate, resulting in a conservative estimate.\newline
 
-We will further assume that the height of the warehouse is 6 metres, and that the warehouse is square (for the purpose of calculating wall heights). 
+It is further assumed that the height of the warehouse is 6 metres, and that the warehouse is square. 
 
-As demonstrated in equation \ref{app:heating-calcs}, we find that the total heating power required to hold the warehouse at a temperature of \(20^\circ C\) is 17.6 kW.
+As shown in equation \ref{app:heating-calcs}, it is found that the total heating power required to maintain a temperature of \(20^\circ C\) is 17.6 kW.
 \newline
 
-To calculate the lighting costs, it is assumed the warehouse requires fifty 100W equivalent LEDs, each drawing 15W of power (the maze needs lots of lighting to avoid dark shadows in corners). However, since the game is designed to be played in darkness, the lights will only be required in between play sessions. Each game is designed to last 45 minutes, with 15 minute breaks between them, so the lights will only be "on" one quarter of the time. Therefore the effective power of the lighting is given by \(\dot Q = \frac 14 \times 50\times100W = 1.3kW\) to the nearest \(100W\).
+\paragraph{Lighting} \(\) \newline
+To calculate the lighting costs, it is assumed the warehouse requires fifty 100W equivalent LEDs, each drawing 15W of power, to avoid dark shadows in the maze corners. However, since the game is played in (relative) darkness, the lights will only be required in between play sessions. Each game lasts 45 minutes, separated by 15 minute breaks, so the lights will only be "on" one quarter of the time. Therefore the effective power of the lighting is given by \(\dot Q = \frac 14 \times 50\times100W = 1.3kW\).
 
-The other electricity costs include charging the batteries and powering computers used by employees. It is assumed that the batteries and computers are both charged by \(65W\) USB-C chargers. There are assumed to be 20 batteries in total, including computers and drone batteries, and (for the sake of a conservative estimate) it is assumed they are all charging whenever the centre is open. Therefore, the effective power draw of charging batteries is given by \(\dot Q=20\times 65W=1.3kW\).
+\paragraph{Batteries} \(\) \newline
+Batteries in drones and laptops used by employees both must be charged. Both are assumed to be charged by standard \(65W\) chargers. There are assumed to be 20 batteries in total, and it is assumed they are all charging whenever the centre is open. The effective power draw of charging batteries is estimated at \(\dot Q=20\times 65W=1.3kW\).
 
-Therefore the total power draw of the operational warehouse is approximated to \(17.6kW+1.3kW=1.3kW=20.2kW\)
+Therefore the total power draw of the operational warehouse is approximated to \(17.6kW+1.3kW+1.3kW=20.2kW\)
 
-The warehouse is assumed to be heated electrically. According to Department for Energy Security and Net Zero's Q2 2025 Energy Prices report \cite{EnergyPrices}, the average electricity cost to non-domestic users (including Climate Change Levy) over the last three years is around 25p/kWh. This will be used to calculate an annual electricity cost. It is also assumed that the warehouse will need to be open 3000 hours per year (for 2000 hour-long games per year), to include unbooked game slots and the time required for the air to heat before the warehouse is warm enough to allow players in. The final electricity cost is therefore given in Equation \ref{equ:eleccost}
+\paragraph{Full Electricity Cost} \(\) \newline
+According to the Department for Energy Security and Net Zero's Q2 2025 Energy Prices report \cite{EnergyPrices}, the average electricity cost to non-domestic users (including Climate Change Levy) over the last three years is around 25p/kWh. This will be used to calculate an annual electricity cost. It is also assumed that the warehouse will need to be open 3000 hours per year (for 2000 hour-long games per year), to include unbooked game slots, maintenance and opening preparation time. The final electricity cost is therefore given in Equation \ref{equ:eleccost}.
 \begin{equation}
     \label{equ:eleccost}
     \text{Electricity Cost [£/Year]}=20.2\text{kW}\times3000\text{ hours/year} \times 0.25 \text{ £/kWh}=£15150/\text{year}
 \end{equation}
 
-To keep the estimate conservative, to allow for fluctuations in electricity price and to allow for unforeseen costs (employees boiling a kettle, for example), this value will be rounded up to a final electricity cost of £20k/year.
+To keep the estimate conservative, to allow for fluctuations in electricity price and to allow for miscellaneous costs (employees boiling a kettle, for example), this value will be rounded up to a final electricity cost of £20k/year.
 
 \subsubsection{Warehouse Decoration and Maintenance}
 The purpose of Year 0 is, among other things, to decorate the warehouse and make it suitable for playing drone laser-tag. From year 1 onward, the infrastructure will already exist, and the purpose of the budget is for wear-and-tear and maintenance. Hence, the Year 0 budget for decoration and maintenance will be much higher than for subsequent years. 
@@ -1589,7 +1623,7 @@ Hence, the total Income \& Expenditure table, not including tax or external fina
 Year & 0 & 1 & 2 & 3 & 4 & \dots \\
 \hline
 Warehouse Hire & 25 & 25 & 25 & 25 & 25 & \dots \\
-Warehouse Heating \& Lighting & 20 & 20 & 20 & 20 & 20 & \dots \\
+Electricity & 20 & 20 & 20 & 20 & 20 & \dots \\
 Warehouse Decorating \& Maintenance & 30 & 10 & 10 & 10 & 10 & \dots \\
 Employees & 100 & 100 & 150 & 200 & 200 & \dots \\
 Advertising & 30 & 30 & 30 & 30 & 30 & \dots \\
@@ -1718,7 +1752,7 @@ WACC & 17.7\% &&&&&&&&\\
 Year & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & \dots \\
 \hline
 Warehouse Hire & 25 & 25 & 25 & 25 & 25 & 25 & 25 & 25 & \dots \\
-Heating \& Lighting & 20 & 20 & 20 & 20 & 20 & 20 & 20 & 20 & \dots \\
+Electricity & 20 & 20 & 20 & 20 & 20 & 20 & 20 & 20 & \dots \\
 Decorating \& Maintenance & 30 & 10 & 10 & 10 & 10 & 10 & 10 & 10 & \dots \\
 Employees & 100 & 100 & 150 & 200 & 200 & 200 & 200 & 200 & \dots \\
 Advertising & 30 & 30 & 30 & 30 & 30 & 30 & 30 & 30 &\dots \\
@@ -1748,6 +1782,7 @@ The Discouted Cumulative Cash Flow becomes positive in Year 10 (known as payback
 \subsection{Analyses}
 Using Apps Script, the Google Sheets equivalent of Microsoft Excel's macros, the following analyses were performed. In general, one or more variables was changed, and another was observed, while all others were held constant according to the assumptions stated above.
 \subsubsection{NPV Profile}
+\label{NPVProfile}
 A common way of analysing a business' viability is by observing the effects on NPV of changing the discount rate, and by analysing the NPV-Discount Rate graph that this analysis produces (shown in Figure \ref{fig:NPV-Profile}.
 
 \begin{figure}[H]
@@ -1760,6 +1795,7 @@ A common way of analysing a business' viability is by observing the effects on N
 It is observed that the discount rate at which NPV is zero (Internal Rate of Return, IRR) is 22.3\%. Using WACC calculations, a discount rate of 17.7\% was projected. This shows that the business is viable even if the discount rate is slightly higher than projected. Furthermore the NPV profile shows that a small reduction in discount rate produces a large increase in NPV. This is encouraging, since discount rate is likely to decrease significantly as the business becomes more established, reflecting a decrease in perceived risk of equity investment.
 
 \subsubsection{Discounted Payback Sensitivity}
+\label{DPS}
 It is also useful to investigate how payback (the time required for the project to recover initial investments from cash flows, or the time at which the cumulative discounted cash flow becomes positive) changes with discount rate (shown in figure \ref{fig:dis-pay-sen}.
 
 \begin{figure}[H]
@@ -1772,6 +1808,7 @@ It is also useful to investigate how payback (the time required for the project 
 It is observed that Payback increases with Discount Rate (which is to be expected). However, since Payback (a measure of the business' early performance) is being measured, it is not affected by the expected decrease of discount rate with time. It is however observed that Payback does not change hugely constant over the realistic values of Discount Rate, only increasing from 9 to 13 years as Discount Rate increases from 15\% to 20\%. This is encouraging, since it shows a slight error in numerical assumptions does not hugely affect the projected business performance.
 
 \subsubsection{Pricing}
+\label{PriceAnal}
 \paragraph{Price and Demand}\(\) \newline
 To determine the optimum price to charge per game, it is necessary to model how utility (games per year) will change with the price charged per game. For now, the increase of utility shown in Table \ref{tab:utility} is assumed to be constant.
 
@@ -1832,6 +1869,7 @@ It is also observed that, for the linear left-hand most section of the graph (co
 It is lastly that NPV is only positive for prices between £160 and £240 per game (to the nearest £10). Given how small this range of price values is, this demonstrates the importance of this analysis.
 
 \paragraph{Utility Sensitivity}\(\) \newline
+\label{UtilityAnalFixedPrice}
 It was estimated that the maximum number of games per year would be 2000 when the price was £200 per game. The effect on NPV of a small error is this estimate was investigated.
 Price per game was held constant, maxmimum games per year was varied and the resulting NPV tabulated. The results are shown in Figure \ref{fig:uti-sen}.
 
@@ -1846,6 +1884,7 @@ It is observed that NPV is only positive for a utility of over 1900 games per ye
 This demonstrates the importance of a high utility, and justifies the high advertising budget. 
 
 \paragraph{How Optimal Price varies with elasticity} \(\) \newline
+\label{ElasticityAnal}
 This process was repeated for reference values of elasticity \(\varepsilon'\) between -0.5 (very unresponsive to price change) and -3 (very price-sensitive). Since the effect on NPV of variations on two variables (reference elasticity and price per game) is being measured, it would be possible to create a 3D surface to demonstrate this. However, since reference elasticity is only being varied in order to assess the sensitivity of the model to errors in numerical assumptions, i.e. it is not something that can be changed in order to maximise NPV, it is only useful to tabulate the optimal price per game (price that maximises NPV) and plot it against reference elasticity. This is shown in Figure \ref{fig:opt-cos-sen}.
 
 \begin{figure}[H]
@@ -1896,5 +1935,17 @@ Assuming the average daytime temperature in London is \(10 ^\circ C\), and the d
 \end{equation}
 \newpage
 
-
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/High-Level/Flow2.png}
+    \caption{Flow Chart Describing High-Level Mode Changes}
+    \label{fig:FlowBig}
+\end{figure}
+\label{risk-assessment}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/risk-assessment}
+    \caption{Quantitative Risk Assessment}
+    \label{fig:risk-assessment}
+\end{figure}
 \end{document}
