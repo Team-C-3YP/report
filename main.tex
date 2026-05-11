@@ -453,13 +453,13 @@ This suggests that the battery is theoretically capable of supplying the require
 
 We require a component for power distribution used to route the main battery output to the four ESCs safely and with enough current margin. Since each motor is driven by a separate ESC, a PDB must be able to supply the combined current demand of all propulsion channels.
 
-Given the ESCs are rated \(40~\text{A}\) each, hence the combined theoretical maximum ESC demand is:
+Given the ESCs are rated \(40~\text{A}\) each, the combined theoretical maximum ESC demand is:
 
 \[
 4\times40=160\text{A}
 \]
 
-We require a high-current PDB, which was chosen to be the Holybro Power Distribution Board 300A. It is specified with a \(300~\text{A}\) continuous current rating, \(1000~\text{A}\) burst rating,\(10~\text{oz}\) copper PCB design, and XT90/XT30 connector options. The \(300~\text{A}\)continuous rating gives a clear margin above the theoretical maximum ESC demand
+We require a high-current PDB, which was chosen to be the Holybro Power Distribution Board 300A. It is specified with a \(300~\text{A}\) continuous current rating, \(1000~\text{A}\) burst rating,\(10~\text{oz}\) copper PCB design, and XT90/XT30 connector options. The \(300~\text{A}\)continuous rating gives a clear margin above the theoretical maximum ESC demand.
 
 \begin{table}[htbp]
 \centering
@@ -634,7 +634,7 @@ The camera selected by the visual perception work-stream was the OAK-D Lite used
 
 %%%%%FIGURE:OAK D Lite
 
-\paragraph{flight control sensors}
+\paragraph{Flight Control Sensors}
 
 Suitable flight control sensors were needed to give the drone basic state information required for basic motion and awareness. Chosen sensors were intended to provide local state information that could support stabilization, height referencing, and obstacle awareness during indoor operations: the IMU measured body motion, the ToF sensor provided ceiling-distance and side distance information for nearby obstacles.
 
@@ -662,11 +662,18 @@ The SparkFun ICM-20948 IMU provides local motion and oreintation feedback. It is
 
 The VL53L1X and VL53L5CX ToF sensors are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained RL control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
 
-\paragraph{IR Tagging system}
+\paragraph{IR Tagging System}
 
+For game-specific components, the drone is required to have an infrared tagging system capable of tagging players and detecting when it has been tagged. Despite the project name, the physical hardware uses infrared rather than actual lasers. This is due to safety and regulatory reasons: laser products usage are subject to classification and safety requirements under UK regulations - such as the BS EN/IEC 60825-1 \cite{bsi_laser_safety_60825}, and guidance notes that laser radiation risks harm to eyes and skin \cite{ukhsa_laser_safety}. Using Infra-red based system is therefore more appropriate for indoor game-play, where players and drones operate near each other. In terms of hardware, we focus on how the IR components are physically installed into the overall drone design.
 
+\textbf{IR emitter} - Mounted on the gimbal/turret alongside the camera so tagging direction is aligned with the aiming direction. The emitter is housed in a compact cylindrical mount - around 10mm in diameter. 
+
+\textbf{IR receiver} - These IR sensors should be distributed around the drone hull where they should be exposed enough to detect incoming IR signals. The receiver spacing should also be dense enough to ensure reliable hit registration during game-play, so players can have an easier time shooting at the drones.
+
+%%%%%FIGURE: - a choice between the sensors and emitter, or the installation process.
 
 \subsection{Mechanical Design Development}
+
 \subsubsection{Early Design Concepts}
 \subsubsection{Main Body Design}
 \subsubsection{Rotor Arm and Motor Mount Design}
