@@ -640,7 +640,31 @@ Suitable flight control sensors were needed to give the drone basic state inform
 
 A barometer was not selected as the primary height sensor despite being commonly used in drones for altitude estimation. Given the indoor environment and close proximity between walls and ceilings, pressure-based height estimation is less reliable. Instead, an upward-facing ToF sensor was considered more appropriate for this controlled indoor environment, where the ceiling height can be known in advance.
 
+\begin{table}[htbp]
+\centering
+\caption{Flight-control sensors used for local motion and distance awareness} \cite{sparkfun_icm20948, st_vl53l1x, st_vl53l5cx}
+\label{tab:flight_control_sensors}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l X X X @{}}
+\toprule
+\textbf{Sensor} & \textbf{Role} & \textbf{Placement / Orientation} & \textbf{Key Specification} \\
+\midrule
+SparkFun ICM-20948 IMU & Measures drone motion and orientation/state & Housed inside hull, near the centre & 9-axis IMU: 3-axis accelerometer, 3-axis gyroscope, 3-axis magnetometer; I\textsuperscript{2}C/SPI support \\
+
+VL53L1X ToF sensor & Provides vertical distance reference & Mounted pointing upwards & ToF ranging up to approximately 4 m; up to 50 Hz ranging frequency \\
+
+VL53L5CX ToF sensors & Provides side obstacle awareness and short-range distance sensing & Mounted facing outwards on multiple sides of the drone & 8$\times$8 multizone ToF sensing; up to 4 m range; \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The SparkFun ICM-20948 IMU provides local motion and oreintation feedback. It is housed inside the drone, near the centre of the drone body, where it can measure acceleration, angular-rate, and magnetic-field measurements representative of the airframe while simultaneously protected from impact.
+
+The VL53L1X and VL53L5CX ToF sensors are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained RL control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
+
 \paragraph{IR Tagging system}
+
+
 
 \subsection{Mechanical Design Development}
 \subsubsection{Early Design Concepts}
