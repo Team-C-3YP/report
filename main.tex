@@ -542,19 +542,105 @@ Voltage regulation & Pololu D24V90F5 5 V regulator & Steps battery voltage down 
 
 Before investigating deeper into the topic of onboard computing and communication, it is vital to define its role within the overall drone system. Each drone is required to have a local processing unit that handles specific tasks that needed to happen directly on the drone, such as sensor processing, low-to mid-level control, and execution of pre-trained control or perception models during game-play. This includes responding to sensor inputs, player tracking, and carrying out motion commands in real time.
 
-However, as explained in other sections, the drone is not intended to make all these decisions independently onboard. High-level control (i.e. game logic and multi-drone coordination) will be handled via a central server housed outside the arena. The onboard computer would therefore be required to communicate drones state, sensor information, and status updates to the server while receiving instructions. This meant that the onboard companion computer needed to provide more capability than a simple micro-controller, while still needs to remain light, compact and inexpensive.
+However, as explained in other sections, the drone is not intended to make all these decisions independently onboard. High-level control (i.e. game logic and drone coordination) will be handled via a central server housed outside the arena. The onboard computer would therefore be required to communicate drone states, sensor data, and status updates to the server while simultaneously receiving instructions. This meant that the onboard companion computer needed to provide more capability than a simple micro-controller, while still remaining light, compact and inexpensive.
 
 \paragraph{Onboard Computer}
 
+Several hardware options were considered for the onboard computer. The main choice was between an Arduino-based micro-controller and Raspberry Pi single-board computer. Arduino boards are attractive as they are generally low-cost, easily programmable, lightweight and generally suitable for direct hardware control. However, they lacked the necessary processing power and memory to run pre-trained models, and often require additional modules for Wi-Fi communication. They also lacked camera and high-level software support.
 
+A two-board Arduino setup was considered, where one board would handle lower-level hardware control and another would manage communication or higher-level tasks. However this would increase general complexity in wiring and packaging while still not solving the main processing limitation. For this reason, the design moved towards investigating the usage of Raspberry Pi.
+
+\begin{table}[htbp]
+\centering
+\caption{Arduino options considered. Data from Arduino product specifications \cite{arduino_uno_rev3, arduino_uno_r4_wifi}.}
+\label{tab:arduino_comparison}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l X X @{}}
+\toprule
+\textbf{Parameter} & \textbf{Arduino Uno Rev3} & \textbf{Arduino Uno R4 WiFi} \\
+\midrule
+Processing unit & ATmega328P microcontroller & Renesas RA4M1 Arm Cortex-M4 microcontroller \\
+
+Clock speed & 16 MHz & 48 MHz main core; ESP32-S3 up to 240 MHz for wireless module \\
+
+Memory & 32 KB flash, 2 KB SRAM, 1 KB EEPROM & 256 KB flash, 32 KB RAM, 8 KB EEPROM on main MCU \\
+
+Integrated wireless modules & None; external Wi-Fi/Bluetooth module required & Built-in Wi-Fi and Bluetooth \\
+
+I/O interfaces & GPIO, PWM, analog inputsI & GPIO, PWM, analog inputs \\
+
+Camera support & No camera interface & No Raspberry Pi-style camera/software ecosystem \\
+
+Weight & Approximately 25 g & Approximately 48 g \\
+
+Approx price & \pounds20--\pounds25 &  \pounds25--\pounds35 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Comparison of Raspberry Pi single-board computer. Data from official Raspberry Pi \cite{raspberrypi4_specs, raspberrypi5_specs}.}
+\label{tab:raspberrypi_comparison}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l X X @{}}
+\toprule
+\textbf{Parameter} & \textbf{Raspberry Pi 4 Model B} & \textbf{Raspberry Pi 5} \\
+\midrule
+Processor & Broadcom BCM2711 quad-core Cortex-A72 64-bit SoC & Broadcom BCM2712 quad-core Cortex-A76 64-bit SoC \\
+
+Clock speed & 1.8 GHz & 2.4 GHz \\
+
+Relative performance & sufficient for deployed models & Approximately 2--3$\times$ CPU performance relative to Raspberry Pi 4 \\
+
+Memory options & 1 GB, 2 GB, 4 GB, or 8 GB LPDDR4 & 1 GB, 2 GB, 4 GB, 8 GB, or 16 GB LPDDR4X \\
+
+Wireless LAN & 2.4 GHz and 5.0 GHz IEEE 802.11ac Wi-Fi & Dual-band 802.11ac Wi-Fi \\
+
+Bluetooth & Bluetooth 5.0, BLE & Bluetooth 5.0, BLE \\
+
+GPIO & Raspberry Pi standard 40-pin GPIO header & Raspberry Pi standard 40-pin GPIO header \\
+
+Camera interface & 2-lane MIPI CSI camera port & 2 $\times$ 4-lane MIPI camera/display transceivers \\
+
+USB & 2 $\times$ USB 3.0, 2 $\times$ USB 2.0 & 2 $\times$ USB 3.0, 2 $\times$ USB 2.0 \\
+
+Approximate cost & From \$35, depending on RAM option & From \$45, depending on RAM option \\
+
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Two main Rasperry Pi single-board computers were considered, the Raspberry Pi 4 Model B and the Raspberry Pi 5 - specs are shown in table 12.
+
+Despite the strong performance offered by the Raspberry Pi 5, its additional computing capabilities were not considered important as the project was using pre-trained models rather than training onboard. The Raspberry Pi 4 Model B was chosen as the onboard computer as it provided a good balance between processing, cost and integration. In addition, it provided the required Wi-Fi, GPIO, USB, and camera interfaces, while being easier to power and package inside the drone.
+
+%%%%%FIGURE: Raspberry Pi 4 Model B
+%%%%%FIGURE: Rapsberry Pi 5
 
 \paragraph{Communication Interface}
 
+From a hardware point of view, the main communication requirement was that the drone could connect wirelessly to the external server. The Raspberry Pi 4 Model B included built-in dual band Wi-Fi and Bluetooth. Wi-Fi would be used to connect between the drone and the server, while the Bluetooth could be reserved for short-range setup or debugging if required. Detailed comparison between both methods are covered in the networking section of the report.
+
 \paragraph{Interface with Sensors and Control Hardware}
 
-\paragraph{Summary of Onboard Computing and Communication}
+Drone electronics will connect to the onboard computer via the GPIO, serial, USB, and camera-related interfaces. The camera would connect to the Raspberry Pi through USB, allowing the Raspberry Pi to receive camera, depth, and other processed visual data from the camera module. Sensors such as the IMU and ToF would connect through standard buses which allows the Raspberry Pi to read data during flight operations. The IR receivers would connect to GPIO pins while the IR emitter would be controlled through a GPIO output signal. The gimbal/turret servos would be driven using PWM control signals, allowing onboard system to aim the camera and IR emitter simultaneously. ESCs would receive power directly from the battery via the PDB, while the Raspberry Pi would command motor speeds. The Raspberry Pi, as mentioned previously, will be powered from via the regulated 5V voltage.
 
 \subsubsection{Sensors and Game-Specific Electronics}
+
+\paragraph{Camera}
+
+The camera selected by the visual perception work-stream was the OAK-D Lite used for player detection and tracking. In this hardware section, the camera is considered from an integration point of view. The OAK-D Lite connects to the Raspberry Pi through USB hence the drone body must be designed to ensure both the USB connection and cable routing are practical inside the drone body. Its power draw also need to be included in the 5V electronics power budget. Mechanically, the camera must be placed with a clear field of view - placed in line with the IR emitter inside a gimble/turret where they can move simultaneously. There should be no obstruction by the airframe, turret structure, or wiring. More detailed reasoning behind the camera choice can be found in the visual detection pipeline covered separately under "Mid Level Control".
+
+%%%%%FIGURE:OAK D Lite
+
+\paragraph{flight control sensors}
+
+Suitable flight control sensors were needed to give the drone basic state information required for basic motion and awareness. Chosen sensors were intended to provide local state information that could support stabilization, height referencing, and obstacle awareness during indoor operations: the IMU measured body motion, the ToF sensor provided ceiling-distance and side distance information for nearby obstacles.
+
+A barometer was not selected as the primary height sensor despite being commonly used in drones for altitude estimation. Given the indoor environment and close proximity between walls and ceilings, pressure-based height estimation is less reliable. Instead, an upward-facing ToF sensor was considered more appropriate for this controlled indoor environment, where the ceiling height can be known in advance.
+
+\paragraph{IR Tagging system}
 
 \subsection{Mechanical Design Development}
 \subsubsection{Early Design Concepts}
