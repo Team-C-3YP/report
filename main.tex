@@ -671,10 +671,27 @@ For game-specific components, the drone is required to have an infrared tagging 
 
 \subsection{Mechanical Design Development}
 
+After investigating and selecting the main electronics, the mechanical design aims to transform the selected components into a physical drone layout. Most modeling and assembly designs was carried out in Fusion 360, while standard component models such as motors, batteries, sensors, and other components were either simplified into representative objects based on specified dimensions or downloaded from online libraries to save time. The goal is to define how the components are mounted, protected, and accessed while also ensuring easily manufacturable and cheap parts that are simple to assemble. 
+
 \subsubsection{Early Design Concepts}
+
+The early concepts tested out basic airframe layouts. The first concept followed a compact quadrotor arrangement, taking inspiration from commercial drones - featuring a central body, four rotor positions, and a space for a centrally mounted turret system. This gave a simple starting point, but as more electronic components were introduced into the CAD assembly, internal packaging became the main issue.
+
+%%%%%FIGURE: First Drone CAD
+
+The second and third concepts continued to investigate into symmetrical quadrotor layouts with increased body volume. One version even featured blade-guards, but made the drone noticeably larger, bulkier and less refined than the original concept. Scaling up the size solved some layout issues, but caused the platform to be less suitable for indoor game environment where the drone was required to be compact. In addition, earlier versions treated the airframe as one large connected body, which was not practical for assembly, manufacturing or repair. 
+
+%%%%%FIGURE: Second Drone CAD and Third Drone CAD
+
+This led to a complete change in direction for the final design: a modular mirrored layout, where the rotor arms are separate from the main body and secured using linkage parts and bolts. This allows the body, arms, linkages, and mounts to be manufactured separately and assembled more easily. The key design areas are the central main body, rotor arms and motor mounts, and turret/gimbal assembly - at which we will go into detail in the following sections.
+
+%%%%%FIGURE: Final Assembled Drone CAD
+
 \subsubsection{Main Body Design}
+
+The main body is composed of three main parts: the top hull, the bottom hull, and the electronics basket. 
+
 \subsubsection{Rotor Arm and Motor Mount Design}
-\subsubsection{Landing Gear Design}
 \subsubsection{Turret Design Process}
 \label{Turret}
 
