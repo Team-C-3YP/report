@@ -89,12 +89,12 @@ This gives players a simple overall objective: beat the hardest wave possible. I
 In "Objective Mode", the players must attempt to navigate the maze to complete objectives, such as "Hold this button for 5 seconds", or "Shoot this target on the wall", which will be communicated to the players via CHECK WITH RICKIE. They must complete all objectives within a defined time to "pass" the level. While they are completing these objectives, the drones are flying overhead and attempting to shoot at the players, just as in Wave Mode. Similarly, the players must timeout for 10 seconds in a particular area of the maze if hit, and the drones will exit the game if hit, but will return after a short timeout. If all players timeout at once, they lose; if they exceed the time limit for the level, they lose; if they complete all objectives, they win. If they win, they will progress to a harder level. \newline
 
 Just as in "Wave Mode", this gives players a simple overall objective: to pass the hardest level they can. This can be displayed in their player profile in the companion app.
-\subsubsection{Difficulty Scaling}
+\subsection{Difficulty Scaling}
 Since the levels increase in difficulty, there is little need to scale difficulty according to a players' skill: if the players are inexperienced, they will only play easy levels, and levels will be designed to suit players of all skill levels. However, there may need to change the difficulty of the levels according to the number of players. This can be achieved in a number of ways. For example, the number of drones could be adjusted, the top speed of the drones could be capped, and artificial inaccuracy could be added to the shooting of the drones. \newline
 
 It is very difficult to know which methods of adjusting difficulty will result in a game that is enjoyable, and balanced, for a range of numbers of people. Hence, deciding exactly how to perform this adjustment will require play-testing, in the arena, once it has been created.
 \newpage
-\section{System Architecture and Integration} \label{system} % Everyone
+\section{System Architecture and Integration} \label{system} % Everyone except Ritchie
 
 \subsection{Simulation Representation of the Hardware} %Rickie
 \subsubsection{Geometric and Physical Abstraction}
@@ -1503,8 +1503,31 @@ Lastly, it was estimated that the cost of hiring a single full-time employee (or
 \subsubsection{Advertising}
 The advertising budget is very large. This is because early revenue has a huge affect on NPV (discussed in section [SECTION NUMBER HERE]), so it is desirable to invest heavily in advertising initially, with the hope of spending as little time as possible operating below maximum utility. Advertising will continue even when maximum utility has been reached. This will be necessary if the business is to keep reaching new audiences, and if it is to advertise new features that are developed. The assumption is made that advertising costs are constant throughout business operation. This may be slightly unrealistic, but it is assumes for the sake of making a conservative estimate % waiting for Global to return call
 \subsubsection{Heating and Lighting}
-The 
-% heat loss equation stuff
+The heating power required to heat a building is given by:
+\begin{equation}
+    \dot Q=U_wA_w\Delta T+U_rA_r\Delta T+U_fA_f\Delta T +\text{ACH}\cdot \frac{\rho c_p V\Delta T}{3600}
+\end{equation}
+where \(U,A,\Delta T\) denote the U-Value (thermal transmittance), area and temperature difference between indoors and outdoors, and subcripts \(w,r,f\) denote the walls, roof and floor respectively. \(\text{ACH}, \rho, c_p, V\) denote the equivalent number of complete air changes per hour, air density, air specific heat capacity (constant pressure), and volume respectively. As a rough assumption, it is assumed that the warehouse is poorly insulates, with U-Values three times worse than the maximum specified for newly built houses under UK law \cite{UValueRegs}. This is summarised in table \ref{tab:U-Values}.
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+&Maximum U-Value [\(W/m^2K\)]& Assumed U-Value for warehouse [\(W/m^2K\)]\\
+\hline
+External Walls & 0.26 & 0.78 \\
+Roof (pitched)& 0.16 & 0.48 \\
+Floor & 0.18 & 0.54 \\
+\hline
+\end{tabular}
+\caption{Maximum U-Values for newly build residential properties and assumed U-Values for the warehouse}
+\label{tab:U-Values}
+\end{table}
+
+It is also assumed that, when a new set of players enters the warehouse, 50\% of the air is evacuated and replaced, and no air is evacuated when the game is being played. The first assumption is likely a significant overestimate, and the second a modest underestimate, resulting in a slightly inflated heating power requirement.\newline
+
+We will further assume that the height of the warehouse is 6 metres, and that the warehouse is square (for the purpose of calculating wall heights). 
+
+As demonstrated in \ref{app:heating-calcs}, we find that the total heating power required to hold the warehouse at a temperature of \(20^\circ C\) is 17.6 kJ.
 
 \subsubsection{Warehouse Decoration and Maintenance}
 The purpose of Year 0 is, among other things, to decorate the warehouse and make it suitable for playing drone laser-tag. From year 1 onward, the infrastructure will already exist, and the purpose of the budget is for wear-and-tear and maintenance. Hence, the Year 0 budget for decoration and maintenance will be much higher than for subsequent years. 
@@ -1512,7 +1535,7 @@ Chaboun Construction (a London-based building services provider) quotes £50000 
 
 \begin{table}[h]
 \centering
-\begin{tabular}{|c|c|c|}
+\begin{tabular}{|c|c|}
 \hline
 Year & Warehouse Decoration and Maintenance Cost\\
 \hline
@@ -1822,6 +1845,32 @@ In general, one or more variables was changed, and another was observed, while a
 % Essential content that interrupts the flow of the document can be placed here, e.g. technical drawings, detailed lists of equations used, etc.
 \addcontentsline{toc}{section}{Appendix}
 \section*{Appendix}
+\label{app:heating-calcs}
+\begin{equation}
+    \dot Q=U_wA_w\Delta T+U_rA_r\Delta T+U_fA_f\Delta T +\text{ACH}\cdot \frac{\rho c_p V\Delta T}{3600}
+\end{equation}
+\begin{equation}
+    \text{Floor Area}=\text{Roof Area}=6800 \text{ft}^2=632m^2
+\end{equation}
+Assume floor plan to be square, and walls to be \(6m\) tall:
+\begin{equation}
+    \text{Wall Length}=\sqrt{632m^2}=25.1m
+\end{equation}
+\begin{equation}
+    \text{Total Wall Area}=4*25.1m*6m=603m^2
+\end{equation}
+\begin{equation}
+    \text{Total Volume}=632m^2\times6m=3792m^3
+\end{equation}
+Assuming the average daytime temperature in London is \(10 ^\circ C\), and the desired temperature is \(20^\circ C\), \(\Delta T=10^\circ C\):
+\begin{equation}
+    \dot Q=U_wA_w\Delta T+U_rA_r\Delta T+U_fA_f\Delta T +\text{ACH}\cdot \frac{\rho c_p V\Delta T}{3600}
+\end{equation}
+\begin{equation}            =0.78\times603\times10+0.48\times632\times10+0.54\times632\times10+0.5\cdot \frac{1.225\times1005\times3792\times10}{3600}
+\end{equation}
+\begin{equation}            
+    =17.6\text{kJ}
+\end{equation}
 \newpage
 
 
