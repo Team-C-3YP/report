@@ -810,26 +810,61 @@ The gimbal turret designed included requirements from the visual learning proces
 
 Mechanically, the gimbal is mounted through the central opening in the bottom hull and electronics basket. 
 
-The coupler forms the main connection between the yaw actuator and the electronics basket. It defines the mounting region for the MG90S servo output and provide the space where the square axial component will be installed. 
+%%%%%FIGURE:Blueprint for Gimbal (without motor) - with blueprint
 
-The gimbal installation plate is positioned below the coupler and is used to close up the interface between the gimbal and the drone body. It also secures the lower part of the installation interface which keeps the yaw mechanism aligned and provide tighter space for wires to help reduce entanglement issues. 
+The \textbf{coupler} forms the main connection between the yaw actuator and the electronics basket. It defines the mounting region for the servomotor output and provide the space where the square axial component will be installed. 
 
-The square Axial component supports the pitch-axis moto and provides the structural frame for the upper gimbal mechanisms. It is directly installed to the yaw mechanism allowing the overall gimbal to move in yaw motion - it is only in contact with the MG90S servo output. The pitch motion is produced by mounting a gimbal motor onto the square axial component, with the motor output connected to the gimbal pitch axis component. This allows camera and IR emitter to tile upward and downward.
+The \textbf{gimbal installation plate} is positioned below the coupler and is used to close up the interface between the gimbal and the drone body. It also secures the lower part of the installation interface which keeps the yaw mechanism aligned and provide tighter space for wires to help reduce entanglement issues. 
 
-The gimbal pitch axis component acts as the moving structure for pitch stage and provides roll-axis motor mount. The roll motion is produced by mounting the roll gimbal motor onto the pitch axis component, with the motor output connected to the gimbal 
+The \textbf{square axial component}square Axial component supports the pitch-axis motor and provides the structural frame for the upper gimbal mechanisms. It is directly installed to the yaw mechanism allowing the overall gimbal to move in yaw motion - it is only in contact with the servomotor output. The pitch motion is produced by mounting a gimbal motor onto the square axial component, with the motor output connected to the gimbal pitch axis component. This allows camera and IR emitter to tile upward and downward.
 
-\subsection{Final Drone Assembly and Packaging}
-\subsubsection{Overall Airframe Configuration}
-\subsubsection{Internal Component Layout}
-\subsubsection{Maintainability and Replace-ability}
-\subsubsection{Safety Features}
+The \textbf{gimbal pitch axis component} acts as the moving structure for pitch stage and provides roll-axis motor mount. The roll motion is produced by mounting the roll gimbal motor onto the pitch axis component, with the motor output connected to the gimbal roll axis component. This creates a second controlled axis above the yaw and pitch stages.
+
+The \textbf{gimbal roll axis component} provides the mounting location for the OAK-D Lite camera and IR emitter. As the camera and IR emitter are mounted on the same final axis, the visual tracking direction and IR tagging direction remain aligned.
+
+Together, the yaw servo, pitch motor, and roll motor allow the turret to achieve 3-axis movement.
+
+%%%%%FIGURE: showing the final gimbal assembly
+
+\begin{table}[htbp]
+\centering
+\caption{Estimated printed mass of gimbal turret components using Fusion 360 solid-body mass and assumed 3D-print infill percentages.}
+\label{tab:gimbal_mass_estimate}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l r r r @{}}
+\toprule
+\textbf{Component} & \textbf{Solid CAD Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
+\midrule
+Gimbal installation plate & 21.58 g & 50\% & 10.8 g \\
+Square axial component & 12.23 g & 70\% & 8.6 g \\
+Gimbal pitch axis component & 6.65 g & 70\% & 4.7 g \\
+Gimbal roll axis component & 5.21 g & 70\% & 3.6 g \\
+Coupler & 20.89 g & 80\% & 16.7 g \\
+\midrule
+\textbf{Total gimbal assembly} & \textbf{66.55 g} & -- & \textbf{44.4 g} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Table~\ref{tab:gimbal_mass_estimate} shows the mass of the solid body from Fusion 360 using assigned ABS material properties. Estimations were made using infill assumptions for each component which reduced the final mass from 66.55g to 44.4g - excluding the camera, IR emitter, gimbal motors and servo. 
+
+\paragraph{Servomotor and Gimbal Motor}
+
+The gimbal turret uses two actuator types as mentioned previously. The MG90S servo is used for the yaw axis, while the Quanum 2208 brush-less gimbal motors are used for the pitch and roll axes. Servo was used for the Yaw stage in order to provide compact rotation at the base, while the pitch and roll may be better with smoother gimbal-style motion. 
+
+\subsubsection{Overall Airframe Configuration - Assembly}
+\paragraph{Internal Component Layout}
 
 \subsection{Preliminary Engineering Evaluation}
-\subsubsection{Mass, Thrust, and Endurance Estimates}
 \subsubsection{Structural Assessment of Critical Components}
 \subsubsection{Feasibility of the Final Design}
 
 \newpage
+
+\section{Player Hardware Design}
+\subsection{Vest}
+\subsection{Helmet}
+\subsection{Weapon}
 
 %%%%%%%%%----------------end of Hardware---------------%%%%%%%%%
 
