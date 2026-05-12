@@ -57,6 +57,7 @@
 \newacronym{npv}{NPV}{Net Present Value}
 \newacronym{wacc}{WACC}{Weight Averaged Cost of Capital}
 \newacronyn{tv}{TV}{Terminal Value}
+\newacronym{irr}{IRR}{Internal Rate of Return}
 \printglossaries
 \newpage
 
@@ -1745,7 +1746,7 @@ The cost of hiring exclusive usage of a laser-tag facility is commonly around £
 The effect of a variation in game price is analysed in Section \ref{PriceAnal}.
 
 \subsubsection{Aggregate}
-Hence, the total Income \& Expenditure table, not including tax or external financing (such as bank loans, equity etc.) is shown in Table \ref{tab:IE}.
+Hence, the total Income \& Expenditure Table, not including tax or external financing (such as bank loans, equity etc.) is shown in Table \ref{tab:IE}.
 
 \begin{table}[h]
 \centering
@@ -1830,6 +1831,8 @@ Therefore, for the sake of simplicity, WACC is used in this model, with rates:
     r_d=15\% \qquad r_e=20\%
 \end{equation}
 
+The effect of a variation in discount rate is analysed in Sections \ref{NPVProfile} and \ref{DPS}.
+
 \subsubsection{Terminal Value}
 \label{TermValue}
 The "left-over" value of a business after a fixed term of \(t\), the "Terminal Value", with cash flow (positive cash flow corresponding to profit) in year k, \(\text{CF}_k\), is given by:
@@ -1870,12 +1873,12 @@ UK corporation tax law also allows losses in one year to be carried over to the 
 \subsubsection{Net Present Value}
 A running total cash flow is tabulated. This is discounted according to the year in which the money is made. The Net Present Value (NPV) at a given year is given by the discounted cumulative cash flow up to that year added to the discounted terminal value. In future years, once cash flow (including tax) stabilises, NPV remains constant. "NPV" refers to a this stabilised value.
 
-\paragraph{Assumptions and Limitations} \(\) \newline
+\paragraph{Assumptions} \(\) \newline
 For simplicity, it is assumed that a constant WACC discount rate is applied over time. This assumes:
 \begin{itemize}
     \item The debt held with the bank is constant, and the business is only paying the interest on the loan; in reality, the loan would likely be paid off after \(N\) years,according to equation \ref{equ:amortisation}
-    \item Both the Equity-Only Discount Rate and the Loan Interest Rates are constant; in reality, it is likely that they would decrease over time as the business becomes more established to reflect a decreased risk in investing in the business.
-    \item Only the capital investments in Year 0 need to be financed. As can be seen in table \ref{tab:IE}, Year 1 is projected to run at a small loss, which must also be financed. This is neglected for simplicity, and is insignificant compared with other assumptions made in this model.
+    \item Both the Equity-Only Discount Rate and the Loan Interest Rates are constant; in reality, both would decrease over time as the business becomes more established to reflect a decreased risk.
+    \item Only the capital investments in Year 0 need to be financed. As can be seen in Table \ref{tab:IE}, Year 1 is projected to run at a small loss, which must also be financed. This is neglected for simplicity, and is insignificant compared with other assumptions made in this model.
 \end{itemize}
 
 \subsection{Full Model}
@@ -1916,13 +1919,13 @@ Discounted CCF& -215&-219&-194&-148&-109&-79.0&-56.8&-37.9& \dots \\
 \label{tab:model}
 \end{table}
 
-The Discouted Cumulative Cash Flow becomes positive in Year 10 (known as payback, discussed at greater length in analyses). After calculating the discounted Terminal Value once tax has stabalised according to equation \ref{equ:DTV}, it is found that the Net Current Value (NPV) is £68669. In other words, the business is viable under current assumptions.
+The Discounted Cumulative Cash Flow turns positive in Year 10 (payback; section \ref{DPS}). It is found that the Net Present Value (NPV) is £68669. Hence, the business is viable under these assumptions.
 
 \subsection{Analyses}
-Using Apps Script, the Google Sheets equivalent of Microsoft Excel's macros, the following analyses were performed. In general, one or more variables was changed, and another was observed, while all others were held constant according to the assumptions stated above.
+Using Apps Script, Google Sheets' equivalent of Excel macros, the following analyses were performed. In general, one variable was changed and another was observed, while all others were held constant according to the assumptions stated above.
 \subsubsection{NPV Profile}
 \label{NPVProfile}
-A common way of analysing a business' viability is by observing the effects on NPV of changing the discount rate, and by analysing the NPV-Discount Rate graph that this analysis produces (shown in Figure \ref{fig:NPV-Profile}.
+A common measure of a business' viability is the effect of changing the discount rate on NPV, and analysis of the NPV-Discount Rate graph that this analysis produces (shown in Figure \ref{fig:NPV-Profile}).
 
 \begin{figure}[H]
     \centering
@@ -1931,11 +1934,11 @@ A common way of analysing a business' viability is by observing the effects on N
     \label{fig:NPV-Profile}
 \end{figure}
 
-It is observed that the discount rate at which NPV is zero (Internal Rate of Return, IRR) is 22.3\%. Using WACC calculations, a discount rate of 17.7\% was projected. This shows that the business is viable even if the discount rate is slightly higher than projected. Furthermore the NPV profile shows that a small reduction in discount rate produces a large increase in NPV. This is encouraging, since discount rate is likely to decrease significantly as the business becomes more established, reflecting a decrease in perceived risk of equity investment.
+The discount rate at which NPV is zero (Internal Rate of Return, IRR) is 22.3\%. Using WACC calculations, a discount rate of 17.7\% was projected. This shows that the business is viable even under slightly higher discount rates than predicted. Furthermore the NPV profile shows that a small reduction in discount rate produces a large increase in NPV. This is encouraging, since discount rate is likely to decrease significantly as the business becomes more established.
 
 \subsubsection{Discounted Payback Sensitivity}
 \label{DPS}
-It is also useful to investigate how payback (the time required for the project to recover initial investments from cash flows, or the time at which the cumulative discounted cash flow becomes positive) changes with discount rate (shown in figure \ref{fig:dis-pay-sen}.
+It is also useful to investigate how payback (the time at which the cumulative discounted cash flow becomes positive) changes with discount rate (shown in Figure \ref{fig:dis-pay-sen}).
 
 \begin{figure}[H]
     \centering
@@ -1944,19 +1947,21 @@ It is also useful to investigate how payback (the time required for the project 
     \label{fig:dis-pay-sen}
 \end{figure}
 
-It is observed that Payback increases with Discount Rate (which is to be expected). However, since Payback (a measure of the business' early performance) is being measured, it is not affected by the expected decrease of discount rate with time. It is however observed that Payback does not change hugely constant over the realistic values of Discount Rate, only increasing from 9 to 13 years as Discount Rate increases from 15\% to 20\%. This is encouraging, since it shows a slight error in numerical assumptions does not hugely affect the projected business performance.
+Payback increases with Discount Rate. However, Payback only decreses a little over the realistic values of Discount Rate, only increasing from 9 to 13 years as Discount Rate increases from 15\% to 20\%. This suggests slight errors in numerical assumptions does not hugely affect the projected business performance.
 
 \subsubsection{Pricing}
 \label{PriceAnal}
 \paragraph{Price and Demand}\(\) \newline
-To determine the optimum price to charge per game, it is necessary to model how utility (games per year) will change with the price charged per game. For now, the increase of utility shown in Table \ref{tab:utility} is assumed to be constant.
 
-A linear demand-price curve was assumed - that is to say the demand (maximum number of games per year, given by \(Q_d\)) varies with price per game (\(P\) according to the equation:
+To determine the optimum price per game, the relationship between utility (games per year) and the price per game is modelled. The increase of utility shown in Table \ref{tab:utilityandemployees} is assumed to be constant.
+
+
+A linear demand-price curve was assumed: demand (maximum number of games per year, \(Q_d\)) varies with price per game, \(P\), according to the equation:
 \begin{equation}
     Q_d=a-bP
 \end{equation}
 for constants \(a, b\).
-As above, it was assumed that, charging £200 per game would yield a maximum of 2000 games per year, leading to:
+As above, it was assumed that, a price of £200 per game corresponds to a maximum of 2000 games per year, giving:
 \begin{equation}
     Q_d=2000+b(200-P)
 \end{equation}
@@ -1966,33 +1971,25 @@ The demand-price elasticity \(\varepsilon\) is defined as:
     \varepsilon=\frac{dQ_d}{dP}\cdot \frac PQ
 \end{equation}
 
-It can be shown that the above equations combine to give:
+% It can be shown that the above equations combine to give:
+% \begin{equation}
+%     Q_d=2000-\varepsilon\frac QP(200-P)
+% \end{equation}
+In a linear model, \(\varepsilon\) is varies. Instead, a reference value of elasticity \(\varepsilon'\) will be taken at \((Q_d=2000, P=200\)), and the gradient held constant. Hence, the demand-price curve reduces to:
 \begin{equation}
-    Q=2000-\varepsilon\frac QP(200-P)
+    Q_d=2000-10\varepsilon'(200-P)
 \end{equation}
-NB: \(\varepsilon<0\)
-In a linear model, \(\varepsilon\) is not constant. Instead, a reference value of elasticity \(\varepsilon'\) will be assumed at \((Q=2000, P=200\), the gradient found at this point, and held constant across the demand-price curve. Hence, the demand-price curve reduces to:
-\begin{equation}
-    Q=2000-10\varepsilon'(200-P)
-\end{equation}
-
-
-However, this model implies no limit on utility. In reality, there is a strict upper-limit on utility (only one game can be played at a time). 
-
-This upper limit is modelled as 3000 (corresponding to around 59 hour-long games per week, excluding public holidays)
-
-So, the final demand-price curve is given by:
+However, this model implies no limit on utility. In reality, only one game can be played at a time. This upper limit is modelled as 3000 games/year (corresponding to around 59 hour-long games per week, excluding public holidays), given a final demand-price curve of:
 
 \begin{equation}
-    Q=\min\{2000-10\varepsilon'(200-P), 3000\}
+    Q_d=\min\{2000-10\varepsilon'(200-P), 3000\}
 \end{equation}
+A reference value of elasticity \(\varepsilon=-1.1\) is chosen, since it represents a moderate price-sensitivity.\newline
 
-To begin, a reference value of elasticity \(\varepsilon=-1.1\) is chosen, since it represents a moderate price-sensitivity.
+The effect of a variation in reference elasticity is analysed in Section \ref{ElasticityAnal}
 
 \paragraph{Finding optimal price} \(\) \newline
-Using the model between the maximum number of games per year and price shown above, the relationship between the price per game and NPV is investigated. Again, the increase of utility shown in Table \ref{tab:utility} is assumed to be constant.
-
-The results are shown in Figure \ref{fig:pri-sen}.
+The variation of NPV with game price was investigated. The results are shown in Figure \ref{fig:pri-sen}.
 
 \begin{figure}[H]
     \centering
@@ -2003,14 +2000,14 @@ The results are shown in Figure \ref{fig:pri-sen}.
 
 It is observed that, given \(\varepsilon'=-1.1\), £200 per game is the price that maximises NPV. 
 
-It is also observed that, for the linear left-hand most section of the graph (corresponding to constant utility of 3000 games per year), NPV is hugely negative. This implies that attempting to set the price per game such that the facility is running at capacity is a very poor decision
 
-It is lastly that NPV is only positive for prices between £160 and £240 per game (to the nearest £10). Given how small this range of price values is, this demonstrates the importance of this analysis.
+The linear left-most section of the graph corresponds to a constant utility of 3000 games per year. In this section, NPV is hugely negative. Therefore, attempting to setting the game price such that the facility is running at capacity is a very poor decision.
+
+NPV is only positive for prices between £160 and £240 per game (to the nearest £10). Given how narrow this range of is, this demonstrates the importance of this analysis.
 
 \paragraph{Utility Sensitivity}\(\) \newline
 \label{UtilityAnalFixedPrice}
-It was estimated that the maximum number of games per year would be 2000 when the price was £200 per game. The effect on NPV of a small error is this estimate was investigated.
-Price per game was held constant, maxmimum games per year was varied and the resulting NPV tabulated. The results are shown in Figure \ref{fig:uti-sen}.
+It was assumed that the maximum number of games per year would be 2000 when the price was £200 per game. The effect of a small error is this estimate was investigated. Price per game was held constant, maximum games per year was varied and the resulting NPV was tabulated. The results are shown in Figure \ref{fig:uti-sen}.
 
 \begin{figure}[H]
     \centering
@@ -2019,12 +2016,11 @@ Price per game was held constant, maxmimum games per year was varied and the res
     \label{fig:uti-sen}
 \end{figure}
 
-It is observed that NPV is only positive for a utility of over 1900 games per year (rounded to the nearest 50). This is very close to the estimated 2000 games per year.
-This demonstrates the importance of a high utility, and justifies the high advertising budget. 
+NPV is only positive for above 1900 games per year (rounded to the nearest 50) This is very close to the estimated 2000 games per year: a high utility is critical, justifying the high advertising budget. 
 
 \paragraph{How Optimal Price varies with elasticity} \(\) \newline
 \label{ElasticityAnal}
-This process was repeated for reference values of elasticity \(\varepsilon'\) between -0.5 (very unresponsive to price change) and -3 (very price-sensitive). Since the effect on NPV of variations on two variables (reference elasticity and price per game) is being measured, it would be possible to create a 3D surface to demonstrate this. However, since reference elasticity is only being varied in order to assess the sensitivity of the model to errors in numerical assumptions, i.e. it is not something that can be changed in order to maximise NPV, it is only useful to tabulate the optimal price per game (price that maximises NPV) and plot it against reference elasticity. This is shown in Figure \ref{fig:opt-cos-sen}.
+This process was repeated for reference elasticity \(\varepsilon'\) between -0.5 (very price-insensitive) and -3 (very price-sensitive). Since the effect on NPV of changing two variables (reference elasticity and price per game) is being measured, it would be possible to create a 3D surface to demonstrate this. Since reference elasticity is only being varied in order to assess the sensitivity of the model to errors in numerical assumptions (it is not something that can be changed in order to maximise NPV), it is only useful to tabulate the optimal price per game (price that maximises NPV) and plot this against reference elasticity. This is shown in Figure \ref{fig:opt-cos-sen}.
 
 \begin{figure}[H]
     \centering
@@ -2033,11 +2029,11 @@ This process was repeated for reference values of elasticity \(\varepsilon'\) be
     \label{fig:opt-cos-sen}
 \end{figure}
 
-It is likely that the elasticity will be between -0.8 and -1.5. It is observed that, over this range of reference elasticity, the optimal cost is almost constant, and very close to £200 per game.
+Elasticity is likely to be between -0.8 and -1.5. It is observed that, over this range of reference elasticity, the optimal cost is almost constant, and very close to £200 per game.
 
 \subsubsection{Limitations}
 
-In general, one or more variables were changed, and another was observed, while all others were held constant according to the assumptions stated above. It is likely that, by completing a sweep, changing all values at once to create a multi-dimensional space model of all financial values, optima of NPV will be found that were missed in the above analysis, either by brute force or multi-dimensional gradient descent.
+In general, one or more variables were changed, and another was observed, while all others were held constant according to the assumptions stated above. It is likely that, by completing a sweep, changing all values at once to create a multi-dimensional surface model of all financial values, optima of NPV will be found that were missed in the above analysis, either by brute force or multi-dimensional gradient descent.
 
 \newpage
 
