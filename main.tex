@@ -897,20 +897,13 @@ We plan to use industrial safety nets to separate the players from the drones as
 
 \newpage
 
-\section{Sensor Processing} % Tommy, Rishabh
-\subsection{Player detection} % Rishabh
-\subsection{Drone pose tracking} \label{pose tracking} % Tommy
+\section{State Estimation} \label{state estimation} % Tommy
+\fancyhead[C]{Thomas August} % 
 
-
-\section{High Level Control} \label{high level control} % Ritchie
-\subsection{Drone pose tracking} % Tommy
 \newpage
 
-
-
-
 \section{Network and Communications}
-\fancyhead[C]{Richard Usherwood} % Ritchie
+Ritchie
 \subsection{Overview}
 Network and Communications is not strictly necessary. It is theoretically possible for all of the drones to achieve a common goal without either the need for the ability to communicate with each other, or the ability to communicate with a central server. In this case, each drone would act according the the information that it had gathered (location of the players, location of other drones etc.), and would not have access to the information that other players had gathered. An analogy can be used between a football team (no central server) and a human playing table football.\newline
 There are a couple of advantages to handling information without a central server, which are listed below: 
@@ -1627,7 +1620,7 @@ When the perception pipeline returns a valid \gls{yolo} detection, the update ph
 
 \newpage
 
-\section{Search Mode} % Tommy
+\section{Search Mode} \label{search mode}% Tommy
 \fancyhead[C]{Thomas August}
 The objective of the multi-agent drone system is to find and eliminate players without getting eliminated themselves and this section focuses on the method of finding the players within the map. At the start of a laser tag game, the drones and players will each start in their home bases which as positioned at opposite edges of the map. At this stage, our system knows that players will be entering the map from their home base, but does not know the exact location of these players within the map, and hence all drones will start in the search mode. This mode will not only be used at the start of the game but also when a drone cannot see a player and has not received a backup call from another drone (detailed in Section \ref{high level control}). In both cases, the server will need to plan a trajectory for each drone and the drone should follow this trajectory while looking for players with the onboard camera.
 
@@ -1639,7 +1632,7 @@ For the region allocation, we decided to use a multi-agent Breadth First Search 
 For the path planning algorithm, we initially looked at just using a Depth First Search (DFS) tree walk along the allocated region, which is efficient when in tight maze like areas of the map, however in open spaces such as the middle of the map it still walks through it as if it is a maze, backtracking when in open space. To mitigate this behavior and make the search more efficient over the whole map, we decided to use a hybrid DFS and lawnmower search method where we assign any open spaces as a single item in the DFS tree and plan the path through this region using the lawnmower method.
 
 \subsection{Trajectory Following}
-Now that we have planned a trajectory for each drone, the drones need a method of following those trajectories. As we are searching for players, we want this trajectory to be slow and smooth to give the gimble-camera system time to search the area. We considered a number of methods for the motion planning such as PD
+Now that we have planned a trajectory for each drone, the drones need a method of following those trajectories. As we are searching for players, we want this trajectory to be slow and smooth to give the gimble-camera system time to search the area. Since the behaviour needed is not complex, we opted to use basic PD controllers here to reduce the computational load. Since we would like to control the position of the drone using the propeller thrusts, we are unable to use a single PD controller to directly control position from the motor thrusts. Instead this is split into 3 stages: position PD controller, attitude PD controller, and mixing matrix. The position PD controller uses the position error and velocity as inputs and outputs an acceleration vector. This acceleration vector is then combined with the inverse of the drone weight vector to produce a desired thrust vector, and from this desired thrust vector along with the heading direction we compute a desired orientation to point all propellers along the desired thrust direction. The orientation error between this desired orientation and the current orientation along with the angular velocities are used in the second PD controller to output angular accelerations which can be converted to moments using the drone moment of inertia. These moments as well as the desired thrust vector projected onto the current upward direction are used as the drone body thrust and moments. Finally the mixing matrix (detailed in Section \ref{mixing matrix}) is used to convert these body thrust and moments to individual rotor thrusts.
 
 \newpage
 
@@ -1649,22 +1642,34 @@ Now that we have planned a trajectory for each drone, the drones need a method o
 All of our play modes are team based meaning we need a method of coordinating the drones to work as a team against the human players. In order to make the game fair for the players we decided not to give the central server full control over every aspect of the drone team. For example, if a drone has detected a player's location, we have not allowed the central server to pass this information to all other drones meaning a player should not be faced with many drones against them at one time. To provide a compromise between full information sharing and no information sharing, we decided to introduce a protocol where a drone can call for backup if multiple players are detected within its view. The central server will then find the closest unoccupied drone and put it into this movement mode, in which it is given a target location where the other drone needs backup and the objective is to get there as quickly as possible. The information provided here is to give some context to why we produced a movement mode and what it's purpose is; further information regarding the interaction of the modes and the call for backup protocol can be found in Section \ref{high level control}.
 
 \subsection{Design Setup}
-In order to best decide on the optimal algorithms and methods to use within this mode, we first outlined the criteria for this state to meet. The inputs will be the current grid square of the drone and the target grid square, and the outputs will be the drone thrust and moments. The drone behaviour we need from this mode is for it to reach the target location as quickly as possible with a reliable success rate. We do have the collision avoidance which would abort an unsuccessful trajectory if it is executed, however it is still optimal to ensure all modes have a high success rate to avoid the need to use collision avoidance as much as possible. This task can be split into the planning stage and the execution stage. We decided to run the planning stage on the central server, since the drone and target grid coordinates are already stored there and this will reduce the computational load on the drone. This will output a trajectory through the 2D map for the drone to follow in the execution stage. Since the execution stage involved the direct control of the drone thrust and moments, we decided to run this onboard to reduce latency, as high latency would introduce unnecessary complexity to the control algorithm. 
+In order to best decide on the optimal algorithms and methods to use within this mode, we first outlined the criteria for this state to meet. The inputs will be the current grid square of the drone and the target grid square, and the outputs will be the drone thrust and moments. The drone behaviour we need from this mode is for it to reach the target location as quickly as possible with a reliable success rate. We do have the collision avoidance which would abort an unsuccessful trajectory if it is executed, however it is still optimal to ensure all modes have a high success rate to avoid the need to use collision avoidance as much as possible. This task can be split into the planning stage and the execution stage. We decided to run the planning stage on the central server, since the drone and target grid coordinates are already stored there and this will reduce the computational load on the drone. This will output a trajectory through the 2D map for the drone to follow in the execution stage. Since the execution stage involves the direct control of the drone thrust and moments, we decided to run this onboard to reduce latency, as high latency would introduce unnecessary complexity to the control algorithm. 
 
 \subsection{Planning Stage}
 
-As mentioned above, the planning stage will need to compute a path through our known 2D map of the maze from the current drone location to the target location. Since the objective of this method it to reach the target location as quickly as possible, we want to plan the shortest path in order to minimise the distance travelled. To plan the shortest path we decided to use a Breadth First Search (BFS) algorithm which uses our map to determine which adjacent cells can be accessed from the current cell. The map will use 
+As mentioned above, the planning stage will need to compute a path through our known 2D map of the maze from the current drone location to the target location. Since the objective of this method it to reach the target location as quickly as possible, we want to plan the shortest path in order to minimise the distance travelled. To do this, we decided to use a Breadth First Search (BFS) algorithm which uses our map (detailed in Section \ref{map}) to determine which adjacent cells can be accessed from the current cell. This algorithm runs until the target location is reached, and then the shortest path is determined by starting at the target location and adding the parent node of the previous node recursively until it gets back to the current location, and then reversing the order. Since the map we have designed is 11x17 grid squares, there are 187 grid squares, so the number of possible paths is $187 \cdot 187 = 34,969$, and since this will be run on the central server, we decided so pre-compute all possible paths as storage will not be a problem on the central server and this will reduce the computation time and hence get the drone moving towards the target location quicker. In order to access it efficiently, we will use a lookup table from which the programme can request paths using the start and end coordinates. 
+
+Now that we have the shortest 2D path through the grid squares, we need to convert this to a trajectory for the drone to follow in the 3D arena. In order to minimise the chance of collisions with the map and provide the drones with as much freedom of movement as possible, we decided to place the trajectory checkpoints in the centre of each grid square, halfway between the net and the ceiling. These checkpoints are then sent to the drone along with the command to change into movement mode.
+
+\subsection{Control Method}
+In the other modes we have described using PD controllers to track the drone trajectories due to it having a low computational cost, however, since we would like this mode to be as quick as possible, we are willing to use more compute in order to reach the target location quicker. This led us to look at more complex control methods such as Reinforcement Learning (RL) and Model Predictive Control (MPC). When researching the methods above we came across a paper that uses MPC to train a RL policy online using supervised learning, \cite{zhang_learning_2016}, and although we did not use the method explained in this paper, their reasoning in the introduction helped decide what method was best for our application. In the introduction they stated that "MPC is an effective and reliable method ... However, applications of MPC can be computationally demanding" and "model-free RL is difficult to apply to unstable systems such as quadrotors, due to the possibility of catastrophic failure during training." From this we can see that their justification for using an RL policy trained under supervision from an MPC controller is because they aim to achieve the reliable results from MPC but with the lower computational load of RL, however, they decided not to train direcly with RL becuase in the early stages of training this would lead to catastrophic damage of their hardware. In our situation, we also aim to get reliable results while maintaining the lower computation load of RL, however, instead of using online supervised learning, we opted for offline learning on a physics simulator, which allows us to train the RL policy unsupervised without causing catastrophic damage to hardware during the early stage of training. This also allows us to train and test this policy without needing physical hardware, which speeds up the design phase. Additionally, in the paper, they mention that they passed the raw sensor data as the input to the RL policy to avoid having to estimate the state, however since we already need to estimate the state (detailed in Section \ref{state estimation}), for the Search and Collision Avoidance modes (detailed in Sections \ref{search mode} and \ref{collision avoidance mode} respectively), we decided to get the inputs for our RL policy from this estimated state instead to avoid increasing the complexity of the control problem unnecessarily. We opted for the policy to output body thrust and moments, again to avoid unnecessarily increasing the complexity, because we already need the mixing matrix (detailed in Section \ref{mixing matrix}) for the other modes.
+
+In conclusion, we opted to use a reinforcement learning policy trained offline on a physics simulator using Isaac Lab \cite{IsaacLab}. The inputs of our policy are be derived from the estimated state and the outputs are the thrust and moments of the drone body.
+
+\subsection{Environment Setup}
+
+
+
 
 
 \newpage
 
-\section{Collision Avoidance Mode} % Tommy
+\section{Collision Avoidance Mode} \label{collision avoidance mode} % Tommy
 \fancyhead[C]{Thomas August}
 
 As much as we have tried to mitigate the possibility of collisions when designing the different control systems for the drones, there will inevitably still be some collisions that would occur, so we need a method of avoiding collisions in real time that are likely to occur in the near future. Our implementation of this uses constant collision detection to force the drone into collision avoidance mode when there is likely to be an imminent collision. 
 
 \subsection{Collision Detection}
-For the collision detection, we chose to monitor the distance and velocity towards the obstacle and enter collision avoidance mode when the estimated time to collision from these values is below a threshold. Since the drones will estimate their pose and velocity onboard (detailed in Section \ref{pose tracking}), the distance, d, to the closest map obstacle in the direction of the velocity, v, can be calculated and used to find the estimated time to collision using the formula $t=d/v$. Since the pose, velocity and map are all stored onboard, this detection can be run onboard the drone to reduce latency and catch potential collisions quicker. For drone to drone collisions, the pose and velocity of the other drones will have to be sent through the server to other drones, so this will already introduce latency. Due to this, we chose to run the drone to drone collision detection on the server so that we do not get conflicting decisions from the two drones and a unanimous decision can be made for both drones. To determine if a drone to drone collision is imminent, the server will receive the pose and velocity of both drones and propagate the drone poses based on their velocities for time up to the collision detection time threshold and calculate the distance between the two at each time step. If the distance between the two drones is below a small threshold distance to account for noise in the data, then both drones are forced into collision avoidance mode.
+For the collision detection, we chose to monitor the distance and velocity towards the obstacle and enter collision avoidance mode when the estimated time to collision from these values is below a threshold. Since the drones will estimate their pose and velocity onboard (detailed in Section \ref{state estimation}), the distance, d, to the closest map obstacle in the direction of the velocity, v, can be calculated and used to find the estimated time to collision using the formula $t=d/v$. Since the pose, velocity and map are all stored onboard, this detection can be run onboard the drone to reduce latency and catch potential collisions quicker. For drone to drone collisions, the pose and velocity of the other drones will have to be sent through the server to other drones, so this will already introduce latency. Due to this, we chose to run the drone to drone collision detection on the server so that we do not get conflicting decisions from the two drones and a unanimous decision can be made for both drones. To determine if a drone to drone collision is imminent, the server will receive the pose and velocity of both drones and propagate the drone poses based on their velocities for time up to the collision detection time threshold and calculate the distance between the two at each time step. If the distance between the two drones is below a small threshold distance to account for noise in the data, then both drones are forced into collision avoidance mode.
 
 \subsection{Collision Avoidance}
 For the collision avoidance method, we chose to use an Artificial Potential Field (APF) based method. Since we know the exact map and we can estimate the position of all drones in the environment, we can place repulsive potential fields perpendicular to the walls, net, and ceiling, and around all other drones, each acting as a point source. We can then sum the potential from all of these at the location of the current drone and take the gradient to find the best direction to move in. We will use the gradient of the potential field as a target velocity and use a PD controller to find the acceleration vector needed to track this velocity. This acceleration vector is then converted to a force vector using the mass of the drone and an upwards force with magnitude equal to the drone is added to this as the hover force to get a final force vector. This force vector and the velocity direction vectors are used to create a coordinate frame by taking the cross product of the two to get the third vector. The error between the current drone orientation and this desired orientation is then computed and used with the angular velocities as the input to another PD controller that outputs the desired drone moments. The desired force vector from the first PD controller is then used as the thrust combined with these moments as the output of the collision avoidance controller and is fed into the mixing matrix (detailed in Section \ref{mixing matrix}).
@@ -2273,16 +2278,8 @@ In general, one or more variables were changed, and another was observed, while 
 
 
 
-
-
-
-
 \section*{Appendix}
 \fancyhead[C]{Group}
-\newpage
-
-\printbibliography{biblio}
-
 
 \paragraph{Heating cost assumptions}\(\) \newline
 \label{assumptions}
@@ -2330,4 +2327,8 @@ Assuming the average daytime temperature in London is \(10 ^\circ C\), and the d
     \caption{Quantitative Risk Assessment}
     \label{fig:risk-assessment}
 \end{figure}
+
+\newpage
+\printbibliography{biblio}
+
 \end{document}
