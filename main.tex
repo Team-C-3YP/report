@@ -643,7 +643,7 @@ A barometer was not selected as a height sensor despite being commonly used in d
 
 \begin{table}[htbp]
 \centering
-\caption{Flight-control sensors used for local motion and distance awareness} \cite{sparkfun_icm20948, st_vl53l1x, st_vl53l5cx}
+\caption{Flight-control sensors used for local motion and distance awareness \cite{sparkfun_icm20948, st_vl53l1x, st_vl53l5cx}}
 \label{tab:flight_control_sensors}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l X X X @{}}
@@ -1592,7 +1592,7 @@ which can be expressed in matrix representation as:
     }
 \end{equation}
 
-\subsubsection{State Estimation and Predictive Tracking}
+\subsubsection{Player State Estimation and Predictive Tracking}
 Although we are able to obtain the 3D global coordinates of the player ($P_w$) using the kinematic transformations above, the raw measurements will be inherently noisy due to stereoscopic depth jitter and \gls{yolo} bounding box fluctuations. In addition, the arena contains physical walls and objects that can cause temporary occlusions. As a result, we cannot rely solely on the raw visual data and must maintain a state estimate of the player's position.
 
 In order to achieve this, we implemented a Linear Kalman Filter to maintain a continuous, smoothed estimate of the player's position. The filter operates on a constant velocity model, allowing us to project the player's trajectory during periods of occlusion.
