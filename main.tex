@@ -226,7 +226,7 @@ The Avenger 2806.5 was selected because it provided a strong thrust margin witho
 
 \paragraph{Propeller Choice}
 
-The propeller was selected based on geometry as it directly affects the thrust, clearance, and overall rotor-arm design. The propeller was required to provide enough lift when paired with the selected motor, while remaining sizeable for an indoor drone platform. 
+The propeller was selected based on geometry as it directly affects the thrust, clearance, and overall rotor-arm design. The propeller was required to provide enough lift when paired with the selected motor, while remaining size-able for an indoor drone platform. 
 
 We selected using an 8x4x3 propeller, where the notation refers to 8 inch diameter, 4 inch pitch, and 3-blade configuration. A manufacturer dataset for an HQProp 8x4x3 propeller was used as a reference for dimensions and mass, which formed the basis for the certain assumptions related to the rotor-arm design.
 
@@ -644,7 +644,7 @@ A barometer was not selected as a height sensor despite being commonly used in d
 
 \begin{table}[htbp]
 \centering
-\caption{Flight-control sensors used for local motion and distance awareness} \cite{sparkfun_icm20948, st_vl53l1x, st_vl53l5cx}
+\caption{Flight-control sensors \cite{sparkfun_icm20948, st_vl53l1x, st_vl53l5cx}}
 \label{tab:flight_control_sensors}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l X X X @{}}
@@ -811,7 +811,7 @@ The gimbal turret designed included requirements from the visual learning proces
 
 Mechanically, the gimbal is mounted through the central opening in the bottom hull and electronics basket. 
 
-%%%%%FIGURE:Blueprint for Gimbal (without motor) - with blueprint
+%%%%%FIGURE:Blueprint for Gimbal (without motor and servos) - with blueprint
 
 The \textbf{coupler} forms the main connection between the yaw actuator and the electronics basket. It defines the mounting region for the servomotor output and provide the space where the square axial component will be installed. 
 
@@ -853,8 +853,36 @@ Table~\ref{tab:gimbal_mass_estimate} shows the mass of the solid body from Fusio
 
 The gimbal turret uses two actuator types as mentioned previously. The MG90S servo is used for the yaw axis, while the Quanum 2208 brush-less gimbal motors are used for the pitch and roll axes. Servo was used for the Yaw stage in order to provide compact rotation at the base, while the pitch and roll may be better with smoother gimbal-style motion. 
 
+\begin{table}[htbp]
+\centering
+\caption{Suggested actuator specifications for the gimbal turret. Data adapted from supplier specifications \cite{mg90s_servo, gbm2208_gimbal_motor}.}
+\label{tab:gimbal_actuator_specs}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l l X X @{}}
+\toprule
+\textbf{Axis} & \textbf{Suggested Actuator} & \textbf{Size / Weight}\\
+\midrule
+Yaw & MG90S servo & 22.8 mm $\times$ 12.2 mm $\times$ 28.5 mm; approximately 13.4 g\\
+
+Pitch & Quanum/GBM2208 brushless gimbal motor & 28 mm $\times$ 22 mm; approximately 43 g\\
+
+Roll & Quanum/GBM2208 brushless gimbal motor & 28 mm $\times$ 22 mm; approximately 43 g\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The MG90S is suitable for the yaw stage as it fits within the turret base region inside the electronic basket. The operating speed is sufficient for controlled left-right aiming at 0.10 s/60$^\circ$ at 4.8 V or 0.08 s/60$^\circ$ at 6 V. The gimbal motors are used for pitch and roll control as they are generally designed for smoother movement. They are specified for payloads in 100-200g range which fits the weight requirements for the OAK-D Lite (61g) along with the IR emitter and gimbal parts. The suggested GBM2208 dimensions are approximately 28 x 22 mm which fits the clearance for the motor mount locations.
+
+
 \subsubsection{Overall Airframe Configuration - Assembly}
-\paragraph{Internal Component Layout}
+
+The final airframe configuration brings the separate subsystem assemblies together into a single integrated drone assembly. The design uses a modular central body with detachable rotor-arm, integrated with propeller protection and helicopter-based landing gears, along with a centrally mounted 3-axis gimbal turret. This layout suits the electronics, propulsion, sensors, camera, and IR-tagging system while keeping key parts accessible for maintenance. Rather than one-piece shell, all parts are designed to be separate yet connected, replaceable, and cheap making it practical for manufacture and repair.
+
+%%%%%Figure: Showcase Final Drone image
+
+\paragraph{Component Layout}
+
+The drone parts are designed with reference to the chosen internal electronics. Most of the components will be housed in the electronics basket - including the Raspberry Pi, ESCs, voltage regulator, IMU sensor, battery, and wiring. The OAK-D Lite camera and IR emitter will be mounted externally on the gimbal turret, with their wiring routed back into the central body opening. The motor and propellers will be mounted in the motor arms.
 
 \subsection{Preliminary Engineering Evaluation}
 \subsubsection{Structural Assessment of Critical Components}
@@ -868,6 +896,8 @@ The gimbal turret uses two actuator types as mentioned previously. The MG90S ser
 \subsection{Weapon}
 
 %%%%%%%%%----------------end of Hardware---------------%%%%%%%%%
+
+\newpage
 
 \section{Map} \label{map}
 \fancyhead[C]{Thomas August}
@@ -939,6 +969,8 @@ We plan to use industrial safety nets to separate the players from the drones as
 \newpage
 
 \section{Network and Communications} %Ritchie
+\section{Network and Communications}
+\fancyhead[C]{Richard Usherwood}
 \subsection{Overview}
 Network and communications are not strictly necessary for a single wave of the game. Without them, each drone would act according to the information that it had gathered (location of the players, location of other drones etc.), and would not have access to the information that other drones had gathered. Advantages of this approach include: 
 \begin{itemize}
@@ -967,7 +999,7 @@ A Wi-Fi connection typically has a lower latency and a much higher maximum bitra
 For these reasons, Wi-Fi is selected as the networking medium between the drones and the server. The server will be a desktop computer (with Wi-Fi capability), and the drones, helmets and vests all contain a Raspberry Pi 4, with Wi-Fi capability.
 
 \newpage
-\section{High Level Control} % Ritchie
+\section{High Level Control} \label{high level control} % Ritchie
 \fancyhead[C]{Richard Usherwood} % Ritchie
 \subsection{Context}
 The objective of the High Level Control Protocol is to define algorithms that take game states (positions of human players, positions of drones, etc.) as their inputs, and give a high-level behaviour of a drone as their output. This is achieved by splitting the drones' behaviour into several "modes", in which some information and computation is performed in the server, and transmitted to the drones via Wi-Fi, and some information storage and computing is performed onboard the drone, according to an Information Responsibility Protocol.
@@ -1695,12 +1727,6 @@ For the collision detection, we chose to monitor the distance and velocity towar
 
 \subsection{Collision Avoidance}
 For the collision avoidance method, we chose to use an Artificial Potential Field (APF) based method. Since we know the exact map and we can estimate the position of all drones in the environment, we can place repulsive potential fields perpendicular to the walls, net, and ceiling, and around all other drones, each acting as a point source. We can then sum the potential from all of these at the location of the current drone and take the gradient to find the best direction to move in. We will use the gradient of the potential field as a target velocity and use a PD controller to find the acceleration vector needed to track this velocity. This acceleration vector is then converted to a force vector using the mass of the drone and an upwards force with magnitude equal to the drone is added to this as the hover force to get a final force vector. This force vector and the velocity direction vectors are used to create a coordinate frame by taking the cross product of the two to get the third vector. The error between the current drone orientation and this desired orientation is then computed and used with the angular velocities as the input to another PD controller that outputs the desired drone moments. The desired force vector from the first PD controller is then used as the thrust combined with these moments as the output of the collision avoidance controller and is fed into the mixing matrix (detailed in Section \ref{mixing matrix}).
-
-
-
-
-
-\newpage
 
 \section{Mixing Matrix} \label{mixing matrix} % Tommy, Rishabh
 \fancyhead[C]{Thomas August}
