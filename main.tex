@@ -568,7 +568,7 @@ Memory & 32 KB flash, 2 KB SRAM, 1 KB EEPROM & 256 KB flash, 32 KB RAM, 8 KB EEP
 
 Integrated wireless modules & None; external Wi-Fi/Bluetooth module required & Built-in Wi-Fi and Bluetooth \\
 
-I/O interfaces & GPIO, PWM, analog inputsI & GPIO, PWM, analog inputs \\
+I/O interfaces & GPIO, PWM, analog inputs & GPIO, PWM, analog inputs \\
 
 Camera support & No camera interface & No Raspberry Pi-style camera/software ecosystem \\
 
@@ -612,7 +612,7 @@ Approximate cost & From \$35, depending on RAM option & From \$45, depending on 
 \end{tabularx}
 \end{table}
 
-Two main Rasperry Pi single-board computers were considered, the Raspberry Pi 4 Model B and the Raspberry Pi 5 - specs are shown in table 12.
+Two main Rasperry Pi single-board computers were considered, the Raspberry Pi 4 Model B and the Raspberry Pi 5 - specs are shown in Table~\ref{tab:raspberrypi_comparison}.
 
 Despite the strong performance offered by the Raspberry Pi 5, its additional computing capabilities were not considered important as the project was using pre-trained models rather than training onboard. The \textbf{Raspberry Pi 4 Model B} was chosen as the onboard computer as it provided a good balance between processing, cost and integration. In addition, it provided the required Wi-Fi, GPIO, USB, and camera interfaces, while being easier to power and package inside the drone.
 
@@ -639,7 +639,7 @@ The camera selected by the visual perception work-stream was the OAK-D Lite used
 
 Suitable flight control sensors were needed to give the drone basic state information required for basic motion and awareness. Chosen sensors were intended to provide local state information that could support stabilization, height referencing, and obstacle awareness during indoor operations: the IMU measured body motion, the ToF sensor provided ceiling-distance and side distance information for nearby obstacles.
 
-A barometer was not selected as the primary height sensor despite being commonly used in drones for altitude estimation. Given the indoor environment and close proximity between walls and ceilings, pressure-based height estimation is less reliable. Instead, an upward-facing ToF sensor was considered more appropriate for this controlled indoor environment, where the ceiling height can be known in advance.
+A barometer was not selected as a height sensor despite being commonly used in drones for altitude estimation. Given the indoor environment and close proximity between walls and ceilings, pressure-based height estimation is less reliable. Instead, an upward-facing ToF sensor was considered more appropriate for indoor environment, where the ceiling height can be known in advance.
 
 \begin{table}[htbp]
 \centering
@@ -659,7 +659,7 @@ VL53L5CX ToF sensors & Provides side obstacle awareness and short-range distance
 \end{tabularx}
 \end{table}
 
-The SparkFun ICM-20948 IMU provides local motion and oreintation feedback. It is housed inside the drone, near the centre of the drone body, where it can measure acceleration, angular-rate, and magnetic-field measurements representative of the airframe while simultaneously protected from impact.
+The SparkFun ICM-20948 IMU provides local motion and orientation feedback. It is housed inside the drone, near the center of the drone body, where it can measure acceleration, angular-rate, and magnetic-field measurements representative of the airframe while simultaneously protected from impact.
 
 The VL53L1X and VL53L5CX ToF sensors are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained RL control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
 
@@ -693,38 +693,252 @@ This led to a complete change in direction for the final design: a modular mirro
 
 \subsubsection{Main Body Design}
 
-The main body is composed of three main parts: the top hull, the bottom hull, and the electronics basket. 
+The main body is composed of three main parts: the top hull, the bottom hull, and the electronics basket.
+
+%%%%%FIGURE:An image of the entire central body - exploded
+
+The \textbf{top hull} forms an upper protective cover. It acts as a shield to the internal electronics from direct contact while simultaneously ensure all components are inside. It is designed to give the drone a smooth external shape which helps avoid a bulky appearance and gives the drone a more refined final form.
+
+The \textbf{bottom hull} forms the lower section of the drone and includes the landing gear. It has a boat-like shape that helps enclose the electronics bay while providing a stable base structure. The helicopter-style skid landing gear is directly integrated into the lower section. This landing gear layout was chosen such that it provides a simple, lightweight, and low-maintenance structure. The wide stance improves stability during take-off and landing. 
+
+The \textbf{electronics basket} acts as a removable internal frame used to hold the main electronics, wiring, and mounting points. It also connects the structure between the central body, and the rotor-arm assemblies. Keeping the basket separate from the outer hull means the electronic components can be accessed for maintenance without dismantling the entire drone.
+
+All three body sections are held together using \textbf{bolt fasteners}. This may not be an optimal fastening method, however, is a reasonable choice for the current design stage given they are simple, low-cost, and make the body easier to assemble or disassemble.
+
+There also includes a central opening that passes through the bottom hull and electronics basket for the gimbal/turret assembly. The electronics basket includes a dedicated gimbal/turret mounting feature, where the servo connecting the basket and the gimbal/turret may be installed.
+
+\begin{table}[htbp]
+\centering
+\caption{Estimated printed mass of central body}
+\label{tab:main_body_mass_estimate}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l r r r @{}}
+\toprule
+\textbf{Component} & \textbf{Solid CAD Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
+\midrule
+Top hull & 764.457 g & 20\% & 152.9 g \\
+Bottom hull + landing gear & 1163.830 g & 25\% & 291.0 g \\
+Electronics basket & 604.322 g & 30\% & 181.3 g \\
+\midrule
+\textbf{Total main body assembly} & \textbf{2532.609 g} & -- & \textbf{625.1 g} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The values in Table~\ref{tab:main_body_mass_estimate} were estimated from the Fusion 360 CAD model using assigned ABS material properties. Given Fusion 360 gives a solid CAD mass, this is not expected to represent the final manufactured mass as parts would be 3D printed with partial infill. The infill assumptions provide a more realistic approximation of the printed body mass - which reduces the main body assembly from 2532.6g to approximately 625.1g. Note that this value does not account for wall thickness, slicing setting and print orientation.
+
+\begin{table}[htbp]
+\centering
+\caption{Maximum CAD dimensions of the main body components}
+\label{tab:main_body_dimensions}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{} l r r r @{}}
+\toprule
+\textbf{Component} & \textbf{X (mm)} & \textbf{Y (mm)} & \textbf{Z (mm)} \\
+\midrule
+Top hull & 207.47 & 360.64 & 65.02 \\
+Electronics basket & 255.20 & 260.20 & 70.00 \\
+Bottom hull + landing gear & 234.00 & 418.65 & 144.90 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsubsection{Rotor Arm and Motor Mount Design}
-\subsubsection{Turret Design Process}
-\label{Turret}
 
-\subsection{Final Drone Assembly and Packaging}
-\subsubsection{Overall Airframe Configuration}
-\subsubsection{Internal Component Layout}
-\subsubsection{Maintainability and Replace-ability}
-\subsubsection{Safety Features}
+The rotor-arm assembly is made up of the front and rear rotor arms, blade guards, and linkage parts, which mounts the propulsion system and connect to the main body.
+
+%%%%%FIGURE:Front Rotor + Blueprint
+%%%%%FIGURE:Rear Rotor + Blueprint
+
+The \textbf{rotor arms} support the motor and positions them away from the central body to provide clearance for the propellers. The motor mounts are already integrated to the overall part, so the motor can be fixed directly to the arm. The front and rear arms have slightly different geometries.
+
+The \textbf{blade guards} surround the propeller area and acts as a protective structure against minor collisions. The main purpose is to reduce the chance of propeller collisions and prevent immediately disabling the drone. They can be directly attached to the rotor arms. Further detail on the structural analysis of the blade guards will be within the section on "Preliminary Engineering Evaluation".
+
+The \textbf{linkage parts} connect the rotor arms to the electronics basket. These small parts allow the arms to be assembled separately from the main body and are secured using bolt fasteners. This type of assembly allows damaged arm or linkage to be replaced without rebuilding the full drone body. As these parts transfer load between arms and body, they are treated as vital structural components and will use higher infill then the rest of the body.
+
+\begin{table}[htbp]
+\centering
+\caption{Estimated printed mass of one side of the rotor-arm and blade-guard assembly.}
+\label{tab:rotor_arm_mass_estimate}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l r r r @{}}
+\toprule
+\textbf{Component} & \textbf{Solid CAD Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
+\midrule
+Rear blade guard & 91.2 g & 35\% & 31.9 g \\
+Front blade guard & 86.3 g & 35\% & 30.2 g \\
+Rear rotor arm & 129.1 g & 60\% & 77.5 g \\
+Rear upper linkage & 3.8 g & 80\% & 3.0 g \\
+Rear lower linkage & 3.8 g & 80\% & 3.0 g \\
+Front rotor arm & 171.5 g & 60\% & 102.9 g \\
+Front upper linkage & 3.7 g & 80\% & 3.0 g \\
+Front lower linkage & 3.7 g & 80\% & 3.0 g \\
+\midrule
+\textbf{Total one-side assembly} & \textbf{493.1 g} & -- & \textbf{254.5 g} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fusion 360 CAD model using the properties assigned of ABS material. Just like the main body, the Fusion 360 reports the solid-body CAD mass, therefore we estimate the real manufactured mass using base infill assumptions. Note that this estimate does not account for wall thickness, slicing settings, print orientation, or bolt fastener mass.
+
+\begin{table}[htbp]
+\centering
+\caption{Maximum length of one side of the rotor-arm and blade-guard assembly}
+\label{tab:rotor_arm_dimensions}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{} l r r r @{}}
+\toprule
+\textbf{Component} & \textbf{X (mm)} & \textbf{Y (mm)} & \textbf{Z (mm)} \\
+\midrule
+Rear blade guard & 207.51 & 167.16 & 113.00 \\
+Front blade guard & 117.50 & 207.51 & 118.00 \\
+Rear rotor arm + motor mount & 75.00 & 50.00 & 120.00 \\
+Rear linkage 1 & 40.00 & 20.00 & 5.00 \\
+Rear linkage 2 & 40.00 & 20.00 & 5.00 \\
+Front rotor arm + motor mount & 75.00 & 50.00 & 140.00 \\
+Front upper linkage & 40.00 & 20.00 & 5.00 \\
+Front lower linkage & 40.00 & 20.00 & 5.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Note that the measurements are maximum lengths on each axis, rather than rectangular measurements. The blade guards and rotor arms have circular geometry around the propeller area - these measurements are useful for checking propeller clearance but should not be interpreted as box-shaped component dimensions.
+
+\subsubsection{Turret/Gimbal Design}
+
+The gimbal turret designed included requirements from the visual learning process, where the camera was required to roll, pitch, and yaw. The design took inspiration from traditional industrial two-axis gimbals, but an with an additional yaw axis which provided a 3-axis movement. The camera and IR emitter needed to remain aligned to ensure aiming and tagging were done in the same direction. A reminder previously where the OAK D Lite camera was used as a reference to designing the dimensions of the gimbal.
+
+Mechanically, the gimbal is mounted through the central opening in the bottom hull and electronics basket. 
+
+%%%%%FIGURE:Blueprint for Gimbal (without motor) - with blueprint
+
+The \textbf{coupler} forms the main connection between the yaw actuator and the electronics basket. It defines the mounting region for the servomotor output and provide the space where the square axial component will be installed. 
+
+The \textbf{gimbal installation plate} is positioned below the coupler and is used to close up the interface between the gimbal and the drone body. It also secures the lower part of the installation interface which keeps the yaw mechanism aligned and provide tighter space for wires to help reduce entanglement issues. 
+
+The \textbf{square axial component}square Axial component supports the pitch-axis motor and provides the structural frame for the upper gimbal mechanisms. It is directly installed to the yaw mechanism allowing the overall gimbal to move in yaw motion - it is only in contact with the servomotor output. The pitch motion is produced by mounting a gimbal motor onto the square axial component, with the motor output connected to the gimbal pitch axis component. This allows camera and IR emitter to tile upward and downward.
+
+The \textbf{gimbal pitch axis component} acts as the moving structure for pitch stage and provides roll-axis motor mount. The roll motion is produced by mounting the roll gimbal motor onto the pitch axis component, with the motor output connected to the gimbal roll axis component. This creates a second controlled axis above the yaw and pitch stages.
+
+The \textbf{gimbal roll axis component} provides the mounting location for the OAK-D Lite camera and IR emitter. As the camera and IR emitter are mounted on the same final axis, the visual tracking direction and IR tagging direction remain aligned.
+
+Together, the yaw servo, pitch motor, and roll motor allow the turret to achieve 3-axis movement.
+
+%%%%%FIGURE: showing the final gimbal assembly
+
+\begin{table}[htbp]
+\centering
+\caption{Estimated printed mass of gimbal turret components using Fusion 360 solid-body mass and assumed 3D-print infill percentages.}
+\label{tab:gimbal_mass_estimate}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l r r r @{}}
+\toprule
+\textbf{Component} & \textbf{Solid CAD Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
+\midrule
+Gimbal installation plate & 21.58 g & 50\% & 10.8 g \\
+Square axial component & 12.23 g & 70\% & 8.6 g \\
+Gimbal pitch axis component & 6.65 g & 70\% & 4.7 g \\
+Gimbal roll axis component & 5.21 g & 70\% & 3.6 g \\
+Coupler & 20.89 g & 80\% & 16.7 g \\
+\midrule
+\textbf{Total gimbal assembly} & \textbf{66.55 g} & -- & \textbf{44.4 g} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Table~\ref{tab:gimbal_mass_estimate} shows the mass of the solid body from Fusion 360 using assigned ABS material properties. Estimations were made using infill assumptions for each component which reduced the final mass from 66.55g to 44.4g - excluding the camera, IR emitter, gimbal motors and servo. 
+
+\paragraph{Servomotor and Gimbal Motor}
+
+The gimbal turret uses two actuator types as mentioned previously. The MG90S servo is used for the yaw axis, while the Quanum 2208 brush-less gimbal motors are used for the pitch and roll axes. Servo was used for the Yaw stage in order to provide compact rotation at the base, while the pitch and roll may be better with smoother gimbal-style motion. 
+
+\subsubsection{Overall Airframe Configuration - Assembly}
+\paragraph{Internal Component Layout}
 
 \subsection{Preliminary Engineering Evaluation}
-\subsubsection{Mass, Thrust, and Endurance Estimates}
 \subsubsection{Structural Assessment of Critical Components}
 \subsubsection{Feasibility of the Final Design}
 
 \newpage
 
+\section{Player Hardware Design}
+\subsection{Vest}
+\subsection{Helmet}
+\subsection{Weapon}
+
 %%%%%%%%%----------------end of Hardware---------------%%%%%%%%%
 
+\section{Map} \label{map}
+\fancyhead[C]{Thomas August}
+In our game, we will have humans and drones interacting with each other in close proximity within the same arena, and hence we need to design a map for this arena which is accessible to both players and drones and allows the two to safely interact with each other. We discussed this as a group, considering player enjoyment, game complexity, drone localisation, and drone movement, and concluded that a floor to ceiling maze design would be best.
 
-\section{Sensor Processing} % Tommy, Rishabh
-\subsection{Player detection} % Rishabh
-\subsection{Drone pose tracking} % Tommy
+\subsection{Maze Design}
+For continuity throughout our project, we decided to design an exact map layout in order to use the same one for all parts of this project. Since we plan to hire a warehouse for the arena to be setup in, we want to utilise the space as much as possible, and hence we chose to use a grid graph with edge constraints for our map design. This means that all cells on the map are accessible and the walls are represented by the edges connecting the cells which can either be blocked if there is a wall or not blocked if there is no wall. We designed the map by adding borders to cells in an Excel document and used a python script to convert this to a csv file containing a 2 bit integer for each grid cell. The least and most significant bits of this integer indicate if there is a wall on the north and west sides of the cell respectively. The presence of south or east walls are found by checking the north or west walls of the corresponding adjacent cell to avoid repeating information and increasing the size of the stored map matrix. An example of a map and it's wall matrix are shown below.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=0.6\textwidth]{figs/3x3 map.png}
+        \caption{3x3 map}
+        \label{fig:3x3Map}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{figs/3x3 map matrix.png}
+        \caption{Wall matrix for the 3x3 map}
+        \label{fig:3x3WallMatrix}
+    \end{subfigure}
+    
+    \caption{An example 3x3 map, (\subref{fig:3x3Map}), and its corresponding wall matrix, (\subref{fig:3x3WallMatrix}).}
+    \label{fig:wallMatrixDemo}
+\end{figure}
+
+\newpage % REPLACE WITH IMAGE 
+
+\subsection{Map Separation}
+In order to make the maze a safe environment for the players and drones to occupy at the same time and interact with each other, we decided to implement a safety net above the players to separate the drones from the players and mitigate injuries due to a drone falling onto a player during a malfunction. This safety net will run throughout the whole maze and we will have the home base of the drones and players on opposite sides with half walls connecting the net to the floor or ceiling for the drone and player home bases respectively. This completely separates the drones from the players with a physical barrier at all times, greatly reducing the risk of a human-drone collision incident. This separation between players and drones also allows us to customise each section independently so that we can have obstacles, doorways and windows in the player area while keeping the drone area free of obstructions. This setup allows us to have a more interesting arena for the players while minimising the chance of collision for the drones.
+
+\subsection{Map Dimensions}
+After deciding on the general design and layout of the map, we next looked at the exact dimensions of the map. The dimensions we chose are, 2x2m grid squares, with the net and ceiling at 3m and 5m height respectively. The grid square dimensions allow sufficient space for the drones to move around without feeling too large for the players. The net height is high enough to be out of reach from players allowing them to move around freely as if it was not there, and the ceiling height allows sufficient space for the drones to move around without being too tall to fit in a small warehouse.
+
+\subsection{Net Material}
+We plan to use industrial safety nets to separate the players from the drones as these are tested and reliable. From our research we found a company called SafetyNet365 that make custom safety nets with many different variants, allowing us to choose the mesh size and material diameter among other parameters. We first considered their fall safety nets, which are designed for construction sites to catch workers if they fall, and we chose the largest mesh size of to minimise the area blocked by the net. This net we will call net A, \cite{testedSafetyNet}. As seen in Table \ref{} below, this has an energy absorption of 4.8kJ, but if we calculate the kinetic energy of our $4kg$ drone falling the maximum distance of $2m$ with maximum thrust downwards and a thrust to weight ratio of $2$, the kinetic energy at impact would be $235J$, assuming $g=9.81$. Therefore, the energy absorption of this net far exceeds our needs, so we next considered nets with thinner material diameter. The only nets on their website that have energy absorption listed have $5mm$ material diameter, so in order to consider the energy absorption of other nets we will have to estimate it ourselves. Since the specifications include the maximum tensile force $F$ and breaking elongation $\Delta$ for a single rope, we can calculate the maximum energy stored in each rope as $E=F\Delta L$, where $L$ is the mesh size, the distance between two rope connections. If we then assume that the energy absorption of the net is proportional to the maximum energy stored in a single thread, then we can estimate the energy absorption of an identical net with only the tensile strength, breaking elongation, and mesh size changed. Since this is already a bold assumption, we chose to keep the breaking elongation and mesh size the same and look for a net with thinner material diameter and therefore less maximum tensile force, while keeping all other parameters the same. This simplifies the proportion equation to $EA = k F$, where $EA$ is the energy absorption and $k$ is a constant. We then picked the net with the thinnest material diameter but all other parameters the same to get a lower bound of the energy absorption. This net we will call net B, \cite{thinSafetyNet}. Using the values in Table \ref{} below, we can estimate the energy absorption of net B, $EA_B$, from that of net A, $EA_A$, using the formula $EA_B = EA_A \cdot F_B/F_A$, giving $EA_B = 375J$. This is larger than the predicted maximum energy of the drone upon impact with a safety factor of 1.6, however this is not a very large safety factor, especially with the bold assumptions made above. Ideally we would like a safety factor of at least 3 to cover us from the assumptions made above so we increased the material diameter until this condition was met, giving us the final choice of net C, \cite{usedSafetyNet}. Calculating the energy absorption for this net gives $EA_C = EA_A \cdot F_C/F_A = 1200J$, which gives a safety factor of 5.1 which is well above the proposed minimum of 3.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Net specifications}
+    \label{tab:net}
+    \small
+    \begin{tabularx}{\textwidth}{cccc}
+        \toprule
+        \textbf{}                       & \textbf{Net A}    & \textbf{Net B}    & \textbf{Net C}    \\
+        \midrule
+        Material Diameter / mm          & 5                 & 1.5               & 0.5               \\
+        \midrule
+        Mesh Size / mm                      & 100x100           & 100x100           & 100x100       \\
+        \midrule
+        Max Tensile Strength / N        & 3200              & 250               & 800               \\
+        \midrule
+        Breaking Elongation / \%        & 15                & 15                & 15                \\
+        \midrule
+        Energy Absorption / J           & 4800              & 375               & 1200              \\
+        \midrule
+        Energy Absorption Safety Factor & 20.4              & 1.6               & 5.1               \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
 \newpage
 
+\section{State Estimation} \label{state estimation} % Tommy
+\fancyhead[C]{Thomas August} % 
 
-
+\newpage
 
 \section{Network and Communications}
-\fancyhead[C]{Richard Usherwood} % Ritchie
+Ritchie
 \subsection{Overview}
 Network and Communications are not strictly necessary for a single wave of the game. Without them, each drone would act according the the information that it had gathered (location of the players, location of other drones etc.), and would not have access to the information that other drones had gathered. 
 There are a couple of advantages to handling information without a central server: 
@@ -1441,15 +1655,70 @@ When the perception pipeline returns a valid \gls{yolo} detection, the update ph
 
 \newpage
 
+\section{Search Mode} \label{search mode}% Tommy
+\fancyhead[C]{Thomas August}
+The objective of the multi-agent drone system is to find and eliminate players without getting eliminated themselves and this section focuses on the method of finding the players within the map. At the start of a laser tag game, the drones and players will each start in their home bases which as positioned at opposite edges of the map. At this stage, our system knows that players will be entering the map from their home base, but does not know the exact location of these players within the map, and hence all drones will start in the search mode. This mode will not only be used at the start of the game but also when a drone cannot see a player and has not received a backup call from another drone (detailed in Section \ref{high level control}). In both cases, the server will need to plan a trajectory for each drone and the drone should follow this trajectory while looking for players with the onboard camera.
+
+\subsection{Trajectory Planning}
+In order for the drones to search the map effectively as a team they need to be coordinated which is why we run the planning for this mode on the central server. The planning will be split into two parts: region allocation and trajectory planning. The region allocation part will take the location of all drones in search mode as it's input and output a single closed region for each drone to search. Next, the trajectory planning part will take the regions from the first part and plan a closed loop trajectory of grid squares for each drone covering it's whole region. We chose this overall structure because assigning individual regions to each drone mitigates the risk of drone to drone collisions and reduces wasted time searching the same cells more than once, and planning a closed loop trajectory means the drone can search the region repeatedly.
+
+For the region allocation, we decided to use a multi-agent Breadth First Search (BFS) algorithm that completes BFS simultaneously from all drone start locations and allocates each cell to the drone that reached it first. This assumes all drones have a fixed starting location however, when a drone is in it's home base and is entering the map, there are multiple different entry points. For this case, we decided to run the above algorithm for all possible starting locations of any drones currently in the home base and choose the starting locations that give the smallest maximum region size. Since all drones behave the same in the BFS algorithm, if we have $d$ drones entering from the home base and $e$ possible entry cells, then we only have to complete $eCd$ runs of the region allocation algorithm described above. In our map demo map, we have 7 possible entry cells and 5 drones, giving $7C5 = 21$ runs needed at the start of the game when all drones are in the home base and going into search mode. The maximum number of runs needed occurs when 3 or 4 drones are entering the region and this would need $7C3 = 7C4 = 35$ runs to test all possible cases. Since this algorithm uses a basic BFS with an added check for allocation to the drone, it is a very lightweight algorithm so running it 35 times on the central server will require negligible computation and time so this does not need to be considered in detail. Additionally, due to it being a very lightweight algorithm, we will recompute the regions each time a drone enters or leaves the search mode for all remaining drones in search mode.
+
+For the path planning algorithm, we initially looked at just using a Depth First Search (DFS) tree walk along the allocated region, which is efficient when in tight maze like areas of the map, however in open spaces such as the middle of the map it still walks through it as if it is a maze, backtracking when in open space. To mitigate this behavior and make the search more efficient over the whole map, we decided to use a hybrid DFS and lawnmower search method where we assign any open spaces as a single item in the DFS tree and plan the path through this region using the lawnmower method.
+
+\subsection{Trajectory Following}
+Now that we have planned a trajectory for each drone, the drones need a method of following those trajectories. As we are searching for players, we want this trajectory to be slow and smooth to give the gimble-camera system time to search the area. Since the behaviour needed is not complex, we opted to use basic PD controllers here to reduce the computational load. Since we would like to control the position of the drone using the propeller thrusts, we are unable to use a single PD controller to directly control position from the motor thrusts. Instead this is split into 3 stages: position PD controller, attitude PD controller, and mixing matrix. The position PD controller uses the position error and velocity as inputs and outputs an acceleration vector. This acceleration vector is then combined with the inverse of the drone weight vector to produce a desired thrust vector, and from this desired thrust vector along with the heading direction we compute a desired orientation to point all propellers along the desired thrust direction. The orientation error between this desired orientation and the current orientation along with the angular velocities are used in the second PD controller to output angular accelerations which can be converted to moments using the drone moment of inertia. These moments as well as the desired thrust vector projected onto the current upward direction are used as the drone body thrust and moments. Finally the mixing matrix (detailed in Section \ref{mixing matrix}) is used to convert these body thrust and moments to individual rotor thrusts.
+
+\newpage
+
+\section{Movement Mode} % Tommy
+\fancyhead[C]{Thomas August}
+
+All of our play modes are team based meaning we need a method of coordinating the drones to work as a team against the human players. In order to make the game fair for the players we decided not to give the central server full control over every aspect of the drone team. For example, if a drone has detected a player's location, we have not allowed the central server to pass this information to all other drones meaning a player should not be faced with many drones against them at one time. To provide a compromise between full information sharing and no information sharing, we decided to introduce a protocol where a drone can call for backup if multiple players are detected within its view. The central server will then find the closest unoccupied drone and put it into this movement mode, in which it is given a target location where the other drone needs backup and the objective is to get there as quickly as possible. The information provided here is to give some context to why we produced a movement mode and what it's purpose is; further information regarding the interaction of the modes and the call for backup protocol can be found in Section \ref{high level control}.
+
+\subsection{Design Setup}
+In order to best decide on the optimal algorithms and methods to use within this mode, we first outlined the criteria for this state to meet. The inputs will be the current grid square of the drone and the target grid square, and the outputs will be the drone thrust and moments. The drone behaviour we need from this mode is for it to reach the target location as quickly as possible with a reliable success rate. We do have the collision avoidance which would abort an unsuccessful trajectory if it is executed, however it is still optimal to ensure all modes have a high success rate to avoid the need to use collision avoidance as much as possible. This task can be split into the planning stage and the execution stage. We decided to run the planning stage on the central server, since the drone and target grid coordinates are already stored there and this will reduce the computational load on the drone. This will output a trajectory through the 2D map for the drone to follow in the execution stage. Since the execution stage involves the direct control of the drone thrust and moments, we decided to run this onboard to reduce latency, as high latency would introduce unnecessary complexity to the control algorithm. 
+
+\subsection{Planning Stage}
+
+As mentioned above, the planning stage will need to compute a path through our known 2D map of the maze from the current drone location to the target location. Since the objective of this method it to reach the target location as quickly as possible, we want to plan the shortest path in order to minimise the distance travelled. To do this, we decided to use a Breadth First Search (BFS) algorithm which uses our map (detailed in Section \ref{map}) to determine which adjacent cells can be accessed from the current cell. This algorithm runs until the target location is reached, and then the shortest path is determined by starting at the target location and adding the parent node of the previous node recursively until it gets back to the current location, and then reversing the order. Since the map we have designed is 11x17 grid squares, there are 187 grid squares, so the number of possible paths is $187 \cdot 187 = 34,969$, and since this will be run on the central server, we decided so pre-compute all possible paths as storage will not be a problem on the central server and this will reduce the computation time and hence get the drone moving towards the target location quicker. In order to access it efficiently, we will use a lookup table from which the programme can request paths using the start and end coordinates. 
+
+Now that we have the shortest 2D path through the grid squares, we need to convert this to a trajectory for the drone to follow in the 3D arena. In order to minimise the chance of collisions with the map and provide the drones with as much freedom of movement as possible, we decided to place the trajectory checkpoints in the centre of each grid square, halfway between the net and the ceiling. These checkpoints are then sent to the drone along with the command to change into movement mode.
+
+\subsection{Control Method}
+In the other modes we have described using PD controllers to track the drone trajectories due to it having a low computational cost, however, since we would like this mode to be as quick as possible, we are willing to use more compute in order to reach the target location quicker. This led us to look at more complex control methods such as Reinforcement Learning (RL) and Model Predictive Control (MPC). When researching the methods above we came across a paper that uses MPC to train a RL policy online using supervised learning, \cite{zhang_learning_2016}, and although we did not use the method explained in this paper, their reasoning in the introduction helped decide what method was best for our application. In the introduction they stated that "MPC is an effective and reliable method ... However, applications of MPC can be computationally demanding" and "model-free RL is difficult to apply to unstable systems such as quadrotors, due to the possibility of catastrophic failure during training." From this we can see that their justification for using an RL policy trained under supervision from an MPC controller is because they aim to achieve the reliable results from MPC but with the lower computational load of RL, however, they decided not to train direcly with RL becuase in the early stages of training this would lead to catastrophic damage of their hardware. In our situation, we also aim to get reliable results while maintaining the lower computation load of RL, however, instead of using online supervised learning, we opted for offline learning on a physics simulator, which allows us to train the RL policy unsupervised without causing catastrophic damage to hardware during the early stage of training. This also allows us to train and test this policy without needing physical hardware, which speeds up the design phase. Additionally, in the paper, they mention that they passed the raw sensor data as the input to the RL policy to avoid having to estimate the state, however since we already need to estimate the state (detailed in Section \ref{state estimation}), for the Search and Collision Avoidance modes (detailed in Sections \ref{search mode} and \ref{collision avoidance mode} respectively), we decided to get the inputs for our RL policy from this estimated state instead to avoid increasing the complexity of the control problem unnecessarily. We opted for the policy to output body thrust and moments, again to avoid unnecessarily increasing the complexity, because we already need the mixing matrix (detailed in Section \ref{mixing matrix}) for the other modes.
+
+In conclusion, we opted to use a reinforcement learning policy trained offline on a physics simulator using Isaac Lab \cite{IsaacLab}. The inputs of our policy are be derived from the estimated state and the outputs are the thrust and moments of the drone body.
+
+\subsection{Environment Setup}
 
 
-\subsection{Trajectory tracking} % Tommy
-\subsection{Searching} % Maybe Tommy
-\subsection{Hiding} % Not implemented but talk about it
 
-\section{Low Level Control} % Tommy, Rishabh
-\fancyhead[C]{Student3 author of section}
-\subsection{Conversion Matrix}
+
+
+\newpage
+
+\section{Collision Avoidance Mode} \label{collision avoidance mode} % Tommy
+\fancyhead[C]{Thomas August}
+
+As much as we have tried to mitigate the possibility of collisions when designing the different control systems for the drones, there will inevitably still be some collisions that would occur, so we need a method of avoiding collisions in real time that are likely to occur in the near future. Our implementation of this uses constant collision detection to force the drone into collision avoidance mode when there is likely to be an imminent collision. 
+
+\subsection{Collision Detection}
+For the collision detection, we chose to monitor the distance and velocity towards the obstacle and enter collision avoidance mode when the estimated time to collision from these values is below a threshold. Since the drones will estimate their pose and velocity onboard (detailed in Section \ref{state estimation}), the distance, d, to the closest map obstacle in the direction of the velocity, v, can be calculated and used to find the estimated time to collision using the formula $t=d/v$. Since the pose, velocity and map are all stored onboard, this detection can be run onboard the drone to reduce latency and catch potential collisions quicker. For drone to drone collisions, the pose and velocity of the other drones will have to be sent through the server to other drones, so this will already introduce latency. Due to this, we chose to run the drone to drone collision detection on the server so that we do not get conflicting decisions from the two drones and a unanimous decision can be made for both drones. To determine if a drone to drone collision is imminent, the server will receive the pose and velocity of both drones and propagate the drone poses based on their velocities for time up to the collision detection time threshold and calculate the distance between the two at each time step. If the distance between the two drones is below a small threshold distance to account for noise in the data, then both drones are forced into collision avoidance mode.
+
+\subsection{Collision Avoidance}
+For the collision avoidance method, we chose to use an Artificial Potential Field (APF) based method. Since we know the exact map and we can estimate the position of all drones in the environment, we can place repulsive potential fields perpendicular to the walls, net, and ceiling, and around all other drones, each acting as a point source. We can then sum the potential from all of these at the location of the current drone and take the gradient to find the best direction to move in. We will use the gradient of the potential field as a target velocity and use a PD controller to find the acceleration vector needed to track this velocity. This acceleration vector is then converted to a force vector using the mass of the drone and an upwards force with magnitude equal to the drone is added to this as the hover force to get a final force vector. This force vector and the velocity direction vectors are used to create a coordinate frame by taking the cross product of the two to get the third vector. The error between the current drone orientation and this desired orientation is then computed and used with the angular velocities as the input to another PD controller that outputs the desired drone moments. The desired force vector from the first PD controller is then used as the thrust combined with these moments as the output of the collision avoidance controller and is fed into the mixing matrix (detailed in Section \ref{mixing matrix}).
+
+
+
+
+
+\newpage
+
+\section{Mixing Matrix} \label{mixing matrix} % Tommy, Rishabh
+\fancyhead[C]{Thomas August}
+
+
 \newpage
 
 
@@ -2050,12 +2319,8 @@ In general, one or more variables were changed, and another was observed, while 
 
 
 
-
-
-
-
 \section*{Appendix}
-
+\fancyhead[C]{Group}
 
 \paragraph{Heating cost assumptions}\(\) \newline
 \label{assumptions}
@@ -2179,4 +2444,7 @@ Assuming the average daytime temperature in London is \(10 ^\circ C\), and the d
     \caption{Screenshot of SQL Database}
     \label{fig:Database}
 \end{figure}
+\newpage
+\printbibliography{biblio}
+
 \end{document}
