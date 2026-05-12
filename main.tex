@@ -227,7 +227,7 @@ The Avenger 2806.5 was selected because it provided a strong thrust margin witho
 
 \paragraph{Propeller Choice}
 
-The propeller was selected based on geometry as it directly affects the thrust, clearance, and overall rotor-arm design. The propeller was required to provide enough lift when paired with the selected motor, while remaining sizeable for an indoor drone platform. 
+The propeller was selected based on geometry as it directly affects the thrust, clearance, and overall rotor-arm design. The propeller was required to provide enough lift when paired with the selected motor, while remaining size-able for an indoor drone platform. 
 
 We selected using an 8x4x3 propeller, where the notation refers to 8 inch diameter, 4 inch pitch, and 3-blade configuration. A manufacturer dataset for an HQProp 8x4x3 propeller was used as a reference for dimensions and mass, which formed the basis for the certain assumptions related to the rotor-arm design.
 
@@ -645,7 +645,7 @@ A barometer was not selected as a height sensor despite being commonly used in d
 
 \begin{table}[htbp]
 \centering
-\caption{Flight-control sensors used for local motion and distance awareness} \cite{sparkfun_icm20948, st_vl53l1x, st_vl53l5cx}
+\caption{Flight-control sensors \cite{sparkfun_icm20948, st_vl53l1x, st_vl53l5cx}}
 \label{tab:flight_control_sensors}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l X X X @{}}
@@ -812,7 +812,7 @@ The gimbal turret designed included requirements from the visual learning proces
 
 Mechanically, the gimbal is mounted through the central opening in the bottom hull and electronics basket. 
 
-%%%%%FIGURE:Blueprint for Gimbal (without motor) - with blueprint
+%%%%%FIGURE:Blueprint for Gimbal (without motor and servos) - with blueprint
 
 The \textbf{coupler} forms the main connection between the yaw actuator and the electronics basket. It defines the mounting region for the servomotor output and provide the space where the square axial component will be installed. 
 
@@ -854,8 +854,36 @@ Table~\ref{tab:gimbal_mass_estimate} shows the mass of the solid body from Fusio
 
 The gimbal turret uses two actuator types as mentioned previously. The MG90S servo is used for the yaw axis, while the Quanum 2208 brush-less gimbal motors are used for the pitch and roll axes. Servo was used for the Yaw stage in order to provide compact rotation at the base, while the pitch and roll may be better with smoother gimbal-style motion. 
 
+\begin{table}[htbp]
+\centering
+\caption{Suggested actuator specifications for the gimbal turret. Data adapted from supplier specifications \cite{mg90s_servo, gbm2208_gimbal_motor}.}
+\label{tab:gimbal_actuator_specs}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l l X X @{}}
+\toprule
+\textbf{Axis} & \textbf{Suggested Actuator} & \textbf{Size / Weight}\\
+\midrule
+Yaw & MG90S servo & 22.8 mm $\times$ 12.2 mm $\times$ 28.5 mm; approximately 13.4 g\\
+
+Pitch & Quanum/GBM2208 brushless gimbal motor & 28 mm $\times$ 22 mm; approximately 43 g\\
+
+Roll & Quanum/GBM2208 brushless gimbal motor & 28 mm $\times$ 22 mm; approximately 43 g\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The MG90S is suitable for the yaw stage as it fits within the turret base region inside the electronic basket. The operating speed is sufficient for controlled left-right aiming at 0.10 s/60$^\circ$ at 4.8 V or 0.08 s/60$^\circ$ at 6 V. The gimbal motors are used for pitch and roll control as they are generally designed for smoother movement. They are specified for payloads in 100-200g range which fits the weight requirements for the OAK-D Lite (61g) along with the IR emitter and gimbal parts. The suggested GBM2208 dimensions are approximately 28 x 22 mm which fits the clearance for the motor mount locations.
+
+
 \subsubsection{Overall Airframe Configuration - Assembly}
-\paragraph{Internal Component Layout}
+
+The final airframe configuration brings the separate subsystem assemblies together into a single integrated drone assembly. The design uses a modular central body with detachable rotor-arm, integrated with propeller protection and helicopter-based landing gears, along with a centrally mounted 3-axis gimbal turret. This layout suits the electronics, propulsion, sensors, camera, and IR-tagging system while keeping key parts accessible for maintenance. Rather than one-piece shell, all parts are designed to be separate yet connected, replaceable, and cheap making it practical for manufacture and repair.
+
+%%%%%Figure: Showcase Final Drone image
+
+\paragraph{Component Layout}
+
+The drone parts are designed with reference to the chosen internal electronics. Most of the components will be housed in the electronics basket - including the Raspberry Pi, ESCs, voltage regulator, IMU sensor, battery, and wiring. The OAK-D Lite camera and IR emitter will be mounted externally on the gimbal turret, with their wiring routed back into the central body opening. The motor and propellers will be mounted in the motor arms.
 
 \subsection{Preliminary Engineering Evaluation}
 \subsubsection{Structural Assessment of Critical Components}
