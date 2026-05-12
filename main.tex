@@ -942,7 +942,7 @@ Maintainability & Separate hull sections, rotor arms, linkages, electronics bask
 \hline
 Safety features & Blade guards, enclosed electronics, and helicopter-style landing gear improve landing safety and stability. \\
 \hline
-Main limitation & The design has not been physically prototyped, so many real behaviours remain unevaluated. \\
+Main limitation & The design has not been physically prototyped, so many real behaviors remain unevaluated. \\
 \hline
 \end{tabularx}
 \end{table}
@@ -952,9 +952,24 @@ The final design of the drone hardware is acceptable within the scope of the pro
 \newpage
 
 \section{Player Hardware Design}
+
+The player hardware shows how human players would interact with the multi-agent laser-tag system. These components were not developed in detail compared with the drone hardware, and therefore will only focus on representative and illustrative models.
+
 \subsection{Vest}
+
+The vest is used as the main hit-detection surface for the player. The intended design is to have IR receiver modules positioned throughout the vest in high density so the drone can target. The receivers would be distributed across the front, back, and sides of the vest so that hits can be detected from multiple directions during game-play. The vest should be lightweight but also ideally provide some protection against potential physical impacts such as player collisions. A compartment acting as an electronics box may house all required electronics including micro-controller, wiring, and wireless modules. A small display or LED indicator area can be included to show simple feedback such as team status and player status.
+
+%%%%%FIGURE: Image of the vest front and back
+
 \subsection{Helmet}
+
+The helmet provides an upper-body hit detection area and improved IR coverage around the player. Similar to the vest, IR receivers will be positioned around the helmet surface so the signals can be detected. Again, a compartment will house all the required electronics and circuitry for the hit-detection and status updates. The helmet also acts as an additional protective element, alongside the overhead net, against falling drones and other collisions.
+
+%%%%%FIGUREL: Image of the Helmet
+
 \subsection{Weapon}
+
+The weapon can be treated as a proposed handheld IR tagging device. Its purpose would be to allow players to tag drones with a trigger. The device would likely contain a compartment with all required electronics just as the other player hardware. As stated before, all tagging systems will be using infrared rather than actual lasers for safety and regulatory reasons.
 
 %%%%%%%%%----------------end of Hardware---------------%%%%%%%%%
 
