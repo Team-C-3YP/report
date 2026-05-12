@@ -567,7 +567,7 @@ Memory & 32 KB flash, 2 KB SRAM, 1 KB EEPROM & 256 KB flash, 32 KB RAM, 8 KB EEP
 
 Integrated wireless modules & None; external Wi-Fi/Bluetooth module required & Built-in Wi-Fi and Bluetooth \\
 
-I/O interfaces & GPIO, PWM, analog inputsI & GPIO, PWM, analog inputs \\
+I/O interfaces & GPIO, PWM, analog inputs & GPIO, PWM, analog inputs \\
 
 Camera support & No camera interface & No Raspberry Pi-style camera/software ecosystem \\
 
@@ -611,7 +611,7 @@ Approximate cost & From \$35, depending on RAM option & From \$45, depending on 
 \end{tabularx}
 \end{table}
 
-Two main Rasperry Pi single-board computers were considered, the Raspberry Pi 4 Model B and the Raspberry Pi 5 - specs are shown in table 12.
+Two main Rasperry Pi single-board computers were considered, the Raspberry Pi 4 Model B and the Raspberry Pi 5 - specs are shown in Table~\ref{tab:raspberrypi_comparison}.
 
 Despite the strong performance offered by the Raspberry Pi 5, its additional computing capabilities were not considered important as the project was using pre-trained models rather than training onboard. The \textbf{Raspberry Pi 4 Model B} was chosen as the onboard computer as it provided a good balance between processing, cost and integration. In addition, it provided the required Wi-Fi, GPIO, USB, and camera interfaces, while being easier to power and package inside the drone.
 
@@ -638,7 +638,7 @@ The camera selected by the visual perception work-stream was the OAK-D Lite used
 
 Suitable flight control sensors were needed to give the drone basic state information required for basic motion and awareness. Chosen sensors were intended to provide local state information that could support stabilization, height referencing, and obstacle awareness during indoor operations: the IMU measured body motion, the ToF sensor provided ceiling-distance and side distance information for nearby obstacles.
 
-A barometer was not selected as the primary height sensor despite being commonly used in drones for altitude estimation. Given the indoor environment and close proximity between walls and ceilings, pressure-based height estimation is less reliable. Instead, an upward-facing ToF sensor was considered more appropriate for this controlled indoor environment, where the ceiling height can be known in advance.
+A barometer was not selected as a height sensor despite being commonly used in drones for altitude estimation. Given the indoor environment and close proximity between walls and ceilings, pressure-based height estimation is less reliable. Instead, an upward-facing ToF sensor was considered more appropriate for indoor environment, where the ceiling height can be known in advance.
 
 \begin{table}[htbp]
 \centering
@@ -658,7 +658,7 @@ VL53L5CX ToF sensors & Provides side obstacle awareness and short-range distance
 \end{tabularx}
 \end{table}
 
-The SparkFun ICM-20948 IMU provides local motion and oreintation feedback. It is housed inside the drone, near the centre of the drone body, where it can measure acceleration, angular-rate, and magnetic-field measurements representative of the airframe while simultaneously protected from impact.
+The SparkFun ICM-20948 IMU provides local motion and orientation feedback. It is housed inside the drone, near the center of the drone body, where it can measure acceleration, angular-rate, and magnetic-field measurements representative of the airframe while simultaneously protected from impact.
 
 The VL53L1X and VL53L5CX ToF sensors are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained RL control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
 
@@ -692,11 +692,130 @@ This led to a complete change in direction for the final design: a modular mirro
 
 \subsubsection{Main Body Design}
 
-The main body is composed of three main parts: the top hull, the bottom hull, and the electronics basket. 
+The main body is composed of three main parts: the top hull, the bottom hull, and the electronics basket.
+
+%%%%%FIGURE:An image of the entire central body - exploded
+
+The \textbf{top hull} forms an upper protective cover. It acts as a shield to the internal electronics from direct contact while simultaneously ensure all components are inside. It is designed to give the drone a smooth external shape which helps avoid a bulky appearance and gives the drone a more refined final form.
+
+The \textbf{bottom hull} forms the lower section of the drone and includes the landing gear. It has a boat-like shape that helps enclose the electronics bay while providing a stable base structure. The helicopter-style skid landing gear is directly integrated into the lower section. This landing gear layout was chosen such that it provides a simple, lightweight, and low-maintenance structure. The wide stance improves stability during take-off and landing. 
+
+The \textbf{electronics basket} acts as a removable internal frame used to hold the main electronics, wiring, and mounting points. It also connects the structure between the central body, and the rotor-arm assemblies. Keeping the basket separate from the outer hull means the electronic components can be accessed for maintenance without dismantling the entire drone.
+
+All three body sections are held together using \textbf{bolt fasteners}. This may not be an optimal fastening method, however, is a reasonable choice for the current design stage given they are simple, low-cost, and make the body easier to assemble or disassemble.
+
+There also includes a central opening that passes through the bottom hull and electronics basket for the gimbal/turret assembly. The electronics basket includes a dedicated gimbal/turret mounting feature, where the servo connecting the basket and the gimbal/turret may be installed.
+
+\begin{table}[htbp]
+\centering
+\caption{Estimated printed mass of central body}
+\label{tab:main_body_mass_estimate}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l r r r @{}}
+\toprule
+\textbf{Component} & \textbf{Solid CAD Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
+\midrule
+Top hull & 764.457 g & 20\% & 152.9 g \\
+Bottom hull + landing gear & 1163.830 g & 25\% & 291.0 g \\
+Electronics basket & 604.322 g & 30\% & 181.3 g \\
+\midrule
+\textbf{Total main body assembly} & \textbf{2532.609 g} & -- & \textbf{625.1 g} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The values in Table~\ref{tab:main_body_mass_estimate} were estimated from the Fusion 360 CAD model using assigned ABS material properties. Given Fusion 360 gives a solid CAD mass, this is not expected to represent the final manufactured mass as parts would be 3D printed with partial infill. The infill assumptions provide a more realistic approximation of the printed body mass - which reduces the main body assembly from 2532.6g to approximately 625.1g. Note that this value does not account for wall thickness, slicing setting and print orientation.
+
+\begin{table}[htbp]
+\centering
+\caption{Maximum CAD dimensions of the main body components}
+\label{tab:main_body_dimensions}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{} l r r r @{}}
+\toprule
+\textbf{Component} & \textbf{X (mm)} & \textbf{Y (mm)} & \textbf{Z (mm)} \\
+\midrule
+Top hull & 207.47 & 360.64 & 65.02 \\
+Electronics basket & 255.20 & 260.20 & 70.00 \\
+Bottom hull + landing gear & 234.00 & 418.65 & 144.90 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsubsection{Rotor Arm and Motor Mount Design}
-\subsubsection{Turret Design Process}
-\label{Turret}
+
+The rotor-arm assembly is made up of the front and rear rotor arms, blade guards, and linkage parts, which mounts the propulsion system and connect to the main body.
+
+%%%%%FIGURE:Front Rotor + Blueprint
+%%%%%FIGURE:Rear Rotor + Blueprint
+
+The \textbf{rotor arms} support the motor and positions them away from the central body to provide clearance for the propellers. The motor mounts are already integrated to the overall part, so the motor can be fixed directly to the arm. The front and rear arms have slightly different geometries.
+
+The \textbf{blade guards} surround the propeller area and acts as a protective structure against minor collisions. The main purpose is to reduce the chance of propeller collisions and prevent immediately disabling the drone. They can be directly attached to the rotor arms. Further detail on the structural analysis of the blade guards will be within the section on "Preliminary Engineering Evaluation".
+
+The \textbf{linkage parts} connect the rotor arms to the electronics basket. These small parts allow the arms to be assembled separately from the main body and are secured using bolt fasteners. This type of assembly allows damaged arm or linkage to be replaced without rebuilding the full drone body. As these parts transfer load between arms and body, they are treated as vital structural components and will use higher infill then the rest of the body.
+
+\begin{table}[htbp]
+\centering
+\caption{Estimated printed mass of one side of the rotor-arm and blade-guard assembly.}
+\label{tab:rotor_arm_mass_estimate}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l r r r @{}}
+\toprule
+\textbf{Component} & \textbf{Solid CAD Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
+\midrule
+Rear blade guard & 91.2 g & 35\% & 31.9 g \\
+Front blade guard & 86.3 g & 35\% & 30.2 g \\
+Rear rotor arm & 129.1 g & 60\% & 77.5 g \\
+Rear upper linkage & 3.8 g & 80\% & 3.0 g \\
+Rear lower linkage & 3.8 g & 80\% & 3.0 g \\
+Front rotor arm & 171.5 g & 60\% & 102.9 g \\
+Front upper linkage & 3.7 g & 80\% & 3.0 g \\
+Front lower linkage & 3.7 g & 80\% & 3.0 g \\
+\midrule
+\textbf{Total one-side assembly} & \textbf{493.1 g} & -- & \textbf{254.5 g} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fusion 360 CAD model using the properties assigned of ABS material. Just like the main body, the Fusion 360 reports the solid-body CAD mass, therefore we estimate the real manufactured mass using base infill assumptions. Note that this estimate does not account for wall thickness, slicing settings, print orientation, or bolt fastener mass.
+
+\begin{table}[htbp]
+\centering
+\caption{Maximum length of one side of the rotor-arm and blade-guard assembly}
+\label{tab:rotor_arm_dimensions}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{} l r r r @{}}
+\toprule
+\textbf{Component} & \textbf{X (mm)} & \textbf{Y (mm)} & \textbf{Z (mm)} \\
+\midrule
+Rear blade guard & 207.51 & 167.16 & 113.00 \\
+Front blade guard & 117.50 & 207.51 & 118.00 \\
+Rear rotor arm + motor mount & 75.00 & 50.00 & 120.00 \\
+Rear linkage 1 & 40.00 & 20.00 & 5.00 \\
+Rear linkage 2 & 40.00 & 20.00 & 5.00 \\
+Front rotor arm + motor mount & 75.00 & 50.00 & 140.00 \\
+Front upper linkage & 40.00 & 20.00 & 5.00 \\
+Front lower linkage & 40.00 & 20.00 & 5.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Note that the measurements are maximum lengths on each axis, rather than rectangular measurements. The blade guards and rotor arms have circular geometry around the propeller area - these measurements are useful for checking propeller clearance but should not be interpreted as box-shaped component dimensions.
+
+\subsubsection{Turret/Gimbal Design}
+
+The gimbal turret designed included requirements from the visual learning process, where the camera was required to roll, pitch, and yaw. The design took inspiration from traditional industrial two-axis gimbals, but an with an additional yaw axis which provided a 3-axis movement. The camera and IR emitter needed to remain aligned to ensure aiming and tagging were done in the same direction. A reminder previously where the OAK D Lite camera was used as a reference to designing the dimensions of the gimbal.
+
+Mechanically, the gimbal is mounted through the central opening in the bottom hull and electronics basket. 
+
+The coupler forms the main connection between the yaw actuator and the electronics basket. It defines the mounting region for the MG90S servo output and provide the space where the square axial component will be installed. 
+
+The gimbal installation plate is positioned below the coupler and is used to close up the interface between the gimbal and the drone body. It also secures the lower part of the installation interface which keeps the yaw mechanism aligned and provide tighter space for wires to help reduce entanglement issues. 
+
+The square Axial component supports the pitch-axis moto and provides the structural frame for the upper gimbal mechanisms. It is directly installed to the yaw mechanism allowing the overall gimbal to move in yaw motion - it is only in contact with the MG90S servo output. The pitch motion is produced by mounting a gimbal motor onto the square axial component, with the motor output connected to the gimbal pitch axis component. This allows camera and IR emitter to tile upward and downward.
+
+The gimbal pitch axis component acts as the moving structure for pitch stage and provides roll-axis motor mount. The roll motion is produced by mounting the roll gimbal motor onto the pitch axis component, with the motor output connected to the gimbal 
 
 \subsection{Final Drone Assembly and Packaging}
 \subsubsection{Overall Airframe Configuration}
