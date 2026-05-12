@@ -1591,12 +1591,11 @@ The App uses Supabase as its backend API, to access an SQL database hosted throu
 A specific format had to be created for this data to be stored. For example, Game Data is stored in a format (A, B, C, \dots),(D, E, F, \dots),(G, H, I, \dots). This game data is equivalent to "Players A, B, C, \dots played a game in which they got D, E, F, \dots kills and died G, H, I, \dots times, respectively". Furthermore the "score" is defined as "number of kills squared divided by number of deaths" in a game, and the friend requests are stored as CSVs. When a change to the data is made in the app (for example sending or accepting a friend request), the database is automatically updated by API. However, the database must also be updated after every game. In the real system, this would be integrated into a system that counts communications with drones and helmets, and updates the database automatically. However, for now it is handled by a script that allows the user to input the results of the game (who was playing, how many kills they got, how many times they died etc.), and updates the database accordingly. 
 
 
-\section{Commercialisation, Safety and Project Management} % Mostly Ritchie
-\subsection{Risk Assessment}
+\section{Safety and Risk Assessment Management}
 
 
 A quantitative risk assessment has been completed, and is shown in Figure \ref{fig:risk-assessment}, in the appendix. The most significant initial risks (before mitigations) were the the contact between guns and players' eyes, and players running into each other. After the necessary control measures, they are still most significant residual risks, along with trips and falls. This demonstrates that there is not an undue risk associated with playing the game, since trips and falls, player-on-player collision and impact with instruments used for playing (such as laser-guns, squash raquets, etc.) are risks associated with traditional laser-tag, as well as many common sports. 
-\subsection{Financial Modeling}
+\section{Commercialisation and Financial Modelling}
 \subsection{Setup}
 A discounted cash flow model was created. The model was used to track cash flow, apply a discount rate to future revenue, and to calculate the Net Present Value (NPV) of a company providing the game as a commercial enterprise.
 \subsection{Numerical Estimations}
@@ -1625,23 +1624,38 @@ The effect of a variation in utility is analysed in Section \ref{PriceAnal}.
 \subsubsection{Employee Costs}
 The minimum equivalent number of full-time employees required was thought to be two. The number of full-time employees was assumed to increase with utility, up to a maximum of four, as shown in Table \ref{tab:utilityandemployees}:
 
+
 \begin{table}[h]
 \centering
-\begin{tabular}{|c|c|c|}
+\begin{tabular}{|c|c c c c c c|}
 \hline
-Year & Percentage of Maximum Utility & Equivalent Number of Full-Time Employees\\
+Year & \qquad 0 & \quad 1 & \quad 2 & \quad 3 & \quad 4 & \quad \dots\\
 \hline
-0 & 0\% & 2\\
-1 & 50\% & 2\\
-2 & 75\% & 3\\
-3 & 100\% & 4\\
-4 & 100\% & 4\\
-\vdots & \vdots & \vdots \\
+Percentage of Maximum Utility & \qquad 0\% & \quad 50\% & \quad 75\% & \quad 100\% & \quad 100\% & \quad \dots \\
+\hline
+Full-Time employees & \qquad 2 & \quad 2 & \quad 3 & \quad 4 & \quad 4 & \quad \dots \\
 \hline
 \end{tabular}
-\caption{Utility and Number of Employees with time}
+\caption{Number of employees with time}
 \label{tab:utilityandemployees}
 \end{table}
+% \begin{table}[h]
+% \centering
+% \begin{tabular}{|c|c|c|}
+% \hline
+% Year & Percentage of Maximum Utility & Equivalent Number of Full-Time Employees\\
+% \hline
+% 0 & 0\% & 2\\
+% 1 & 50\% & 2\\
+% 2 & 75\% & 3\\
+% 3 & 100\% & 4\\
+% 4 & 100\% & 4\\
+% \vdots & \vdots & \vdots \\
+% \hline
+% \end{tabular}
+% \caption{Utility and Number of Employees with time}
+% \label{tab:utilityandemployees}
+% \end{table}
 
 It was also estimated that the cost of employing one full-time employee (or equivalent in part-time workers) would be £50000. This includes salaries, company computers, training, sick cover, annual bonuses etc.
 \subsubsection{Warehouse Hiring}
@@ -1679,11 +1693,7 @@ Floor & 0.18 & 0.54 \\
 \label{tab:U-Values}
 \end{table}
 
-It is also assumed that, when players enters the warehouse every hour, 50\% of the air is evacuated and replaced, and no air is evacuated when the game is being played. The first assumption is likely a significant overestimate, and the second a modest underestimate, resulting in a conservative estimate.\newline
-
-It is further assumed that the height of the warehouse is 6 metres, and that the warehouse is square. 
-
-As shown in equation \ref{app:heating-calcs}, it is found that the total heating power required to maintain a temperature of \(20^\circ C\) is 17.6 kW.
+Additional assumptions are made, as shown in the appendix in section \ref{assumptions}. As shown in equation \ref{app:heating-calcs}, it is found that the total heating power required to maintain a temperature of \(20^\circ C\) is 17.6 kW.
 \newline
 
 \paragraph{Lighting} \(\) \newline
@@ -1704,34 +1714,18 @@ According to the Department for Energy Security and Net Zero's Q2 2025 Energy Pr
 To keep the estimate conservative, to allow for fluctuations in electricity price and to allow for miscellaneous costs (employees boiling a kettle, for example), this value will be rounded up to a final electricity cost of £20k/year.
 
 \subsubsection{Warehouse Decoration and Maintenance}
-The purpose of Year 0 is, among other things, to decorate the warehouse and make it suitable for playing drone laser-tag. From year 1 onward, the infrastructure will already exist, and the purpose of the budget is for wear-and-tear and maintenance. Hence, the Year 0 budget for decoration and maintenance will be much higher than for subsequent years. 
-Chaboun Construction (a London-based building services provider) quotes £50000 as a typical cost for a complete, but basic, 3-bedroom house renovation \cite{chabounconstructionMuchDoes}. However, a great deal of this cost is in the kitchen and the bathrooms, and in rewiring/replumbing. None of this applies to our warehouse, and (certainly to begin), non-premium materials will suffice. However, the warehouse is much larger than a 3-bedroom house. Therefore, £30000 was selected as a reasonable price of Year 0 decoration. £10000 was selected as the budget for redecoration and maintenance. This is probably higher than strictly realistic, but is designed to take into account the fact that a complete redecoration will be necessary every few years. The cost of decoration and maintenance therefore varies with time as shown in table \ref{tab:decoration}.
-
-\begin{table}[h]
-\centering
-\begin{tabular}{|c|c|}
-\hline
-Year & Warehouse Decoration and Maintenance Cost\\
-\hline
-0 & £30000 \\
-1 & £10000 \\
-2 & £10000 \\
-\vdots & \vdots \\
-\hline
-\end{tabular}
-\caption{Warehouse Decoration and Maintenance Cost with time}
-\label{tab:decoration}
-\end{table}
+Year 0 will be used to prepare the warehouse for laser-tag. From Year 1 onward, this budget will only be spent on repairing wear-and-tear. Chaboun Construction (a London-based building services provider) estimates £50000 for a basic, 3-bedroom house renovation \cite{chabounconstructionMuchDoes}. However, much of this cost is related to the kitchen and the bathrooms, and in rewiring/replumbing. None of this applies to the warehouse, and (certainly to begin), non-premium materials will suffice. However, the warehouse is much larger than a 3-bedroom house. The price of Year 0 was therefore estimated at £30000. £10000 was selected as the budget for redecoration and maintenance. This is probably higher than strictly realistic, but accounts for the fact that a complete redecoration will be necessary every few years, and maintains a conservative estimate.
 
 \subsubsection{Hardware}
-The drones themselves cost a little under £500 to produce, of which 10 are required. Including all other hardware (laser-guns and helmets), the model used assumes the total cost is £10000. This is a slight overestimate, but is used for the sake of a conservative estimate. 
-The hardware will get slightly damaged during operation. Some components (such as blades) are likely to need replacing often, whereas some (such as laser-guns) are likely to require replacing hardly ever. For simplicity, the model assumes that a full hardware replacement is required every 500 games, after a full set is fabricated in Year 0.
+The drones themselves cost a little under £500 to produce, of which 10 are required. Including other hardware (laser-guns, helmets and battery chargers), the model assumes the total cost is £10000. This is conservative estimate. The hardware will get slightly damaged during operation. Some components (such as blades) are likely to need replacing often, whereas some (such as laser-guns) are likely not to require frequent replacement. For simplicity, the model assumes that a full hardware replacement is required every 500 games, after a full set is fabricated in Year 0.
 
 \subsubsection{Revenue}
-Research was conducted on the pricing structure of laser-tag. It was found that the cost of hiring exclusive usage of a laser-tag facility is commonly around £15-£20 per person per hour. For example, LASERGAMING OXFORD charges £29.50 per person for sole use of their facilities \cite{outdoorlaserLasergamingEXCLUSIVE}. It was thought that a drone-based experience could afford to charge two to three times this fee, once the novelty value has been taken into account. The game is designed to be played by three to eight people at once. The cost per game is therefore projected to be £200 per hour game per group, as a first estimate.
+The cost of hiring exclusive usage of a laser-tag facility is commonly around £15-£20 per person per hour. For example, LASERGAMING OXFORD charges £29.50 per person for two hours of exclusive use \cite{outdoorlaserLasergamingEXCLUSIVE}. A drone-based experience could afford to charge two to three times this fee, due to its novelty value. The game is designed to be played by three to eight people at once. The cost per game is therefore projected to be £200 per hour game per group, as a first estimate. \newline
+
+The effect of a variation in game price is analysed in Section \ref{PriceAnal}.
 
 \subsubsection{Aggregate}
-Hence, the total Income \& Expenditure table, not including tax or external financing (such as bank loans, equity etc.) is shown in table \ref{tab:IE}.
+Hence, the total Income \& Expenditure table, not including tax or external financing (such as bank loans, equity etc.) is shown in Table \ref{tab:IE}.
 
 \begin{table}[h]
 \centering
@@ -1759,29 +1753,52 @@ It is observed that the annual non-discounted profit stabilises at £75000.
 
 \subsection{Initial Capital Investment}
 
-It is observed that, in year 0, £215k of capital is required to offset initial costs. This will be provided by equity (seeking investors) and bank loans. Both have their own advantages and disadvantages. 
-For example, bank loans are much more "unforgiving", that is to say, regardless of how the company performs, it is obliged to make monthly/annual repayments. If the company fails to do this, it must declare bankruptcy. Private investment requires no such repayments. Investors make money on their investments in two ways: (i) the company makes enough money to pay dividends to shareholders and (ii) the company performs well financially, so their shares increase in value, and can be sold for a profit. 
-However, because investors have no guaranteed repayments, they tend to require a higher interest rate than bank loans (discussed in section [SECTIONHERE]). Because of this, the greater the proportion of initial investment sourced by equity financing is, the greater the effective discount rate is, which reduces the effect of future revenue on Net Present Value.
-Because of this, the business is seeking £100k in bank loans and £115k in equity financing. 
+In Year 0, £215k of capital is required for startup costs, and will be funded through both equity (seeking investors) and bank loans. \newline Bank loans are much more "unforgiving": if the company fails to do make repayments, it must declare bankruptcy. Private investment requires no such repayments. Investors make money on their investments through share appreciation and dividends, so require no fixed repayments. Because of this, they require a higher interest rate than bank loans (discussed in section \ref{DiscountRate}). This means that relying heavily on equity financing increases effective discount rate, reducing the effect of future revenue on Net Present Value.\newline As a balance, the business seeks £100k in bank loans and £115k in equity financing. 
 
 \subsection{Discount Rate}
 \subsubsection{Overview}
-The discount rate is required for investors to decide whether or not to invest in the business. It is assumed that an investor could make interest on capital, by not investing in a business, at annual interest rate (or discount rate) \(d\). So, the value of their capital \(P_0\) after \(t\) years, \(P(t)\), should they have chosen not to invest, is given by:
+The equity-only discount rate is used by investors to assess the viability of a business. It is assumed that an investor could make interest on capital, by not investing in a business, at annual interest rate (or discount rate) \(d\). So, the value of their capital \(P_0\) after \(t\) years, \(P(t)\), would be given by:
 
 \begin{equation}
     P(t)=P_0(1+d)^t
-\end{equation}
-
-so the "present value" \(P_0\) of money \(P(t)\) that is projected to be made \(P(t)\) years in the future, should they have chosen not to invest in the business, is given by:
+\end{equation} had they chosen not to invest. Therefore, the "present value" \(P_0\) of money \(P(t)\) they would own \(t\) years in the future, is given by:
 \begin{equation}
     P_0=\frac{P(t)}{(1+d)^t}
+\end{equation} so the projected returns must exceed \(\frac{P(t)}{(1+d)^t}\) if the business is to be considered a profitable investment.
+
+The choice of equity-only discount rate is made by investors when choosing whether or not to invest. Investing in a small start-up is riskier than investing in a large, established business, so the applied equity-only discount rate tends to be very high for start-ups (around 15-30\%).
+
+
+\subsubsection{Modelling Discount Rate}
+\label{DiscountRate}
+Two common approaches to model discount rate are: Equity-Only Discount Rate, and Weighted Average Cost of Capital (WACC).
+\paragraph{Equity-Only Discount Rate} \(\)\newline
+Using an Equity-Only Discount Rate, the discount rate applied to future cash flows is set by investors, ignoring debt interest from the bank. The annual repayment \(A\) on a loan of initial size \(P\) over a term \(N\) years that gathers interest at annual rate \(r_d\) is given by the amortisation formula:
+\begin{equation}
+    A=\frac{Pr_d}{1-(1+r_d)^{-N}}
+    \label{equ:amortisation}
+\end{equation} and the remaining balance \(B_t\) after \(t\) years is given by:
+
+\begin{equation}
+    B_t=P(1+r_d)^t-A\frac{(1+r_d)^t-1}{r_d}{}
+\end{equation}
+Using an equity-only discount rate, the Year 0 capital injection and the annual debt repayments in subsequent years must be included in the cash flow. Additionally, the terminal value (discussed in section \ref{TermValue}) must include the remaining loan balance as a liability.
+\paragraph{Weight Averaged Cost of Capital (WACC)} \(\) \newline
+Another method of modelling the discount rate is by weight-averaging the loan interest rate \(r_d\) and the equity-only discount rate \(r_e\) to produce an "effective" discount rate used in NPV calculations. The effective discount rate is given by:
+\begin{equation}
+    \text{WACC}=\frac{D}{D+E}r_d+\frac{E}{D+E}r_e
+\end{equation}
+where \(D\) is the initial capital of a the loan taken with a bank, and \(E\) is the capital investment from equity financing. 
+
+When modelling using WACC it is not necessary to model the inital capital of the loan, the annual debt repayments and the remaining capital of the loan as either cash flows or liabilities; these are all taken into account by the effective discount rate. 
+
+For these reasons, WACC is used in this model, with rates:
+\begin{equation}
+    r_d=15\% \qquad r_e=20\%
 \end{equation}
 
-So the projected payback on investments must exceed \(\frac{P(t)}{(1+d)^t}\) if the business is to be considered a profitable investment.
-
-The choice of discount rate is made by investors when choosing whether or not to invest. It depends hugely on the perceived level of risk. Investing in a small start-up is much higher risk than investing in a large, established business. Hence the applied discount rate tends to be very high for start-ups (around 15-30\%).
-
 \subsubsection{Terminal Value}
+\label{TermValue}
 The "left-over" value of a business after a fixed term of \(t\) years is named the "Terminal Value", and is given by \(\text{TV}_t\). If the cash flow (positive cash flow corresponding to profit) in year k is given by \(\text{CF}_k\), the terminal value is given by:
 \begin{equation}
     \text{TV}_t=\frac{\text{CF}_{t+1}}{1+d}+\frac{\text{CF}_{t+2}}{(1+d)^2}+\frac{\text{CF}_{t+3}}{(1+d)^3}+\dots
@@ -1806,38 +1823,7 @@ NB: This is the undiscounted Terminal Value; to get the present value of \(\text
 \end{equation}
 \subsubsection{Net Present Value}
 A running total cash flow is tabulated. This is discounted according to the year in which the money is made. The Net Present Value (NPV) at a given year is given by the discounted cumulative cash flow (a measure of capital) up to that year added to the discounted terminal value of the business at that year. It is observed, and can be proven, that according to this model, the NPV of a business is constant with time (it is a single value based on modelling assumptions), if tax is ignored. Tax introduces non-linearity into the model, and will be discussed at greater length in a later section.
-\subsubsection{Modelling Discount Rate}
-There are two common approaches to model discount rate. These are: Equity-Only Discount Rate, and Weighted Average Cost of Capital (WACC).
-\paragraph{Equity-Only Discount Rate} \(\)\newline
-When modelling using an Equity-Only Discount Rate, the discount rate applied to future cash flows is determined exclusively by investors. The equity-only discount rate \(r_e\) is typically in the range 15-30\% for small start-ups. 
-However, this does not take into account debt interest from the bank.  It can be shown that the annual repayment \(A\) on a loan of initial size \(P\) over a term \(N\) years that gathers interest at annual rate \(r_d\) is given by the amortisation formula:
-\begin{equation}
-    A=\frac{Pr_d}{1-(1+r_d)^{-N}}
-    \label{equ:amortisation}
-\end{equation}
 
-and the remaining capital remaining to be repayed after \(t\) years \(B_t\) is given by:
-
-\begin{equation}
-    B_t=P(1+r_d)^t-A\frac{(1+r_d)^t-1}r{}
-\end{equation}
-When modelling using an equity-only discount rate, the initial capital injection of the loan must be included in the cash flow in Year 0, and the annual debt repayments must be included in the cash flow from Year 1 onwards. Additionally, the terminal value must take the remaining capital of the loan into account as a liability.
-\paragraph{Weight Averaged Cost of Capital (WACC)} \(\) \newline
-Another method of modelling the discount rate is by weight-averaging the loan interest rate \(r_d\) and the equity-only discount rate \(r_e\) to produce an "effective" discount rate used in NPV calculations. The effective discount rate is given by:
-\begin{equation}
-    \text{WACC}=\frac{D}{D+E}r_d+\frac{E}{D+E}r_e
-\end{equation}
-where \(D\) is the initial capital of a the loan taken with a bank, and \(E\) is the capital investment from equity financing. 
-
-When modelling using WACC it is not necessary to model the inital capital of the loan, the annual debt repayments and the remaining capital of the loan as either cash flows or liabilities; these are all taken into account by the effective discount rate. 
-
-For these reasons, WACC is used in this model, with rates:
-\begin{equation}
-    r_d=15\%
-\end{equation}
-\begin{equation}
-    r_e=20\%
-\end{equation}
 \paragraph{Limitations} \(\) \newline
 For simplicity, it is assumed that a constant WACC discount rate is applied over time. This is based on three simplifying assumption: Firstly, it is assumed that the debt held with the bank is constant, and the business is only paying the interest on the loan; in reality, the loan would likely be paid off after \(N\) years in annual installments according to equation \ref{equ:amortisation}. Secondly, it is assumed that both the Equity-Only Discount Rate and the Loan Interest Rates are constant; in reality, it is likely that they would decrease over time as the business becomes more established to reflect a decreased risk in investing in the business. Thirdly, it is assumed that only the capital investments in Year 0 need to be financed. As can be seen in table \ref{tab:IE}, Year 1 is projected to run at a small loss, which must also be financed. This is neglected for simplicity, and is insignificant compared with other assumptions made in this model.
 
@@ -1936,7 +1922,7 @@ A linear demand-price curve was assumed - that is to say the demand (maximum num
 for constants \(a, b\).
 As above, it was assumed that, charging £200 per game would yield a maximum of 2000 games per year, leading to:
 \begin{equation}
-    Q_d=2000+b(200=P)
+    Q_d=2000+b(200-P)
 \end{equation}
 
 The demand-price elasticity \(\varepsilon\) is defined as:
@@ -2015,7 +2001,7 @@ It is likely that the elasticity will be between -0.8 and -1.5. It is observed t
 
 \subsubsection{Limitations}
 
-In general, one or more variables was changed, and another was observed, while all others were held constant according to the assumptions stated above. It is likely that, by completing a sweep, changing all values at once to create a multi-dimensional space model of all financial values, optima of NPV will be found that were missed in the above analysis, either by brute force or multi-dimensional gradient descent.
+In general, one or more variables were changed, and another was observed, while all others were held constant according to the assumptions stated above. It is likely that, by completing a sweep, changing all values at once to create a multi-dimensional space model of all financial values, optima of NPV will be found that were missed in the above analysis, either by brute force or multi-dimensional gradient descent.
 
 \newpage
 
@@ -2023,7 +2009,21 @@ In general, one or more variables was changed, and another was observed, while a
 % Appendix
 % Essential content that interrupts the flow of the document can be placed here, e.g. technical drawings, detailed lists of equations used, etc.
 \addcontentsline{toc}{section}{Appendix}
+
+
+
+
+
+
+
 \section*{Appendix}
+
+
+\paragraph{Heating cost assumptions}\(\) \newline
+\label{assumptions}
+It is also assumed that, when players enters the warehouse every hour, 50\% of the air is evacuated and replaced, and no air is evacuated when the game is being played. The first assumption is likely a significant overestimate, and the second a modest underestimate, resulting in a conservative estimate.\newline
+
+It is further assumed that the height of the warehouse is 6 metres, and that the warehouse is square. 
 \begin{equation}
     \dot Q=U_wA_w\Delta T+U_rA_r\Delta T+U_fA_f\Delta T +\text{ACH}\cdot \frac{\rho c_p V\Delta T}{3600}
 \end{equation}
