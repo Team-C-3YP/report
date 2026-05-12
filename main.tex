@@ -238,13 +238,76 @@ As stated previously, the goal of the first iteration was for brainstorming idea
 
 %%%%%%%%%----------------end of Hardware---------------%%%%%%%%%
 
+\section{Map} \label{map}
+\fancyhead[C]{Thomas August}
+In our game, we will have humans and drones interacting with each other in close proximity within the same arena, and hence we need to design a map for this arena which is accessible to both players and drones and allows the two to safely interact with each other. We discussed this as a group, considering player enjoyment, game complexity, drone localisation, and drone movement, and concluded that a floor to ceiling maze design would be best.
+
+\subsection{Maze Design}
+For continuity throughout our project, we decided to design an exact map layout in order to use the same one for all parts of this project. Since we plan to hire a warehouse for the arena to be setup in, we want to utilise the space as much as possible, and hence we chose to use a grid graph with edge constraints for our map design. This means that all cells on the map are accessible and the walls are represented by the edges connecting the cells which can either be blocked if there is a wall or not blocked if there is no wall. We designed the map by adding borders to cells in an Excel document and used a python script to convert this to a csv file containing a 2 bit integer for each grid cell. The least and most significant bits of this integer indicate if there is a wall on the north and west sides of the cell respectively. The presence of south or east walls are found by checking the north or west walls of the corresponding adjacent cell to avoid repeating information and increasing the size of the stored map matrix. An example of a map and it's wall matrix are shown below.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=0.6\textwidth]{figs/3x3 map.png}
+        \caption{3x3 map}
+        \label{fig:3x3Map}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{figs/3x3 map matrix.png}
+        \caption{Wall matrix for the 3x3 map}
+        \label{fig:3x3WallMatrix}
+    \end{subfigure}
+    
+    \caption{An example 3x3 map, (\subref{fig:3x3Map}), and its corresponding wall matrix, (\subref{fig:3x3WallMatrix}).}
+    \label{fig:wallMatrixDemo}
+\end{figure}
+
+\newpage % REPLACE WITH IMAGE 
+
+\subsection{Map Separation}
+In order to make the maze a safe environment for the players and drones to occupy at the same time and interact with each other, we decided to implement a safety net above the players to separate the drones from the players and mitigate injuries due to a drone falling onto a player during a malfunction. This safety net will run throughout the whole maze and we will have the home base of the drones and players on opposite sides with half walls connecting the net to the floor or ceiling for the drone and player home bases respectively. This completely separates the drones from the players with a physical barrier at all times, greatly reducing the risk of a human-drone collision incident. This separation between players and drones also allows us to customise each section independently so that we can have obstacles, doorways and windows in the player area while keeping the drone area free of obstructions. This setup allows us to have a more interesting arena for the players while minimising the chance of collision for the drones.
+
+\subsection{Map Dimensions}
+After deciding on the general design and layout of the map, we next looked at the exact dimensions of the map. The dimensions we chose are, 2x2m grid squares, with the net and ceiling at 3m and 5m height respectively. The grid square dimensions allow sufficient space for the drones to move around without feeling too large for the players. The net height is high enough to be out of reach from players allowing them to move around freely as if it was not there, and the ceiling height allows sufficient space for the drones to move around without being too tall to fit in a small warehouse.
+
+\subsection{Net Material}
+We plan to use industrial safety nets to separate the players from the drones as these are tested and reliable. From our research we found a company called SafetyNet365 that make custom safety nets with many different variants, allowing us to choose the mesh size and material diameter among other parameters. We first considered their fall safety nets, which are designed for construction sites to catch workers if they fall, and we chose the largest mesh size of to minimise the area blocked by the net. This net we will call net A, \cite{testedSafetyNet}. As seen in Table \ref{} below, this has an energy absorption of 4.8kJ, but if we calculate the kinetic energy of our $4kg$ drone falling the maximum distance of $2m$ with maximum thrust downwards and a thrust to weight ratio of $2$, the kinetic energy at impact would be $235J$, assuming $g=9.81$. Therefore, the energy absorption of this net far exceeds our needs, so we next considered nets with thinner material diameter. The only nets on their website that have energy absorption listed have $5mm$ material diameter, so in order to consider the energy absorption of other nets we will have to estimate it ourselves. Since the specifications include the maximum tensile force $F$ and breaking elongation $\Delta$ for a single rope, we can calculate the maximum energy stored in each rope as $E=F\Delta L$, where $L$ is the mesh size, the distance between two rope connections. If we then assume that the energy absorption of the net is proportional to the maximum energy stored in a single thread, then we can estimate the energy absorption of an identical net with only the tensile strength, breaking elongation, and mesh size changed. Since this is already a bold assumption, we chose to keep the breaking elongation and mesh size the same and look for a net with thinner material diameter and therefore less maximum tensile force, while keeping all other parameters the same. This simplifies the proportion equation to $EA = k F$, where $EA$ is the energy absorption and $k$ is a constant. We then picked the net with the thinnest material diameter but all other parameters the same to get a lower bound of the energy absorption. This net we will call net B, \cite{thinSafetyNet}. Using the values in Table \ref{} below, we can estimate the energy absorption of net B, $EA_B$, from that of net A, $EA_A$, using the formula $EA_B = EA_A \cdot F_B/F_A$, giving $EA_B = 375J$. This is larger than the predicted maximum energy of the drone upon impact with a safety factor of 1.6, however this is not a very large safety factor, especially with the bold assumptions made above. Ideally we would like a safety factor of at least 3 to cover us from the assumptions made above so we increased the material diameter until this condition was met, giving us the final choice of net C, \cite{usedSafetyNet}. Calculating the energy absorption for this net gives $EA_C = EA_A \cdot F_C/F_A = 1200J$, which gives a safety factor of 5.1 which is well above the proposed minimum of 3.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Net specifications}
+    \label{tab:net}
+    \small
+    \begin{tabularx}{\textwidth}{cccc}
+        \toprule
+        \textbf{}                       & \textbf{Net A}    & \textbf{Net B}    & \textbf{Net C}    \\
+        \midrule
+        Material Diameter / mm          & 5                 & 1.5               & 0.5               \\
+        \midrule
+        Mesh Size / mm                      & 100x100           & 100x100           & 100x100       \\
+        \midrule
+        Max Tensile Strength / N        & 3200              & 250               & 800               \\
+        \midrule
+        Breaking Elongation / \%        & 15                & 15                & 15                \\
+        \midrule
+        Energy Absorption / J           & 4800              & 375               & 1200              \\
+        \midrule
+        Energy Absorption Safety Factor & 20.4              & 1.6               & 5.1               \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\newpage
 
 \section{Sensor Processing} % Tommy, Rishabh
 \subsection{Player detection} % Rishabh
-\subsection{Drone pose tracking} % Tommy
+\subsection{Drone pose tracking} \label{pose tracking} % Tommy
 
 
-\section{High Level Control} % Ritchie
+\section{High Level Control} \label{high level control} % Ritchie
 \newpage
 
 \section{Mid Level Control} % Tommy, Rishabh
@@ -854,15 +917,58 @@ When the perception pipeline returns a valid \gls{yolo} detection, the update ph
 
 \newpage
 
+\section{Search Mode} % Tommy
+\fancyhead[C]{Thomas August}
+The objective of the multi-agent drone system is to find and eliminate players without getting eliminated themselves and this section focuses on the method of finding the players within the map. At the start of a laser tag game, the drones and players will each start in their home bases which as positioned at opposite edges of the map. At this stage, our system knows that players will be entering the map from their home base, but does not know the exact location of these players within the map, and hence all drones will start in the search mode. This mode will not only be used at the start of the game but also when a drone cannot see a player and has not received a backup call from another drone (detailed in Section \ref{high level control}). In both cases, the server will need to plan a trajectory for each drone and the drone should follow this trajectory while looking for players with the onboard camera.
+
+\subsection{Trajectory Planning}
+In order for the drones to search the map effectively as a team they need to be coordinated which is why we run the planning for this mode on the central server. The planning will be split into two parts: region allocation and trajectory planning. The region allocation part will take the location of all drones in search mode as it's input and output a single closed region for each drone to search. Next, the trajectory planning part will take the regions from the first part and plan a closed loop trajectory of grid squares for each drone covering it's whole region. We chose this overall structure because assigning individual regions to each drone mitigates the risk of drone to drone collisions and reduces wasted time searching the same cells more than once, and planning a closed loop trajectory means the drone can search the region repeatedly.
+
+For the region allocation, we decided to use a multi-agent Breadth First Search (BFS) algorithm that completes BFS simultaneously from all drone start locations and allocates each cell to the drone that reached it first. This assumes all drones have a fixed starting location however, when a drone is in it's home base and is entering the map, there are multiple different entry points. For this case, we decided to run the above algorithm for all possible starting locations of any drones currently in the home base and choose the starting locations that give the smallest maximum region size. Since all drones behave the same in the BFS algorithm, if we have $d$ drones entering from the home base and $e$ possible entry cells, then we only have to complete $eCd$ runs of the region allocation algorithm described above. In our map demo map, we have 7 possible entry cells and 5 drones, giving $7C5 = 21$ runs needed at the start of the game when all drones are in the home base and going into search mode. The maximum number of runs needed occurs when 3 or 4 drones are entering the region and this would need $7C3 = 7C4 = 35$ runs to test all possible cases. Since this algorithm uses a basic BFS with an added check for allocation to the drone, it is a very lightweight algorithm so running it 35 times on the central server will require negligible computation and time so this does not need to be considered in detail. Additionally, due to it being a very lightweight algorithm, we will recompute the regions each time a drone enters or leaves the search mode for all remaining drones in search mode.
+
+For the path planning algorithm, we initially looked at just using a Depth First Search (DFS) tree walk along the allocated region, which is efficient when in tight maze like areas of the map, however in open spaces such as the middle of the map it still walks through it as if it is a maze, backtracking when in open space. To mitigate this behavior and make the search more efficient over the whole map, we decided to use a hybrid DFS and lawnmower search method where we assign any open spaces as a single item in the DFS tree and plan the path through this region using the lawnmower method.
+
+\subsection{Trajectory Following}
+Now that we have planned a trajectory for each drone, the drones need a method of following those trajectories. As we are searching for players, we want this trajectory to be slow and smooth to give the gimble-camera system time to search the area. We considered a number of methods for the motion planning such as PD
+
+\newpage
+
+\section{Movement Mode} % Tommy
+\fancyhead[C]{Thomas August}
+
+All of our play modes are team based meaning we need a method of coordinating the drones to work as a team against the human players. In order to make the game fair for the players we decided not to give the central server full control over every aspect of the drone team. For example, if a drone has detected a player's location, we have not allowed the central server to pass this information to all other drones meaning a player should not be faced with many drones against them at one time. To provide a compromise between full information sharing and no information sharing, we decided to introduce a protocol where a drone can call for backup if multiple players are detected within its view. The central server will then find the closest unoccupied drone and put it into this movement mode, in which it is given a target location where the other drone needs backup and the objective is to get there as quickly as possible. The information provided here is to give some context to why we produced a movement mode and what it's purpose is; further information regarding the interaction of the modes and the call for backup protocol can be found in Section \ref{high level control}.
+
+\subsection{Design Setup}
+In order to best decide on the optimal algorithms and methods to use within this mode, we first outlined the criteria for this state to meet. The inputs will be the current grid square of the drone and the target grid square, and the outputs will be the drone thrust and moments. The drone behaviour we need from this mode is for it to reach the target location as quickly as possible with a reliable success rate. We do have the collision avoidance which would abort an unsuccessful trajectory if it is executed, however it is still optimal to ensure all modes have a high success rate to avoid the need to use collision avoidance as much as possible. This task can be split into the planning stage and the execution stage. We decided to run the planning stage on the central server, since the drone and target grid coordinates are already stored there and this will reduce the computational load on the drone. This will output a trajectory through the 2D map for the drone to follow in the execution stage. Since the execution stage involved the direct control of the drone thrust and moments, we decided to run this onboard to reduce latency, as high latency would introduce unnecessary complexity to the control algorithm. 
+
+\subsection{Planning Stage}
+
+As mentioned above, the planning stage will need to compute a path through our known 2D map of the maze from the current drone location to the target location. Since the objective of this method it to reach the target location as quickly as possible, we want to plan the shortest path in order to minimise the distance travelled. To plan the shortest path we decided to use a Breadth First Search (BFS) algorithm which uses our map to determine which adjacent cells can be accessed from the current cell. The map will use 
 
 
-\subsection{Trajectory tracking} % Tommy
-\subsection{Searching} % Maybe Tommy
-\subsection{Hiding} % Not implemented but talk about it
+\newpage
 
-\section{Low Level Control} % Tommy, Rishabh
-\fancyhead[C]{Student3 author of section}
-\subsection{Conversion Matrix}
+\section{Collision Avoidance Mode} % Tommy
+\fancyhead[C]{Thomas August}
+
+As much as we have tried to mitigate the possibility of collisions when designing the different control systems for the drones, there will inevitably still be some collisions that would occur, so we need a method of avoiding collisions in real time that are likely to occur in the near future. Our implementation of this uses constant collision detection to force the drone into collision avoidance mode when there is likely to be an imminent collision. 
+
+\subsection{Collision Detection}
+For the collision detection, we chose to monitor the distance and velocity towards the obstacle and enter collision avoidance mode when the estimated time to collision from these values is below a threshold. Since the drones will estimate their pose and velocity onboard (detailed in Section \ref{pose tracking}), the distance, d, to the closest map obstacle in the direction of the velocity, v, can be calculated and used to find the estimated time to collision using the formula $t=d/v$. Since the pose, velocity and map are all stored onboard, this detection can be run onboard the drone to reduce latency and catch potential collisions quicker. For drone to drone collisions, the pose and velocity of the other drones will have to be sent through the server to other drones, so this will already introduce latency. Due to this, we chose to run the drone to drone collision detection on the server so that we do not get conflicting decisions from the two drones and a unanimous decision can be made for both drones. To determine if a drone to drone collision is imminent, the server will receive the pose and velocity of both drones and propagate the drone poses based on their velocities for time up to the collision detection time threshold and calculate the distance between the two at each time step. If the distance between the two drones is below a small threshold distance to account for noise in the data, then both drones are forced into collision avoidance mode.
+
+\subsection{Collision Avoidance}
+For the collision avoidance method, we chose to use an Artificial Potential Field (APF) based method. Since we know the exact map and we can estimate the position of all drones in the environment, we can place repulsive potential fields perpendicular to the walls, net, and ceiling, and around all other drones, each acting as a point source. We can then sum the potential from all of these at the location of the current drone and take the gradient to find the best direction to move in. We will use the gradient of the potential field as a target velocity and use a PD controller to find the acceleration vector needed to track this velocity. This acceleration vector is then converted to a force vector using the mass of the drone and an upwards force with magnitude equal to the drone is added to this as the hover force to get a final force vector. This force vector and the velocity direction vectors are used to create a coordinate frame by taking the cross product of the two to get the third vector. The error between the current drone orientation and this desired orientation is then computed and used with the angular velocities as the input to another PD controller that outputs the desired drone moments. The desired force vector from the first PD controller is then used as the thrust combined with these moments as the output of the collision avoidance controller and is fed into the mixing matrix (detailed in Section \ref{mixing matrix}).
+
+
+
+
+
+\newpage
+
+\section{Mixing Matrix} \label{mixing matrix} % Tommy, Rishabh
+\fancyhead[C]{Thomas August}
+
+
 \newpage
 
 
@@ -1365,7 +1471,10 @@ In general, one or more variables was changed, and another was observed, while a
 % Essential content that interrupts the flow of the document can be placed here, e.g. technical drawings, detailed lists of equations used, etc.
 \addcontentsline{toc}{section}{Appendix}
 \section*{Appendix}
+\fancyhead[C]{Group}
 \newpage
+
+\printbibliography{biblio}
 
 
 \end{document}
