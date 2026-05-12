@@ -726,14 +726,14 @@ The main body is composed of three main parts: the top hull, the bottom hull, an
 \section{Network and Communications}
 \fancyhead[C]{Richard Usherwood} % Ritchie
 \subsection{Overview}
-Network and Communications is not strictly necessary. It is theoretically possible for all of the drones to achieve a common goal without either the need for the ability to communicate with each other, or the ability to communicate with a central server. In this case, each drone would act according the the information that it had gathered (location of the players, location of other drones etc.), and would not have access to the information that other players had gathered. An analogy can be used between a football team (no central server) and a human playing table football.\newline
-There are a couple of advantages to handling information without a central server, which are listed below: 
+Network and Communications are not strictly necessary for a single wave of the game. Without them, each drone would act according the the information that it had gathered (location of the players, location of other drones etc.), and would not have access to the information that other drones had gathered. 
+There are a couple of advantages to handling information without a central server: 
 \begin{itemize}
     \item Perceived Fairness: the drones will not have access to information they have not gathered themselves, just like the human players.
     \item Robustness: if each drone acts individually, there is no single thing that can go wrong that would entirely derail the game (the way a central server crash would).
 \end{itemize}
 
-However, this method of handling information also has some significant disadvantages, which are listed below:
+Alternatively, a central server could be used to give drones high-level instructions, and to share information pertaining to the state of the game. This method of handling information also has some advantages:
 \begin{itemize}
     \item Complexity: it is much easier to create a program that, with access to all of the available information, controls the drones in the desired manner than it is to create a program that, with different drones following the same program with differing levels of information, will have the same desired effect.
     \item Hardware Costs: if the central high-level decision making is done locally on the processer of each drone, rather than in a central server, not only will a higher-powered processer be needed in the drone, but a larger battery will be needed to power it, so more powerful motors will be required to lift the batter, and so on, driving up hardware costs.
@@ -763,7 +763,7 @@ Wi-Fi medium-ranged wireless communication system, designed for fast transfer of
 
 A Wi-Fi connection has much lower latency than Bluetooth, and has a much higher maximum bitrate than Bluetooth. However, the data that is likely to be needed is small enough that this will not be important. However, Wi-Fi is much more reliable than Bluetooth, and this is especially true at distances above ten meters; Bluetooth was designed for low bitrate, low power, short-range communication between a small number of devices, whereas Wi-Fi was designed for high bitrate, medium power, medium-range communication between a large number of devices.
 
-For these reasons, Wi-Fi is selected as the networking medium between the drones and the server. The server will be a desktop computer (with Wi-Fi capability), and the drones, helmets and vests all contain a ASK RICKIE ABOUT RASPBERRY PI with Wi-Fi capability.
+For these reasons, Wi-Fi is selected as the networking medium between the drones and the server. The server will be a desktop computer (with Wi-Fi capability), and the drones, helmets and vests all contain a Raspberry Pi 4, with Wi-Fi capability.
 
 \newpage
 \section{High Level Control} % Ritchie
@@ -1466,27 +1466,7 @@ Companion apps encourage user-engagement by allowing users to track their progre
 Companion apps also serve a functional purpose. Since effectively everyone in the UK owns and uses a smartphone, they can be directly implemented into the experience of an existing product. For example, popular budget UK pub chain JD Wetherspoon uses a companion app to allow patrons to order drinks and food directly to their table, without requiring them to break conversation and queue at a busy bar. 
 
 \subsection{Overview}
-When opened for the first time, the app prompts the user to create an account with a username and password. If the user has already created a login, they will instead be prompted to enter their user name and password. This is shown in Figure \ref{fig:0_Login_Screen}. When completed, the app the first of five screens that are navigated using a bottom panel: the "Profile" screen, the "Leaderboard" screen, the "Achievements and Challenges" screen, the "Community" screen, and the "Play in Person" screen . The first four screens are engagement-based, and the fifth is functionality-based. 
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.25\linewidth]{figs/App_Screenshots/0_Login_Screen.jpg}
-    \caption{Login Screen}
-    \label{fig:0_Login_Screen}
-\end{figure}
-
-\subsubsection{Engagement}
-The "Profile" screen displays the player's details (Player ID, name etc.), the score details (number of games played, number of kills and deaths, total score), and the player's social details (friends, friend requests). This is shown in Figure \ref{fig:1_Profile_Screen}. 
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.25\linewidth]{figs/App_Screenshots/1_Profile_Screen.jpg}
-    \caption{Profile Screen}
-    \label{fig:1_Profile_Screen}
-\end{figure}
-
-The "Leaderboard" screen displays a list of players in order of their total score. The app user can toggle between viewing a global leaderboard and a leaderboard of only their friends. This is shown in Figures \ref{fig:2_1_All} and \ref{fig:2_2_Friends}.
-
+When opened for the first time, the app prompts the user to create an account with a username and password. If the user has already created a login, they will instead be prompted to enter their user name and password. This is shown in Figure \ref{fig:0_Login_Screen}. When completed, the app the first of five screens that are navigated using a bottom panel: the "Profile" screen, the "Leaderboard" screen, the "Achievements and Challenges" screen, the "Community" screen, and the "Play in Person" screen . The first four screens are engagement-based, and the fifth is functionality-based. As an example, the "Leaderboard" screen is shown in Figure \ref{fig:lea-screen}. The app user can toggle between viewing a global leaderboard and a leaderboard of only their friends
 
 \begin{figure}[htbp]
      \centering
@@ -1507,67 +1487,96 @@ The "Leaderboard" screen displays a list of players in order of their total scor
      \label{fig:lea-screen}
 \end{figure}
 
+\subsection{Engagement}
 
-The "Achievements and Challenges" screen displays all achievements (lifetime goals, for example "play ten games", "kill fifteen drones in one game", "be the last player alive in a death match" etc.), shown in Figure \ref{fig:3_1_Lifetime}, and monthly challenges (smaller achievements that reset and change every month), shown in figure \ref{fig:3_2_Monthly}. The inclusion of lifetime achievements allows for a long-term feeling of improvement, while the monthly challenges allow new players to compete with their more experienced friends.
+Apps encourage user engagement in many ways. A few are outlined below: 
+
+\subsubsection{Progress}
+Tracking progress encourages user engagement by giving users a sense of achievement and improvement over time. The app achieves this in many ways:
+\begin{itemize}
+    \item The user's total score is displayed under their profile, allowing them easily to track progress.
+    \item The user can track their progress against their friends in the Leaderboard screen.
+    \item The user can achieve achievements are specified, and the player is rewarded with a notification when one has been completed. Added to this are monthly challenges, allowing all users satisfaction from short-term progress.
+\end{itemize}
+\subsubsection{Friends}
+Connecting friends and integrating social features encourages user engagement by allowing users to see their friends' progress. The app achieves this in many ways:
+\begin{itemize}
+    \item The Leaderboard screen allows players to compare themselves only against their friends (as shown in Figure \ref{fig:lea-fri}.
+    \item The Community screen allows players to see recent activity of their friends, as well as to send and accept/decline friend requests.
+\end{itemize}
+\subsubsection{Notifications and reminders}
+Integrating Notifications and reminders prompts users to engage regularly with the app. Notifications are delivered to the phone's operating system notification bar for the following reasons:
+\begin{itemize}
+    \item The user has completed an achievement/monthly challenge.
+    \item The user has overtaken/been overtaken by a friend in the Leaderboard.
+    \item The user has a new friend request.
+\end{itemize}
 
 
-\begin{figure}[htbp]
-     \centering
-     \begin{subfigure}[b]{0.25\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/3_1_Achievements_Lifetime.jpg}
-         \caption{Achievements Screen - Lifetime Achievements}
-         \label{fig:ach-lif}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.25\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/3_2_Achievements_Monthly.jpg}
-         \caption{Achievements Screen - Monthly Challenges}
-         \label{fig:ach-mon}
-     \end{subfigure}
-     \caption{Achievements Screen}
-     \label{fig:ach-screen}
-\end{figure}
+% The "Profile" screen displays the player's details (Player ID, name etc.), the score details (number of games played, number of kills and deaths, total score), and the player's social details (friends, friend requests). This is shown in Figure \ref{fig:1_Profile_Screen}. 
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.25\linewidth]{figs/App_Screenshots/1_Profile_Screen.jpg}
+%     \caption{Profile Screen}
+%     \label{fig:1_Profile_Screen}
+% \end{figure}
 
 
-The "Community" screen toggles between displaying details of recent games played by the app user's friends, and displaying details of all recent games played. It also allows users to search for other players by name, or by Player ID, and to send each other friend requests. Figure \ref{fig:4_2_Receiving} shows a screen displayed when the player "Alice" has made a friend request to the player logged into the app. Figure \ref{fig:4_2_Sending} shows a screen displayed when the player logged into the app is sending a friend request to the player "Bob". This system allows players to track each other's progress, and allows players to feel connected to friends they may have made through playing the game in person.
 
-\begin{figure}[htbp]
-     \centering
-     \begin{subfigure}[b]{0.25\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_1_Community_Friends.jpg}
-         \caption{Community Screen - Friends Tab}
-         \label{fig:com-friends}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.25\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_2_1_Community_Requests_Receiving.jpg}
-         \caption{Community Screen - receiving friend request}
-         \label{fig:com-rec}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.25\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_2_2_Community_Requests_Making.jpg}
-         \caption{Community Screen - sending friend request}
-         \label{fig:com-sen}
-     \end{subfigure}
-     \caption{Community Screen}
-     \label{fig:com-screen}
-\end{figure}
+% The "Leaderboard" screen displays a list of players in order of their total score. The app user can toggle between viewing a global leaderboard and a leaderboard of only their friends. This is shown in Figure \ref{fig:lea-screen}. \newline
+
+
+
+
+
+% The "Achievements and Challenges" screen displays all achievements (lifetime goals, for example "Play ten games", "Kill fifteen drones in one game", "Be the last player alive in a death match" etc.), shown in Figure \ref{fig:ach-lif}, and monthly challenges (smaller achievements that reset and change every month), shown in Figure \ref{fig:ach-mon}. The inclusion of lifetime achievements allows for a long-term feeling of improvement, while the monthly challenges allow new players to compete with their more experienced friends. \newline
+
+
+
+
+
+% The "Community" screen toggles between displaying details of recent games played by the app user's friends, and displaying details of all recent games played. It also allows users to search for other players by name, or by Player ID, and to send each other friend requests. Figure \ref{fig:4_2_Receiving} shows a screen displayed when the player "Alice" has made a friend request to the player logged into the app. Figure \ref{fig:4_2_Sending} shows a screen displayed when the player logged into the app is sending a friend request to the player "Bob". This system allows players to track each other's progress, and allows players to feel connected to friends they may have made through playing the game in person.
+
+
 
 \subsubsection{Functionality}
-The "Play in Person" screen prompts the player to scan the QR codes on the top of the laser gun and the helmet they are given when playing in-person. This allows the server to attribute the correct number of kills and deaths (infra-red strikes on drones, encoded with ID of the gun, and infra-red strikes on helmet detector, communicated with server) to the correct player, making for a seamless user experience. The "Play in Person" screen is shown in Figure \ref{fig:5_PiP_Screen}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.25\linewidth]{figs/App_Screenshots/5_Play_In_Person.jpg}
-    \caption{Play in Person Screen}
-    \label{fig:5_PiP_Screen}
+The user experience of playing game in the centre, using the app, is outlined below.
+\begin{itemize}
+    \item THe user signs in to the app (or create an account if this has not already been done). The Login screen is shown in Figure \ref{fig:userstory1}.
+    \item The app displays the Profile Screen. Using the bottom panel (shown in Figure \ref{fig:App-Panel}, the user navigates to the "Play in Person" Screen. The Profile Screen is shown in Figure \ref{fig:userstory2}.
+    \item The player uses the "Play in Person" screen to scan QR codes on the gun and the helmet given to you by the centre. The Play in Person screen is shown in Figure \ref{fig:userstory3}.
+    
+\end{itemize}
+\begin{figure}[htbp]
+     \centering
+     \begin{subfigure}[b]{0.25\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/0_Login_Screen.jpg}
+         \caption{Login Screen}
+         \label{fig:userstory1}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.25\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/1_Profile_Screen.jpg}
+         \caption{Profile Screen}
+         \label{fig:userstory2}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.25\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/5_Play_In_Person.jpg}
+         \caption{Play in Person Screen}
+         \label{fig:userstory3}
+     \end{subfigure}
+     \caption{From Left to Right: The user experience of using the app in for functionality}
+     \label{fig:userstory}
 \end{figure}
+
+
+This allows the server to attribute the correct number of kills and deaths (infra-red strikes on drones, encoded with ID of the gun, and infra-red strikes on helmet detector, communicated to server via WiFi) to the correct player.
+
 \subsection{Usability Design Choices}
 In 2010, Lee et al \cite{LEE201090} identified several "Principles for General System Design", with respect to complex 3D architectural design and engineering tools. While this use-case is not identical to that of Lee et al, the principles are still relevant. The following are examples of the identified "Principles":
 \subsubsection{Visibility}
@@ -1598,24 +1607,21 @@ The app was created using Expo. Expo is a development framework built to create 
 \subsubsection{Project Structure}
 When the app is run, it opens a "package.json" file which sets the rest of the app in motion. From here, it exectutes index.js which imports App.js, which opens MainContainer.js. MainContainer.js serves as the app's navigation hub. MainContainer.js decides which "navigation flow" to show, based on whether the app is in state "Auth" or "Main" (whether the user is signed in or not). From here, MainContainer.js accesses each of the displayed screens, each of which has a dedicates JavaScript file in the "screens" subfolder.
 \subsubsection{State Management}
-The app uses a hybrid state management strategy. That is to say, not all states are stored centrally ("All-Global State Management"), and not all states are managed independently by an individual screen ("All-Local State Management"). The direct React Context including AuthContext (whether or not a user is logged in) and DataContext (cached API data) is stored centrally, however each screen also stores its own data including the user's name and password (in login screen), the data of the user's friends' last games (in leaderboard screen) etc. This hybrid style of state management has several advantages. For example, the fact that low-level data is stored in the JavaScript file corresponding to the screen it is needed in allows for good "separation of concerns", meaning that, if the project were bigger than it is now, several developers could be editing different parts of the software without interfering. Additionally, by having some data stored separately, such as API cached data, each screen can "reach in" to this file and get what it needs, rather than the same data having to be stored in many different places.
+The app uses a hybrid state management strategy. That is to say, not all states are stored centrally (fully global), and not all states are managed independently by an individual screen (fully local). The React Context including AuthContext (whether or not a user is logged in) and DataContext (cached API data) are stored centrally, however each screen also stores its own data, such as the the data of the user's last game (in profile screen), friend requests a user may have (in community screen) etc. \newline This hybrid style of state management has several advantages. For example, the fact that low-level data is stored in the JavaScript file corresponding to the screen it is needed in allows for good "separation of concerns", meaning that, if the project were bigger than it is now, several developers could be editing different parts of the software without interfering. Additionally, by having some data stored separately, such as API cached data, each screen can "reach in" to this file and get what it needs, rather than the same data having to be stored in many different places.
 \subsubsection{API Integration}
-The App uses Supabase as its backend API, to access an SQL database hosted through Supabase. This API is handled through a single client "db.js" - after the app is loaded, the data is cached in datacache.js to avoid unnecessary loading times, especially when being used with poor internet connections. A screenshot of the database is shown below in Figure \ref{fig:Database}.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\linewidth]{figs/Database_Screenshot.png}
-    \caption{Screenshot of SQL Database}
-    \label{fig:Database}
-\end{figure}
-
-A specific format had to be created for this data to be stored. For example, Game Data is stored in a format (A, B, C, \dots),(D, E, F, \dots),(G, H, I, \dots). This game data is equivalent to "Players A, B, C, \dots played a game in which they got D, E, F, \dots kills and died G, H, I, \dots times, respectively". Furthermore the "score" is defined as "number of kills squared divided by number of deaths" in a game, and the friend requests are stored as CSVs. When a change to the data is made in the app (for example sending or accepting a friend request), the database is automatically updated by API. However, the database must also be updated after every game. In the real system, this would be integrated into a system that counts communications with drones and helmets, and updates the database automatically. However, for now it is handled by a script that allows the user to input the results of the game (who was playing, how many kills they got, how many times they died etc.), and updates the database accordingly. 
+The App uses Supabase as its backend platform, to access an PostgreSQL database. Database access is handled through a single client in "db.js" - after the app is loaded, the data is cached in datacache.js to avoid unnecessary loading times, especially when being used with poor internet connections. A screenshot of the database is included in the appendix.
 
 
+
+A specific format had to be created for this data to be stored. For example, Game Data is stored in a format (A, B, C, \dots),(D, E, F, \dots),(G, H, I, \dots). This game data is equivalent to "Players A, B, C, \dots played a game in which they got D, E, F, \dots kills and died G, H, I, \dots times, respectively". Furthermore the "score" is defined as "number of kills squared divided by number of deaths" in a game, and the friend requests are stored as CSVs. When a change to the data is made in the app (for example sending or accepting a friend request), the database is automatically through API calls. However, the database must also be updated after every game. In the real system, this would be integrated into a system that processes communications with drones and helmets, and updates the database automatically. However, for now it is handled by a script that allows the user to input the results of the game (who was playing, how many kills they got, how many times they died etc.), and updates the database accordingly. 
+
+\newpage
 \section{Safety and Risk Assessment Management}
 
 
 A quantitative risk assessment has been completed, and is shown in Figure \ref{fig:risk-assessment}, in the appendix. The most significant initial risks (before mitigations) were the the contact between guns and players' eyes, and players running into each other. After the necessary control measures, they are still most significant residual risks, along with trips and falls. This demonstrates that there is not an undue risk associated with playing the game, since trips and falls, player-on-player collision and impact with instruments used for playing (such as laser-guns, squash raquets, etc.) are risks associated with traditional laser-tag, as well as many common sports. 
+
+\newpage
 \section{Commercialisation and Financial Modelling}
 \subsection{Setup}
 A discounted cash flow model was created. The model was used to track cash flow, apply a discount rate to future revenue, and to calculate the Net Present Value (NPV) of a company providing the game as a commercial enterprise.
@@ -2096,5 +2102,81 @@ Assuming the average daytime temperature in London is \(10 ^\circ C\), and the d
     \includegraphics[width=1\linewidth]{figs/risk-assessment}
     \caption{Quantitative Risk Assessment}
     \label{fig:risk-assessment}
+\end{figure}
+
+\begin{figure}[htbp]
+     \centering
+     \begin{subfigure}[b]{0.25\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/0_Login_Screen.jpg}
+         \caption{Login Screen}
+         \label{fig:0_Login_Screen}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.25\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/1_Profile_Screen.jpg}
+         \caption{Profile Screen}
+         \label{fig:1_Profile_Screen}
+     \end{subfigure}
+     \caption{Login and Profile Screens}
+     \label{fig:log-pro-screen}
+\end{figure}
+
+\begin{figure}[htbp]
+     \centering
+     \begin{subfigure}[b]{0.25\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/3_1_Achievements_Lifetime.jpg}
+         \caption{Achievements Screen - Lifetime Achievements}
+         \label{fig:ach-lif}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.25\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/3_2_Achievements_Monthly.jpg}
+         \caption{Achievements Screen - Monthly Challenges}
+         \label{fig:ach-mon}
+     \end{subfigure}
+     \caption{Achievements Screen}
+     \label{fig:ach-screen}
+\end{figure}
+\begin{figure}[htbp]
+     \centering
+     \begin{subfigure}[b]{0.25\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_1_Community_Friends.jpg}
+         \caption{Community Screen - Friends Tab}
+         \label{fig:com-friends}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.25\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_2_1_Community_Requests_Receiving.jpg}
+         \caption{Community Screen - receiving friend request}
+         \label{fig:com-rec}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.25\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_2_2_Community_Requests_Making.jpg}
+         \caption{Community Screen - sending friend request}
+         \label{fig:com-sen}
+     \end{subfigure}
+     \caption{Community Screen}
+     \label{fig:com-screen}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.25\linewidth]{figs/App_Screenshots/5_Play_In_Person.jpg}
+    \caption{Play in Person Screen}
+    \label{fig:5_PiP_Screen}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/Database_Screenshot.png}
+    \caption{Screenshot of SQL Database}
+    \label{fig:Database}
 \end{figure}
 \end{document}
