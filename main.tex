@@ -187,7 +187,10 @@ Simulation requirement & Geometry suitable for representation in simulation \\
 \end{table}
 
 \subsection{Electronics Design and Component Selection}
+\label{sec:electronics_design}
+
 \subsubsection{Propulsion System}
+\label{sec:propulsion_system}
 
 Since the drone was intended to operate in relatively confined spaces and act as an active game-play opponent, the propulsion system needed enough thrust for stable flight while allowing rapid responsive movement. A four-rotor configuration was selected as the most practical solution in avoiding the additional mechanical and control complexity that would come with more unusual multi-rotor arrangements.
 
@@ -378,6 +381,7 @@ As shown in the table 6, the available LittleBee Spring 40A specifications list 
 This ESC was chosen as it matched the propulsion system requirements while remaining compact enough to fit within the airframe. However, as the ESC has no built-in BEC, the lower voltage electronics must be powered through a separate voltage regulation stage, which is addressed in the power system design.
 
 \subsubsection{Power System}
+\label{sec:power_system}
 
 The power system must be designed to supply both the high-current propulsion system and the lower-voltage onboard electronics. The propulsion system requires direct battery power for the four ESCs and brushless motors. Meanwhile, the onboard computer, sensors, and game-specific electronics must receive regulated lower-voltage supplies. As a result, the power system will be split into two main parts: a high power battery path and a regulated path using voltage conversion.
 
@@ -885,8 +889,65 @@ The final airframe configuration brings the separate subsystem assemblies togeth
 The drone parts are designed with reference to the chosen internal electronics. Most of the components will be housed in the electronics basket - including the Raspberry Pi, ESCs, voltage regulator, IMU sensor, battery, and wiring. The OAK-D Lite camera and IR emitter will be mounted externally on the gimbal turret, with their wiring routed back into the central body opening. The motor and propellers will be mounted in the motor arms.
 
 \subsection{Preliminary Engineering Evaluation}
+
+\paragraph{Context} A preliminary design evaluation was conducted to assess how realistic the final hardware design was. Since the drone was developed through CAD modeling and component research, the evaluation focuses on whether the proposed airframe is practical and suitable for manufacture. The main areas considered here are structural behavior and feasibility of modular assembly. Electronic components and power choices were already assessed through calculations in the section ~\ref{sec:electronics_design} - such as the propulsion feasibility check in section ~\ref{sec:propulsion_system}, battery endurance in section ~\ref{sec:power_system} and other certain power-distribution analysis. 
+
 \subsubsection{Structural Assessment of Critical Components}
+
+The structural assessment focused on two components most exposed to loading and collision impact: the motor-body joints and the blade guards. As the project did not develop a physical prototype, the evaluation was carried out using CAD-based structural simulations rather than physical testing. 
+
+\paragraph{Rotor Arm Simulation}
+The first simulation assessed the joint between the rotor arm and the electronics basket, as this connection transfers the motor thrust load back into the main body. This area was important as any failure would affect propulsion support and the integrity of the overall airframe. A static load represent the thrust force acting through the motor and rotor arm - the applied load was above 20 N, which is close to the estimated maximum thrust per motor used in the propulsion analysis.
+
+%%%%%FIGURE: Image of the Rotor Arm analysis
+
+The simulation showed that the highest stress occurred near the handle area of the electronic basket, which was expected because this is where the rotor-arm load is transferred into the central structure. Most of the rotor arm remained in the lower-stress blue/green region - which suggests that the rotor arm geometry was not the limiting factor. The minimum safety factor was approximately 2.23, meaning the component remained above the failure threshold for the load case.
+
+This result showed that the structure was reasonable. However, this should still be treated as a preliminary CAD-based result, noting the fact it does not account for vibration, fatigue, manufacturing defects and loose bolts.
+
+\paragraph{Blade Guard Impact Simulation}
+
+The blade guard was assessed as it was one of the most exposed parts of the drone and is likely to be the primary contact point during minor collisions with walls and obstacles. A 20 N direct front impact was applied in a static structural simulation.
+
+%%%%%FIGURE: Image of the Blade Guard Analysis
+
+The simulation showed that the highest stress occurred near the connection between guard and arm, making this the weakest region of the blade guard design. The minimum safety factor was 1.099, slightly above 1, meaning the structure passes the load case but only by a small margin (less than 10\%) which suggests that the current design is acceptable as an early simulation result.
+
+The assessment was limited to a static simulation, A dynamic impact simulation would have been more realistic in a collision case but the tools were not available without paid access. As a result, the safety factor should be treated as an initial indicator.
+
 \subsubsection{Feasibility of the Final Design}
+
+The final drone design can be considered feasible in the perspective CAD/simulation led concept. The selected electronics are consistent with the design requirements. The airframe provides a dedicated area for internal components and wiring while ensuring the body remains modular, detachable and easy to manufacture and assemble. An overall feasibility assessment is shown in Table~\ref{tab:final_design_feasibility}.
+
+\begin{table}[htbp]
+\centering
+\caption{Feasibility assessment.}
+\label{tab:final_design_feasibility}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Design Area} & \textbf{Feasibility Assessment} \\
+\hline
+Electronics integration & The main electronic components can be housed within the central body and removable electronics basket. \\
+\hline
+Propulsion system & The motor-propeller configuration provides a theoretical thrust margin suitable for the target drone mass. \\
+\hline
+Power system & The 4S battery, PDB, and 5~V regulator provide a clear separation between propulsion power and low-voltage electronics. \\
+\hline
+Mechanical structure & The modular body, rotor arms, blade guards, and gimbal turret form a complete and practical airframe layout. \\
+\hline
+Manufacturability & PLA/ABS 3D-printed parts and bolt fasteners make the design low-cost and easy to assemble. \\
+\hline
+Maintainability & Separate hull sections, rotor arms, linkages, electronics basket, and gimbal parts allow damaged or faulty parts to be replaced individually. \\
+\hline
+Safety features & Blade guards, enclosed electronics, and helicopter-style landing gear improve landing safety and stability. \\
+\hline
+Main limitation & The design has not been physically prototyped, so many real behaviours remain unevaluated. \\
+\hline
+\end{tabularx}
+\end{table}
+
+The final design of the drone hardware is acceptable within the scope of the project. However, the design is not recommended to serve as a final prototype as many of the main areas still require proper validation with real-world testing. 
 
 \newpage
 
