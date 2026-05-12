@@ -97,11 +97,6 @@ It is very difficult to know which methods of adjusting difficulty will result i
 
 \section{System Architecture and Integration} \label{system} % Everyone except Ritchie
 
-\subsection{Simulation Representation of the Hardware} %Rickie
-\subsubsection{Geometric and Physical Abstraction}
-\subsubsection{Propulsion and Motion Representation}
-\subsubsection{Collision and Sensor Simplifications}
-
 \newpage
 
 %%%%%%%%%----------------End of System Architecture---------------%%%%%%%%%
@@ -116,10 +111,7 @@ The project decision was to develop a custom drone hardware design in preference
 In addition, commercial drones tend to be quite closed off in terms of hardware and software access - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed more freedom to choose components, organize the internal layout, and include additional features necessary to the game-play.
 
 \subsection{Literature Review}
-% - Individaul Literature Review
-% - conduct a pros and cons list for the final decision
-% - include references
-% - ensure overall flow makes sense
+%DO THIS PART
 
 \subsection{Design Objectives and Constraints}
 \subsubsection{Operational Requirements}
@@ -146,9 +138,9 @@ As the drone is intended to operate indoors in relative proximity to players dur
 
  The drone needs to be a capable opponent - able to dodge, attack and wander throughout the arena - and able to support the systems needed for the overall project itself (which includes being cost-effective). This led to several requirements that influences the size, layout, performance, and maintainability of the final design.
 \begin{itemize}
-    \item \textbf{Indoor Movement: } Contrary to the safety requirement, the drone must also be a capable opponent rather than a still target. This means the design must be able to allow for navigation and some form of evasive movement. This poses as a tradeoff between gameplay and safety.
-    \item \textbf{Visibility and challenge: } The drone had to be large and visible enough for players to clearly recognize the target during gameplay, while still being agile enough to move around. A design too small would be difficult to engage while a design too large or too slow would reduce gameplay quality.
-    \item \textbf{Supporting game systems and battery: } The drone needs to carry additional hardware required for gameplay, such as IR transmitters and receivers, cameras, sensors, and onboard computing. These systems add weight and take up internal space. In addition, the design needs to allow for enough operating time for meaningful game-play.
+    \item \textbf{Indoor Movement: } Contrary to the safety requirement, the drone must also be a capable opponent rather than a still target. This means the design must be able to allow for navigation and some form of evasive movement. This poses as a tradeoff between game-play and safety.
+    \item \textbf{Visibility and challenge: } The drone had to be large and visible enough for players to clearly recognize the target during game-play, while still being agile enough to move around. A design too small would be difficult to engage while a design too large or too slow would reduce game-play quality.
+    \item \textbf{Supporting game systems and battery: } The drone needs to carry additional hardware required for game-play, such as IR transmitters and receivers, cameras, sensors, and onboard computing. These systems add weight and take up internal space. In addition, the design needs to allow for enough operating time for meaningful game-play.
     \item \textbf{Easy maintenance and replace-ability: } Given the game is a multi-agent system rather than a single platform, the design needs to remain practical to maintain, to repair, and to replace. Minor damage during operation should not require a whole drone to be rebuilt, so replaceable parts and a maintainable layout becomes an important constraint.
 \end{itemize}
 
@@ -160,7 +152,7 @@ The project was carried out mainly through simulation; the hardware design was d
 
 \begin{table}[htbp]
 \centering
-\caption{Summarised starter design criteria for the drone platform.}
+\caption{Summarized starter design criteria for the drone platform.}
 \label{tab:starter_design_criteria}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l X @{}}
@@ -168,7 +160,7 @@ The project was carried out mainly through simulation; the hardware design was d
 \textbf{Design Parameter} & \textbf{Target / Requirement} \\
 \midrule
 Operating environment & Indoor arena with close proximity to players, walls, and obstacles \\
-Operational role & Stable and manoeuvrable aerial platform for indoor gameplay \\
+Operational role & Stable and maneuverable aerial platform for indoor game-play \\
 Configuration & Compact quadrotor platform \\
 Maximum mass & $\leq 4.0$ kg \\
 Maximum width & $\leq 600$ mm \\
@@ -212,7 +204,7 @@ For a quadrotor configuration with a target thrust-to-weight ratio of approximat
 \textbf{Parameter} & \textbf{Value} & \textbf{Design relevance} \\
 \midrule
 Selected motor & BrotherHobby Avenger 2806.5 1300KV & Main propulsion motor \\
-Motor type & Brushless & Suitable for multirotor propulsion \\
+Motor type & Brush-less & Suitable for multi-rotor propulsion \\
 KV rating & 1300KV & Suitable for thrust-focused operation \\
 Mass & 41 g & Four motors contribute approximately 164g \\
 Cell compatibility & 4--6S LiPo & Sets the required battery range for the final power system \\
@@ -949,6 +941,30 @@ Main limitation & The design has not been physically prototyped, so many real be
 
 The final design of the drone hardware is acceptable within the scope of the project. However, the design is not recommended to serve as a final prototype as many of the main areas still require proper validation with real-world testing. 
 
+%------------This section can be put into System Architecture and Integration
+\subsection{Simulation Representation of Drone Hardware}
+
+The hardware design also needed a simplified representation inside the simulation environment. A Fusion 360 CAD assembly would be too detailed for use in Unity, which was the simulation environment that had been chosen.
+
+\subsubsection{Simulation models}
+
+Instead of using the full Fusion 360 assembly,  a lower-detail version was built in Blender. This model kept the main features needed for visual recognition and game play - mainly rotor arms and central body. Smaller details such as bolt holes, internal electronics, linkages were removed to reduce complexity. This allowed the drone to be represented clearly in the simulation. Unity also allowed model mass and size scaling with an in-built physics system, hence could be used to model the simplified drone more accurately.
+
+%%%%%FIGURE: Blender Model Drone
+
+\subsubsection{Importing and setting up the Model}
+
+The simplified drone model was exported from Blender and imported into Unity as a game asset. Once inside Unity, the model was arranged so that movement and animation could be controlled. The rotor propellers were kept separate from the main body to allow spinning animation while following the physics controller.
+
+%%%%%FIGURE: Image of Drone in Unity
+
+\subsubsection{Simplified Physics and interaction}
+
+The Unity model used the built-in physics and collision system to represent the drone during simulation. The drone was treated as a simplified rigid body with approximate box collision boundaries. Collisions with the walls, obstacles or game-play objects were handled using Unity colliders, and the simplified model allowed basic movement and navigation tests.
+
+%%%%%FIGURE: Another Image of Drone in Unity
+
+%-------------------
 \newpage
 
 \section{Player Hardware Design}
