@@ -95,6 +95,7 @@ Since the levels increase in difficulty, there is little need to scale difficult
 
 It is very difficult to know which methods of adjusting difficulty will result in a game that is both enjoyable and balanced, for a range of numbers of people. Hence, deciding exactly how to perform this adjustment will require play-testing, in the arena, once it has been created.
 \newpage
+
 \section{System Architecture and Integration} \label{system} % Everyone except Ritchie
 
 \subsection{Simulation Representation of the Hardware} %Rickie
@@ -115,7 +116,8 @@ The project decision was to develop a custom drone hardware design in preference
 
 In addition, commercial drones tend to be quite closed off in terms of hardware and software access - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed more freedom to choose components, organize the internal layout, and include additional features necessary to the game-play.
 
-% - add additional references to an investigation into commercial platforms
+\subsection{Literature Review}
+% - Individaul Literature Review
 % - conduct a pros and cons list for the final decision
 % - include references
 % - ensure overall flow makes sense
@@ -128,7 +130,7 @@ At core level, the drone design must be able to achieve basic drone operations f
     \item sufficient thrust for stable flight
     \item reliable movement for indoor environment
     \item have required electronics and payload onboard platform
-    \item enough battery-life for meaningful gameplay
+    \item enough battery-life for meaningful game-play
 \end{itemize}
 
 \subsubsection{Safety Constraints}
@@ -913,13 +915,13 @@ We plan to use industrial safety nets to separate the players from the drones as
     \small
     \begin{tabularx}{\textwidth}{cccc}
         \toprule
-        \textbf{}                       & \textbf{Net A}    & \textbf{Net B}    & \textbf{Net C}    \\
+        \textbf{} & \textbf{Net A} & \textbf{Net B} & \textbf{Net C}\\
         \midrule
-        Material Diameter / mm          & 5                 & 1.5               & 0.5               \\
+        Material Diameter / mm & 5 & 1.5 & 0.5\\
         \midrule
-        Mesh Size / mm                      & 100x100           & 100x100           & 100x100       \\
+        Mesh Size / mm & 100x100 & 100x100 & 100x100 \\
         \midrule
-        Max Tensile Strength / N        & 3200              & 250               & 800               \\
+        Max Tensile Strength / N & 3200 & 250& 800 \\
         \midrule
         Breaking Elongation / \%        & 15                & 15                & 15                \\
         \midrule
@@ -2317,6 +2319,11 @@ In general, one or more variables were changed, and another was observed, while 
 % Essential content that interrupts the flow of the document can be placed here, e.g. technical drawings, detailed lists of equations used, etc.
 \addcontentsline{toc}{section}{Appendix}
 
+%%%%%%%%%%%%%%%%-----------End of Commercialisation-------------%%%%%%%%%%%%%%%
+
+\section{Sustainability} %Rickie
+
+%%%%%%%%%%%%%%%----------End of Sustainability--------------%%%%%%%%%%%%%%%
 
 
 \section*{Appendix}
