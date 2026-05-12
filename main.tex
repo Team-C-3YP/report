@@ -1712,12 +1712,6 @@ For the collision detection, we chose to monitor the distance and velocity towar
 \subsection{Collision Avoidance}
 For the collision avoidance method, we chose to use an Artificial Potential Field (APF) based method. Since we know the exact map and we can estimate the position of all drones in the environment, we can place repulsive potential fields perpendicular to the walls, net, and ceiling, and around all other drones, each acting as a point source. We can then sum the potential from all of these at the location of the current drone and take the gradient to find the best direction to move in. We will use the gradient of the potential field as a target velocity and use a PD controller to find the acceleration vector needed to track this velocity. This acceleration vector is then converted to a force vector using the mass of the drone and an upwards force with magnitude equal to the drone is added to this as the hover force to get a final force vector. This force vector and the velocity direction vectors are used to create a coordinate frame by taking the cross product of the two to get the third vector. The error between the current drone orientation and this desired orientation is then computed and used with the angular velocities as the input to another PD controller that outputs the desired drone moments. The desired force vector from the first PD controller is then used as the thrust combined with these moments as the output of the collision avoidance controller and is fed into the mixing matrix (detailed in Section \ref{mixing matrix}).
 
-
-
-
-
-\newpage
-
 \section{Mixing Matrix} \label{mixing matrix} % Tommy, Rishabh
 \fancyhead[C]{Thomas August}
 
