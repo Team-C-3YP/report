@@ -5,6 +5,9 @@
 \usepackage{tabularx}
 \usepackage{wrapfig}
 \usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{fontspec}
+\usepackage{amsmath}
 \usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
 
 \title{Laser Tag using a Multiagent Drone System}
@@ -51,6 +54,10 @@
 \newacronym{coco}{COCO}{Common Objects in Context}
 \newacronym{onnx}{ONNX}{Open Neural Network Exchange}
 \newacronym{imu}{IMU}{Inertial Measurement Unit}
+\newacronym{npv}{NPV}{Net Present Value}
+\newacronym{wacc}{WACC}{Weight Averaged Cost of Capital}
+\newacronyn{tv}{TV}{Terminal Value}
+\newacronym{irr}{IRR}{Internal Rate of Return}
 \printglossaries
 \newpage
 
@@ -71,10 +78,24 @@ You can define them in the header of this file and they will appear in the gloss
 \newpage
 
 \section{Gameplay} % Ritchie
-\subsection{Rules and Play}
-\subsection{Technological Implementation}
+\fancyhead[C]{Richard Usherwood}
+\subsection{Overview}
+Players are equipped with "Laser Guns" (Infrared emitters that fire encoded data), and helmets and vests containing Infrared sensors. The drones are equipped with "Turrets" that fire emit Infrared radiation (see Section \ref{Turret} and Infrared sensors as well. When they are not flying, they are dormant in a "standby location" where they can have batteries replaced by employees if required. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If the player is hit, they must navigate to a designated "timeout" area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun will not work until their timeout has been completed (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at three metres height for safety, see Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
 
-\section{System Architecture and Integration} \label{system} % Everyone
+
+Two "game modes" exist: "Wave Mode" and "Objective Mode". These are summarised in the following sections.
+\subsection{Wave Mode}
+In "Wave Mode", the players must attempt to defeat a number of drones, released in an order designed to be both challenging and engaging. When the drone is hit, it returns to its standby location, where it will remain. If all of the players are timing out at the same time (having been hit), they lose. If all of the drones have been hit, they win. This constitutes a single wave. The players can choose from a catalogue of waves (in future accessible through the companion app, see Section \ref{app}), ranging from tutorial level to advanced. Each level will be marked with a numerical difficulty rating. This allows a team to end a game with an understandable, clear metric of how well they performed: the difficulty rating of the hardest wave in which they won. This will also serve as a clear metric of a team's improvement with time, encouraging them to return. In future, this will be displayed in the companion app, allowing players to compare metrics with their friends.
+
+\subsection{Objective Mode}
+In "Objective Mode", the players must attempt to navigate the maze to complete objectives, such as "Hold this button for 5 seconds", or "Shoot this target on the wall", which will be communicated to the players via speakers (in future they will be communicated via a LED display embedded in the Laser-Guns). They must complete all objectives within a defined time to "pass" the level. While they are completing these objectives, the drones are flying overhead and attempting to shoot at the players, just as in Wave Mode. Similarly, the players must timeout for 10 seconds in a particular area of the maze if hit, and the drones will exit the game if hit, but will return after a short timeout. If all players timeout at once, they lose; if they exceed the time limit for the level, they lose; if they complete all objectives, they win. If they win, they will progress to a harder level. Just as in "Wave Mode", the levels will be designed and play-tested to be both challenging, engaging; a catalogue of levels marked with a numerical difficulty can be selected in-app.\newline
+
+\subsection{Difficulty Scaling}
+Since the levels increase in difficulty, there is little need to scale difficulty according to a players' skill: if the players are inexperienced, they will only play easy levels, and there will be levels to suit players of all skill levels. However, the difficulty of the levels may need to change according to the number of players in a team. This can be achieved in a number of ways. For example, the number of drones could be adjusted, the top speed of the drones could be capped, and artificial inaccuracy could be added to the shooting of the drones. \newline
+
+It is very difficult to know which methods of adjusting difficulty will result in a game that is both enjoyable and balanced, for a range of numbers of people. Hence, deciding exactly how to perform this adjustment will require play-testing, in the arena, once it has been created.
+\newpage
+\section{System Architecture and Integration} \label{system} % Everyone except Ritchie
 
 \subsection{Simulation Representation of the Hardware} %Rickie
 \subsubsection{Geometric and Physical Abstraction}
@@ -85,14 +106,14 @@ You can define them in the header of this file and they will appear in the gloss
 
 %%%%%%%%%----------------End of System Architecture---------------%%%%%%%%%
 
-\section{Hardware and Electronics Design} % Rickie
+\section{Drone Hardware and Electronics Design} % Rickie
 \fancyhead[C]{Shing Hei Rickie Chan}
 
 \subsection{Context}
 
 The project decision was to develop a custom drone hardware design in preference to using an existing commercial platform. This was motivated by the need to co-design the airframe, electronics, sensing equipment, and game-specific payload around the requirements of an indoor multi-agent laser-tag system. Various options may offer good flight performance and easy maintenance, but are generally optimized for less intense activities and outdoor environments, and therefore provide limited flexibility for integrating custom sensing, weapon-tagged hardware, and protective structures. 
 
-In addition, commercial drones tend to be quite closed off in terms of hardware and software access - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed more freedom to choose components, organize the internal layout, and include additional features necessary to the gameplay.
+In addition, commercial drones tend to be quite closed off in terms of hardware and software access - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed more freedom to choose components, organize the internal layout, and include additional features necessary to the game-play.
 
 % - add additional references to an investigation into commercial platforms
 % - conduct a pros and cons list for the final decision
@@ -102,7 +123,7 @@ In addition, commercial drones tend to be quite closed off in terms of hardware 
 \subsection{Design Objectives and Constraints}
 \subsubsection{Operational Requirements}
 
-At core level, the drone design must be able to achieve basic drone operations for gameplay - being able to function as a usable aerial game platform within an indoor environment:
+At core level, the drone design must be able to achieve basic drone operations for game-play - being able to function as a usable aerial game platform within an indoor environment:
 \begin{itemize}
     \item sufficient thrust for stable flight
     \item reliable movement for indoor environment
@@ -112,127 +133,582 @@ At core level, the drone design must be able to achieve basic drone operations f
 
 \subsubsection{Safety Constraints}
 
-As the drone is intended to operate indoors in relative proximity to players during gameplay, safety became a top priority. It was vital to reduce risks associated with collisions, exposed components, poor landings, and potential failure during operation. This led to a number of safety related constraints that influenced the overall drone design and the way the game is played:
+As the drone is intended to operate indoors in relative proximity to players during game-play, safety became a top priority. It was vital to reduce risks associated with collisions, exposed components, poor landings, and potential failure during operation. This led to a number of safety related constraints that influenced the overall drone design and the way the game is played:
 \begin{itemize}
     \item \textbf{Operation around players: } The drone is intended to operate in an indoor environment rather than large spacious areas. This drastically increases the proximity between players and drones which poses as an immediate safety concern.
-    \item \textbf{Close proximity to obstacles: } The environment itself introduces additional safety concerns. The drone would need to move around walls, corners, and other potential obstacles - which increases the risk of potential collisions during normal gameplay.
-    \item \textbf{Protection for components: } One major safety constraint was reducing the risk of exposed components such as propellers and wires. The blade guards became an important part of the design, both to reduce the chance of injury and to risk disabling the drone with minor collisions.
+    \item \textbf{Close proximity to obstacles: } The environment itself introduces additional safety concerns. The drone would need to move around walls, corners, and other potential obstacles - which increases the risk of potential collisions during game-play.
+    \item \textbf{Protection for components: } One major safety constraint was reducing the risk of exposed components such as propellers and wires. The blade guards became an important part of the design, reducing both the chance of injury and risk of disabling the drone during minor collisions.
     \item \textbf{Stable recovery and landing: } It was vital for the drone to be able to return to its post (or battery recharging station) reliably, and land safely after being disabled or encounter an error. The landing structure had to be considered from a safety point of view - hence a stable geometry would help reduce the chance of drone damage.
 \end{itemize}
 
-\subsubsection{Gameplay Requirements}
+\subsubsection{Game-play Requirements}
 
  The drone needs to be a capable opponent - able to dodge, attack and wander throughout the arena - and able to support the systems needed for the overall project itself (which includes being cost-effective). This led to several requirements that influences the size, layout, performance, and maintainability of the final design.
 \begin{itemize}
     \item \textbf{Indoor Movement: } Contrary to the safety requirement, the drone must also be a capable opponent rather than a still target. This means the design must be able to allow for navigation and some form of evasive movement. This poses as a tradeoff between gameplay and safety.
     \item \textbf{Visibility and challenge: } The drone had to be large and visible enough for players to clearly recognize the target during gameplay, while still being agile enough to move around. A design too small would be difficult to engage while a design too large or too slow would reduce gameplay quality.
-    \item \textbf{Supporting game systems and battery: } The drone needs to carry additional hardware required for gameplay, such as IR transmitters and receivers, cameras, sensors, and onboard computing. These systems add weight and take up internal space. In addition, the design needs to allow for enough operating time for meaningful gameplay.
-    \item \textbf{Easy maintenance and replaceability: } Given the game is a multi-agent system rather than a single platform, the design needs to remain practical to maintain, to repair, and to replace. Minor damage during operation should not require a whole drone to be rebuilt, so replaceable parts and a maintainable layout becomes an important constraint.
+    \item \textbf{Supporting game systems and battery: } The drone needs to carry additional hardware required for gameplay, such as IR transmitters and receivers, cameras, sensors, and onboard computing. These systems add weight and take up internal space. In addition, the design needs to allow for enough operating time for meaningful game-play.
+    \item \textbf{Easy maintenance and replace-ability: } Given the game is a multi-agent system rather than a single platform, the design needs to remain practical to maintain, to repair, and to replace. Minor damage during operation should not require a whole drone to be rebuilt, so replaceable parts and a maintainable layout becomes an important constraint.
 \end{itemize}
 
 \subsubsection{Simulation Scope and General Design Assumptions}
 
-The project is was carried out mainly through simulation, the hardware design was developed as a realistic engineering model rather than as a fully built and tested prototype. This means the design was based on CAD modeling, component data sheets, and estimated performance values through online data and program testing. The simulation provided a means to present how the drone would be integrated into the wider system consistently. As a result, some real-world effects such as full electronics integration, dynamic flight behavior, and measured sensor performance were simplified or left as future work.
+The project was carried out mainly through simulation; the hardware design was developed as a realistic engineering model rather than as a fully built and tested prototype. This means that the design was based on CAD modeling, component data sheets, and estimated performance values through online data and program testing. The simulation provided a means of presenting how the drone would be integrated into the wider system consistently. As a result, some real-world effects, such as full electronics integration, dynamic flight behavior, and measured sensor performance, were simplified or left for future work.
 
-\subsection{Mechanical Design Development}
-\subsubsection{Early Concepts and Design choices}
+\subsubsection{Summarized Table for Design Criteria}
 
-The early stages of development was used for brainstorming what kind of drone platform would be most suitable for the project - deciding what the key design features must be. The aim was not to produce a final airframe immediately but to identify a workable overall configuration for an indoor multi-agent laser-tag system. Several minor experiments were conducted, including testing on quadrotor design, investigation into 6-DOF drones and hexarotor drones. A quadrotor layout was taken as a practical starting point as it offered a good balance between mechanical simplicity, controllability, and manoeuvrability for indoor use. Existing commercial drones were used as a reference for proportions and rotor designs but was not adopted in terms of onboard systems such as sensing, computing, communication, and game-specific payloads. This meant the design had to sway from smaller commercial designs to larger custom platforms with additional volume and structure for gameplay. 
-
-Several key design choices were made:
-\begin{itemize}
-    \item \textbf{Quadrotor Configuration} - enough thrust for 4kg weight
-    \begin{itemize}
-        \item A four-rotor layout kept the design simple
-        \item Allowed for smaller design layout to ensure room for agile motion
-    \end{itemize}
-    \item \textbf{Turret configuration}
-    \begin{itemize}
-        \item Camera and laser(infrared) could be mounted on the same mechanism and aimed together
-        \item Compact 2-DOF mount would be required, and supported the choice of small servos such as MG90S during concept development
-    \end{itemize}
-    \item \textbf{Larger Main Body layout} - below 4kg and total diameter of 700mm
-    \begin{itemize}
-        \item Larger body size would provide easier gameplay - drones would remain visible to players
-        \item Drone required to carry a number of onboard equipment including computing, sensing, and other game-specific hardware.
-    \end{itemize}
-    \item \textbf{Feasibility and Cost} - between 200-500 pounds per unit.
-    \begin{itemize}
-        \item Cost must be low enough to allow for replacement of potentially disabled drone
-        \item Parts must be replaceable and easy to produce - especially given the high-risk environment for potential damage.
-    \end{itemize}
-\end{itemize}
-
-The most important outcome of the early concepts was that the internal space quickly became a dominant issue. Initial CAD attempts were useful for exploring body shape, turret position, and landing geometry, but once realistic component dimensions were introduced it became clear that internal space was far more limited than first expected. Particularly the battery, onboard computer, wiring, and the control electronics could not be treated as secondary additions to an outer shell due to the minimum usable volume of the airframe. In addition, it was figured that the outer shell parts would be developed using 3D printing material such as PLA - hence would be cheap to replace. However, the internal components were far more expensive which led to higher priority for internal component safety and structural integrity. The early concepts were valuable as they allowed for further investigation and identification on the main constraints that shaped the rest of the hardware development.
-
-\subsubsection{Set Design Criteria}
-
-Table 1 provides the main design parameters that will shape the  development of the drone.
-
-\begin{table}[h]
-    \centering
-    \caption{Hardware design criteria and target specifications}
-    \begin{tabularx}{\textwidth}{@{} l X @{}}
-    \toprule
-    \textbf{Design Parameter} & \textbf{Target / Requirements} \\
-    \midrule
-    Configuration & Quadrotor (4 motors/ 4 propellers) \\
-    Maximum mass & $\leq 4.0$ kg \\
-    Maximum overall width & $\leq 700$ mm \\
-    Target cost per drone & \pounds200--\pounds500 \\
-    Target match duration & 15 min \\
-    Estimated endurance & 5--10 min at $\sim 60\%$ power \\
-    Battery specification & 3S, 5000 mAh, 1 pack \\
-    Motor / propeller specification & F2806.5 motor with 8'' propeller \\
-    Thrust per motor & $\sim 2$ kg \\
-    Total available thrust & $\sim 8$ kg \\
-    Derived thrust-to-weight target & $\sim 2{:}1$ at 4.0 kg mass limit \\
-    Turret requirement & 2 DOF/Gimble \\
-    Servo count for turret & 2 servos/Gimble \\
-    Internal payload requirement & 1 battery, 1 Raspberry Pi, 4 ESCs, 1 PDB, 1 buck converter, camera, IMU, ToF sensors, IR hardware \\
-    Propeller protection & 4 propeller blade guards \\
-    Landing arrangement &  stable landing structure \\
-    Operating environment & Indoor arena, max design, close to players and obstacles \\
+\begin{table}[htbp]
+\centering
+\caption{Summarised starter design criteria for the drone platform.}
+\label{tab:starter_design_criteria}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l X @{}}
+\toprule
+\textbf{Design Parameter} & \textbf{Target / Requirement} \\
+\midrule
+Operating environment & Indoor arena with close proximity to players, walls, and obstacles \\
+Operational role & Stable and manoeuvrable aerial platform for indoor gameplay \\
+Configuration & Compact quadrotor platform \\
+Maximum mass & $\leq 4.0$ kg \\
+Maximum width & $\leq 600$ mm \\
+Target cost per unit & \pounds300--\pounds500 \\
+Target game duration & 45 min \\
+Target drone endurance & 8-10 min before recharge \\
+Visibility requirement & Large enough to be clearly visible for indoor game-play \\
+Internal space requirement & Sufficient internal volume for onboard electronics \\
+Safety requirement & Safe indoor operation, protected moving parts, and stable landing capability \\
+Maintainability requirement & Easy maintenance with cheap replaceable damaged parts \\
+Structural requirement & Airframe must support normal flight loads and minor impact conditions \\
+Game-play requirement & Agile enough to act as a believable and challenging in-game opponent \\
+Simulation requirement & Geometry suitable for representation in simulation \\
 \bottomrule
-    \end{tabularx}
+\end{tabularx}
 \end{table}
-
-\subsubsection{Design Iterations and Key improvements}
-
-\textbf{First Iteration}
-
-As stated previously, the goal of the first iteration was for brainstorming ideas on overall body layout, turret or gimbal positioning, electronic configurations and other system designs. The design explored the external form of the drone and basic rotor arrangements, but once the electronics were considered in more detail, several major issues became clear. There was not enough room for the battery, onboard computing, wiring, and support electronics - the main body lack sufficient room. This version therefore showed that the airframe could not simply be designed around an outer shape, but had to be built around the internal components of the system.
-
-%Include images and size specifications of the first attempt
-
-\textbf{Second Iteration}
-
-
-
-\textbf{Third Iteration}
-
-%discuss third iteration in more detail
-
-\subsubsection{Final Airframe}
 
 \subsection{Electronics Design and Component Selection}
 \subsubsection{Propulsion System}
+
+Since the drone was intended to operate in relatively confined spaces and act as an active game-play opponent, the propulsion system needed enough thrust for stable flight while allowing rapid responsive movement. A four-rotor configuration was selected as the most practical solution in avoiding the additional mechanical and control complexity that would come with more unusual multi-rotor arrangements.
+
+\paragraph{Motor Selection}
+
+The motor is required to provide a large thrust margin while remaining compact enough to fit in a tight rotor-arm layout. From the design criteria, the drone mass was limited to 4.0kg which corresponds to a weight of approximately
+\[
+W = mg = 4.0 \times 9.81 = 39.2~\text{N}.
+\]
+For a quadrotor configuration with a target thrust-to-weight ratio of approximately 2:1, the total thrust was therefore around 78.5 N, or around 19.6 N per motor.
+
+\begin{table}[htbp]
+\centering
+\caption{Motor specifications. Data adapted from the BrotherHobby Avenger 2806.5 manufacturer specification \cite{brotherhobby_avenger28065}.}
+\label{tab:motor_specifications}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l l X @{}}
+\toprule
+\textbf{Parameter} & \textbf{Value} & \textbf{Design relevance} \\
+\midrule
+Selected motor & BrotherHobby Avenger 2806.5 1300KV & Main propulsion motor \\
+Motor type & Brushless & Suitable for multirotor propulsion \\
+KV rating & 1300KV & Suitable for thrust-focused operation \\
+Mass & 41 g & Four motors contribute approximately 164g \\
+Cell compatibility & 4--6S LiPo & Sets the required battery range for the final power system \\
+Bolt & M3, 19 mm $\times$ 19 mm & Defines the motor mounting interface \\
+Wire specification & 18 AWG, 20 cm &  ESC and wiring  \\
+Target thrust per motor & $\approx 19.6$ N & 4 motors provides approximately 78.5 N \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%%%%% FIGURE: Manufacturer image/ specification drawing of the BrotherHobby Avenger 2806.5 motor
+
+The Avenger 2806.5 was selected because it provided a strong thrust margin without requiring an excessively large motor. Each motors has 41g mass, keeping the four-motor set reasonably light at 164g before propellers and mounting hardware. Its 19mm x 19mm mounting pattern also gave clear interface for motor mount design.
+
+\paragraph{Propeller Choice}
+
+The propeller was selected based on geometry as it directly affects the thrust, clearance, and overall rotor-arm design. The propeller was required to provide enough lift when paired with the selected motor, while remaining sizeable for an indoor drone platform. 
+
+We selected using an 8x4x3 propeller, where the notation refers to 8 inch diameter, 4 inch pitch, and 3-blade configuration. A manufacturer dataset for an HQProp 8x4x3 propeller was used as a reference for dimensions and mass, which formed the basis for the certain assumptions related to the rotor-arm design.
+
+\begin{table}[htbp]
+\centering
+\caption{8$\times$4$\times$3 propeller specifications. Data from an HQProp 8$\times$4$\times$3 propeller dataset \cite{hqprop_8x4x3}.}
+\label{tab:propeller_specifications}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l l X @{}}
+\toprule
+\textbf{Parameter} & \textbf{Reference Value} & \textbf{Design Relevance} \\
+\midrule
+Propeller geometry & 8$\times$4$\times$3 & Defines the intended propeller size and type \\
+Diameter & 8 inch & Sets swept area and required clearance from the airframe \\
+Pitch & 4 inch & Moderate pitch suitable for thrust-focused operation \\
+Blade count & 3 blades & Provides higher thrust capability than a comparable 2-blade propeller \\
+Reference material & Polycarbonate & Representative lightweight multirotor propeller material \\
+Reference mass & 13 g & Four propellers contribute approximately 52 g \\
+Rotation requirement & 2 CW + 2 CCW & Required for balanced quadrotor operation \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%%%%% FIGURE: Representative 8×4×3 propeller geometry used for sizing and clearance assumptions. Manufacturer data from an HQProp 8×4×3 propeller was used as a reference dataset for mass, hub dimensions, and shaft compatibility.
+
+The 8x4x3 propeller geometry was chosen as this motor-prop configuration matched the thrust specifications of the design while also remaining within a practical size range for the airframe. The 8-inch diameter increased the swept area while the 3-blade configuration helped support higher thrust within a limited diameter - which improved lift capability without excessive propeller span in an indoor environment.
+
+\paragraph{Validity Check for Motor-Prop Configuration}
+
+To check whether the assumed thrust of the motor-propeller configuration was physically reasonable, a static propeller thrust coefficient estimate was used. For a propeller operating in static conditions, the thrust can be approximated using:
+
+\[
+T = C_T \rho n^2 D^4
+\]
+
+where \(T\) is thrust, \(C_T\) is thrust coefficient, \(\rho\) is air density, \(n\) is rotational speed (revolutions per second), \(D\) is propeller diameter. \cite{mit_propeller_performance}.
+
+From the selected propeller geometry, the diameter was
+\[
+D = 8~\text{in} = 0.2032~\text{m}
+\]
+
+The standard sea-level air density was assumed as
+\[
+\rho = 1.225~\text{kg m}^{-3}.
+\]
+
+The target thrust per motor was taken as previously calculated
+\[
+T = 19.6~\text{N},
+\]
+
+Rearranging the equations for n gives
+
+\[
+n = \sqrt{\frac{T}{C_T \rho D^4}}.
+\]
+
+The ideal no-load speed of the motor can be estimated from the motor \(K_V\) rating:
+
+\[
+RPM_0= K_V V
+\]
+
+For the selected 1300KV motor on a 4S LiPo supply,
+
+\[
+RPM_0 = 1300 \times 14.8 = 19240~\text{rpm}.
+\]
+
+However, this is an ideal case. In practice, the motor will not reach this speed when driving the propeller as the propeller applies aerodynamic load. A factor is included to account for this:
+
+\[
+RPM_{\text{loaded}} = \eta_{\text{rpm}} RPM_0,
+\]
+
+where \(\eta_{\text{rpm}}\) represents the fraction of no-load speed achieved under propeller load. As a quick estimate, factors between 0.75 and 0.90 (in increments of 0.05) were considered.
+
+\begin{table}[htbp]
+\centering
+\caption{Estimated loaded motor speeds for different loaded RPM factors.}
+\label{tab:loaded_rpm_factors}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{} c c @{}}
+\toprule
+\textbf{Loaded RPM Factor, \(\eta_{\text{rpm}}\)} & \textbf{Loaded RPM} \\
+\midrule
+0.75 & 14,430 rpm \\
+0.80 & 15,392 rpm \\
+0.85 & 16,354 rpm \\
+0.90 & 17,316 rpm \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+As there was no given exact thrust coefficients,therefore we tested using 0.100, 0.125, and 0.150
+
+\begin{table}[htbp]
+\centering
+\caption{Estimated thrust per motor for different loaded RPM factors and thrust coefficients.}
+\label{tab:motor_prop_validity_check}
+\renewcommand{\arraystretch}{1.15}
+\small
+\begin{tabular}{@{} c c c c c @{}}
+\toprule
+\textbf{\(\eta_{\text{rpm}}\)} & \textbf{Loaded RPM} & \textbf{\(T\), \(C_T=0.100\)} & \textbf{\(T\), \(C_T=0.125\)} & \textbf{\(T\), \(C_T=0.150\)} \\
+\midrule
+0.75 & 14,430 rpm & 12.1 N & 15.1 N & 18.1 N \\
+0.80 & 15,392 rpm & 13.7 N & 17.2 N & 20.6 N \\
+0.85 & 16,354 rpm & 15.5 N & 19.4 N & 23.3 N \\
+0.90 & 17,316 rpm & 17.4 N & 21.7 N & 26.1 N \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+From the table 4 and 5, the target thrust of approximately \(19.6~\text{N}\) per motor is not achieved under the most conservative assumptions(where \(C_T = 0.100\)). However, it becomes achievable for higher thrust coefficient values. For \(C_T = 0.125\), the combination reaches approximately \(19.4~\text{N}\) at 85\% of the no-load speed. For \(C_T = 0.150\), the target exceeded at around 80\% no load speed.
+
+This suggests that the target max thrust of \(19.6~\text{N}\) is theoretically plausible for this motor-propeller configuration on a 4S supply - but only when the real thrust coefficient is closer to mid-range values and the motor can maintain between 80--85\% of its no-load speed under load. This calculation does not experimentally validate the propulsion system as the real thrust would depend on a number of other factors such as ESC behavior and battery voltage sag. 
+
+However, the target max value is not the same as minimum thrust required for flight. Given the total weight is approximately \(39.2~\text{N}\), the hover thrust required per motor is \(9.8~\text{N}\) for a quadrotor configuration. This means the selected propulsion configuration has a massive theoretical margin above the hover requirement. Even if the real thrust is lower than the assumed \(19.6~\text{N}\), the drone should still perform admirably, though additional margin would be needed for maneuvering, disturbance rejection, and stable control. However, this proves that the 2:1 thrust-to-weight ratio gives a large and safe tolerance.
+
+\paragraph{ESC Selection}
+
+The ESC is used to control the speed of each motor and provide fast response to throttle commands from the flight controller. Since the propulsion system uses four motors, the design requires one ESC per motor. The selected ESC was the LittleBee Spring 40A.
+
+\begin{table}[htbp]
+\centering
+\caption{ESC specifications. Data from available supplier specifications \cite{littlebee_spring_40a}.}
+\label{tab:esc_specifications}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l l X @{}}
+\toprule
+\textbf{Parameter} & \textbf{Manufacturer / Supplier Specification} & \textbf{Design Relevance} \\
+\midrule
+Selected ESC & LittleBee Spring 40A & Speed controller for each brushless motor \\
+Input voltage & 2--6S LiPo & Compatible with the intended multirotor power range \\
+Continuous current & 40 A & Provides current capacity for high-throttle motor operation \\
+Size & Approximately 35 mm $\times$ 17 mm & Compact \\
+Weight & Approximately 12 g with wires & Low mass \\
+Supported protocols & OneShot, MultiShot, DShot & Suitable for fast multirotor throttle control \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+As shown in the table 6, the available LittleBee Spring 40A specifications list \(2-6~\text{S}\) LiPo input, \(40~\text{A}\) continuous current, with compact dimensions.
+
+%%%%%Figure: LittleBee Spring 40A ESC selected for motor speed control. Its compact size and 2–6S input range made it suitable for integration with the quadrotor propulsion system.
+
+This ESC was chosen as it matched the propulsion system requirements while remaining compact enough to fit within the airframe. However, as the ESC has no built-in BEC, the lower voltage electronics must be powered through a separate voltage regulation stage, which is addressed in the power system design.
+
 \subsubsection{Power System}
+
+The power system must be designed to supply both the high-current propulsion system and the lower-voltage onboard electronics. The propulsion system requires direct battery power for the four ESCs and brushless motors. Meanwhile, the onboard computer, sensors, and game-specific electronics must receive regulated lower-voltage supplies. As a result, the power system will be split into two main parts: a high power battery path and a regulated path using voltage conversion.
+
+\paragraph{Battery Selection}
+
+The battery selection was driven by the propulsion system as it was expected the motors and ESCs would consume significantly more power than other onboard electronics. The battery had to provide a suitable voltage and discharge capability for the hardware, while also remaining practical in terms of mass, size and internal packaging. A 3S LiPo option was initially considered as earlier propulsion combinations included 3S-compatible specifications. However, once the final motor-propeller configuration was selected, the 3S option was disregarded for a more suitable 4S 5000 mAH LiPo battery. This provided nominal voltage for \(14.8~\text{V}\), matching the motor and ESC requirements more appropriately, while maintaining a target capacity for approximately 10 minutes of drone operation before recharge.
+\begin{table}[htbp]
+\centering
+\caption{4S 5000 mAh LiPo Battery specifications. Data adapted from commercially viable sources \cite{tattu_bashing_4s_5000mah, gensace_4s_5000mah}.}
+\label{tab:battery_specifications}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l l X @{}}
+\toprule
+\textbf{Parameter} & \textbf{Representative Specification} & \textbf{Design Relevance} \\
+\midrule
+Battery type & LiPo battery pack & Suitable for high-current drone propulsion \\
+Cell count & 4S / 4 cells & Matches propulsion requirements \\
+Nominal voltage & 14.8 V & Used for motor speed and power-system calculations \\
+Capacity & 5000 mAh / 5 Ah & Supports the target endurance before recharge \\
+Representative mass range & 390--589 g & Gives a realistic range for mass \\
+Representative dimensions & 32 $\times$ 42 $\times$ 132 mm to 138 $\times$ 46 $\times$ 50 mm & realistic range for battery bay sizing and packaging \\
+Battery count & 1 pack per drone & Simplifies packaging and recharge \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%%%%%FIGURE:4S 5000mAH Battery - Power system modeled after selected Battery choice
+
+This battery was selected as a representative design choice as it matched the voltage requirements of the final propulsion system. The \(14.8~\text{V}\) is suitable for the selected ESC and motor configuration while the \(5000~\text{mAh}\) also provided the target \(10~\text{minutes}\) of drone operation before recharge. The mass range of \(390-589~\text{g}\) was also acceptable, leaving more than enough mass capacity for other components of the drone. 
+
+\paragraph{Proving Endurance}
+
+To prove the 5000mAH capacity can theoretically last around 10 minutes of flight time before recharge, we may use the representative data.
+
+For a 4S 5000 mAh LiPo battery, the nominal voltage is \(14.8~\text{V}\) and the capacity is \(5~\text{Ah}\). The nominal battery energy is therefore
+\[
+E=VC = 14.8 \times 5 = 74~\text{Wh}
+\]
+
+In practice, it is not recommended to fully discharge a LiPo battery as doing so may reduce its lifespan. We may assume that 80\% of the nominal capacity is usable, the available energy becomes
+\[
+E_{\text{usable}} = 0.8 \times 74 = 59.2~\text{Wh}
+\]
+
+As per the requirement, the target endurance before recharge was approximately 10 minutes, or 
+\[
+t = \frac{10}{60} = 0.167~\text{h}
+\]
+
+The maximum average power draw is therefore
+\[
+P_{\text{avg,max}} = \frac{E_{\text{usable}}}{t}
+\]
+\[
+P_{\text{avg,max}} = \frac{59.2}{0.167} \approx 355~\text{W}.
+\]
+
+The corresponding current draw is
+\[
+I_{\text{avg}} = \frac{P_{\text{avg,max}}}{V}
+\]
+\[
+I_{\text{avg}} = \frac{355}{14.8} \approx 24~\text{A}.
+\]
+
+The theoretical continuous current capability of the battery can be estimated from its C-rating. Consider a \(50~\text{C}\) discharge rating:
+
+\[
+I_{\text{max}} = 5 \times 50 = 250~\text{A}.
+\]
+
+This suggests that the battery is theoretically capable of supplying the required current for the propulsion system, as the estimated average current is much lower than the continuous discharge limit. However, the main limiting factor is not the maximum current capability, but the total available energy. Therefore, achieving the 10 minute target depends on the average power consumption of all onboard electronics - keeping below approximately \(355~\text{W}\).
+
+\paragraph{Power distribution}
+
+We require a component for power distribution used to route the main battery output to the four ESCs safely and with enough current margin. Since each motor is driven by a separate ESC, a PDB must be able to supply the combined current demand of all propulsion channels.
+
+Given the ESCs are rated \(40~\text{A}\) each, the combined theoretical maximum ESC demand is:
+
+\[
+4\times40=160\text{A}
+\]
+
+We require a high-current PDB, which was chosen to be the Holybro Power Distribution Board 300A. It is specified with a \(300~\text{A}\) continuous current rating, \(1000~\text{A}\) burst rating,\(10~\text{oz}\) copper PCB design, and XT90/XT30 connector options. The \(300~\text{A}\)continuous rating gives a clear margin above the theoretical maximum ESC demand.
+
+\begin{table}[htbp]
+\centering
+\caption{PDB specifications. Data from the Holybro PDB 300A specification \cite{holybro_pdb_300a}.}
+\label{tab:pdb_specifications}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l l X @{}}
+\toprule
+\textbf{Parameter} & \textbf{Manufacturer / Supplier Specification} & \textbf{Design Relevance} \\
+\midrule
+Selected PDB & Holybro Power Distribution Board 300A & Main  PDB \\
+Continuous current rating & 300 A & Provides margin above theoretical maximum \\
+Burst current rating & 1000 A & Provides tolerance for short-duration spikes \\
+PCB design & 10 oz copper & Safe method of wiring \\
+Connector options & XT90 and XT30 options available & Main connection route \\
+Mounting holes & M3 mounting holes & Main attachment to drone hull \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%%%%%Figure X: Holybro Power Distribution Board 300A selected for high-current battery-to-ESC power distribution.
+
+It should be noted that the PDB is responsible for distributing the main battery power. Other components such as the onboard computer, sensors and other electronics may require regulated lower-voltage supplies. Direct connection may cause damage to the components.
+
+\newpage
+
+\paragraph{Voltage Regulation}
+
+Voltage regulation is vital for ensuring the integrity of more sensitive electronics. The 4S LiPo battery supplies \(14.8~\text{V}\) which is suitable for the propulsion system but is too high for onboard electronics which require \(5~\text{V}\). For this reason, we require a dedicated step-down regulator to separate the low-voltage electronics from the high-voltage system. A good regulator considered is the Pololu D24V90F5 \(5~\text{V}\) regulator which could be used in a real prototype, as its input voltage range is compatible with the 4S battery system.
+
+\begin{table}[htbp]
+\centering
+\caption{ 5 V step-down regulator specifications. Data from Pololu D24V90F5 manufacturer  \cite{pololu_d24v90f5}.}
+\label{tab:voltage_regulator_specifications}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l l X @{}}
+\toprule
+\textbf{Parameter} & \textbf{Manufacturer Specification} & \textbf{Design Relevance} \\
+\midrule
+Regulator & Pololu D24V90F5 & 5 V step-down regulator \\
+Regulator type & Step-down / buck regulator & steps down the higher 4S battery voltage \\
+Input voltage range & 5--38 V & Compatible with the 14.8 V 4S LiPo battery \\
+Output voltage & Fixed 5 V & Suitable for the Raspberry Pi and other 5 V electronics \\
+Efficiency & 80--95\% & Reduces power loss and heating \\
+Size & 40.6 mm $\times$ 20.3 mm $\times$ 7.6 mm & Sizable for integration into drone electronics circuit \\
+Weight & Approximately 4.8 g & Low mass contribution to the overall drone design \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%%%%%FIGURE: 5V, 9A Step-Down Voltage Regulator D24V90F5
+
+Pololu D24V90F5 serves as a suitable regulator as it can step the \(14.8~\text{V}\) 4S battery Voltage down to a stable \(5~\text{V}\) voltage. It has an input range of \(5-38~\text{V}\) which is compatible with the main battery while the current output is suitable for the Raspberry Pi, sensors, and other electronics.
+
+\paragraph{Power-system Summary}
+
+The final power system will be divided into two main sections: A high-current propulsion path and a low-voltage electronics path. The propulsion path directly draws power from the battery into the ESCs and motors, while the electronics path step-down the \(14.8~\text{V}\) Battery voltage to \(5~\text{V}\) for onboard computer and other voltage sensitive electronics. 
+
+\begin{table}[htbp]
+\centering
+\caption{Summary of the drone power-system architecture.}
+\label{tab:power_system_summary}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l l X @{}}
+\toprule
+\textbf{Power System Component} & \textbf{Selected Choice} & \textbf{Main Role} \\
+\midrule
+Main battery & 4S 5000 mAh LiPo & Supplies the entire electronic system \\
+High-current distribution & Holybro PDB 300A & Distributes battery power to the four ESCs \\
+Motor control & 4 $\times$ LittleBee Spring 40A ESCs & Controls power delivery to each brush-less motor \\
+Propulsion loads & 4 $\times$ brush-less motors & Generate lift and maneuvering thrust \\
+Voltage regulation & Pololu D24V90F5 5 V regulator & Steps battery voltage down to a regulated 5 V \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%%%%%Figure: Perhaps include an image of the power system layout
+
 \subsubsection{Onboard Computing and Communication}
+
+Before investigating deeper into the topic of onboard computing and communication, it is vital to define its role within the overall drone system. Each drone is required to have a local processing unit that handles specific tasks that needed to happen directly on the drone, such as sensor processing, low-to mid-level control, and execution of pre-trained control or perception models during game-play. This includes responding to sensor inputs, player tracking, and carrying out motion commands in real time.
+
+However, as explained in other sections, the drone is not intended to make all these decisions independently onboard. High-level control (i.e. game logic and drone coordination) will be handled via a central server housed outside the arena. The onboard computer would therefore be required to communicate drone states, sensor data, and status updates to the server while simultaneously receiving instructions. This meant that the onboard companion computer needed to provide more capability than a simple micro-controller, while still remaining light, compact and inexpensive.
+
+\paragraph{Onboard Computer}
+
+Several hardware options were considered for the onboard computer. The main choice was between an Arduino-based micro-controller and Raspberry Pi single-board computer. Arduino boards are attractive as they are generally low-cost, easily programmable, lightweight and generally suitable for direct hardware control. However, they lacked the necessary processing power and memory to run pre-trained models, and often require additional modules for Wi-Fi communication. They also lacked camera and high-level software support.
+
+A two-board Arduino setup was considered, where one board would handle lower-level hardware control and another would manage communication or higher-level tasks. However this would increase general complexity in wiring and packaging while still not solving the main processing limitation. For this reason, the design moved towards investigating the usage of Raspberry Pi.
+
+\begin{table}[htbp]
+\centering
+\caption{Arduino options considered. Data from Arduino product specifications \cite{arduino_uno_rev3, arduino_uno_r4_wifi}.}
+\label{tab:arduino_comparison}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l X X @{}}
+\toprule
+\textbf{Parameter} & \textbf{Arduino Uno Rev3} & \textbf{Arduino Uno R4 WiFi} \\
+\midrule
+Processing unit & ATmega328P microcontroller & Renesas RA4M1 Arm Cortex-M4 microcontroller \\
+
+Clock speed & 16 MHz & 48 MHz main core; ESP32-S3 up to 240 MHz for wireless module \\
+
+Memory & 32 KB flash, 2 KB SRAM, 1 KB EEPROM & 256 KB flash, 32 KB RAM, 8 KB EEPROM on main MCU \\
+
+Integrated wireless modules & None; external Wi-Fi/Bluetooth module required & Built-in Wi-Fi and Bluetooth \\
+
+I/O interfaces & GPIO, PWM, analog inputsI & GPIO, PWM, analog inputs \\
+
+Camera support & No camera interface & No Raspberry Pi-style camera/software ecosystem \\
+
+Weight & Approximately 25 g & Approximately 48 g \\
+
+Approx price & \pounds20--\pounds25 &  \pounds25--\pounds35 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Comparison of Raspberry Pi single-board computer. Data from official Raspberry Pi \cite{raspberrypi4_specs, raspberrypi5_specs}.}
+\label{tab:raspberrypi_comparison}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l X X @{}}
+\toprule
+\textbf{Parameter} & \textbf{Raspberry Pi 4 Model B} & \textbf{Raspberry Pi 5} \\
+\midrule
+Processor & Broadcom BCM2711 quad-core Cortex-A72 64-bit SoC & Broadcom BCM2712 quad-core Cortex-A76 64-bit SoC \\
+
+Clock speed & 1.8 GHz & 2.4 GHz \\
+
+Relative performance & sufficient for deployed models & Approximately 2--3$\times$ CPU performance relative to Raspberry Pi 4 \\
+
+Memory options & 1 GB, 2 GB, 4 GB, or 8 GB LPDDR4 & 1 GB, 2 GB, 4 GB, 8 GB, or 16 GB LPDDR4X \\
+
+Wireless LAN & 2.4 GHz and 5.0 GHz IEEE 802.11ac Wi-Fi & Dual-band 802.11ac Wi-Fi \\
+
+Bluetooth & Bluetooth 5.0, BLE & Bluetooth 5.0, BLE \\
+
+GPIO & Raspberry Pi standard 40-pin GPIO header & Raspberry Pi standard 40-pin GPIO header \\
+
+Camera interface & 2-lane MIPI CSI camera port & 2 $\times$ 4-lane MIPI camera/display transceivers \\
+
+USB & 2 $\times$ USB 3.0, 2 $\times$ USB 2.0 & 2 $\times$ USB 3.0, 2 $\times$ USB 2.0 \\
+
+Approximate cost & From \$35, depending on RAM option & From \$45, depending on RAM option \\
+
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Two main Rasperry Pi single-board computers were considered, the Raspberry Pi 4 Model B and the Raspberry Pi 5 - specs are shown in table 12.
+
+Despite the strong performance offered by the Raspberry Pi 5, its additional computing capabilities were not considered important as the project was using pre-trained models rather than training onboard. The \textbf{Raspberry Pi 4 Model B} was chosen as the onboard computer as it provided a good balance between processing, cost and integration. In addition, it provided the required Wi-Fi, GPIO, USB, and camera interfaces, while being easier to power and package inside the drone.
+
+%%%%%FIGURE: Raspberry Pi 4 Model B
+%%%%%FIGURE: Rapsberry Pi 5
+
+\paragraph{Communication Interface}
+
+From a hardware point of view, the main communication requirement was that the drone could connect wirelessly to the external server. The Raspberry Pi 4 Model B included built-in dual band Wi-Fi and Bluetooth. Wi-Fi would be used to connect between the drone and the server, while the Bluetooth could be reserved for short-range setup or debugging if required. Detailed comparison between both methods are covered in the networking section of the report.
+
+\paragraph{Interface with Sensors and Control Hardware}
+
+Drone electronics will connect to the onboard computer via the GPIO, serial, USB, and camera-related interfaces. The camera would connect to the Raspberry Pi through USB, allowing the Raspberry Pi to receive camera, depth, and other processed visual data from the camera module. Sensors such as the IMU and ToF would connect through standard buses which allows the Raspberry Pi to read data during flight operations. The IR receivers would connect to GPIO pins while the IR emitter would be controlled through a GPIO output signal. The gimbal/turret servos would be driven using PWM control signals, allowing onboard system to aim the camera and IR emitter simultaneously. ESCs would receive power directly from the battery via the PDB, while the Raspberry Pi would command motor speeds. The Raspberry Pi, as mentioned previously, will be powered from via the regulated 5V voltage.
+
 \subsubsection{Sensors and Game-Specific Electronics}
 
-\subsection{Complete CAD Integration and Packaging}
+\paragraph{Camera}
+
+The camera selected by the visual perception work-stream was the OAK-D Lite used for player detection and tracking. In this hardware section, the camera is considered from an integration point of view. The OAK-D Lite connects to the Raspberry Pi through USB hence the drone body must be designed to ensure both the USB connection and cable routing are practical inside the drone body. Its power draw also need to be included in the 5V electronics power budget. Mechanically, the camera must be placed with a clear field of view - placed in line with the IR emitter inside a gimble/turret where they can move simultaneously. There should be no obstruction by the airframe, turret structure, or wiring. More detailed reasoning behind the camera choice can be found in the visual detection pipeline covered separately under "Mid Level Control".
+
+%%%%%FIGURE:OAK D Lite
+
+\paragraph{Flight Control Sensors}
+
+Suitable flight control sensors were needed to give the drone basic state information required for basic motion and awareness. Chosen sensors were intended to provide local state information that could support stabilization, height referencing, and obstacle awareness during indoor operations: the IMU measured body motion, the ToF sensor provided ceiling-distance and side distance information for nearby obstacles.
+
+A barometer was not selected as the primary height sensor despite being commonly used in drones for altitude estimation. Given the indoor environment and close proximity between walls and ceilings, pressure-based height estimation is less reliable. Instead, an upward-facing ToF sensor was considered more appropriate for this controlled indoor environment, where the ceiling height can be known in advance.
+
+\begin{table}[htbp]
+\centering
+\caption{Flight-control sensors used for local motion and distance awareness} \cite{sparkfun_icm20948, st_vl53l1x, st_vl53l5cx}
+\label{tab:flight_control_sensors}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{} l X X X @{}}
+\toprule
+\textbf{Sensor} & \textbf{Role} & \textbf{Placement / Orientation} & \textbf{Key Specification} \\
+\midrule
+SparkFun ICM-20948 IMU & Measures drone motion and orientation/state & Housed inside hull, near the centre & 9-axis IMU: 3-axis accelerometer, 3-axis gyroscope, 3-axis magnetometer; I\textsuperscript{2}C/SPI support \\
+
+VL53L1X ToF sensor & Provides vertical distance reference & Mounted pointing upwards & ToF ranging up to approximately 4 m; up to 50 Hz ranging frequency \\
+
+VL53L5CX ToF sensors & Provides side obstacle awareness and short-range distance sensing & Mounted facing outwards on multiple sides of the drone & 8$\times$8 multizone ToF sensing; up to 4 m range; \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The SparkFun ICM-20948 IMU provides local motion and oreintation feedback. It is housed inside the drone, near the centre of the drone body, where it can measure acceleration, angular-rate, and magnetic-field measurements representative of the airframe while simultaneously protected from impact.
+
+The VL53L1X and VL53L5CX ToF sensors are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained RL control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
+
+\paragraph{IR Tagging System}
+
+For game-specific components, the drone is required to have an infrared tagging system capable of tagging players and detecting when it has been tagged. Despite the project name, the physical hardware uses infrared rather than actual lasers. This is due to safety and regulatory reasons: laser products usage are subject to classification and safety requirements under UK regulations - such as the BS EN/IEC 60825-1 \cite{bsi_laser_safety_60825}, and guidance notes that laser radiation risks harm to eyes and skin \cite{ukhsa_laser_safety}. Using Infra-red based system is therefore more appropriate for indoor game-play, where players and drones operate near each other. In terms of hardware, we focus on how the IR components are physically installed into the overall drone design.
+
+\textbf{IR emitter} - Mounted on the gimbal/turret alongside the camera so tagging direction is aligned with the aiming direction. The emitter is housed in a compact cylindrical mount - around 10mm in diameter. 
+
+\textbf{IR receiver} - These IR sensors should be distributed around the drone hull where they should be exposed enough to detect incoming IR signals. The receiver spacing should also be dense enough to ensure reliable hit registration during game-play, so players can have an easier time shooting at the drones.
+
+%%%%%FIGURE: - a choice between the sensors and emitter, or the installation process.
+
+\subsection{Mechanical Design Development}
+
+After investigating and selecting the main electronics, the mechanical design aims to transform the selected components into a physical drone layout. Most modeling and assembly designs was carried out in Fusion 360, while standard component models such as motors, batteries, sensors, and other components were either simplified into representative objects based on specified dimensions or downloaded from online libraries to save time. The goal is to define how the components are mounted, protected, and accessed while also ensuring easily manufacturable and cheap parts that are simple to assemble. 
+
+\subsubsection{Early Design Concepts}
+
+The early concepts tested out basic airframe layouts. The first concept followed a compact quadrotor arrangement, taking inspiration from commercial drones - featuring a central body, four rotor positions, and a space for a centrally mounted turret system. This gave a simple starting point, but as more electronic components were introduced into the CAD assembly, internal packaging became the main issue.
+
+%%%%%FIGURE: First Drone CAD
+
+The second and third concepts continued to investigate into symmetrical quadrotor layouts with increased body volume. One version even featured blade-guards, but made the drone noticeably larger, bulkier and less refined than the original concept. Scaling up the size solved some layout issues, but caused the platform to be less suitable for indoor game environment where the drone was required to be compact. In addition, earlier versions treated the airframe as one large connected body, which was not practical for assembly, manufacturing or repair. 
+
+%%%%%FIGURE: Second Drone CAD and Third Drone CAD
+
+This led to a complete change in direction for the final design: a modular mirrored layout, where the rotor arms are separate from the main body and secured using linkage parts and bolts. This allows the body, arms, linkages, and mounts to be manufactured separately and assembled more easily. The key design areas are the central main body, rotor arms and motor mounts, and turret/gimbal assembly - at which we will go into detail in the following sections.
+
+%%%%%FIGURE: Final Assembled Drone CAD
+
+\subsubsection{Main Body Design}
+
+The main body is composed of three main parts: the top hull, the bottom hull, and the electronics basket. 
+
+\subsubsection{Rotor Arm and Motor Mount Design}
+\subsubsection{Turret Design Process}
+\label{Turret}
+
+\subsection{Final Drone Assembly and Packaging}
+\subsubsection{Overall Airframe Configuration}
 \subsubsection{Internal Component Layout}
-\subsubsection{Maintainability}
+\subsubsection{Maintainability and Replace-ability}
 \subsubsection{Safety Features}
 
 \subsection{Preliminary Engineering Evaluation}
 \subsubsection{Mass, Thrust, and Endurance Estimates}
 \subsubsection{Structural Assessment of Critical Components}
 \subsubsection{Feasibility of the Final Design}
-
-\subsection{Limitations and Future Physical Implementation}
-
 
 \newpage
 
@@ -308,8 +784,123 @@ We plan to use industrial safety nets to separate the players from the drones as
 
 
 \section{High Level Control} \label{high level control} % Ritchie
+\subsection{Drone pose tracking} % Tommy
 \newpage
 
+
+
+
+\section{Network and Communications}
+\fancyhead[C]{Richard Usherwood} % Ritchie
+\subsection{Overview}
+Network and Communications is not strictly necessary. It is theoretically possible for all of the drones to achieve a common goal without either the need for the ability to communicate with each other, or the ability to communicate with a central server. In this case, each drone would act according the the information that it had gathered (location of the players, location of other drones etc.), and would not have access to the information that other players had gathered. An analogy can be used between a football team (no central server) and a human playing table football.\newline
+There are a couple of advantages to handling information without a central server, which are listed below: 
+\begin{itemize}
+    \item Perceived Fairness: the drones will not have access to information they have not gathered themselves, just like the human players.
+    \item Robustness: if each drone acts individually, there is no single thing that can go wrong that would entirely derail the game (the way a central server crash would).
+\end{itemize}
+
+However, this method of handling information also has some significant disadvantages, which are listed below:
+\begin{itemize}
+    \item Complexity: it is much easier to create a program that, with access to all of the available information, controls the drones in the desired manner than it is to create a program that, with different drones following the same program with differing levels of information, will have the same desired effect.
+    \item Hardware Costs: if the central high-level decision making is done locally on the processer of each drone, rather than in a central server, not only will a higher-powered processer be needed in the drone, but a larger battery will be needed to power it, so more powerful motors will be required to lift the batter, and so on, driving up hardware costs.
+\end{itemize}
+
+It was decided, considering the pros and cons listed above, to use a central server to carry out high-level decision making. Different methods of handling communications between the drones and the server are discussed below.
+
+\subsection{Bluetooth}
+Bluetooth is a short-ranged wireless communication system, which is designed for low-power device-to-device communications. It uses 79 channels, \(1\text{MHz}\) apart, from 2.402 to 2.480 GHz, hopping between them constantly - that is to say, information is sent by changes in frequency as opposed to changes in amplitude or phase. The signal is decoded wither using Frequency Hopping Spread Spectrum (FHSS, used in Classic Bluetooth), or Gaussian Frequency Shift Keying (GFSK, in Bluetooth Low Energy, BLE). In any given connection, one device acts as a "master", and up to seven devices act as "slaves". During connection, Time-Division-Duplexing is used to avoid collisions. Time is split into \(625\mu\text{s}\) divisions. The master communicated in even slots, and the slaves communicate in odd slots. The public technical information website GeeksForGeeks gives an overview of Bluetooth Data transfer \cite{geeksforgeeksBluetoothFrameStructure}; each data packet or "frame" is structured as follows:
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/Bluetoothframestructure-660x253.png}
+    \caption{Bluetooth Information Packet Structure}
+    \label{fig:BlueStruct}
+\end{figure}
+A bluetooth connection requires very little power. However, a bluetooth connection has a fairly low bit rate compared with a Wi-Fi connection (1-10 \(\text{Mbps}\)). It is also much less reliable than a Wi-Fi connection. Connection drop-out and communication failures are common in Bluetooth connections. Furthermore the maximum number of seven slaves connected to a single master will pose a problem since it will be necessary for up to 10 drones to be connected to the server at a time, requiring a secondary server, the purpose of which is to manage communication between some drones and the server. This would be possible, but inconvenient and prone to fault.
+
+\subsection{Wi-Fi}
+Wi-Fi medium-ranged wireless communication system, designed for fast transfer of data and reliable server-to-device communication. It typically runs at frequencies of \(\textasciitilde\)2.4\(\text{GHz}\), \(\textasciitilde\)5\(\text{GHz}\) or \(\textasciitilde\)6\(\text{GHz}\), transferring data over 3, 25 or 60 non-overlapping channels of bandwidth 20\(\text{MHz}\) respectively, and Orthogonal Frequency Division Multiplexing (OFDM) is used to decode signals. HowIWiFi.com, an information page dedicated to Wi-Fi, gives an overview of Frame Types and Formats \cite{key}; each data packet or "frame" is structured as follow:
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/frame-format.png}
+    \caption{Wi-Fi Information Packet Structure}
+    \label{fig:Wi-FiStruct}
+\end{figure}
+
+A Wi-Fi connection has much lower latency than Bluetooth, and has a much higher maximum bitrate than Bluetooth. However, the data that is likely to be needed is small enough that this will not be important. However, Wi-Fi is much more reliable than Bluetooth, and this is especially true at distances above ten meters; Bluetooth was designed for low bitrate, low power, short-range communication between a small number of devices, whereas Wi-Fi was designed for high bitrate, medium power, medium-range communication between a large number of devices.
+
+For these reasons, Wi-Fi is selected as the networking medium between the drones and the server. The server will be a desktop computer (with Wi-Fi capability), and the drones, helmets and vests all contain a ASK RICKIE ABOUT RASPBERRY PI with Wi-Fi capability.
+
+\newpage
+\section{High Level Control} % Ritchie
+\fancyhead[C]{Richard Usherwood} % Ritchie
+\subsection{Context}
+The objective of the High Level Control Protocol is to create a series of algorithms which take game states (positions of human players, positions of drones etc.) as their inputs, and give a high-level behaviour of a drone as their output. This is achieved through splitting the drones' behaviour into several "modes", in which some information and computing is performed in the server, and transmitted to the drones via Wi-Fi, and some information storage and computing is performed onboard the drone, according to an Information Responsibility Protocol.
+% \subsection{Drone States}
+% A set of drone "states" or "modes", describing the drone's behaviour, are shown below in Figure \ref{fig:StatesList}. \newline
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.7\linewidth]{figs/High-Level/StatesList.png}
+%     \caption{A List of Drone States}
+%     \label{fig:StatesList}
+% \end{figure} \newline
+% An overview of the purpose of each state is given below.
+
+\subsection{Drone Modes}
+A set of drone "modes" or "states", describing the drone's high-level behaviour, have been defined. They are:
+\begin{itemize}
+    \item Dormant Mode
+    \item Search Mode
+    \item Movement Mode
+    \item Track Mode
+    \item Shoot Mode
+    \item Collision Avoidance Mode
+\end{itemize}
+An overview of the purpoe of each state is given below.
+
+\subsubsection{Dormant Mode}
+This is the "default mode" of the drones, designed for waiting between rounds or games on standby, when not actively involved in the game - it is triggered by the end of a round, or by the powering on of the drone.
+\subsubsection{Search Mode}
+This is the initial mode of a drone upon entering a game. In this mode, the drone is exploring an area of the map decided by the central server, looking for a target. The flow diagram describing the conditions under which the drone will change out of Search Mode is shown below, in Figure \ref{fig:FlowSearch}.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/High-Level/SearchMode.png}
+    \caption{Flow Chart Describing Mode Changes, centred on Search Mode}
+    \label{fig:FlowSearch}
+\end{figure}
+\subsubsection{Track Mode}
+This is the mode the drone is in when is has seen a human player which is not within shooting range. In this mode, the drone's objective is to get close enough to the player to shoot them. The flow diagram describing the conditions under which the drone will change out of Track Mode is shown below, in Figure \ref{fig:FlowTrack}.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/High-Level/TrackMode.png}
+    \caption{Flow Chart Describing Mode Changes, centred on Track Mode}
+    \label{fig:FlowTrack}
+\end{figure}
+\subsubsection{Shoot Mode}
+This is the mode the drone is in when it has identified a player within shooting range of itself. In this mode, the drone will try to shoot the player. The flow diagram describing the conditions under which the drone will change out of Shoot Mode is shown below, in Figure \ref{fig:FlowShoot}.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/High-Level/ShootMode.png}
+    \caption{Flow Chart Describing Mode Changes, centred on Shoot Mode}
+    \label{fig:FlowShoot}
+\end{figure}
+\subsubsection{Movement Mode}
+This is the mode the drone is in when it has been "called for help" - something that happens when a drone detects that more than one player is within shooting range of itself. This mode can only be reached from Search Mode.
+\subsubsection{Collision Avoidance}
+This mode is triggered either when the drone detects it is about to collide into a wall, or when the server detects it is about to collide into another drone. This mode can be accessed from any mode (except Dormant Mode).
+
+\subsection{Logic}
+The flow charts shown in Figures \ref{fig:FlowSearch}, \ref{fig:FlowTrack} and \ref{fig:FlowShoot} are section of a larger flowchart describing the state change logic of the drones, shown in Figure \ref{fig:FlowBig}, in the appendix. The red boxes denote information shared between drones (managed by the server via Wi-Fi). It is worth noting that Dormant Mode and Collision Avoidance Mode have been omitted for the sake of readability. Since these two states are considered "higher-priority" than the others, each decision chain implicitly contains the question boxes: "Am I about to crash?" and "Has the wave ended?".
+
+\newpage
+
+
+\subsection{Information Responsibility}
+\fancyhead[C]{Thomas August} % Tommy
+
+
+\newpage
 \section{Mid Level Control} % Tommy, Rishabh
 \fancyhead[C]{Rishabh Luthra}
 \subsection{Visual Perception and Player Tracking} % Rishabh
@@ -425,7 +1016,7 @@ As the target turns, its 2D profile narrows and the monocular algorithm, which i
 
 We also evaluated the systems against a reduction in the target's vertical height, to simulate the motion of crouching. Similar to the changes in the target's orientation, the monocular algorithm misinterprets the shrinking of the target as an increase in depth, leading to the depth overestimation seen in Figure \ref{fig:crouch_deformation}. 
 
-This scenario highlights the advantage of the stereo system with the stereo estimate accurately tracking the ground truth. This confirms that the geometric baseline approach of the stereo model is robust to physical deformation, whereas the area approach of the monocular model will fail when the target's posture changes. 
+This scenario highlights the advantage of the stereo system with the stereo estimate accurately tracking the ground truth. This confirms that the geometric baseline approach of the stereo model is \textbf{robust} to physical deformation, whereas the area approach of the monocular model will fail when the target's posture changes. 
 
 \begin{figure}[htbp]
     \centering
@@ -434,9 +1025,9 @@ This scenario highlights the advantage of the stereo system with the stereo esti
     \label{fig:crouch_deformation}
 \end{figure}
 
-Consequently, the passive stereoscopic system is selected for the sensor payload attached to the drone's gimbal. While the monocular camera presents a favourable \gls{swapc} profile, the simulations demonstrate that area-based depth estimation is insufficient for reliable depth estimation. The system cannot reliably distinguish between a change in the target posture or orientation from a change in physical depth. 
-
-The passive stereo system resolves this by estimating depth via horizontal pixel disparity ($d$) and provides a robust depth estimate. Crucially, its reliance on ambient light means that there will be no interference with the infrared game mechanics.  
+\textbf{Consequently, the passive stereoscopic system is selected for the sensor payload attached to the drone's gimbal. While the monocular camera presents a favourable \gls{swapc} profile, the simulations demonstrate that area-based depth estimation is insufficient for reliable depth estimation. The system cannot reliably distinguish between a change in the target posture or orientation from a change in physical depth. 
+}
+The passive stereo system resolves this by estimating depth via horizontal pixel disparity ($d$) and provides a \textbf{robust} depth estimate. Crucially, its reliance on ambient light means that there will be no interference with the infrared game mechanics.  
 
 \subsubsection{Computer Vision Architecture}
 The hardware of this system is comprised of a camera array consisting of three cameras. It features a high-resolution central RGB camera with two greyscale sensors either side that are dedicated to computing the stereoscopic disparity depth map. These visual streams are sequentially processed to meet both the tracking objectives described above: reliably distinguishing a human player from the background to lock onto the correct target, and calculating the target's 3D Cartesian coordinates relative to the drone's local frame. Together, these stages form the sensor pipeline (Figure \ref{fig:pipeline_diagram}). 
@@ -475,8 +1066,8 @@ The hardware of this system is comprised of a camera array consisting of three c
 
 To satisfy the first objective, the system must transform the raw visual data into spatial data. The central RGB sensor outputs a continuous stream of frames, which are essentially high-dimensional pixel arrays. To interpret these, an object detection model is required to ingest this raw data and output bounding boxes around valid targets. This process effectively maps visual features to 2D semantic coordinates within the image frame, ensuring the system can reliably distinguish the player from the background. 
 
-For this task, the YOLOv8-nano (YOLOv8n) framework was selected. It provides an extremely fast multi-object detection algorithm that uses a \gls{cnn} to detect and identify objects. \gls{yolo} evaluates the entire image in a single computational pass to predict bounding box coordinates and this approach ensures low latency of the model. Because the drone's flight controller takes actions based on the visual feed, it must receive the most up-to-date target data to ensure the control loops remain responsive. 
-
+\textbf{For this task, the YOLOv8-nano (YOLOv8n) framework was selected. It provides an extremely fast multi-object detection algorithm that uses a \gls{cnn} to detect and identify objects. \gls{yolo} evaluates the entire image in a single computational pass to predict bounding box coordinates and this approach ensures low latency of the model. Because the drone's flight controller takes actions based on the visual feed, it must receive the most up-to-date target data to ensure the control loops remain responsive. 
+}
 The nano variant was chosen because it has the lowest parameter count out of the YOLOv8 models and this makes it the lightest and fastest model available. The streamlined nature of this architecture is well-suited to the limited computer resources available on the drone's onboard hardware. Furthermore, the maturity of the \gls{yolo} architecture, combined with its extensive Python support and documentation, facilitates the training process and provides a reliable pipeline for deploying the model within the project.
 
 To achieve the second objective, the system performs sensor fusion. The predicted 2D bounding box defines a region of interest (Figure \ref{fig:rgb_data}), which is projected onto the synchronised stereo disparity map (Figure \ref{fig:depth_data}). This allows the system to extract the absolute depth ($Z$) of the target by sampling depth data across the pixels within this region, effectively bridging 2D visual recognition with 3D spatial tracking. 
@@ -531,7 +1122,7 @@ Following data preparation, the pre-trained YOLOv8n model was fine-tuned on the 
 
 Once the network had converged, the final weights were exported to the \gls{onnx} format that allowed the model trained in Python to be imported directly into Unity. Within the simulation, the model is executed using Unity Sentis, a tensor engine used to run neural networks natively within the simulated environment.
 
-To quantify the model's convergence during training, loss and precision metrics were tracked across 50 epochs. As visualised in Figure  \ref{fig:visdrone_training_results}, both the training and validation losses steadily decreased and plateaued towards the end of the run. This indicates that the neural network converged successfully and learned the dataset's features without overfitting. 
+To quantify the model's convergence during training, loss and precision metrics were tracked across 50 epochs. As visualised in Figure  \ref{fig:visdrone_training_results}, both the training and validation losses steadily decreased and plateaued towards the end of the run. This indicates that the neural network converged successfully and \textbf{learned the dataset's features without overfitting}. 
 
 \begin{figure}[htbp]
     \centering
@@ -610,7 +1201,7 @@ The following 2D graphs flatten the 3D hemispherical sweeps shown in Figure \ref
     \label{fig:benchmark_daylight}
 \end{figure}
 
-Under daylight conditions (Figure \ref{fig:benchmark_daylight}), the model demonstrates robust player detection. The confidence contour map indicates sustained detections across majority of the orbital grid, highlighting peak probability zones at steep pitch angles between $50^\circ$ and $80^\circ$. This spatial bias is expected given that the VisDrone training dataset consists primarily of high-altitude aerial perspectives. The classification plot confirms this trend, displaying a ring of True Positives around the outer edge. Consequently, the model performs well when looking down at the target from above. This also validates the fidelity of the environment itself since a neural network trained exclusively on real-world photographic data can successfully detect a synthetic target within Unity. Hence, we can verify that the simulation environment has been configured correctly.
+Under daylight conditions (Figure \ref{fig:benchmark_daylight}), the model demonstrates \textbf{robust} player detection. The confidence contour map indicates sustained detections across majority of the orbital grid, highlighting peak probability zones at steep pitch angles between $50^\circ$ and $80^\circ$. This spatial bias is expected given that the VisDrone training dataset consists primarily of high-altitude aerial perspectives. The classification plot confirms this trend, displaying a ring of True Positives around the outer edge. Consequently, the model performs well when looking down at the target from above. This also validates the fidelity of the environment itself since a neural network trained exclusively on real-world photographic data can successfully detect a synthetic target within Unity. Hence, we can verify that the \textbf{simulation environment has been configured correctly}.
 
 
 \begin{figure}[htbp]
@@ -692,8 +1283,8 @@ To quantify the performance of the synthetic data pipeline and ensure that the n
     \label{fig:synthetic_training_results}
 \end{figure}
 
-The training and validation curves indicate highly stable convergence. The training and validation losses both descend and this confirms that the model hasn't overfit to the synthetic data. 
-
+\textbf{The training and validation curves indicate highly stable convergence. The training and validation losses both descend and this confirms that the model hasn't overfit to the synthetic data. 
+}
 % maybe a comment on the 40-epoch drop but perhaps best made for the visdrone training and a brief mention here
 
 The performance metrics corroborate the successful convergence. The mean Average Precision at an Intersection over Union threshold of 0.50 (mAP50) plateaus at 0.96 and the mAP50-95 metric climbs to above 0.80. These exceptionally high metrics are a direct characteristic of synthetic datasets. Unlike human-annotated real-world data, which inherently suffers from subjective or loose labelling, the Unity pipeline generates mathematically perfect ground-truth coordinates. Furthermore, evaluating the network against validation data drawn from the exact same simulated distribution naturally yields higher accuracy. Ultimately, these theoretical metrics prove the network successfully extracted the features of the simulated human targets,
@@ -973,19 +1564,23 @@ For the collision avoidance method, we chose to use an Artificial Potential Fiel
 
 
 \section{App} % Ritchie
+\label{app}
 \fancyhead[C]{Richard Usherwood}
-\subsection{Motivation}
+\subsection{Context}
 From fast-food restaurants to road cycling, apps are everywhere. Their purpose can be separated into two categories: Engagement and Functionality.
 
-They encourage user-engagement by allowing users to track their progress through points and achievements, customise their profiles, and connect with friends. For example, popular birdwatching app "Birda" is used by users to log bird sightings. It rewards users with achievement badges when they complete objectives (for example, seeing ten different species), and integrates monthly challenges. It also connects birdwatchers through the "community" feature, allowing users to view their friends' activity and sightings by strangers in their area. 
+\paragraph{Engagement} \(\) \newline
+Companion apps encourage user-engagement by allowing users to track their progress through points and leaderboards, track achievements, and connect with friends. For example, popular birdwatching app "Birda" is used by users to log bird sightings. It rewards users with achievement badges when they complete objectives (for example, having logged ten different species), and integrates monthly challenges. It also connects birdwatchers through the "community" feature, allowing users to view their friends' activity and sightings by strangers in their area. 
 
-Companion apps also serve a functional purpose. Since (almost) everyone in the UK owns and uses a smartphone, they can be directly implemented into the experience. For example, popular budget UK pub chain JD Wetherspoon uses a companion app to allow patrons to order drinks and food directly to their table, without requiring them to break conversation and queue at a busy bar. 
+\paragraph{Functionality} \(\) \newline
+Companion apps also serve a functional purpose. Since effectively everyone in the UK owns and uses a smartphone, they can be directly implemented into the experience of an existing product. For example, popular budget UK pub chain JD Wetherspoon uses a companion app to allow patrons to order drinks and food directly to their table, without requiring them to break conversation and queue at a busy bar. 
+
 \subsection{Overview}
-When opened for the first time, the app prompts the user to create an account with a username and password. If the user has already created a login, they will instead be prompted to enter their user name and password. This is shown in Figure \ref{fig:0_Login_Screen}. When completed, the app the first of five screens that are navigated using a bottom panel: the "Profile" screen, the "Leaderboard" screen, the "Achievements and Challenges" screen, the "Community" screen, and the "Play in Person" screen . The first four screens are engagement-based, and the fifth is functionality-based.
+When opened for the first time, the app prompts the user to create an account with a username and password. If the user has already created a login, they will instead be prompted to enter their user name and password. This is shown in Figure \ref{fig:0_Login_Screen}. When completed, the app the first of five screens that are navigated using a bottom panel: the "Profile" screen, the "Leaderboard" screen, the "Achievements and Challenges" screen, the "Community" screen, and the "Play in Person" screen . The first four screens are engagement-based, and the fifth is functionality-based. 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.3\linewidth]{figs/App_Screenshots/0_Login_Screen.jpg}
+    \includegraphics[width=0.25\linewidth]{figs/App_Screenshots/0_Login_Screen.jpg}
     \caption{Login Screen}
     \label{fig:0_Login_Screen}
 \end{figure}
@@ -995,7 +1590,7 @@ The "Profile" screen displays the player's details (Player ID, name etc.), the s
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.3\linewidth]{figs/App_Screenshots/1_Profile_Screen.jpg}
+    \includegraphics[width=0.25\linewidth]{figs/App_Screenshots/1_Profile_Screen.jpg}
     \caption{Profile Screen}
     \label{fig:1_Profile_Screen}
 \end{figure}
@@ -1005,14 +1600,14 @@ The "Leaderboard" screen displays a list of players in order of their total scor
 
 \begin{figure}[htbp]
      \centering
-     \begin{subfigure}[b]{0.3\textwidth}
+     \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/2_1_Leaderboard_All.jpg}
          \caption{Leaderboard Screen - Global Leaderboard Tab}
          \label{fig:lea-glo}
      \end{subfigure}
      \hfill
-     \begin{subfigure}[b]{0.3\textwidth}
+     \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/2_2_1_Leaderboard_Friends_No_Alice.jpg}
          \caption{Leaderboard Screen - Friends Only Tab}
@@ -1028,14 +1623,14 @@ The "Achievements and Challenges" screen displays all achievements (lifetime goa
 
 \begin{figure}[htbp]
      \centering
-     \begin{subfigure}[b]{0.3\textwidth}
+     \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/3_1_Achievements_Lifetime.jpg}
          \caption{Achievements Screen - Lifetime Achievements}
          \label{fig:ach-lif}
      \end{subfigure}
      \hfill
-     \begin{subfigure}[b]{0.3\textwidth}
+     \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/3_2_Achievements_Monthly.jpg}
          \caption{Achievements Screen - Monthly Challenges}
@@ -1048,24 +1643,23 @@ The "Achievements and Challenges" screen displays all achievements (lifetime goa
 
 The "Community" screen toggles between displaying details of recent games played by the app user's friends, and displaying details of all recent games played. It also allows users to search for other players by name, or by Player ID, and to send each other friend requests. Figure \ref{fig:4_2_Receiving} shows a screen displayed when the player "Alice" has made a friend request to the player logged into the app. Figure \ref{fig:4_2_Sending} shows a screen displayed when the player logged into the app is sending a friend request to the player "Bob". This system allows players to track each other's progress, and allows players to feel connected to friends they may have made through playing the game in person.
 
-
 \begin{figure}[htbp]
      \centering
-     \begin{subfigure}[b]{0.3\textwidth}
+     \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/4_1_Community_Friends.jpg}
          \caption{Community Screen - Friends Tab}
          \label{fig:com-friends}
      \end{subfigure}
      \hfill
-     \begin{subfigure}[b]{0.3\textwidth}
+     \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/4_2_1_Community_Requests_Receiving.jpg}
          \caption{Community Screen - receiving friend request}
          \label{fig:com-rec}
      \end{subfigure}
      \hfill
-     \begin{subfigure}[b]{0.3\textwidth}
+     \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/4_2_2_Community_Requests_Making.jpg}
          \caption{Community Screen - sending friend request}
@@ -1080,110 +1674,189 @@ The "Play in Person" screen prompts the player to scan the QR codes on the top o
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.3\linewidth]{figs/App_Screenshots/5_Play_In_Person.jpg}
+    \includegraphics[width=0.25\linewidth]{figs/App_Screenshots/5_Play_In_Person.jpg}
     \caption{Play in Person Screen}
     \label{fig:5_PiP_Screen}
 \end{figure}
-
-\subsection{Technical Details}
-
-\section{Commercialisation, Safety and Project Management} % Mostly Ritchie
-\subsection{Risk Assessment}
+\subsection{Usability Design Choices}
+In 2010, Lee et al \cite{LEE201090} identified several "Principles for General System Design", with respect to complex 3D architectural design and engineering tools. While this use-case is not identical to that of Lee et al, the principles are still relevant. The following are examples of the identified "Principles":
+\subsubsection{Visibility}
+Lee et al describe the use of visibility in UI design as "Making relevant information conspicuous and easily detectable to the user". This has been achieved by the large panel at the bottom of the app, visible at all times, as shown in Figure \ref{fig:App-Panel}. Furthermore, the open-source React icons encourage faster visual recognition from the user, increasing the visibility of the relevant information (in this case the purpose of each screen).
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\linewidth]{figs/risk-assessment}
-    \caption{Quantitative Risk Assessment}
-    \label{fig:risk-assessment}
+    \includegraphics[width=1\linewidth]{figs/App_Screenshots/Bottom_Panel.png}
+    \caption{Bottom Panel}
+    \label{fig:App-Panel}
+\end{figure}
+\subsubsection{Feedback}
+Lee et al describe the use of feedback in UI design as "Response of the system to the user’s actions in order to provide information regarding the internal state of the system". As an example of this principle in the design of this app, the icon in the bottom panel corresponding to the screen currently being displayed is filled in (a variant of the React icon is displayed), and is red. When a user changes screen, the "internal state" of the app is reflected by the change of icon displayed in red. As another example, when a friend request is made, the user receiving the request sees a box with two buttons: "Accept" and "Decline", as shown in Figure \ref{fig:App-Friend_Request}. When the user selects one of these options, the box disappears. While this is not required for the functionality of the system, the change to the external state of the app (the box disappearing) reinforces instinctively to the user of a change to the internal state of the app (the friends associated with a player in the database). 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{figs/App_Screenshots/Fried_Request_Box.png}
+    \caption{Box displayed when receiving a friend request}
+    \label{fig:App-Friend_Request}
+\end{figure}
+\subsubsection{Consistency}
+Lee et al describe the use of consistency in UI design as "Uniformity of system semantics across similar situations". In this context, "system semantics" refers to the method the user is expected to use when interacting with the UI, as well as the use of language, technical or otherwise. As an example, the app uses a dark grey and red colour scheme, in which, across pages, red is used to mean "active/on" and dark grey is used to mean "passive/off". This is seen in the bottom panel (Figure \ref{fig:App-Panel}) and top panel in the achievements (Figure \ref{fig:ach-screen}) and community (Figure \ref{fig:com-screen}) screens, in which the screen being displayed in shown in red. It is also seen in the player profile (Figure \ref{fig:0_Login_Screen} and login (Figure \ref{fig:1_Profile_Screen} screens, in which the Login/Logout buttons are coloured red. It is shown in the box displayed when receiving a friend request (Figure \ref{fig:App-Friend_Request}) in which the "Accept" button, which changes the user's list of friends, is coloured red, and the "Decline" button, which leaves the user's list of friends as it is, is shown in dark grey.
+
+
+
+\subsection{Technical Details}
+\subsubsection{Overview}
+The app was created using Expo. Expo is a development framework built to create React Native apps. React Native is a framework that allows mobile apps to be built using React. Finally, React is a JavaScript library built for user interface design. 
+\subsubsection{Project Structure}
+When the app is run, it opens a "package.json" file which sets the rest of the app in motion. From here, it exectutes index.js which imports App.js, which opens MainContainer.js. MainContainer.js serves as the app's navigation hub. MainContainer.js decides which "navigation flow" to show, based on whether the app is in state "Auth" or "Main" (whether the user is signed in or not). From here, MainContainer.js accesses each of the displayed screens, each of which has a dedicates JavaScript file in the "screens" subfolder.
+\subsubsection{State Management}
+The app uses a hybrid state management strategy. That is to say, not all states are stored centrally ("All-Global State Management"), and not all states are managed independently by an individual screen ("All-Local State Management"). The direct React Context including AuthContext (whether or not a user is logged in) and DataContext (cached API data) is stored centrally, however each screen also stores its own data including the user's name and password (in login screen), the data of the user's friends' last games (in leaderboard screen) etc. This hybrid style of state management has several advantages. For example, the fact that low-level data is stored in the JavaScript file corresponding to the screen it is needed in allows for good "separation of concerns", meaning that, if the project were bigger than it is now, several developers could be editing different parts of the software without interfering. Additionally, by having some data stored separately, such as API cached data, each screen can "reach in" to this file and get what it needs, rather than the same data having to be stored in many different places.
+\subsubsection{API Integration}
+The App uses Supabase as its backend API, to access an SQL database hosted through Supabase. This API is handled through a single client "db.js" - after the app is loaded, the data is cached in datacache.js to avoid unnecessary loading times, especially when being used with poor internet connections. A screenshot of the database is shown below in Figure \ref{fig:Database}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/Database_Screenshot.png}
+    \caption{Screenshot of SQL Database}
+    \label{fig:Database}
 \end{figure}
 
-A quantitative risk assessment has been completed, and is shown in figure \ref{fig:risk-assessment}. As shown, the most significant initial risks were the the contact between guns and players' eyes, and players running into each other. After the necessary control measures, they are still most significant residual risks, along with trips and falls. This demonstrates that there is not an undue risk associated with playing the game, since trips and falls, player-on-player collision and impact with instruments used for playing (such as laser-guns, squash raquets, etc.) are risks associated with traditional laser-tag, as well as many common sports. 
-\subsection{Financial Modeling}
+A specific format had to be created for this data to be stored. For example, Game Data is stored in a format (A, B, C, \dots),(D, E, F, \dots),(G, H, I, \dots). This game data is equivalent to "Players A, B, C, \dots played a game in which they got D, E, F, \dots kills and died G, H, I, \dots times, respectively". Furthermore the "score" is defined as "number of kills squared divided by number of deaths" in a game, and the friend requests are stored as CSVs. When a change to the data is made in the app (for example sending or accepting a friend request), the database is automatically updated by API. However, the database must also be updated after every game. In the real system, this would be integrated into a system that counts communications with drones and helmets, and updates the database automatically. However, for now it is handled by a script that allows the user to input the results of the game (who was playing, how many kills they got, how many times they died etc.), and updates the database accordingly. 
+
+
+\section{Safety and Risk Assessment Management}
+
+
+A quantitative risk assessment has been completed, and is shown in Figure \ref{fig:risk-assessment}, in the appendix. The most significant initial risks (before mitigations) were the the contact between guns and players' eyes, and players running into each other. After the necessary control measures, they are still most significant residual risks, along with trips and falls. This demonstrates that there is not an undue risk associated with playing the game, since trips and falls, player-on-player collision and impact with instruments used for playing (such as laser-guns, squash raquets, etc.) are risks associated with traditional laser-tag, as well as many common sports. 
+\section{Commercialisation and Financial Modelling}
 \subsection{Setup}
-A discounted cash flow model was created. The purpose of this was to track cash flow, apply a discount rate into the future (to capture the fact that £100 now is worth more to an investor than £100 in 10 years), and to calculate the Net Present Value (NPV) of a company which provides the game as a commercial enterprise.
+A discounted cash flow model was created. The model was used to track cash flow, apply a discount rate to future revenue, and to calculate the Net Present Value (NPV) of a company providing the game as a commercial enterprise.
 \subsection{Numerical Estimations}
 \subsubsection{Utility}
-It is supposed that the first year will be spent producing hardware, advertising the business, and decorating the playing area (a warehouse). The first year (Year 0) is therefore assumed not to make any revenue from gameplay. As the business establishes itself, and as it continues to invest in advertising, its utility (games per year) is modeled to increase up to a plateau in the third year of operation (Year 3). As a first estimation, the increase is modeled as shown in table \ref{tab:utility}:
+It is assumed that the first year (Year 0) will be spent producing hardware, advertising the business, and decorating the playing area (a warehouse). Year 0 is therefore assumed to generate no revenue from gameplay. As the business becomes more established, its utility (games per year) is modelled to increase up to a plateau in Year 3. The modelled increase in utility is shown in Table \ref{tab:utilityandemployees}:
 
-\begin{table}[h]
-\centering
-\begin{tabular}{|c|c|c|}
-\hline
-Year & Percentage of Maximum Utility\\
-\hline
-0 & 0\% \\
-1 & 50\% \\
-2 & 75\% \\
-3 & 100\% \\
-4 & 100\% \\
-\vdots & \vdots \\
-\hline
-\end{tabular}
-\caption{Utility evolution with time}
-\label{tab:utility}
-\end{table}
+% \begin{table}[h]
+% \centering
+% \begin{tabular}{|c|c c c c c c|}
+% \hline
+% Year & \qquad 0 & \quad 1 & \quad 2 & \quad 3 & \quad 4 & \quad \dots\\
+% \hline
+% Percentage of Maximum Utility & \qquad 0\% & \quad 50\% & \quad 75\% & \quad 100\% & \quad 100\% & \quad \dots \\
+% \hline
+% \end{tabular}
+% \caption{Utility evolution with time}
+% \label{tab:utility}
+% \end{table}
 
-It was lastly imagined as a first approximation that the maximum number of games per year would be 2000, this corresponding to 10 hour-long games on Saturday and Sunday, and four hour-long games every day during the week, for 50 weeks per year. NB this "maximum utility" refers to the value at which utility is modeled to plateau, not a fundamental limit.
+As a first approximation, the maximum number of games per year was assumed to be 2000, corresponding to 10 hour-long games on Saturday and Sunday, and four hour-long games on weekdays, for 50 weeks per year. Note that this "maximum utility" refers to the value at which utility plateaus, not a fundamental limit. \newline
 
-\subsubsection{Warehouse Hiring}
-The game is imagined to be played in a converted warehouse. The size of warehouse required for gameplay was thought to be comparable to that of a large school hall (circa. 5000 square feet). Including enough space for a reception area, a small office and a break room for staff, between 6000 and 7000 square feet was thought to be an appropriate size. It was considered important that the warehouse be within a short drive of a large city. A 6800 square foot warehouse in London was found for £2000 pcm \cite{rightmoveCheckThis}. The cost of hiring the warehouse is therefore estimated to be £25000 per annum.
+The effect of a variation in utility is analysed in Section \ref{PriceAnal}.
+
+
 
 \subsubsection{Employee Costs}
-It was thought that the minimum equivalent number of full-time employees required would be two. It was furthermore imagined that the number of full-time employees would increase with increased utility, up to a maximum of four. It was thought that the number of employees would increase with utility as shown in table \ref{tab:employees}:
+The minimum equivalent number of full-time employees required was thought to be two. The number of full-time employees was assumed to increase with utility, up to a maximum of four, as shown in Table \ref{tab:utilityandemployees}:
+
 
 \begin{table}[h]
 \centering
-\begin{tabular}{|c|c|c|}
+\begin{tabular}{|c|c c c c c c|}
 \hline
-Year & Percentage of Maximum Utility & Equivalent Number of Full-Time Employees\\
+Year & \qquad 0 & \quad 1 & \quad 2 & \quad 3 & \quad 4 & \quad \dots\\
 \hline
-0 & 0\% & 2\\
-1 & 50\% & 2\\
-2 & 75\% & 3\\
-3 & 100\% & 4\\
-4 & 100\% & 4\\
-\vdots & \vdots & \vdots \\
+Percentage of Maximum Utility & \qquad 0\% & \quad 50\% & \quad 75\% & \quad 100\% & \quad 100\% & \quad \dots \\
+\hline
+Full-Time employees & \qquad 2 & \quad 2 & \quad 3 & \quad 4 & \quad 4 & \quad \dots \\
 \hline
 \end{tabular}
 \caption{Number of employees with time}
-\label{tab:employees}
+\label{tab:utilityandemployees}
 \end{table}
+% \begin{table}[h]
+% \centering
+% \begin{tabular}{|c|c|c|}
+% \hline
+% Year & Percentage of Maximum Utility & Equivalent Number of Full-Time Employees\\
+% \hline
+% 0 & 0\% & 2\\
+% 1 & 50\% & 2\\
+% 2 & 75\% & 3\\
+% 3 & 100\% & 4\\
+% 4 & 100\% & 4\\
+% \vdots & \vdots & \vdots \\
+% \hline
+% \end{tabular}
+% \caption{Utility and Number of Employees with time}
+% \label{tab:utilityandemployees}
+% \end{table}
 
-Lastly, it was estimated that the cost of hiring a single full-time employee (or equivalent in part-time workers) would be £50000. This includes their salary, their training, their sick cover, their annual bonus etc.
+It was also estimated that the cost of employing one full-time employee (or equivalent in part-time workers) would be £50000. This includes salaries, company computers, training, sick cover, annual bonuses etc.
+\subsubsection{Warehouse Hiring}
+The game is assumed to be played in a converted warehouse. The size of warehouse required for the game was thought to be comparable to that of a large school hall (circa. 5000 square feet). Including space for a reception area, a small office and a break room for staff, between 6000 and 7000 square feet was thought to be an appropriate size. The warehouse should be within a short drive of a large city. A 6800 square foot warehouse in London was identified at £2000 pcm \cite{rightmoveCheckThis}. The cost of hiring the warehouse is therefore estimated at £25000 per annum.
 \subsubsection{Advertising}
-The advertising budget is very large. This is because early revenue has a huge affect on NPV (discussed in section [SECTION NUMBER HERE]), so it is desirable to invest heavily in advertising initially, with the hope of spending as little time as possible operating below maximum utility. Advertising will continue even when maximum utility has been reached. This will be necessary if the business is to keep reaching new audiences, and if it is to advertise new features that are developed. The assumption is made that advertising costs are constant throughout business operation. This may be slightly unrealistic, but it is assumes for the sake of making a conservative estimate % waiting for Global to return call
-\subsubsection{Heating and Lighting}
-The 
-% heat loss equation stuff
+The advertising budget is large, because early revenue has a disproportionate affect on NPV due to the large discount rate. It is therefore desirable to invest heavily in advertising initially, spending as little time as possible operating below maximum utility. Advertising will continue even when maximum utility has been reached. This is necessary to keep the business reaching new audiences, and if it is to advertise new features. It is assumed that advertising costs are constant throughout operation. This may be unrealistic, but produces a conservative estimate. After conversations with Global (the advertising agency responsible for Transport for London), the cost of a "small-scale advertising campaign" involving one-to-two posters in several small, outer-London underground stations and a small presence in carriage poster advertising is around £2000 per month. The cost of 1000 views for a social media advertising campaign is around £10 for Facebook, Instagram, and TikTok. So, for £500 per month, 50000 views of social media advertising can be bought. These can be localised so only users in London will be shown advertising. \newline
 
-\subsubsection{Warehouse Decoration and Maintenance}
-The purpose of Year 0 is, among other things, to decorate the warehouse and make it suitable for playing drone laser-tag. From year 1 onward, the infrastructure will already exist, and the purpose of the budget is for wear-and-tear and maintenance. Hence, the Year 0 budget for decoration and maintenance will be much higher than for subsequent years. 
-Chaboun Construction (a London-based building services provider) quotes £50000 as a typical cost for a complete, but basic, 3-bedroom house renovation \cite{chabounconstructionMuchDoes}. However, a great deal of this cost is in the kitchen and the bathrooms, and in rewiring/replumbing. None of this applies to our warehouse, and (certainly to begin), non-premium materials will suffice. However, the warehouse is much larger than a 3-bedroom house. Therefore, £30000 was selected as a reasonable price of Year 0 decoration. £10000 was selected as the budget for redecoration and maintenance. This is probably higher than strictly realistic, but is designed to take into account the fact that a complete redecoration will be necessary every few years. The cost of decoration and maintenance therefore varies with time as shown in table \ref{tab:decoration}.
+Therefore, the projected required advertising budget is given by 
+\begin{equation}
+    \label{equ:advertising}
+    \text{Cost [£/Year]} = \left (2000\text{ £/month} + 500\text{ £/month}\right ) \times 12\text{ months/year} = £30000\text{ £/year}
+\end{equation}
 
+
+
+\subsubsection{Electricity}
+\paragraph{Heating} \(\) \newline
+The warehouse is assumed to be heated electrically. The heating power is given by:
+\begin{equation}
+    \dot Q=U_wA_w\Delta T+U_rA_r\Delta T+U_fA_f\Delta T +\text{ACH}\cdot \frac{\rho c_p V\Delta T}{3600}
+\end{equation}
+where \(U,A,\Delta T\) denote the U-Value (thermal transmittance), area and the indoor-outdoor temperature difference, and subscripts \(w,r,f\) the walls, roof and floor respectively. \(\text{ACH}, \rho, c_p, V\) denote the equivalent number of complete air changes per hour, air density, air specific heat capacity (constant pressure), and volume respectively. As a rough estimate, the warehouse is assumed to have U-Values three times greater (less well insulated) than the maximum specified for newly built houses under UK law \cite{UValueRegs}. This is summarised in Table \ref{tab:U-Values}.
 \begin{table}[h]
 \centering
 \begin{tabular}{|c|c|c|}
 \hline
-Year & Warehouse Decoration and Maintenance Cost\\
+&Maximum U-Value [\(W/m^2K\)]& Assumed U-Value for warehouse [\(W/m^2K\)]\\
 \hline
-0 & £30000 \\
-1 & £10000 \\
-2 & £10000 \\
-\vdots & \vdots \\
+External Walls & 0.26 & 0.78 \\
+Roof (pitched)& 0.16 & 0.48 \\
+Floor & 0.18 & 0.54 \\
 \hline
 \end{tabular}
-\caption{Warehouse Decoration and Maintenance Cost with time}
-\label{tab:decoration}
+\caption{Maximum U-Values for newly built residential properties and assumed U-Values for the warehouse}
+\label{tab:U-Values}
 \end{table}
 
+Additional assumptions are made, as shown in the appendix in section \ref{assumptions}. As shown in equation \ref{app:heating-calcs}, it is found that the total heating power required to maintain a temperature of \(20^\circ C\) is 17.6 kW.
+\newline
+
+\paragraph{Lighting} \(\) \newline
+To calculate the lighting costs, it is assumed the warehouse requires fifty 100W equivalent LEDs, each drawing 15W of power, to avoid dark shadows in the maze corners. However, since the game is played in (relative) darkness, the lights will only be required in between play sessions. Each game lasts 45 minutes, separated by 15 minute breaks, so the lights will only be "on" one quarter of the time. Therefore the effective power of the lighting is given by \(\dot Q = \frac 14 \times 50\times100W = 1.3kW\).
+
+\paragraph{Batteries} \(\) \newline
+Batteries in drones and laptops used by employees both must be charged. Both are assumed to be charged by standard \(65W\) chargers. There are assumed to be 20 batteries in total, and it is assumed they are all charging whenever the centre is open. The effective power draw of charging batteries is estimated at \(\dot Q=20\times 65W=1.3kW\).
+
+Therefore the total power draw of the operational warehouse is approximated to \(17.6kW+1.3kW+1.3kW=20.2kW\)
+
+\paragraph{Full Electricity Cost} \(\) \newline
+According to the Department for Energy Security and Net Zero's Q2 2025 Energy Prices report \cite{EnergyPrices}, the average electricity cost to non-domestic users (including Climate Change Levy) over the last three years is around 25p/kWh. This will be used to calculate an annual electricity cost. It is also assumed that the warehouse will need to be open 3000 hours per year (for 2000 hour-long games per year), to include unbooked game slots, maintenance and opening preparation time. The final electricity cost is therefore given in Equation \ref{equ:eleccost}.
+\begin{equation}
+    \label{equ:eleccost}
+    \text{Electricity Cost [£/Year]}=20.2\text{kW}\times3000\text{ hours/year} \times 0.25 \text{ £/kWh}=£15150/\text{year}
+\end{equation}
+
+To keep the estimate conservative, to allow for fluctuations in electricity price and to allow for miscellaneous costs (employees boiling a kettle, for example), this value will be rounded up to a final electricity cost of £20k/year.
+
+\subsubsection{Warehouse Decoration and Maintenance}
+Year 0 will be used to prepare the warehouse for laser-tag. From Year 1 onward, this budget will only be spent on repairing wear-and-tear. Chaboun Construction (a London-based building services provider) estimates £50000 for a basic, 3-bedroom house renovation \cite{chabounconstructionMuchDoes}. However, much of this cost is related to the kitchen and the bathrooms, and in rewiring/replumbing. None of this applies to the warehouse, and (certainly to begin), non-premium materials will suffice. However, the warehouse is much larger than a 3-bedroom house. The price of Year 0 was therefore estimated at £30000. £10000 was selected as the budget for redecoration and maintenance. This is probably higher than strictly realistic, but accounts for the fact that a complete redecoration will be necessary every few years, and maintains a conservative estimate.
+
 \subsubsection{Hardware}
-The drones themselves cost a little under £500 to produce, of which 10 are required. Including all other hardware (laser-guns and helmets), the model used assumes the total cost is £10000. This is a slight overestimate, but is used for the sake of a conservative estimate. 
-The hardware will get slightly damaged during operation. Some components (such as blades) are likely to need replacing often, whereas some (such as laser-guns) are likely to require replacing hardly ever. For simplicity, the model assumes that a full hardware replacement is required every 500 games, after a full set is fabricated in Year 0.
+The drones themselves cost a little under £500 to produce, of which 10 are required. Including other hardware (laser-guns, helmets and battery chargers), the model assumes the total cost is £10000. This is conservative estimate. The hardware will get slightly damaged during operation. Some components (such as blades) are likely to need replacing often, whereas some (such as laser-guns) are likely not to require frequent replacement. For simplicity, the model assumes that a full hardware replacement is required every 500 games, after a full set is fabricated in Year 0.
 
 \subsubsection{Revenue}
-Research was conducted on the pricing structure of laser-tag. It was found that the cost of hiring exclusive usage of a laser-tag facility is commonly around £15-£20 per person per hour. For example, LASERGAMING OXFORD charges £29.50 per person for sole use of their facilities \cite{outdoorlaserLasergamingEXCLUSIVE}. It was thought that a drone-based experience could afford to charge two to three times this fee, once the novelty value has been taken into account. The game is designed to be played by three to eight people at once. The cost per game is therefore projected to be £200 per hour game per group, as a first estimate.
+The cost of hiring exclusive usage of a laser-tag facility is commonly around £15-£20 per person per hour. For example, LASERGAMING OXFORD charges £29.50 per person for two hours of exclusive use \cite{outdoorlaserLasergamingEXCLUSIVE}. A drone-based experience could afford to charge two to three times this fee, due to its novelty value. The game is designed to be played by three to eight people at once. The cost per game is therefore projected to be £200 per hour game per group, as a first estimate. \newline
+
+The effect of a variation in game price is analysed in Section \ref{PriceAnal}.
 
 \subsubsection{Aggregate}
-Hence, the total Income \& Expenditure table, not including tax or external financing (such as bank loans, equity etc.) is shown in table \ref{tab:IE}.
+Hence, the total Income \& Expenditure Table, not including tax or external financing (such as bank loans, equity etc.) is shown in Table \ref{tab:IE}.
 
 \begin{table}[h]
 \centering
@@ -1192,7 +1865,7 @@ Hence, the total Income \& Expenditure table, not including tax or external fina
 Year & 0 & 1 & 2 & 3 & 4 & \dots \\
 \hline
 Warehouse Hire & 25 & 25 & 25 & 25 & 25 & \dots \\
-Warehouse Heating \& Lighting & 20 & 20 & 20 & 20 & 20 & \dots \\
+Electricity & 20 & 20 & 20 & 20 & 20 & \dots \\
 Warehouse Decorating \& Maintenance & 30 & 10 & 10 & 10 & 10 & \dots \\
 Employees & 100 & 100 & 150 & 200 & 200 & \dots \\
 Advertising & 30 & 30 & 30 & 30 & 30 & \dots \\
@@ -1211,38 +1884,72 @@ It is observed that the annual non-discounted profit stabilises at £75000.
 
 \subsection{Initial Capital Investment}
 
-It is observed that, in year 0, £215k of capital is required to offset initial costs. This will be provided by equity (seeking investors) and bank loans. Both have their own advantages and disadvantages. 
-For example, bank loans are much more "unforgiving", that is to say, regardless of how the company performs, it is obliged to make monthly/annual repayments. If the company fails to do this, it must declare bankruptcy. Private investment requires no such repayments. Investors make money on their investments in two ways: (i) the company makes enough money to pay dividends to shareholders and (ii) the company performs well financially, so their shares increase in value, and can be sold for a profit. 
-However, because investors have no guaranteed repayments, they tend to require a higher interest rate than bank loans (discussed in section [SECTIONHERE]). Because of this, the greater the proportion of initial investment sourced by equity financing is, the greater the effective discount rate is, which reduces the effect of future revenue on Net Present Value.
-Because of this, the business is seeking £100k in bank loans and £115k in equity financing. 
+In Year 0, £215k of capital is required for startup costs, and will be funded through both equity (seeking investors) and bank loans. \newline Bank loans are much more "unforgiving": if the company fails to do make repayments, it must declare bankruptcy. Private investment requires no such repayments. Investors make money on their investments through share appreciation and dividends, so require no fixed repayments. Because of this, they require a higher interest rate than bank loans (discussed in section \ref{DiscountRate}). This means that relying heavily on equity financing increases effective discount rate, reducing the effect of future revenue on Net Present Value.\newline As a balance, the business seeks £100k in bank loans and £115k in equity financing. 
 
 \subsection{Discount Rate}
 \subsubsection{Overview}
-The discount rate is required for investors to decide whether or not to invest in the business. It is assumed that an investor could make interest on capital, by not investing in a business, at annual interest rate (or discount rate) \(d\). So, the value of their capital \(P_0\) after \(t\) years, \(P(t)\), should they have chosen not to invest, is given by:
+The equity-only discount rate is used by investors to assess the viability of a business. It is assumed that an investor could make interest on capital, by not investing in a business, at annual interest rate (or discount rate) \(d\). So, the value of their capital \(P_0\) after \(t\) years, \(P(t)\), would be given by:
 
 \begin{equation}
     P(t)=P_0(1+d)^t
-\end{equation}
-
-so the "present value" \(P_0\) of money \(P(t)\) that is projected to be made \(P(t)\) years in the future, should they have chosen not to invest in the business, is given by:
+\end{equation} had they chosen not to invest. Therefore, the "present value" \(P_0\) of money \(P(t)\) they would own \(t\) years in the future, is given by:
 \begin{equation}
     P_0=\frac{P(t)}{(1+d)^t}
+\end{equation} so the projected returns must exceed \(\frac{P(t)}{(1+d)^t}\) if the business is to be considered a profitable investment.
+
+The choice of equity-only discount rate is made by investors when choosing whether or not to invest. Investing in a small start-up is riskier than investing in a large, established business, so the applied equity-only discount rate tends to be very high for start-ups (around 15-30\%).
+
+
+\subsubsection{Modelling Discount Rate}
+\label{DiscountRate}
+Two common approaches to model discount rate are: Equity-Only Discount Rate, and Weighted Average Cost of Capital (WACC).
+\paragraph{Equity-Only Discount Rate} \(\)\newline
+Using an Equity-Only Discount Rate, the discount rate applied to future cash flows is set by investors, ignoring debt interest from the bank. Therefore the Year 0 capital injection from the bank loan \(P\) and the annual debt repayments \(A\) in subsequent years must be included in the cash flow, and the remaining balance after \(t\) years \(B_t\) on the bank loan must be considered as a liability in the terminal value (discussed in section \ref{TermValue}). These are determined by the amortisation formula, shown in equation \ref{equ:amortisation}.
+
+\begin{equation}
+    A=\frac{Pr_d}{1-(1+r_d)^{-N}}, \qquad\qquad B_t=P(1+r_d)^t-A\frac{(1+r_d)^t-1}{r_d}
+    \label{equ:amortisation}
 \end{equation}
 
-So the projected payback on investments must exceed \(\frac{P(t)}{(1+d)^t}\) if the business is to be considered a profitable investment.
 
-The choice of discount rate is made by investors when choosing whether or not to invest. It depends hugely on the perceived level of risk. Investing in a small start-up is much higher risk than investing in a large, established business. Hence the applied discount rate tends to be very high for start-ups (around 15-30\%).
+
+
+
+% The annual repayment \(A\) on a loan of initial size \(P\) over a term \(N\) years that gathers interest at annual rate \(r_d\) is given by the amortisation formula:
+% \begin{equation}
+%     A=\frac{Pr_d}{1-(1+r_d)^{-N}}
+%     \label{equ:amortisation}
+% \end{equation} and the remaining balance \(B_t\) after \(t\) years is given by:
+
+% \begin{equation}
+%     B_t=P(1+r_d)^t-A\frac{(1+r_d)^t-1}{r_d}
+% \end{equation}
+% Using an equity-only discount rate,  Additionally, the terminal value (discussed in section \ref{TermValue}) must include the remaining loan balance as a liability.
+
+
+\paragraph{Weight Averaged Cost of Capital (WACC)} \(\) \newline
+Another approach is to weight the bank loan interest rate \(r_d\) and the equity-only discount rate \(r_e\) to produce an "effective" discount rate, or WACC, used in NPV calculations. The WACC is given by:
+\begin{equation}
+    \text{WACC}=\frac{D}{D+E}r_d+\frac{E}{D+E}r_e
+\end{equation}
+where \(D\) is the initial capital of the bank loan, and \(E\) is the capital investment from equity financing. 
+
+Using WACC, it is not necessary to model the loan an the debt repayments as cash flows , or the remaining balance as a liability; these are all captured by the use of WACC. 
+
+Therefore, for the sake of simplicity, WACC is used in this model, with rates:
+\begin{equation}
+    r_d=15\% \qquad r_e=20\%
+\end{equation}
+
+The effect of a variation in discount rate is analysed in Sections \ref{NPVProfile} and \ref{DPS}.
 
 \subsubsection{Terminal Value}
-The "left-over" value of a business after a fixed term of \(t\) years is named the "Terminal Value", and is given by \(\text{TV}_t\). If the cash flow (positive cash flow corresponding to profit) in year k is given by \(\text{CF}_k\), the terminal value is given by:
+\label{TermValue}
+The "left-over" value of a business after a fixed term of \(t\), the "Terminal Value", with cash flow (positive cash flow corresponding to profit) in year k, \(\text{CF}_k\), is given by:
 \begin{equation}
     \text{TV}_t=\frac{\text{CF}_{t+1}}{1+d}+\frac{\text{CF}_{t+2}}{(1+d)^2}+\frac{\text{CF}_{t+3}}{(1+d)^3}+\dots
 \end{equation}
-If it can be assumed that annual cash flow \(\text{CF}\) is constant after \(t\) years, 
-\begin{equation}
-    \text{CF}_{t+1}=\text{CF}_{t+2}=\text{CF}_{t+3}=\dots=\text{CF}
-\end{equation}
-then the terminal value is given by:
+If cash flow can be assumed to be constant after \(t\) years, \(\text{CF}_{t+1}=\text{CF}_{t+2}=\text{CF}_{t+3}=\dots=\text{CF}\),
 
 \begin{equation}
     \text{TV}_t=\frac{\text{CF}}{1+d}+\frac{\text{CF}}{(1+d)^2}+\frac{\text{CF}}{(1+d)^3}+\dots = \sum_{k=1}^\infty \frac{\text{CF}}{(1+d)^k}
@@ -1251,51 +1958,15 @@ which can be rearranged to:
 \begin{equation}
     \text{TV}_t=\frac{\text{CF}}{d}
 \end{equation}
-NB: This is the undiscounted Terminal Value; to get the present value of \(\text{TV}_t\), it must be multiplied by \(\frac1{(1+d)^t}\).
+This is the undiscounted Terminal Value; to get the present value of \(\text{TV}_t\), it must be multiplied by \(\frac1{(1+d)^t}\).
 \begin{equation}
     \text{TV}_{t, \text{discounted}}=\frac{\text{CF}}{d}\times \frac 1{(1+d)^t}
     \label{equ:DTV}
 \end{equation}
-\subsubsection{Net Present Value}
-A running total cash flow is tabulated. This is discounted according to the year in which the money is made. The Net Present Value (NPV) at a given year is given by the discounted cumulative cash flow (a measure of capital) up to that year added to the discounted terminal value of the business at that year. It is observed, and can be proven, that according to this model, the NPV of a business is constant with time (it is a single value based on modelling assumptions), if tax is ignored. Tax introduces non-linearity into the model, and will be discussed at greater length in a later section.
-\subsubsection{Modelling Discount Rate}
-There are two common approaches to model discount rate. These are: Equity-Only Discount Rate, and Weighted Average Cost of Capital (WACC).
-\paragraph{Equity-Only Discount Rate} \(\)\newline
-When modelling using an Equity-Only Discount Rate, the discount rate applied to future cash flows is determined exclusively by investors. The equity-only discount rate \(r_e\) is typically in the range 15-30\% for small start-ups. 
-However, this does not take into account debt interest from the bank.  It can be shown that the annual repayment \(A\) on a loan of initial size \(P\) over a term \(N\) years that gathers interest at annual rate \(r_d\) is given by the amortisation formula:
-\begin{equation}
-    A=\frac{Pr_d}{1-(1+r_d)^{-N}}
-    \label{equ:amortisation}
-\end{equation}
-
-and the remaining capital remaining to be repayed after \(t\) years \(B_t\) is given by:
-
-\begin{equation}
-    B_t=P(1+r_d)^t-A\frac{(1+r_d)^t-1}r{}
-\end{equation}
-When modelling using an equity-only discount rate, the initial capital injection of the loan must be included in the cash flow in Year 0, and the annual debt repayments must be included in the cash flow from Year 1 onwards. Additionally, the terminal value must take the remaining capital of the loan into account as a liability.
-\paragraph{Weight Averaged Cost of Capital (WACC)} \(\) \newline
-Another method of modelling the discount rate is by weight-averaging the loan interest rate \(r_d\) and the equity-only discount rate \(r_e\) to produce an "effective" discount rate used in NPV calculations. The effective discount rate is given by:
-\begin{equation}
-    \text{WACC}=\frac{D}{D+E}r_d+\frac{E}{D+E}r_e
-\end{equation}
-where \(D\) is the initial capital of a the loan taken with a bank, and \(E\) is the capital investment from equity financing. 
-
-When modelling using WACC it is not necessary to model the inital capital of the loan, the annual debt repayments and the remaining capital of the loan as either cash flows or liabilities; these are all taken into account by the effective discount rate. 
-
-For these reasons, WACC is used in this model, with rates:
-\begin{equation}
-    r_d=15\%
-\end{equation}
-\begin{equation}
-    r_e=20\%
-\end{equation}
-\paragraph{Limitations} \(\) \newline
-For simplicity, it is assumed that a constant WACC discount rate is applied over time. This is based on three simplifying assumption: Firstly, it is assumed that the debt held with the bank is constant, and the business is only paying the interest on the loan; in reality, the loan would likely be paid off after \(N\) years in annual installments according to equation \ref{equ:amortisation}. Secondly, it is assumed that both the Equity-Only Discount Rate and the Loan Interest Rates are constant; in reality, it is likely that they would decrease over time as the business becomes more established to reflect a decreased risk in investing in the business. Thirdly, it is assumed that only the capital investments in Year 0 need to be financed. As can be seen in table \ref{tab:IE}, Year 1 is projected to run at a small loss, which must also be financed. This is neglected for simplicity, and is insignificant compared with other assumptions made in this model.
-
 
 \subsection{Tax}
-Tax is modelled according to UK corporation tax laws. Over a given year, the taxable income is the corporation's total income (revenue subtract allowable business expenses). Allowable business expenses include the cost of hiring employees, advertising, property hiring costs etc.). Depending on the terms of the loan, interest payments are sometimes included in allowable business expenses. For the sake of simplicity, and for the sake of creating a conservative estimate, this is not included in the model used. Annual taxable income up to £50000 is taxed at 19\%, and annual taxable income above £250000 is taxed at 25\%. Tax rate increases linearly with annual income between £50000 and £250000 from 19\% to 25\%. Hence the tax payed \(T\) on annual income \(I\) is given by:
+\label{Tax}
+Tax is modelled under UK corporation tax laws. For a given year, the taxable income revenue subtract allowable business expenses. Depending on the loan terms, interest payments are sometimes included in allowable business expenses. For simplicity and conservatism, they are not here. Iincome up to £50000 is taxed at 19\%, and annual taxable income above £250000 is taxed at 25\%. The tax rate increases linearly with annual income between £50000 and £250000 from 19\% to 25\%. Hence tax payed \(T\) on annual income \(I\) is given by:
 \begin{equation}
     T=
     \begin{cases} 
@@ -1305,9 +1976,21 @@ Tax is modelled according to UK corporation tax laws. Over a given year, the tax
     \end{cases}
 \end{equation}
 
-NB: This linearly increasing tax rate applies to all income, not just income between £50000 and £250000, like personal income tax would.
+NB: The marginal rate applies to total income, not just income between £50000 and £250000, like personal income tax would.
 
-UK corporation tax laws also allows losses in one year to be carried over to the next. For example, if a business makes a loss of £20000 in Year \(n\), and makes a profit of £60000 in Year \(n+1\), its taxable income in Year \(n+1\) is £40000. Losses can be carried over arbitrarily many years into the future.
+UK corporation tax law also allows losses in one year to be carried over to the next. For example, if a business makes a loss of £20000 in Year \(n\), and makes a profit of £60000 in Year \(n+1\), its taxable income in Year \(n+1\) is £40000. Losses can be carried over indefinitely.
+
+\subsubsection{Net Present Value}
+A running total cash flow is tabulated. This is discounted according to the year in which the money is made. The Net Present Value (NPV) at a given year is given by the discounted cumulative cash flow up to that year added to the discounted terminal value. In future years, once cash flow (including tax) stabilises, NPV remains constant. "NPV" refers to a this stabilised value.
+
+\paragraph{Assumptions} \(\) \newline
+For simplicity, it is assumed that a constant WACC discount rate is applied over time. This assumes:
+\begin{itemize}
+    \item The debt held with the bank is constant, and the business is only paying the interest on the loan; in reality, the loan would likely be paid off after \(N\) years,according to equation \ref{equ:amortisation}
+    \item Both the Equity-Only Discount Rate and the Loan Interest Rates are constant; in reality, both would decrease over time as the business becomes more established to reflect a decreased risk.
+    \item Only the capital investments in Year 0 need to be financed. As can be seen in Table \ref{tab:IE}, Year 1 is projected to run at a small loss, which must also be financed. This is neglected for simplicity, and is insignificant compared with other assumptions made in this model.
+\end{itemize}
+
 \subsection{Full Model}
 According to the assumptions and models, the full financial model is summarised in table \ref{tab:model}
 
@@ -1321,7 +2004,7 @@ WACC & 17.7\% &&&&&&&&\\
 Year & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & \dots \\
 \hline
 Warehouse Hire & 25 & 25 & 25 & 25 & 25 & 25 & 25 & 25 & \dots \\
-Heating \& Lighting & 20 & 20 & 20 & 20 & 20 & 20 & 20 & 20 & \dots \\
+Electricity & 20 & 20 & 20 & 20 & 20 & 20 & 20 & 20 & \dots \\
 Decorating \& Maintenance & 30 & 10 & 10 & 10 & 10 & 10 & 10 & 10 & \dots \\
 Employees & 100 & 100 & 150 & 200 & 200 & 200 & 200 & 200 & \dots \\
 Advertising & 30 & 30 & 30 & 30 & 30 & 30 & 30 & 30 &\dots \\
@@ -1346,12 +2029,13 @@ Discounted CCF& -215&-219&-194&-148&-109&-79.0&-56.8&-37.9& \dots \\
 \label{tab:model}
 \end{table}
 
-The Discouted Cumulative Cash Flow becomes positive in Year 10 (known as payback, discussed at greater length in analyses). After calculating the discounted Terminal Value once tax has stabalised according to equation \ref{equ:DTV}, it is found that the Net Current Value (NPV) is £68669. In other words, the business is viable under current assumptions.
+The Discounted Cumulative Cash Flow turns positive in Year 10 (payback; section \ref{DPS}). It is found that the Net Present Value (NPV) is £68669. Hence, the business is viable under these assumptions.
 
 \subsection{Analyses}
-Using Apps Script, the Google Sheets equivalent of Microsoft Excel's macros, the following analyses were performed. In general, one or more variables was changed, and another was observed, while all others were held constant according to the assumptions stated above.
+Using Apps Script, Google Sheets' equivalent of Excel macros, the following analyses were performed. In general, one variable was changed and another was observed, while all others were held constant according to the assumptions stated above.
 \subsubsection{NPV Profile}
-A common way of analysing a business' viability is by observing the effects on NPV of changing the discount rate, and by analysing the NPV-Discount Rate graph that this analysis produces (shown in Figure \ref{fig:NPV-Profile}.
+\label{NPVProfile}
+A common measure of a business' viability is the effect of changing the discount rate on NPV, and analysis of the NPV-Discount Rate graph that this analysis produces (shown in Figure \ref{fig:NPV-Profile}).
 
 \begin{figure}[H]
     \centering
@@ -1360,10 +2044,11 @@ A common way of analysing a business' viability is by observing the effects on N
     \label{fig:NPV-Profile}
 \end{figure}
 
-It is observed that the discount rate at which NPV is zero (Internal Rate of Return, IRR) is 22.3\%. Using WACC calculations, a discount rate of 17.7\% was projected. This shows that the business is viable even if the discount rate is slightly higher than projected. Furthermore the NPV profile shows that a small reduction in discount rate produces a large increase in NPV. This is encouraging, since discount rate is likely to decrease significantly as the business becomes more established, reflecting a decrease in perceived risk of equity investment.
+The discount rate at which NPV is zero (Internal Rate of Return, IRR) is 22.3\%. Using WACC calculations, a discount rate of 17.7\% was projected. This shows that the business is viable even under slightly higher discount rates than predicted. Furthermore the NPV profile shows that a small reduction in discount rate produces a large increase in NPV. This is encouraging, since discount rate is likely to decrease significantly as the business becomes more established.
 
 \subsubsection{Discounted Payback Sensitivity}
-It is also useful to investigate how payback (the time required for the project to recover initial investments from cash flows, or the time at which the cumulative discounted cash flow becomes positive) changes with discount rate (shown in figure \ref{fig:dis-pay-sen}.
+\label{DPS}
+It is also useful to investigate how payback (the time at which the cumulative discounted cash flow becomes positive) changes with discount rate (shown in Figure \ref{fig:dis-pay-sen}).
 
 \begin{figure}[H]
     \centering
@@ -1372,20 +2057,23 @@ It is also useful to investigate how payback (the time required for the project 
     \label{fig:dis-pay-sen}
 \end{figure}
 
-It is observed that Payback increases with Discount Rate (which is to be expected). However, since Payback (a measure of the business' early performance) is being measured, it is not affected by the expected decrease of discount rate with time. It is however observed that Payback does not change hugely constant over the realistic values of Discount Rate, only increasing from 9 to 13 years as Discount Rate increases from 15\% to 20\%. This is encouraging, since it shows a slight error in numerical assumptions does not hugely affect the projected business performance.
+Payback increases with Discount Rate. However, Payback only decreses a little over the realistic values of Discount Rate, only increasing from 9 to 13 years as Discount Rate increases from 15\% to 20\%. This suggests slight errors in numerical assumptions does not hugely affect the projected business performance.
 
 \subsubsection{Pricing}
+\label{PriceAnal}
 \paragraph{Price and Demand}\(\) \newline
-To determine the optimum price to charge per game, it is necessary to model how utility (games per year) will change with the price charged per game. For now, the increase of utility shown in Table \ref{tab:utility} is assumed to be constant.
 
-A linear demand-price curve was assumed - that is to say the demand (maximum number of games per year, given by \(Q_d\)) varies with price per game (\(P\) according to the equation:
+To determine the optimum price per game, the relationship between utility (games per year) and the price per game is modelled. The increase of utility shown in Table \ref{tab:utilityandemployees} is assumed to be constant.
+
+
+A linear demand-price curve was assumed: demand (maximum number of games per year, \(Q_d\)) varies with price per game, \(P\), according to the equation:
 \begin{equation}
     Q_d=a-bP
 \end{equation}
 for constants \(a, b\).
-As above, it was assumed that, charging £200 per game would yield a maximum of 2000 games per year, leading to:
+As above, it was assumed that, a price of £200 per game corresponds to a maximum of 2000 games per year, giving:
 \begin{equation}
-    Q_d=2000+b(200=P)
+    Q_d=2000+b(200-P)
 \end{equation}
 
 The demand-price elasticity \(\varepsilon\) is defined as:
@@ -1393,33 +2081,25 @@ The demand-price elasticity \(\varepsilon\) is defined as:
     \varepsilon=\frac{dQ_d}{dP}\cdot \frac PQ
 \end{equation}
 
-It can be shown that the above equations combine to give:
+% It can be shown that the above equations combine to give:
+% \begin{equation}
+%     Q_d=2000-\varepsilon\frac QP(200-P)
+% \end{equation}
+In a linear model, \(\varepsilon\) is varies. Instead, a reference value of elasticity \(\varepsilon'\) will be taken at \((Q_d=2000, P=200\)), and the gradient held constant. Hence, the demand-price curve reduces to:
 \begin{equation}
-    Q=2000-\varepsilon\frac QP(200-P)
+    Q_d=2000-10\varepsilon'(200-P)
 \end{equation}
-NB: \(\varepsilon<0\)
-In a linear model, \(\varepsilon\) is not constant. Instead, a reference value of elasticity \(\varepsilon'\) will be assumed at \((Q=2000, P=200\), the gradient found at this point, and held constant across the demand-price curve. Hence, the demand-price curve reduces to:
-\begin{equation}
-    Q=2000-10\varepsilon'(200-P)
-\end{equation}
-
-
-However, this model implies no limit on utility. In reality, there is a strict upper-limit on utility (only one game can be played at a time). 
-
-This upper limit is modelled as 3000 (corresponding to around 59 hour-long games per week, excluding public holidays)
-
-So, the final demand-price curve is given by:
+However, this model implies no limit on utility. In reality, only one game can be played at a time. This upper limit is modelled as 3000 games/year (corresponding to around 59 hour-long games per week, excluding public holidays), given a final demand-price curve of:
 
 \begin{equation}
-    Q=\min\{2000-10\varepsilon'(200-P), 3000\}
+    Q_d=\min\{2000-10\varepsilon'(200-P), 3000\}
 \end{equation}
+A reference value of elasticity \(\varepsilon=-1.1\) is chosen, since it represents a moderate price-sensitivity.\newline
 
-To begin, a reference value of elasticity \(\varepsilon=-1.1\) is chosen, since it represents a moderate price-sensitivity.
+The effect of a variation in reference elasticity is analysed in Section \ref{ElasticityAnal}
 
 \paragraph{Finding optimal price} \(\) \newline
-Using the model between the maximum number of games per year and price shown above, the relationship between the price per game and NPV is investigated. Again, the increase of utility shown in Table \ref{tab:utility} is assumed to be constant.
-
-The results are shown in Figure \ref{fig:pri-sen}.
+The variation of NPV with game price was investigated. The results are shown in Figure \ref{fig:pri-sen}.
 
 \begin{figure}[H]
     \centering
@@ -1430,13 +2110,14 @@ The results are shown in Figure \ref{fig:pri-sen}.
 
 It is observed that, given \(\varepsilon'=-1.1\), £200 per game is the price that maximises NPV. 
 
-It is also observed that, for the linear left-hand most section of the graph (corresponding to constant utility of 3000 games per year), NPV is hugely negative. This implies that attempting to set the price per game such that the facility is running at capacity is a very poor decision
 
-It is lastly that NPV is only positive for prices between £160 and £240 per game (to the nearest £10). Given how small this range of price values is, this demonstrates the importance of this analysis.
+The linear left-most section of the graph corresponds to a constant utility of 3000 games per year. In this section, NPV is hugely negative. Therefore, attempting to setting the game price such that the facility is running at capacity is a very poor decision.
+
+NPV is only positive for prices between £160 and £240 per game (to the nearest £10). Given how narrow this range of is, this demonstrates the importance of this analysis.
 
 \paragraph{Utility Sensitivity}\(\) \newline
-It was estimated that the maximum number of games per year would be 2000 when the price was £200 per game. The effect on NPV of a small error is this estimate was investigated.
-Price per game was held constant, maxmimum games per year was varied and the resulting NPV tabulated. The results are shown in Figure \ref{fig:uti-sen}.
+\label{UtilityAnalFixedPrice}
+It was assumed that the maximum number of games per year would be 2000 when the price was £200 per game. The effect of a small error is this estimate was investigated. Price per game was held constant, maximum games per year was varied and the resulting NPV was tabulated. The results are shown in Figure \ref{fig:uti-sen}.
 
 \begin{figure}[H]
     \centering
@@ -1445,11 +2126,11 @@ Price per game was held constant, maxmimum games per year was varied and the res
     \label{fig:uti-sen}
 \end{figure}
 
-It is observed that NPV is only positive for a utility of over 1900 games per year (rounded to the nearest 50). This is very close to the estimated 2000 games per year.
-This demonstrates the importance of a high utility, and justifies the high advertising budget. 
+NPV is only positive for above 1900 games per year (rounded to the nearest 50) This is very close to the estimated 2000 games per year: a high utility is critical, justifying the high advertising budget. 
 
 \paragraph{How Optimal Price varies with elasticity} \(\) \newline
-This process was repeated for reference values of elasticity \(\varepsilon'\) between -0.5 (very unresponsive to price change) and -3 (very price-sensitive). Since the effect on NPV of variations on two variables (reference elasticity and price per game) is being measured, it would be possible to create a 3D surface to demonstrate this. However, since reference elasticity is only being varied in order to assess the sensitivity of the model to errors in numerical assumptions, i.e. it is not something that can be changed in order to maximise NPV, it is only useful to tabulate the optimal price per game (price that maximises NPV) and plot it against reference elasticity. This is shown in Figure \ref{fig:opt-cos-sen}.
+\label{ElasticityAnal}
+This process was repeated for reference elasticity \(\varepsilon'\) between -0.5 (very price-insensitive) and -3 (very price-sensitive). Since the effect on NPV of changing two variables (reference elasticity and price per game) is being measured, it would be possible to create a 3D surface to demonstrate this. Since reference elasticity is only being varied in order to assess the sensitivity of the model to errors in numerical assumptions (it is not something that can be changed in order to maximise NPV), it is only useful to tabulate the optimal price per game (price that maximises NPV) and plot this against reference elasticity. This is shown in Figure \ref{fig:opt-cos-sen}.
 
 \begin{figure}[H]
     \centering
@@ -1458,11 +2139,11 @@ This process was repeated for reference values of elasticity \(\varepsilon'\) be
     \label{fig:opt-cos-sen}
 \end{figure}
 
-It is likely that the elasticity will be between -0.8 and -1.5. It is observed that, over this range of reference elasticity, the optimal cost is almost constant, and very close to £200 per game.
+Elasticity is likely to be between -0.8 and -1.5. It is observed that, over this range of reference elasticity, the optimal cost is almost constant, and very close to £200 per game.
 
 \subsubsection{Limitations}
 
-In general, one or more variables was changed, and another was observed, while all others were held constant according to the assumptions stated above. It is likely that, by completing a sweep, changing all values at once to create a multi-dimensional space model of all financial values, optima of NPV will be found that were missed in the above analysis, either by brute force or multi-dimensional gradient descent.
+In general, one or more variables were changed, and another was observed, while all others were held constant according to the assumptions stated above. It is likely that, by completing a sweep, changing all values at once to create a multi-dimensional surface model of all financial values, optima of NPV will be found that were missed in the above analysis, either by brute force or multi-dimensional gradient descent.
 
 \newpage
 
@@ -1470,6 +2151,13 @@ In general, one or more variables was changed, and another was observed, while a
 % Appendix
 % Essential content that interrupts the flow of the document can be placed here, e.g. technical drawings, detailed lists of equations used, etc.
 \addcontentsline{toc}{section}{Appendix}
+
+
+
+
+
+
+
 \section*{Appendix}
 \fancyhead[C]{Group}
 \newpage
@@ -1477,4 +2165,50 @@ In general, one or more variables was changed, and another was observed, while a
 \printbibliography{biblio}
 
 
+\paragraph{Heating cost assumptions}\(\) \newline
+\label{assumptions}
+It is also assumed that, when players enters the warehouse every hour, 50\% of the air is evacuated and replaced, and no air is evacuated when the game is being played. The first assumption is likely a significant overestimate, and the second a modest underestimate, resulting in a conservative estimate.\newline
+
+It is further assumed that the height of the warehouse is 6 metres, and that the warehouse is square. 
+\begin{equation}
+    \dot Q=U_wA_w\Delta T+U_rA_r\Delta T+U_fA_f\Delta T +\text{ACH}\cdot \frac{\rho c_p V\Delta T}{3600}
+\end{equation}
+\begin{equation}
+    \text{Floor Area}=\text{Roof Area}=6800 \text{ft}^2=632m^2
+\end{equation}
+Assume floor plan to be square, and walls to be \(6m\) tall:
+\begin{equation}
+    \text{Wall Length}=\sqrt{632m^2}=25.1m
+\end{equation}
+\begin{equation}
+    \text{Total Wall Area}=4*25.1m*6m=603m^2
+\end{equation}
+\begin{equation}
+    \text{Total Volume}=632m^2\times6m=3792m^3
+\end{equation}
+Assuming the average daytime temperature in London is \(10 ^\circ C\), and the desired temperature is \(20^\circ C\), \(\Delta T=10^\circ C\):
+\begin{equation}
+    \dot Q=U_wA_w\Delta T+U_rA_r\Delta T+U_fA_f\Delta T +\text{ACH}\cdot \frac{\rho c_p V\Delta T}{3600}
+\end{equation}
+\begin{equation}            =0.78\times603\times10+0.48\times632\times10+0.54\times632\times10+0.5\cdot \frac{1.225\times1005\times3792\times10}{3600}
+\end{equation}
+\begin{equation}  
+    \label{app:heating-calcs}
+    =17.6\text{kW}
+\end{equation}
+\newpage
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/High-Level/Flow2.png}
+    \caption{Flow Chart Describing High-Level Mode Changes}
+    \label{fig:FlowBig}
+\end{figure}
+\label{risk-assessment}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/risk-assessment}
+    \caption{Quantitative Risk Assessment}
+    \label{fig:risk-assessment}
+\end{figure}
 \end{document}
