@@ -870,6 +870,8 @@ The gimbal turret uses two actuator types as mentioned previously. The MG90S ser
 
 %%%%%%%%%----------------end of Hardware---------------%%%%%%%%%
 
+\newpage
+
 \section{Map} \label{map}
 \fancyhead[C]{Thomas August}
 In our game, we will have humans and drones interacting with each other in close proximity within the same arena, and hence we need to design a map for this arena which is accessible to both players and drones and allows the two to safely interact with each other. We discussed this as a group, considering player enjoyment, game complexity, drone localisation, and drone movement, and concluded that a floor to ceiling maze design would be best.
@@ -940,7 +942,7 @@ We plan to use industrial safety nets to separate the players from the drones as
 \newpage
 
 \section{Network and Communications}
-Ritchie
+\fancyhead[C]{Richard Usherwood}
 \subsection{Overview}
 Network and Communications are not strictly necessary for a single wave of the game. Without them, each drone would act according the the information that it had gathered (location of the players, location of other drones etc.), and would not have access to the information that other drones had gathered. 
 There are a couple of advantages to handling information without a central server: 
@@ -982,7 +984,7 @@ A Wi-Fi connection has much lower latency than Bluetooth, and has a much higher 
 For these reasons, Wi-Fi is selected as the networking medium between the drones and the server. The server will be a desktop computer (with Wi-Fi capability), and the drones, helmets and vests all contain a Raspberry Pi 4, with Wi-Fi capability.
 
 \newpage
-\section{High Level Control} % Ritchie
+\section{High Level Control} \label{high level control} % Ritchie
 \fancyhead[C]{Richard Usherwood} % Ritchie
 \subsection{Context}
 The objective of the High Level Control Protocol is to create a series of algorithms which take game states (positions of human players, positions of drones etc.) as their inputs, and give a high-level behaviour of a drone as their output. This is achieved through splitting the drones' behaviour into several "modes", in which some information and computing is performed in the server, and transmitted to the drones via Wi-Fi, and some information storage and computing is performed onboard the drone, according to an Information Responsibility Protocol.
