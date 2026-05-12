@@ -56,7 +56,7 @@
 \newacronym{imu}{IMU}{Inertial Measurement Unit}
 \newacronym{npv}{NPV}{Net Present Value}
 \newacronym{wacc}{WACC}{Weight Averaged Cost of Capital}
-\newacronyn{tv}{TV}{Terminal Value}
+\newacronym{tv}{TV}{Terminal Value}
 \newacronym{irr}{IRR}{Internal Rate of Return}
 \printglossaries
 \newpage
@@ -69,11 +69,7 @@
 % - Give a short overview of report structure
 \section{Introduction}
 \fancyhead[C]{Rishabh Luthra}
-\subsection{An awesome Acronym}
-Droney Droney
-\newpage
 
-\section{Literature Review}
 \newpage
 
 \section{Gameplay} % Ritchie
@@ -1159,10 +1155,9 @@ The flow charts shown in Figures \ref{fig:FlowSearch}, \ref{fig:FlowTrack} and \
 
 
 \newpage
-\section{Mid Level Control} % Tommy, Rishabh
 \fancyhead[C]{Rishabh Luthra}
-\subsection{Visual Perception and Player Tracking} % Rishabh
-\subsubsection{Context}
+\section{Visual Perception and Player Tracking} % Rishabh
+\subsection{Context}
 
 The fundamental objective of the autonomous multiagent system is to actively compete against human players in a dynamic laser environment. To play the game effectively, the drones require a reliable way to identify and track opponents whilst navigating through the maze environment. While pathfinding algorithms can navigate the fixed geometry of a maze, human players represent highly dynamic variables. Therefore, a real-time perception system is required to continuously locate the targets, maintain visual lock, and output kinematic commands to the drone's flight controller and gimbal.
 
@@ -1173,7 +1168,7 @@ This section details the design and implementation of this perception system. To
     \item Maintaining a continuous state estimate of the target's trajectory to handle temporary line-of-sight occlusions caused by walls and obstacles.
 \end{itemize}
 
-\subsubsection{Sensor Selection} % (Rishabh - can be moved somewhere else, just put it here to make sure it's covered)
+\subsection{Sensor Selection} % (Rishabh - can be moved somewhere else, just put it here to make sure it's covered)
 
 % To Do:
 % - check references
@@ -1287,7 +1282,7 @@ This scenario highlights the advantage of the stereo system with the stereo esti
 }
 The passive stereo system resolves this by estimating depth via horizontal pixel disparity ($d$) and provides a \textbf{robust} depth estimate. Crucially, its reliance on ambient light means that there will be no interference with the infrared game mechanics.  
 
-\subsubsection{Computer Vision Architecture}
+\subsection{Computer Vision Architecture}
 The hardware of this system is comprised of a camera array consisting of three cameras. It features a high-resolution central RGB camera with two greyscale sensors either side that are dedicated to computing the stereoscopic disparity depth map. These visual streams are sequentially processed to meet both the tracking objectives described above: reliably distinguishing a human player from the background to lock onto the correct target, and calculating the target's 3D Cartesian coordinates relative to the drone's local frame. Together, these stages form the sensor pipeline (Figure \ref{fig:pipeline_diagram}). 
 
 \begin{figure}[htbp]
@@ -1359,7 +1354,7 @@ Note that the visualisations in Figure \ref{fig:perception_system_overview} were
 % \end{figure}
 
 
-\subsubsection{Data Preprocessing}
+\subsection{Data Preprocessing}
 To accelerate the training process, we utilised a pre-trained \gls{yolo} model initialised using baseline weights on the \gls{coco} dataset. Leveraging a pre-trained model provides the neural network with a foundational understanding on geometric features such as edges and spatial gradients. This drastically reduces the time required for the network to converge. However, these standard weights are insufficient for our case because the \gls{coco} dataset consists primarily of eye-level photography whereas the drone requires aerial imagery. To achieve reliable target locking from the drone's pitch angles, the model required fine-tuning on specific drone imagery. As a result, the VisDrone2019-DET dataset was selected to provide this top-down perspective.
 
 The VisDrone dataset contains numerous additional classes such as vehicles and bicycles. Training the network to recognise these would waste computational resources and risk introducing false positives during operation. To optimise the dataset for the laser tag environment, a preprocessing script was developed to filter the dataset. The script parsed every annotation file and discarded all bounding box data that did not correspond to Class 0 (pedestrian) or Class 1 (people). As a result, the network can allocate its full capacity to identifying human targets only. Subsequently, these two remaining classes were merged into a single class. Distinguishing between a pedestrian and a person provides no operational advantage for our system. 
@@ -1375,7 +1370,7 @@ The VisDrone dataset contains numerous additional classes such as vehicles and b
 
 % For future physical development, this pipeline can be transitioned from synthetic data to empirical data. Rather than relying on Unity generation, the physical drone could be flown manually through the laser tag area to record video footage. Frames extracted from this footage would be labelled to capture the ambient lighting, wall geometry and physical equipment worn by the players. Performing this final fine-tuning pass essentially brings the simulation closer to the real world and guarantees that the network is calibrated to the operational environment.
 
-\subsubsection{Model Training and Deployment}
+\subsection{Model Training and Deployment}
 Following data preparation, the pre-trained YOLOv8n model was fine-tuned on the filtered VisDrone dataset. Training was conducted via Google Colab, utilising an NVIDIA T4 Tensor Core GPU. The training phase was configured using a $640 \times 640$ pixel input resolution to ensure a balance between the detail necessary for target detection and maintaining low-latency inference on the drone's onboard hardware.
 
 Once the network had converged, the final weights were exported to the \gls{onnx} format that allowed the model trained in Python to be imported directly into Unity. Within the simulation, the model is executed using Unity Sentis, a tensor engine used to run neural networks natively within the simulated environment.
@@ -1407,7 +1402,7 @@ While an F1 score of 0.53 and an mAP50 of 0.49 are lower than typical detection 
     \label{fig:visdrone_val_preds}
 \end{figure}
 
-\subsubsection{Baseline Evaluation}
+\subsection{Baseline Evaluation}
 
 To evaluate the operational viability of the VisDrone trained model against the system's design requirements, an automated orbital benchmark script was developed for the Unity simulation. The script positioned a virtual camera in a spherical coordinate system around a human target, sweeping through a series of yaw angles ($0^\circ$ to $360^\circ$) and pitch angles ($0^\circ$ to $80^\circ$). At each coordinate, the network's prediction was compared to the Ground Truth bounding box (derived from the target's vertex projections) to classify the result as a True Positive (TP), False Positive (FP), or False Negative (FN) based on standard Intersection over Union (IoU) and confidence thresholds.
 
@@ -1483,7 +1478,7 @@ Under daylight conditions (Figure \ref{fig:benchmark_daylight}), the model demon
 
 In contrast, testing under low-light conditions (Figure \ref{fig:benchmark_lowlight}) reveals a clear limitation in the model. The confidence contour map (Figure \ref{fig:benchmark_lowlight_confidence}) shows generally low prediction certainty across the grid. The classification scatter plot (Figure \ref{fig:benchmark_lowlight_classification}) reflects this drop in performance with a high concentration of False Negatives replacing the True Positives seen in the daylight benchmark. This indicates that the model struggles to identify the target when ambient lighting is reduced. For the scope of this project, this confirms that the baseline VisDrone model is unsuitable for the target laser tag arena. To resolve this lighting gap, a synthetic dataset must be generated to train a model on the specific environment conditions it will face. 
 
-\subsubsection{Synthetic Dataset Generation}
+\subsection{Synthetic Dataset Generation}
 % maybe mention the lack of publicly available datasets of laser tag footage and hence this bolsters the requirement of a synthetic dataset
 
 To resolve the domain gap identified during baseline evaluation, an automated data generation pipeline was developed within the Unity simulation. The objective was to algorithmically render and annotate a dataset consisting of 5,000 frames tailored to the lighting constraints and textures of the laser tag arena.
@@ -1530,7 +1525,7 @@ To ensure the resulting bounding boxes only encompass visually exposed regions, 
 
 \newpage
 
-\subsubsection{Synthetic Model Training and Deployment}
+\subsection{Synthetic Model Training and Deployment}
 
 To quantify the performance of the synthetic data pipeline and ensure that the network had successfully learned the target features, training metres were monitored across the 50 epoch run. The resulting loss and performance curves are detailed in Figure \ref{fig:synthetic_training_results}.
 
@@ -1574,7 +1569,7 @@ Unlike the baseline VisDrone model, which relied on high-altitude silhouettes, t
 \end{figure}
 
 
-\subsubsection{Synthetic Model Evaluation and Comparison to VisDrone Model}
+\subsection{Synthetic Model Evaluation and Comparison to VisDrone Model}
 
 To evaluate the synthetic model, we conducted a low-light orbital benchmark that is identical to the one completed for the VisDrone model. This test replicates the environmental constraints under which the VisDrone model experienced detection failure.
 
@@ -1616,7 +1611,7 @@ As shown in the detection curve (Figure \ref{fig:occlusion_test}), the VisDrone 
 
 In contrast, the synthetic model demonstrates a more stable detection decay curve. It maintains a confidence score above 0.9 up to 35\% occlusion and crosses the 0.5 threshold at approximately 68\% occlusion. This data suggests that the synthetic domain randomisation pipeline trained the neural network to classify partial human geometry. By learning to identify isolated features, such as an exposed shoulder or an extended arm, the synthetic model addresses the occlusion limitations observed in the Visdrone model, offering greater reliability for deployment in environments with physical barricades.
 
-\subsubsection{3D Coordinates via Sensor Fusion}
+\subsection{3D Coordinates via Sensor Fusion}
 We use sensor fusion in order to bridge the gap between the 2D \gls{yolo} bounding box and the stereoscopic depth map to resolve the 3D Cartesian coordinates of the player. We begin with the geometric centroid ($x_i, y_i$) of the bounding box in pixel coordinates. Because the central RGB camera and stereo cameras are synchronised, this coordinate corresponds to a point on the depth map. 
 
 If this centroid lies on a gap in the target's posture, a single pixel sample of the depth map may erroneously return the distance to the background wall rather than the player itself. In order to prevent this, the system samples a $N \times N$ kernel of pixels around the centroid and a median filter is applied to ensure that the output reflects the true target distance. 
@@ -1703,7 +1698,7 @@ which can be expressed in matrix representation as:
     }
 \end{equation}
 
-\subsubsection{State Estimation and Predictive Tracking}
+\subsection{State Estimation and Predictive Tracking}
 Although we are able to obtain the 3D global coordinates of the player ($P_w$) using the kinematic transformations above, the raw measurements will be inherently noisy due to stereoscopic depth jitter and \gls{yolo} bounding box fluctuations. In addition, the arena contains physical walls and objects that can cause temporary occlusions. As a result, we cannot rely solely on the raw visual data and must maintain a state estimate of the player's position.
 
 In order to achieve this, we implemented a Linear Kalman Filter to maintain a continuous, smoothed estimate of the player's position. The filter operates on a constant velocity model, allowing us to project the player's trajectory during periods of occlusion.
