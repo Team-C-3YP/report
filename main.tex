@@ -539,11 +539,9 @@ Voltage regulation & Pololu D24V90F5 5 V regulator & Steps battery voltage down 
 \end{tabularx}
 \end{table}
 
-%%%%%Figure: Perhaps include an image of the power system layout
-
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1\textwidth]{Power System Map.png}
+    \includegraphics[width=0.75\textwidth]{Power System Map.png}
     \caption{General Power Systems Layout}
     \label{fig:Power_Systems}
 \end{figure}
@@ -593,16 +591,16 @@ Approximate cost & From \$35, depending on RAM option & From \$45, depending on 
 \end{tabularx}
 \end{table}
 
-Two main Rasperry Pi single-board computers were considered, the Raspberry Pi 4 Model B and the Raspberry Pi 5 - specs are shown in Table~\ref{tab:raspberrypi_comparison}.
-
-Despite the strong performance offered by the Raspberry Pi 5, its additional computing capabilities were not considered important as the project was using pre-trained models rather than training onboard. The \textbf{Raspberry Pi 4 Model B} was chosen as the onboard computer as it provided a good balance between processing, cost and integration. In addition, it provided the required Wi-Fi, GPIO, USB, and camera interfaces, while being easier to power and package inside the drone.
-
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.5\textwidth]{Hardware/Raspberry Pi 4 Model B.png}
     \caption{Raspberry Pi 4 Model B}
     \label{fig:Raspberry Pi 4 Model B}
 \end{figure}
+
+Two main Rasperry Pi single-board computers were considered, the Raspberry Pi 4 Model B and the Raspberry Pi 5 - specs are shown in Table~\ref{tab:raspberrypi_comparison}.
+
+Despite the strong performance offered by the Raspberry Pi 5, its additional computing capabilities were not considered important as the project was using pre-trained models rather than training onboard. The \textbf{Raspberry Pi 4 Model B} was chosen as the onboard computer as it provided a good balance between processing, cost and integration. In addition, it provided the required Wi-Fi, GPIO, USB, and camera interfaces, while being easier to power and package inside the drone.
 
 \paragraph{Communication Interface}
 
@@ -702,8 +700,6 @@ The second and third concepts continued to investigate into symmetrical quadroto
     \label{fig:Model 2 and Model 3}
 \end{figure}
 
-This led to a complete change in direction for the final design: a modular mirrored layout, where the rotor arms are separate from the main body and secured using linkage parts and bolts. With a size of 580x420x260mm, the body, arms, linkages, and mounts are to be manufactured separately to ensure easy assembly. The key design areas are the central main body, rotor arms and motor mounts, and turret/gimbal assembly - at which we will go into detail in the following sections.
-
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.6\textwidth]{Hardware/Final Model (un assembled).png}
@@ -711,9 +707,9 @@ This led to a complete change in direction for the final design: a modular mirro
     \label{fig:ModelFinal}
 \end{figure}
 
-\subsubsection{Main Body Design}
+This led to a complete change in direction for the final design: a modular mirrored layout, where the rotor arms are separate from the main body and secured using linkage parts and bolts. With a size of 580x420x260mm, the body, arms, linkages, and mounts are to be manufactured separately to ensure easy assembly. The key design areas are the central main body, rotor arms and motor mounts, and turret/gimbal assembly - at which we will go into detail in the following sections.
 
-The main body is composed of three main parts: the top hull, the bottom hull, and the electronics basket.
+\subsubsection{Main Body Design}
 
 \begin{figure}[htbp]
     \centering
@@ -721,6 +717,8 @@ The main body is composed of three main parts: the top hull, the bottom hull, an
     \caption{Main Body}
     \label{fig:Main Body}
 \end{figure}
+
+The main body is composed of three main parts: the top hull, the bottom hull, and the electronics basket.
 
 The \textbf{top hull} forms an upper protective cover. It acts as a shield to the internal electronics from direct contact while simultaneously ensure all components are inside. It is designed to give the drone a smooth external shape which helps avoid a bulky appearance and gives the drone a more refined final form.
 
@@ -731,6 +729,8 @@ The \textbf{electronics basket} acts as a removable internal frame used to hold 
 All three body sections are held together using \textbf{bolt fasteners}. This may not be an optimal fastening method, however, is a reasonable choice for the current design stage given they are simple, low-cost, and make the body easier to assemble or disassemble.
 
 There also includes a central opening that passes through the bottom hull and electronics basket for the gimbal/turret assembly. The electronics basket includes a dedicated gimbal/turret mounting feature, where the servo connecting the basket and the gimbal/turret may be installed.
+
+The values in Table~\ref{tab:main_body_mass_estimate} were estimated from the Fusion 360 CAD model using assigned ABS material properties. Given Fusion 360 gives a solid CAD mass, this is not expected to represent the final manufactured mass as parts would be 3D printed with partial infill. The infill assumptions provide a more realistic approximation of the printed body mass - which reduces the main body assembly from 2532.6g to approximately 625.1g. Note that this value does not account for wall thickness, slicing setting and print orientation.
 
 \begin{table}[htbp]
 \centering
@@ -749,8 +749,6 @@ Electronics basket & 604.322 g & 30\% & 181.3 g \\
 \bottomrule
 \end{tabularx}
 \end{table}
-
-The values in Table~\ref{tab:main_body_mass_estimate} were estimated from the Fusion 360 CAD model using assigned ABS material properties. Given Fusion 360 gives a solid CAD mass, this is not expected to represent the final manufactured mass as parts would be 3D printed with partial infill. The infill assumptions provide a more realistic approximation of the printed body mass - which reduces the main body assembly from 2532.6g to approximately 625.1g. Note that this value does not account for wall thickness, slicing setting and print orientation.
 
 \begin{table}[htbp]
 \centering
@@ -785,6 +783,10 @@ The \textbf{blade guards} surround the propeller area and acts as a protective s
 
 The \textbf{linkage parts} connect the rotor arms to the electronics basket. These small parts allow the arms to be assembled separately from the main body and are secured using bolt fasteners. This type of assembly allows damaged arm or linkage to be replaced without rebuilding the full drone body. As these parts transfer load between arms and body, they are treated as vital structural components and will use higher infill then the rest of the body.
 
+The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fusion 360 CAD model using the properties assigned of ABS material. Just like the main body, the Fusion 360 reports the solid-body CAD mass, therefore we estimate the real manufactured mass using base infill assumptions. Note that this estimate does not account for wall thickness, slicing settings, print orientation, or bolt fastener mass.
+
+Note that the measurements are maximum lengths on each axis, rather than rectangular measurements. The blade guards and rotor arms have circular geometry around the propeller area - these measurements are useful for checking propeller clearance but should not be interpreted as box-shaped component dimensions.
+
 \begin{table}[htbp]
 \centering
 \caption{Estimated printed mass of one side of the rotor-arm and blade-guard assembly.}
@@ -808,8 +810,6 @@ Front lower linkage & 3.7 g & 80\% & 3.0 g \\
 \end{tabularx}
 \end{table}
 
-The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fusion 360 CAD model using the properties assigned of ABS material. Just like the main body, the Fusion 360 reports the solid-body CAD mass, therefore we estimate the real manufactured mass using base infill assumptions. Note that this estimate does not account for wall thickness, slicing settings, print orientation, or bolt fastener mass.
-
 \begin{table}[htbp]
 \centering
 \caption{Maximum length of one side of the rotor-arm and blade-guard assembly}
@@ -830,8 +830,6 @@ Front lower linkage & 40.00 & 20.00 & 5.00 \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-Note that the measurements are maximum lengths on each axis, rather than rectangular measurements. The blade guards and rotor arms have circular geometry around the propeller area - these measurements are useful for checking propeller clearance but should not be interpreted as box-shaped component dimensions.
 
 \subsubsection{Turret/Gimbal Design}
 \label{Turret}
