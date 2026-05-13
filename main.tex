@@ -69,6 +69,27 @@
 % - Give a short overview of report structure
 \section{Introduction}
 \fancyhead[C]{Rishabh Luthra}
+The UK leisure market is currently defined by a distinct consumer trend: a frugality in routine choices paired with a willingness to invest in high-value experiences. This shift drives a growing demand for immersive environments that offer real-time interactivity and integrate the strategic depth of video games into the physical world. 
+
+To meet this demand, we present a novel laser tag game where human players cooperate to compete against a team of autonomous, multi-agent drones. From a user perspective, the system aims to provide an engaging, safe, and highly interactive experience. Players navigate through a purpose-built indoor maze, constructed from 5-metre high walls, to complete dynamic objectives. The project is defined by strict physical and safety boundaries to ensure a low-risk environment; the arena features a dividing net that separates the drones flying overhead from the human players below. Designed with a $1200 \text{J}$ energy absorption capacity, this industrial netting provides a safety factor of $5.1$ against a $4 \text{kg}$ drone in free-fall. As a result, this mitigates the risk of human-drone collisions without diminishing game immersion.
+
+From a drone perspective, the primary goal is to achieve autonomy and coordinated teamwork within a confined environment. The drones have to navigate the maze rapidly and safely, avoiding collisions with the environment and other drones, while coordinating their actions to serve as a balanced and intelligent opponent to the human players. They must also autonomously detect and track moving human targets under low-light conditions, maintaining spatial awareness even during temporary visual occlusions. 
+
+Since off-the-shelf platforms lack the necessary flexibility, payload integration, and component protection for such close-proximity indoor operations, a custom modular quadrotor airframe was developed. The ABS and PLA 3D-printed chassis features integrated blade guards to ensure operational continuity during minor wall collisions. To satisfy a $2:1$ thrust-to-weight ratio for a $4 \text{kg}$ maximum takeoff mass, the propulsion system utilises BrotherHobby Avenger 2806.5 1300KV brushless motors paired with 8x4x3 polycarbonate propellers, driven by a 4S 5000mAh Lithium Polymer battery to sustain approximately 10 minutes of active flight endurance.
+
+For coordination, the system relies on an IEEE 802.11ac Wi-Fi communications framework linking the onboard drone hardware to a central server. The server manages the high-level game logic, evaluating the global state to dynamically transition individual drones through specific operational modes such as Search, Track, Shoot, and Movement. 
+
+\newpage
+
+Each drone is equipped with an OAK-D Lite passive stereoscopic camera mounted on a custom 3-axis tracking gimbal, which kinematically decouples the camera from the drone’s flight attitude to maintain continuous target lock. Visual data is ingested by a YOLOv8-nano (YOLOv8n) convolutional neural network. To overcome the domain gap caused by the arena's low-light conditions and frequent target occlusions, this model was trained on a synthetic dataset created within Unity.
+
+Because active visual sensors would interfere with the game's infrared mechanics, and monocular depth estimation fails when a human target alters their posture, target depth is extracted passively via stereoscopic horizontal pixel disparity. This raw spatial data is smoothed using a Linear Kalman Filter, operating on a Discrete White Noise Acceleration (DWNA) model, to provide continuous, predictive 3D state estimations of the players. 
+
+These global coordinates directly inform the drone's local flight control algorithms. Search mode utilises a hybrid Breadth-First Search (BFS) region-allocation and lawnmower trajectory algorithm to systematically scan the arena. When rapid transit is required, flight control is handed over to a Reinforcement Learning (RL) policy trained offline in the Isaac Lab physics simulator, outputting body thrust and moment commands. Furthermore, an Artificial Potential Field (APF) controller handles real-time collision avoidance by computing repulsive gradients from walls and other agents, converting them into evasive manoeuvrers.
+
+This report details the design and business integration of the system. We begin by outlining the core gameplay mechanics and overall system architecture, followed by the mechanical and electronic design of the drone and player hardware. The software architecture is then explored in detail, encompassing the computer vision pipeline for visual perception, local flight controllers for path planning and movement, and the high-level game logic coordinated by a central server. Finally, the technical development is supported by an evaluation of broader engineering considerations, including technology strategy, project financing, and health and safety. These considerations are validated by a quantitative risk assessment and a financial model confirming the commercial feasibility of the enterprise.
+
+
 
 \newpage
 
