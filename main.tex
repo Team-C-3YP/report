@@ -171,7 +171,7 @@ The project was carried out mainly through simulation; the hardware design was d
 \centering
 \caption{Summarized starter design criteria for the drone platform.}
 \label{tab:starter_design_criteria}
-\renewcommand{\arraystretch}{1.15}
+\renewcommand{\arraystretch}{1}
 \begin{tabularx}{\textwidth}{@{} l X @{}}
 \toprule
 \textbf{Design Parameter} & \textbf{Target / Requirement} \\
@@ -190,7 +190,6 @@ Safety requirement & Safe indoor operation, protected moving parts, and stable l
 Maintainability requirement & Easy maintenance with cheap replaceable damaged parts \\
 Structural requirement & Airframe must support normal flight loads and minor impact conditions \\
 Game-play requirement & Agile enough to act as a believable and challenging in-game opponent \\
-Simulation requirement & Geometry suitable for representation in simulation \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -1002,19 +1001,15 @@ The hardware design also needed a simplified representation inside the simulatio
 
 Instead of using the full Fusion 360 assembly,  a lower-detail version was built in Blender. This model kept the main features needed for visual recognition and game play - mainly rotor arms and central body. Smaller details such as bolt holes, internal electronics, linkages were removed to reduce complexity. This allowed the drone to be represented clearly in the simulation. Unity also allowed model mass and size scaling with an in-built physics system, hence could be used to model the simplified drone more accurately.
 
-%%%%%FIGURE: Blender Model Drone
-
 \paragraph{Importing and setting up the Model}
 
 The simplified drone model was exported from Blender and imported into Unity as a game asset. Once inside Unity, the model was arranged so that movement and animation could be controlled. The rotor propellers were kept separate from the main body to allow spinning animation while following the physics controller.
-
-%%%%%FIGURE: Image of Drone in Unity
 
 \paragraph{Simplified Physics and interaction}
 
 The Unity model used the built-in physics and collision system to represent the drone during simulation. The drone was treated as a simplified rigid body with approximate box collision boundaries. Collisions with the walls, obstacles or game-play objects were handled using Unity colliders, and the simplified model allowed basic movement and navigation tests.
 
-%%%%%FIGURE: Another Image of Drone in Unity
+%%%%%FIGURE: Blender Model Drone
 
 %-------------------
 \newpage
@@ -1025,7 +1020,7 @@ The player hardware shows how human players would interact with the multi-agent 
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\textwidth]{Hardware/Player Hardware.png}
+    \includegraphics[width=0.70\textwidth]{Hardware/Player Hardware.png}
     \caption{Player Vest and Helmet}
     \label{fig:Player Vest and Helmet}
 \end{figure}
