@@ -1075,6 +1075,15 @@ We plan to use industrial safety nets to separate the players from the drones as
 \section{Drone State Estimation} \label{drone state estimation} % Tommy
 \fancyhead[C]{Thomas August} % 
 
+Our drones fly autonomously and hence need to know their state, including pose, velocity, and acceleration, in order to control their movement through the map. 
+
+\subsection{Literature Review}
+In order to determine the best method for estimating the state of our drones, we first did a literature review to determine what the common methods were. From this research, we found 3 main methods: offboard optical motion capture \cite{liu2018viconmavlinksoftwaretoolindoor}, cameras with april tags, and onboard sensor fusion with a state estimator. 
+
+\paragraph{Optical Motion Capture} This method is the standard for measuring ground truth robot states and hence has very high accuracy, however, there are a number of issues with us using this method. Firstly, with our maze based map design, we would need many of these cameras to cover the whole map, and, assuming we need one for each grid cell, this would be 187 for our whole map. Optitrack is a company that sells these optical motion capture cameras, and their cheapest standard camera is the Prime x 13 \cite{Prime13Optitrack} which they sell for \$2,499, meaning the total cost just for the cameras would be \$467,313, which is well above our budget. Additionally, these cameras transmit a large amount of IR light at a similar frequency to that used by our laser guns and hence would cause a lot of interference with our shot detection system. These cameras also only have a limited field of view, so if we mounted them on the ceiling, there would be blind spots near the ceiling where the drone is outside the field of view of all cameras and hence its state can not be estimted. For these reasons we decided not to go with this option.
+
+\paragraph{Cameras with April Tags} 
+
 
 
 \newpage
