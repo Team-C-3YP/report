@@ -73,7 +73,7 @@ The UK leisure market is currently defined by a distinct consumer trend: a fruga
 
 To meet this demand, we present a novel laser tag game where human players cooperate to compete against a team of autonomous, multi-agent drones. From a user perspective, the system aims to provide an engaging, safe, and highly interactive experience defined by specific gameplay modes and dynamic objectives (Section 2). To complete these objectives, players navigate through a purpose-built indoor maze constructed from 5-metre high walls (Section 6). The project is governed by strict physical and safety boundaries to ensure a low-risk environment; the arena features a dividing net that separates the drones flying overhead from the human players below. Designed with a 1200J energy absorption capacity, this industrial netting provides a safety factor of 5.1 against a 4kg drone in free-fall. As a result, this mitigates the risk of human-drone collisions without diminishing game immersion.
 
-From a drone perspective, the primary goal is to achieve autonomy and coordinated teamwork within a confined environment. Since off-the-shelf platforms lack the necessary flexibility, payload integration, and component protection for such close-proximity indoor operations, a custom modular quadrotor airframe was developed (Section 4). The ABS and PLA 3D-printed chassis features integrated blade guards to ensure operational continuity during minor wall collisions. To satisfy a $2:1$ thrust-to-weight ratio for a $4 \text{kg}$ maximum takeoff mass, the propulsion system utilises BrotherHobby Avenger 2806.5 1300KV brushless motors paired with 8x4x3 polycarbonate propellers, driven by a 4S 5000mAh Lithium Polymer battery to sustain approximately 10 minutes of active flight endurance. Dedicated player hardware, including sensor-equipped helmets and vests, then integrate into this ecosystem (Section 5).
+From a drone perspective, the primary goal is to achieve autonomy and coordinated teamwork within a confined environment. Since off-the-shelf platforms lack the necessary flexibility, payload integration, and component protection for such close-proximity indoor operations, a custom modular quadrotor airframe was developed (Section 4). The ABS and PLA 3D-printed chassis features integrated blade guards to ensure operational continuity during minor wall collisions. To satisfy a 2:1 thrust-to-weight ratio for a 4kg maximum takeoff mass, the propulsion system utilises BrotherHobby Avenger 2806.5 1300KV brushless motors paired with 8x4x3 polycarbonate propellers, driven by a 4S 5000mAh Lithium Polymer battery to sustain approximately 10 minutes of active flight endurance. Dedicated player hardware, including sensor-equipped helmets and vests, then integrate into this ecosystem (Section 5).
 
 For multi-agent coordination, the system relies on an IEEE 802.11ac Wi-Fi communications framework (Section 9) linking the onboard drone hardware to a central server. The server manages the high-level game logic, evaluating the global state to dynamically transition individual drones through specific operational modes such as Search, Track, Shoot, and Movement (Section 10). 
 
@@ -1111,11 +1111,8 @@ In order to determine the best method for estimating the state of our drones, we
 
 \paragraph{Cameras with April Tags} 
 
-
-
 \newpage
 
-\section{Network and Communications} %Ritchie
 \section{Network and Communications}
 \fancyhead[C]{Richard Usherwood}
 \subsection{Overview}
