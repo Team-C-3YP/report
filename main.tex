@@ -8,7 +8,7 @@
 \usepackage{graphicx}
 \usepackage{fontspec}
 \usepackage{amsmath}
-\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
+\usepackage[colorlinks=true, linkcolor=black, citecolor=black, urlcolor=black]{hyperref}
 
 \title{Laser Tag using a Multiagent Drone System}
 \subtitle{Report for the system and software design of a multiagent drone system to play Laser Tag}
@@ -26,7 +26,7 @@
 % - As short as possible while providing key points
 % - Less than 1 page
 \addcontentsline{toc}{section}{Abstract}
-\fancyhead[C]{Student author of section}
+\fancyhead[C]{Group}
 \section*{Abstract}
 \newpage
 
@@ -69,25 +69,20 @@
 % - Give a short overview of report structure
 \section{Introduction}
 \fancyhead[C]{Rishabh Luthra}
-The UK leisure market is currently defined by a distinct consumer trend: a frugality in routine choices paired with a willingness to invest in high-value experiences. This shift drives a growing demand for immersive environments that offer real-time interactivity and integrate the strategic depth of video games into the physical world. 
+The UK leisure market is currently defined by a distinct consumer trend: a frugality in routine choices paired with a willingness to invest in high-value experiences \cite{arrowsmith2026leisure, deloitte2026leisure_report}. This shift drives a growing demand for immersive environments that offer real-time interactivity and integrate the strategic depth of video games into the physical world. 
 
-To meet this demand, we present a novel laser tag game where human players cooperate to compete against a team of autonomous, multi-agent drones. From a user perspective, the system aims to provide an engaging, safe, and highly interactive experience. Players navigate through a purpose-built indoor maze, constructed from 5-metre high walls, to complete dynamic objectives. The project is defined by strict physical and safety boundaries to ensure a low-risk environment; the arena features a dividing net that separates the drones flying overhead from the human players below. Designed with a $1200 \text{J}$ energy absorption capacity, this industrial netting provides a safety factor of $5.1$ against a $4 \text{kg}$ drone in free-fall. As a result, this mitigates the risk of human-drone collisions without diminishing game immersion.
+To meet this demand, we present a novel laser tag game where human players cooperate to compete against a team of autonomous, multi-agent drones. From a user perspective, the system aims to provide an engaging, safe, and highly interactive experience defined by specific gameplay modes and dynamic objectives (Section 2). To complete these objectives, players navigate through a purpose-built indoor maze constructed from 5-metre high walls (Section 6). The project is governed by strict physical and safety boundaries to ensure a low-risk environment; the arena features a dividing net that separates the drones flying overhead from the human players below. Designed with a 1200J energy absorption capacity, this industrial netting provides a safety factor of 5.1 against a 4kg drone in free-fall. As a result, this mitigates the risk of human-drone collisions without diminishing game immersion.
 
-From a drone perspective, the primary goal is to achieve autonomy and coordinated teamwork within a confined environment. The drones have to navigate the maze rapidly and safely, avoiding collisions with the environment and other drones, while coordinating their actions to serve as a balanced and intelligent opponent to the human players. They must also autonomously detect and track moving human targets under low-light conditions, maintaining spatial awareness even during temporary visual occlusions. 
+From a drone perspective, the primary goal is to achieve autonomy and coordinated teamwork within a confined environment. Since off-the-shelf platforms lack the necessary flexibility, payload integration, and component protection for such close-proximity indoor operations, a custom modular quadrotor airframe was developed (Section 4). The ABS and PLA 3D-printed chassis features integrated blade guards to ensure operational continuity during minor wall collisions. To satisfy a $2:1$ thrust-to-weight ratio for a $4 \text{kg}$ maximum takeoff mass, the propulsion system utilises BrotherHobby Avenger 2806.5 1300KV brushless motors paired with 8x4x3 polycarbonate propellers, driven by a 4S 5000mAh Lithium Polymer battery to sustain approximately 10 minutes of active flight endurance. Dedicated player hardware, including sensor-equipped helmets and vests, then integrate into this ecosystem (Section 5).
 
-Since off-the-shelf platforms lack the necessary flexibility, payload integration, and component protection for such close-proximity indoor operations, a custom modular quadrotor airframe was developed. The ABS and PLA 3D-printed chassis features integrated blade guards to ensure operational continuity during minor wall collisions. To satisfy a $2:1$ thrust-to-weight ratio for a $4 \text{kg}$ maximum takeoff mass, the propulsion system utilises BrotherHobby Avenger 2806.5 1300KV brushless motors paired with 8x4x3 polycarbonate propellers, driven by a 4S 5000mAh Lithium Polymer battery to sustain approximately 10 minutes of active flight endurance.
+For multi-agent coordination, the system relies on an IEEE 802.11ac Wi-Fi communications framework (Section 9) linking the onboard drone hardware to a central server. The server manages the high-level game logic, evaluating the global state to dynamically transition individual drones through specific operational modes such as Search, Track, Shoot, and Movement (Section 10). 
 
-For coordination, the system relies on an IEEE 802.11ac Wi-Fi communications framework linking the onboard drone hardware to a central server. The server manages the high-level game logic, evaluating the global state to dynamically transition individual drones through specific operational modes such as Search, Track, Shoot, and Movement. 
+To inform these high-level decisions, each drone is equipped with an OAK-D Lite passive stereoscopic camera mounted on a custom 3-axis tracking gimbal, which kinematically decouples the camera from the drone’s flight attitude to maintain continuous target lock. Visual data is ingested by a YOLOv8-nano (YOLOv8n) convolutional neural network (Section 11). To overcome the domain gap caused by the arena's low-light conditions and frequent target occlusions, this model was trained on a synthetic dataset created within Unity. Because active visual sensors would interfere with the game's infrared mechanics, and monocular depth estimation fails when a human target alters their posture, target depth is extracted passively via stereoscopic horizontal pixel disparity. This raw spatial data is smoothed using a Linear Kalman Filter, operating on a Discrete White Noise Acceleration (DWNA) model, to provide continuous, predictive 3D state estimations of the players. 
 
-\newpage
+These estimated player coordinates update the central server's global state, which in turn dictates the high-level navigational objectives assigned to each drone. Search mode utilises a hybrid Breadth-First Search (BFS) region-allocation and lawnmower trajectory algorithm to systematically scan the arena (Section 12). When rapid transit is required, flight control is handed over to a Reinforcement Learning (RL) policy trained offline in the Isaac Lab physics simulator, outputting body thrust and moment commands (Section 13). Furthermore, an Artificial Potential Field (APF) controller handles real-time collision avoidance by computing repulsive gradients from walls and other agents, converting them into evasive manoeuvrers (Section 14).
 
-Each drone is equipped with an OAK-D Lite passive stereoscopic camera mounted on a custom 3-axis tracking gimbal, which kinematically decouples the camera from the drone’s flight attitude to maintain continuous target lock. Visual data is ingested by a YOLOv8-nano (YOLOv8n) convolutional neural network. To overcome the domain gap caused by the arena's low-light conditions and frequent target occlusions, this model was trained on a synthetic dataset created within Unity.
-
-Because active visual sensors would interfere with the game's infrared mechanics, and monocular depth estimation fails when a human target alters their posture, target depth is extracted passively via stereoscopic horizontal pixel disparity. This raw spatial data is smoothed using a Linear Kalman Filter, operating on a Discrete White Noise Acceleration (DWNA) model, to provide continuous, predictive 3D state estimations of the players. 
-
-These global coordinates directly inform the drone's local flight control algorithms. Search mode utilises a hybrid Breadth-First Search (BFS) region-allocation and lawnmower trajectory algorithm to systematically scan the arena. When rapid transit is required, flight control is handed over to a Reinforcement Learning (RL) policy trained offline in the Isaac Lab physics simulator, outputting body thrust and moment commands. Furthermore, an Artificial Potential Field (APF) controller handles real-time collision avoidance by computing repulsive gradients from walls and other agents, converting them into evasive manoeuvrers.
-
-This report details the design and business integration of the system. We begin by outlining the core gameplay mechanics and overall system architecture, followed by the mechanical and electronic design of the drone and player hardware. The software architecture is then explored in detail, encompassing the computer vision pipeline for visual perception, local flight controllers for path planning and movement, and the high-level game logic coordinated by a central server. Finally, the technical development is supported by an evaluation of broader engineering considerations, including technology strategy, project financing, and health and safety. These considerations are validated by a quantitative risk assessment and a financial model confirming the commercial feasibility of the enterprise.
+In addition to the technical deployment, user retention is driven by a companion mobile application that tracks performance metrics, leaderboards, and achievements to foster community engagement (Section 16). Finally, the technical development is supported by an evaluation of broader engineering considerations. These are validated by a quantitative risk assessment (Section 17) and a financial model (Section 18), which confirms the commercial feasibility of the enterprise by projecting a Net Present Value of £68,669 at an optimal price of £200 per game.
+% Technology Strategy, Project Financing, and Health and Safety
 
 \newpage
 
@@ -1675,7 +1670,7 @@ As shown in the detection curve (Figure \ref{fig:occlusion_test}), the VisDrone 
 
 In contrast, the synthetic model demonstrates a more stable detection decay curve. It maintains a confidence score above 0.9 up to 35\% occlusion and crosses the 0.5 threshold at approximately 68\% occlusion. This data suggests that the synthetic domain randomisation pipeline trained the neural network to classify partial human geometry. By learning to identify isolated features, such as an exposed shoulder or an extended arm, the synthetic model addresses the occlusion limitations observed in the Visdrone model, offering greater reliability for deployment in environments with physical barricades.
 
-\subsection{3D Coordinates via Sensor Fusion}
+\subsection{  3D Coordinates via Sensor Fusion}
 We use sensor fusion in order to bridge the gap between the 2D \gls{yolo} bounding box and the stereoscopic depth map to resolve the 3D Cartesian coordinates of the player. We begin with the geometric centroid ($x_i, y_i$) of the bounding box in pixel coordinates. Because the central RGB camera and stereo cameras are synchronised, this coordinate corresponds to a point on the depth map. 
 
 If this centroid lies on a gap in the target's posture, a single pixel sample of the depth map may erroneously return the distance to the background wall rather than the player itself. In order to prevent this, the system samples a $N \times N$ kernel of pixels around the centroid and a median filter is applied to ensure that the output reflects the true target distance. 
@@ -1762,7 +1757,7 @@ which can be expressed in matrix representation as:
     }
 \end{equation}
 
-\subsection{State Estimation and Predictive Tracking}
+\subsection{  State Estimation and Predictive Tracking}
 Although we are able to obtain the 3D global coordinates of the player ($P_w$) using the kinematic transformations above, the raw measurements will be inherently noisy due to stereoscopic depth jitter and \gls{yolo} bounding box fluctuations. In addition, the arena contains physical walls and objects that can cause temporary occlusions. As a result, we cannot rely solely on the raw visual data and must maintain a state estimate of the player's position.
 
 In order to achieve this, we implemented a Linear Kalman Filter to maintain a continuous, smoothed estimate of the player's position. The filter operates on a constant velocity model, allowing us to project the player's trajectory during periods of occlusion.
