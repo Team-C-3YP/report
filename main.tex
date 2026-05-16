@@ -59,6 +59,8 @@
 \newacronym{wacc}{WACC}{Weight Averaged Cost of Capital}
 \newacronym{tv}{TV}{Terminal Value}
 \newacronym{irr}{IRR}{Internal Rate of Return}
+\newacronym{esc}{ESC}{Electronic Speed Controller}
+\newacronym{pdb}{PDB}{Power Distribution Board}
 \printglossaries
 \newpage
 
@@ -74,7 +76,7 @@ The UK leisure market is currently defined by a distinct consumer trend: a fruga
 
 To meet this demand, we present a novel laser tag game where human players cooperate to compete against a team of autonomous, multi-agent drones. From a user perspective, the system aims to provide an engaging, safe, and highly interactive experience defined by specific gameplay modes and dynamic objectives (Section 2). To complete these objectives, players navigate through a purpose-built indoor maze constructed from 5-metre high walls (Section 6). The project is governed by strict physical and safety boundaries to ensure a low-risk environment; the arena features a dividing net that separates the drones flying overhead from the human players below. Designed with a 1200J energy absorption capacity, this industrial netting provides a safety factor of 5.1 against a 4kg drone flying at full thrust downwards. As a result, this mitigates the risk of human-drone collisions without diminishing game immersion.
 
-From a drone perspective, the primary goal is to achieve autonomy and coordinated teamwork within a confined environment. Since off-the-shelf platforms lack the necessary flexibility, payload integration, and component protection for such close-proximity indoor operations, a custom modular quadrotor airframe was developed (Section 4). The ABS and PLA 3D-printed chassis features integrated blade guards to ensure operational continuity during minor wall collisions. To satisfy a 2:1 thrust-to-weight ratio for a 4kg maximum takeoff mass, the propulsion system utilises BrotherHobby Avenger 2806.5 1300KV brushless motors paired with 8x4x3 polycarbonate propellers, driven by a 4S 5000mAh Lithium Polymer battery to sustain approximately 10 minutes of active flight endurance. Dedicated player hardware, including sensor-equipped helmets and vests, then integrate into this ecosystem (Section 5).
+From a drone perspective, the primary goal is to achieve autonomy and coordinated teamwork within a confined environment. Since off-the-shelf platforms lack the necessary flexibility, payload integration, and component protection for such close-proximity indoor operations, a custom modular quadrotor airframe was developed (Section 4). The ABS 3D-printed chassis features integrated blade guards to ensure operational continuity during minor wall collisions. To satisfy a 2:1 thrust-to-weight ratio for a 4kg maximum takeoff mass, the propulsion system utilises BrotherHobby Avenger 2806.5 1300KV brushless motors paired with 8x4x3 polycarbonate propellers, driven by a 4S 5000mAh Lithium Polymer battery to sustain approximately 10 minutes of active flight endurance. Dedicated player hardware, including sensor-equipped helmets and vests, then integrate into this ecosystem (Section 5).
 
 For multi-agent coordination, the system relies on an IEEE 802.11ac Wi-Fi communications framework (Section 9) linking the onboard drone hardware to a central server. The server manages the high-level game logic, evaluating the global state to dynamically transition individual drones through specific operational modes such as Search, Track, Shoot, and Movement (Section 10). 
 
@@ -840,7 +842,7 @@ The \textbf{coupler} forms the main connection between the yaw actuator and the 
 
 The \textbf{gimbal installation plate} is positioned below the coupler and is used to close up the interface between the gimbal and the drone body. It also secures the lower part of the installation interface which keeps the yaw mechanism aligned and provide tighter space for wires to help reduce entanglement issues. 
 
-The \textbf{square axial component}square Axial component supports the pitch-axis motor and provides the structural frame for the upper gimbal mechanisms. It is directly installed to the yaw mechanism allowing the overall gimbal to move in yaw motion - it is only in contact with the servomotor output. The pitch motion is produced by mounting a gimbal motor onto the square axial component, with the motor output connected to the gimbal pitch axis component. This allows camera and IR emitter to tile upward and downward.
+The \textbf{square axial component} supports the pitch-axis motor and provides the structural frame for the upper gimbal mechanisms. It is directly installed to the yaw mechanism allowing the overall gimbal to move in yaw motion - it is only in contact with the servomotor output. The pitch motion is produced by mounting a gimbal motor onto the square axial component, with the motor output connected to the gimbal pitch axis component. This allows camera and IR emitter to tile upward and downward.
 
 The \textbf{gimbal pitch axis component} acts as the moving structure for pitch stage and provides roll-axis motor mount. The roll motion is produced by mounting the roll gimbal motor onto the pitch axis component, with the motor output connected to the gimbal roll axis component. This creates a second controlled axis above the yaw and pitch stages.
 
@@ -875,7 +877,7 @@ Coupler & 20.89 g & 80\% & 16.7 g \\
 \end{tabularx}
 \end{table}
 
-Table~\ref{tab:gimbal_mass_estimate} shows the mass of the solid body from Fusion 360 using assigned ABS material properties. Estimations were made using infill assumptions for each component which reduced the final mass from 66.55g to 44.4g - excluding the camera, IR emitter, gimbal motors and servo. 
+Table~\ref{tab:gimbal_mass_estimate} shows the mass of the solid body from Fusion 360 using assigned ABS material properties. Estimations were made, shown in Table~\ref{tab:gimbal_mass_estimate}, using infill assumptions for each component which reduced the final mass from 66.55g to 44.4g - excluding the camera, IR emitter, gimbal motors and servo. 
 
 \paragraph{Servomotor and Gimbal Motor}
 
@@ -903,7 +905,7 @@ The MG90S is suitable for the yaw stage as it fits within the turret base region
 
 \subsubsection{Overall Airframe Configuration - Assembly}
 
-The final airframe configuration brings the separate subsystem assemblies together into a single integrated drone assembly. The design uses a modular central body with detachable rotor-arm, integrated with propeller protection and helicopter-based landing gears, along with a centrally mounted 3-axis gimbal turret. This layout suits the electronics, propulsion, sensors, camera, and IR-tagging system while keeping key parts accessible for maintenance. Rather than one-piece shell, all parts are designed to be separate yet connected, replaceable, and cheap making it practical for manufacture and repair.
+The final airframe configuration brings the separate subsystem assemblies together into a single integrated drone assembly, shown in Fig.~\ref{fig:Complete Assembly}. The design uses a modular central body with detachable rotor-arm, integrated with propeller protection and helicopter-based landing gears, along with a centrally mounted 3-axis gimbal turret. This layout suits the electronics, propulsion, sensors, camera, and IR-tagging system while keeping key parts accessible for maintenance. Rather than one-piece shell, all parts are designed to be separate yet connected, replaceable, and cheap making it practical for manufacture and repair.
 
 \begin{figure}[htbp]
     \centering
@@ -934,7 +936,7 @@ The first simulation assessed the joint between the rotor arm and the electronic
     \label{fig:Rotor Arm Sim}
 \end{figure}
 
-The simulation showed that the highest stress occurred near the handle area of the electronic basket, which was expected because this is where the rotor-arm load is transferred into the central structure. Most of the rotor arm remained in the lower-stress blue/green region - which suggests that the rotor arm geometry was not the limiting factor. The minimum safety factor was approximately 2.23, as shown in Figure~\ref{fig:Rotor Arm Sim}, meaning the component remained above the failure threshold for the load case.
+The simulation showed that the highest stress occurred near the handle area of the electronic basket, which was expected because this is where the rotor-arm load is transferred into the central structure. Most of the rotor arm remained in the lower-stress blue/green region - which suggests that the rotor arm geometry was not the limiting factor. The minimum safety factor was approximately 2.23, as shown in Fig.~\ref{fig:Rotor Arm Sim}, meaning the component remained above the failure threshold for the load case.
 
 This result showed that the structure was reasonable. However, this should still be treated as a preliminary CAD-based result, noting the fact it does not account for vibration, fatigue, manufacturing defects and loose bolts.
 
@@ -949,7 +951,7 @@ The blade guard was assessed as it was one of the most exposed parts of the dron
     \label{fig:BladeGaurdSim}
 \end{figure}
 
-The simulation showed that the highest stress occurred near the connection between guard and arm, making this the weakest region of the blade guard design. The minimum safety factor was 1.099 as shown in Figure~\ref{fig:BladeGaurdSim}, slightly above 1, meaning the structure passes the load case but only by a small margin (less than 10\%) which suggests that the current design is acceptable as an early simulation result.
+The simulation showed that the highest stress occurred near the connection between guard and arm, making this the weakest region of the blade guard design. The minimum safety factor was 1.099 as shown in Fig. ~\ref{fig:BladeGaurdSim}, slightly above 1, meaning the structure passes the load case but only by a small margin (less than 10\%) which suggests that the current design is acceptable as an early simulation result.
 
 The assessment was limited to a static simulation, A dynamic impact simulation would have been more realistic in a collision case but the tools were not available without paid access. As a result, the safety factor should be treated as an initial indicator.
 
@@ -1006,12 +1008,9 @@ The Unity model used the built-in physics and collision system to represent the 
 
 %%%%%FIGURE: Blender Model Drone
 
-%-------------------
-\newpage
+\subsection{Player Hardware Design}
 
-\section{Player Hardware Design}
-
-The player hardware shows how human players would interact with the multi-agent laser-tag system. These components were not developed in detail compared with the drone hardware, and therefore will only focus on representative and illustrative models.
+The player hardware shows how human players would interact with the multi-agent laser-tag system. These components were not developed in detail compared with the drone hardware, and therefore will only focus on representative and illustrative models, as shown in Fig.~\ref{fig:Player Vest and Helmet}.
 
 \begin{figure}[htbp]
     \centering
@@ -2517,6 +2516,25 @@ In general, one or more variables were changed, and another was observed, while 
 %%%%%%%%%%%%%%%%-----------End of Commercialisation-------------%%%%%%%%%%%%%%%
 
 \section{Sustainability} %Rickie
+\fancyhead{Shing Hei Rickie Chan}
+
+As the system is intended for repeated commercial use, sustainability is considered, as impacts come not only from initial jump-start stages but also from operation and maintenance. This section assesses these trade-offs through the triple bottom line: environmental, social and economic impact.
+
+\paragraph{Environmental Impact}
+
+The drones are electrically powered, so they produce no direct emissions during flight inside the arena. However, the main environmental impact comes from manufacturing, charging, and eventually disposing of the drone itself, and all components within. The batteries likely have the shortest service life as they degrade with repeated charge cycles and would need replacement periodically. Other components may last longer if protected from impact and overheating. To reduce unnecessary waste, the drone uses a modular airframe with detachable parts, allowing damaged or worn parts to be replaced individually. However, the material choice still has limitations, as ABS is not biodegradable.
+
+\paragraph{Social Impact}
+
+The main social impact of the project is its ability to provide entertainment while maintaining safety. The game design uses infrared tagging rather than physical projectiles or laser systems. The drones are separated from players by overhead net, while blade guards, collision avoidance, helmets and vest provide an additional layer of protection. This ensures the system is acceptable for use in a commercial arena, where players of many different backgrounds and ages come to enjoy the game. The cooperative modes and companion app encourages teamwork and repeat engagement, although this may depend on careful supervision during game-play.
+
+\paragraph{Economic Impact}
+
+The economic impact is considered through the commercial model, which tests whether the system could operate viably after accounting all aspects of the overall system design. The report estimates the drone cost under \pounds500 each, with full hardware replacement assumed over 500 games. At a projected price of \pounds200 per group, the model suggests that annual non-discounted profit could stabilize at around \pounds75000. This supports the economic side, but only if usage is high and replacement costs are strictly controlled.
+
+\paragraph{Limitations}
+
+The system should not be considered fully sustainable. Issues such as waste and replacement of electronic components, general consumptions of arena management, and usage of non-biodegradable ABS material mean that the system cannot be considered impact-free.
 
 %%%%%%%%%%%%%%%----------End of Sustainability--------------%%%%%%%%%%%%%%%
 
