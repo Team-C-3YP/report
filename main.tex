@@ -905,7 +905,7 @@ The MG90S is suitable for the yaw stage as it fits within the turret base region
 
 \subsubsection{Overall Airframe Configuration - Assembly}
 
-The final airframe configuration brings the separate subsystem assemblies together into a single integrated drone assembly, shown in Fig.~\ref{fig:Complete Assembly}. The design uses a modular central body with detachable rotor-arm, integrated with propeller protection and helicopter-based landing gears, along with a centrally mounted 3-axis gimbal turret. This layout suits the electronics, propulsion, sensors, camera, and IR-tagging system while keeping key parts accessible for maintenance. Rather than one-piece shell, all parts are designed to be separate yet connected, replaceable, and cheap making it practical for manufacture and repair.
+The final airframe configuration brings the separate subsystem assemblies together into a single integrated drone assembly, shown in Fig. ~\ref{fig:Complete Assembly}. The design uses a modular central body with detachable rotor-arm, integrated with propeller protection and helicopter-based landing gears, along with a centrally mounted 3-axis gimbal turret. This layout suits the electronics, propulsion, sensors, camera, and IR-tagging system while keeping key parts accessible for maintenance. Rather than one-piece shell, all parts are designed to be separate yet connected, replaceable, and cheap making it practical for manufacture and repair.
 
 \begin{figure}[htbp]
     \centering
@@ -936,7 +936,7 @@ The first simulation assessed the joint between the rotor arm and the electronic
     \label{fig:Rotor Arm Sim}
 \end{figure}
 
-The simulation showed that the highest stress occurred near the handle area of the electronic basket, which was expected because this is where the rotor-arm load is transferred into the central structure. Most of the rotor arm remained in the lower-stress blue/green region - which suggests that the rotor arm geometry was not the limiting factor. The minimum safety factor was approximately 2.23, as shown in Fig.~\ref{fig:Rotor Arm Sim}, meaning the component remained above the failure threshold for the load case.
+The simulation showed that the highest stress occurred near the handle area of the electronic basket, which was expected because this is where the rotor-arm load is transferred into the central structure. Most of the rotor arm remained in the lower-stress blue/green region - which suggests that the rotor arm geometry was not the limiting factor. The minimum safety factor was approximately 2.23, as shown in Fig. ~\ref{fig:Rotor Arm Sim}, meaning the component remained above the failure threshold for the load case.
 
 This result showed that the structure was reasonable. However, this should still be treated as a preliminary CAD-based result, noting the fact it does not account for vibration, fatigue, manufacturing defects and loose bolts.
 
@@ -1010,7 +1010,7 @@ The Unity model used the built-in physics and collision system to represent the 
 
 \subsection{Player Hardware Design}
 
-The player hardware shows how human players would interact with the multi-agent laser-tag system. These components were not developed in detail compared with the drone hardware, and therefore will only focus on representative and illustrative models, as shown in Fig.~\ref{fig:Player Vest and Helmet}.
+The player hardware shows how human players would interact with the multi-agent laser-tag system. These components were not developed in detail compared with the drone hardware, and therefore will only focus on representative and illustrative models, as shown in Fig. ~\ref{fig:Player Vest and Helmet}.
 
 \begin{figure}[htbp]
     \centering
@@ -1165,7 +1165,7 @@ An overview of the purpose of each state is given below.
 \subsubsection{Dormant Mode}
 This is the default mode of the drones, designed for waiting between rounds or games on standby, when not actively involved in the game. This mode is triggered by the end of a round, or by the powering on of the drone.
 \subsubsection{Search Mode}
-This is the initial mode of a drone upon entering a game. In this mode, the drone is exploring an area of the map decided by the central server, looking for a target. The flow diagram describing the conditions under which the drone will change out of Search Mode is shown below, in Figure \ref{fig:FlowSearch}.
+This is the initial mode of a drone upon entering a game. In this mode, the drone is exploring an area of the map decided by the central server, looking for a target. The flow diagram describing the conditions under which the drone will change out of Search Mode is shown below, in Fig. \ref{fig:FlowSearch}.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.7\linewidth]{figs/High-Level/SearchMode.png}
@@ -1173,7 +1173,7 @@ This is the initial mode of a drone upon entering a game. In this mode, the dron
     \label{fig:FlowSearch}
 \end{figure}
 \subsubsection{Track Mode}
-The drone enters this mode when it has seen a human player who is not within shooting range. The drone's objective is to get close enough to the player to shoot them. The flow diagram describing the conditions under which the drone will change out of Track Mode is shown below, in Figure \ref{fig:FlowTrack}.
+The drone enters this mode when it has seen a human player who is not within shooting range. The drone's objective is to get close enough to the player to shoot them. The flow diagram describing the conditions under which the drone will change out of Track Mode is shown below, in Fig. \ref{fig:FlowTrack}.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.7\linewidth]{figs/High-Level/TrackMode.png}
@@ -1181,7 +1181,7 @@ The drone enters this mode when it has seen a human player who is not within sho
     \label{fig:FlowTrack}
 \end{figure}
 \subsubsection{Shoot Mode}
-This is the mode the drone is in when it has identified a player within its shooting range. In this mode, the drone will try to shoot the player. The flow diagram describing the conditions under which the drone will change out of Shoot Mode is shown below, in Figure \ref{fig:FlowShoot}.
+This is the mode the drone is in when it has identified a player within its shooting range. In this mode, the drone will try to shoot the player. The flow diagram describing the conditions under which the drone will change out of Shoot Mode is shown below, in Fig. \ref{fig:FlowShoot}.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.7\linewidth]{figs/High-Level/ShootMode.png}
@@ -1194,7 +1194,7 @@ This is the mode the drone is in when it has been \say{called for help} - someth
 This mode is triggered either when the drone detects it is about to collide into a wall, or when the server detects it is about to collide into another drone. This mode can be accessed from any mode (except Dormant Mode).
 
 \subsection{Logic}
-The flow charts shown in Figures \ref{fig:FlowSearch}, \ref{fig:FlowTrack} and \ref{fig:FlowShoot} are sections of a larger flowchart describing the state change logic of the drones, included in the appendix. The red boxes denote information shared between drones (managed by the server via Wi-Fi). It is worth noting that Dormant Mode and Collision Avoidance Mode have been omitted for the sake of readability. Since these two states are considered higher priority than the others, each decision chain implicitly contains the decision boxes: \say{Am I about to crash?} and \say{Has the wave ended?}.
+The flow charts shown in Fig. \ref{fig:FlowSearch}, \ref{fig:FlowTrack} and \ref{fig:FlowShoot} are sections of a larger flowchart describing the state change logic of the drones, included in the appendix. The red boxes denote information shared between drones (managed by the server via Wi-Fi). It is worth noting that Dormant Mode and Collision Avoidance Mode have been omitted for the sake of readability. Since these two states are considered higher priority than the others, each decision chain implicitly contains the decision boxes: \say{Am I about to crash?} and \say{Has the wave ended?}.
 
 \newpage
 
@@ -1288,7 +1288,7 @@ To compare the performance of monocular and stereo depth estimation under geomet
 
 \textbf{(1) Linear Movement}
 
-We began with a baseline calibration and translated the target linearly from 5m to 15m along the Z-axis. Within this scenario, the target's physical dimensions and orientation remained fixed. As demonstrated in Figure \ref{fig:linear_translation}, both the monocular camera system and stereo camera system accurately map the physical ground truth. This establishes that both approaches are viable for tracking rigid bodies under ideal conditions.
+We began with a baseline calibration and translated the target linearly from 5m to 15m along the Z-axis. Within this scenario, the target's physical dimensions and orientation remained fixed. As demonstrated in Fig. \ref{fig:linear_translation}, both the monocular camera system and stereo camera system accurately map the physical ground truth. This establishes that both approaches are viable for tracking rigid bodies under ideal conditions.
 
 \begin{figure}[htbp]
     \centering
@@ -1303,7 +1303,7 @@ We began with a baseline calibration and translated the target linearly from 5m 
 
 In a practical laser tag environment, players are unlikely to follow linear trajectories. To evaluate how the depth tracking systems handle changes in orientation, we simulate a player turning sideways by rotating the target from $0^\circ$ to $90^\circ$ on its yaw axis. As the target rotates around its 5.1m centroid, the physical ground truth, which is represented by the closest physical surface, shifts from 5.0m down to 4.85m. 
 
-As illustrated in Figure \ref{fig:yaw_rotation}, there is a slight discrepancy between the physical ground truth and the stereo estimation during the turn. While the ground truth tracks the foremost surface, the stereo algorithm calculates the depth based on the centroid of the 2D bounding box. This means that during the rotation, the stereo estimate settles at the $5.1 \text{ m}$ centre of mass and as the rotation reaches $90^\circ$, the camera's view is restricted to the 0.2m side profile and this causes the stereo centroid calculation to fall to the 4.85m ground truth. 
+As illustrated in Fig. \ref{fig:yaw_rotation}, there is a slight discrepancy between the physical ground truth and the stereo estimation during the turn. While the ground truth tracks the foremost surface, the stereo algorithm calculates the depth based on the centroid of the 2D bounding box. This means that during the rotation, the stereo estimate settles at the $5.1 \text{ m}$ centre of mass and as the rotation reaches $90^\circ$, the camera's view is restricted to the 0.2m side profile and this causes the stereo centroid calculation to fall to the 4.85m ground truth. 
 
 As the target turns, its 2D profile narrows and the monocular algorithm, which is reliant on the pixel area, misinterprets this narrowing as the target moving further away.  This means that the depth estimate from the monocular camera diverges from the ground truth. This specific scenario highlights a limitation of the monocular approach, as the system cannot distinguish between a change in the target's orientation and its actual distance. 
 
@@ -1316,7 +1316,7 @@ As the target turns, its 2D profile narrows and the monocular algorithm, which i
 
 \textbf{(3) Changes in Target Posture}
 
-We also evaluated the systems against a reduction in the target's vertical height, to simulate the motion of crouching. Similar to the changes in the target's orientation, the monocular algorithm misinterprets the shrinking of the target as an increase in depth, leading to the depth overestimation seen in Figure \ref{fig:crouch_deformation}. 
+We also evaluated the systems against a reduction in the target's vertical height, to simulate the motion of crouching. Similar to the changes in the target's orientation, the monocular algorithm misinterprets the shrinking of the target as an increase in depth, leading to the depth overestimation seen in Fig. \ref{fig:crouch_deformation}. 
 
 This scenario highlights the advantage of the stereo system with the stereo estimate accurately tracking the ground truth. This confirms that the geometric baseline approach of the stereo model is \textbf{robust} to physical deformation, whereas the area approach of the monocular model will fail when the target's posture changes. 
 
@@ -1332,7 +1332,7 @@ This scenario highlights the advantage of the stereo system with the stereo esti
 The passive stereo system resolves this by estimating depth via horizontal pixel disparity ($d$) and provides a \textbf{robust} depth estimate. Crucially, its reliance on ambient light means that there will be no interference with the infrared game mechanics.  
 
 \subsection{Computer Vision Architecture}
-The hardware of this system is comprised of a camera array consisting of three cameras. It features a high-resolution central RGB camera with two greyscale sensors either side that are dedicated to computing the stereoscopic disparity depth map. These visual streams are sequentially processed to meet both the tracking objectives described above: reliably distinguishing a human player from the background to lock onto the correct target, and calculating the target's 3D Cartesian coordinates relative to the drone's local frame. Together, these stages form the sensor pipeline (Figure \ref{fig:pipeline_diagram}). 
+The hardware of this system is comprised of a camera array consisting of three cameras. It features a high-resolution central RGB camera with two greyscale sensors either side that are dedicated to computing the stereoscopic disparity depth map. These visual streams are sequentially processed to meet both the tracking objectives described above: reliably distinguishing a human player from the background to lock onto the correct target, and calculating the target's 3D Cartesian coordinates relative to the drone's local frame. Together, these stages form the sensor pipeline (Fig. \ref{fig:pipeline_diagram}). 
 
 \begin{figure}[htbp]
     \centering
@@ -1372,9 +1372,9 @@ To satisfy the first objective, the system must transform the raw visual data in
 }
 The nano variant was chosen because it has the lowest parameter count out of the YOLOv8 models and this makes it the lightest and fastest model available. The streamlined nature of this architecture is well-suited to the limited computer resources available on the drone's onboard hardware. Furthermore, the maturity of the \gls{yolo} architecture, combined with its extensive Python support and documentation, facilitates the training process and provides a reliable pipeline for deploying the model within the project.
 
-To achieve the second objective, the system performs sensor fusion. The predicted 2D bounding box defines a region of interest (Figure \ref{fig:rgb_data}), which is projected onto the synchronised stereo disparity map (Figure \ref{fig:depth_data}). This allows the system to extract the absolute depth ($Z$) of the target by sampling depth data across the pixels within this region, effectively bridging 2D visual recognition with 3D spatial tracking. 
+To achieve the second objective, the system performs sensor fusion. The predicted 2D bounding box defines a region of interest (Fig. \ref{fig:rgb_data}), which is projected onto the synchronised stereo disparity map (Fig. \ref{fig:depth_data}). This allows the system to extract the absolute depth ($Z$) of the target by sampling depth data across the pixels within this region, effectively bridging 2D visual recognition with 3D spatial tracking. 
 
-Note that the visualisations in Figure \ref{fig:perception_system_overview} were generated within the Unity simulation environment (detailed in Section \ref{system}), utilising Ground Truth bounding boxes. 
+Note that the visualisations in Fig. \ref{fig:perception_system_overview} were generated within the Unity simulation environment (detailed in Section \ref{system}), utilising Ground Truth bounding boxes. 
 
 % \begin{figure}[H]
 %     \centering
@@ -1424,7 +1424,7 @@ Following data preparation, the pre-trained YOLOv8n model was fine-tuned on the 
 
 Once the network had converged, the final weights were exported to the \gls{onnx} format that allowed the model trained in Python to be imported directly into Unity. Within the simulation, the model is executed using Unity Sentis, a tensor engine used to run neural networks natively within the simulated environment.
 
-To quantify the model's convergence during training, loss and precision metrics were tracked across 50 epochs. As visualised in Figure  \ref{fig:visdrone_training_results}, both the training and validation losses steadily decreased and plateaued towards the end of the run. This indicates that the neural network converged successfully and \textbf{learned the dataset's features without overfitting}. 
+To quantify the model's convergence during training, loss and precision metrics were tracked across 50 epochs. As visualised in Fig.  \ref{fig:visdrone_training_results}, both the training and validation losses steadily decreased and plateaued towards the end of the run. This indicates that the neural network converged successfully and \textbf{learned the dataset's features without overfitting}. 
 
 \begin{figure}[htbp]
     \centering
@@ -1433,7 +1433,7 @@ To quantify the model's convergence during training, loss and precision metrics 
     \label{fig:visdrone_training_results}
 \end{figure}
 
-To determine the most effective confidence threshold for deployment, the F1-Confidence curve was evaluated (Figure \ref{fig:visdrone_f1_curve}). The F1 score represents the harmonic mean of precision and recall. The figure shows that the model reaches its peak F1 score of 0.53 at a confidence threshold of 0.272. Hence, we set the system to this specific threshold in order to achieve the best operational balance between minimising false positives (incorrectly classifying background noise as a player) and preventing false negatives (failing to detect a valid target).         
+To determine the most effective confidence threshold for deployment, the F1-Confidence curve was evaluated (Fig. \ref{fig:visdrone_f1_curve}). The F1 score represents the harmonic mean of precision and recall. The figure shows that the model reaches its peak F1 score of 0.53 at a confidence threshold of 0.272. Hence, we set the system to this specific threshold in order to achieve the best operational balance between minimising false positives (incorrectly classifying background noise as a player) and preventing false negatives (failing to detect a valid target).         
 
 \begin{figure}[htbp]
     \centering
@@ -1442,7 +1442,7 @@ To determine the most effective confidence threshold for deployment, the F1-Conf
     \label{fig:visdrone_f1_curve}
 \end{figure}
 
-While an F1 score of 0.53 and an mAP50 of 0.49 are lower than typical detection models, these lower results are likely as a result of the environment. As seen in the validation sample predictions (Figure \ref{fig:visdrone_val_preds}), the human targets occupy a few pixels in area due to the high-altitude aerial perspective. Visual inspection of the sample predictions confirms that the model has successfully adapted to consistently draw bounding boxes around these low-resolution targets and the suppressed mAP score reflects the inherent difficulty of drawing precise bounding boxes around them. 
+While an F1 score of 0.53 and an mAP50 of 0.49 are lower than typical detection models, these lower results are likely as a result of the environment. As seen in the validation sample predictions (Fig. \ref{fig:visdrone_val_preds}), the human targets occupy a few pixels in area due to the high-altitude aerial perspective. Visual inspection of the sample predictions confirms that the model has successfully adapted to consistently draw bounding boxes around these low-resolution targets and the suppressed mAP score reflects the inherent difficulty of drawing precise bounding boxes around them. 
 
 \begin{figure}[htbp]
     \centering
@@ -1484,7 +1484,7 @@ The benchmark was executed on two distinct simulation conditions:
     \label{fig:orbital_benchmarks}
 \end{figure}
 
-The following 2D graphs flatten the 3D hemispherical sweeps shown in Figure \ref{fig:orbital_benchmarks}. The polar axis represents the drone's yaw and the radial axis represents the camera's pitch. The centre point ($0^\circ$) denotes a horizontal, eye-level view while the outer edge ($80^\circ$) represents a top-down perspective. 
+The following 2D graphs flatten the 3D hemispherical sweeps shown in Fig. \ref{fig:orbital_benchmarks}. The polar axis represents the drone's yaw and the radial axis represents the camera's pitch. The centre point ($0^\circ$) denotes a horizontal, eye-level view while the outer edge ($80^\circ$) represents a top-down perspective. 
 
 \begin{figure}[htbp]
     \centering
@@ -1503,7 +1503,7 @@ The following 2D graphs flatten the 3D hemispherical sweeps shown in Figure \ref
     \label{fig:benchmark_daylight}
 \end{figure}
 
-Under daylight conditions (Figure \ref{fig:benchmark_daylight}), the model demonstrates \textbf{robust} player detection. The confidence contour map indicates sustained detections across majority of the orbital grid, highlighting peak probability zones at steep pitch angles between $50^\circ$ and $80^\circ$. This spatial bias is expected given that the VisDrone training dataset consists primarily of high-altitude aerial perspectives. The classification plot confirms this trend, displaying a ring of True Positives around the outer edge. Consequently, the model performs well when looking down at the target from above. This also validates the fidelity of the environment itself since a neural network trained exclusively on real-world photographic data can successfully detect a synthetic target within Unity. Hence, we can verify that the \textbf{simulation environment has been configured correctly}.
+Under daylight conditions (Fig. \ref{fig:benchmark_daylight}), the model demonstrates \textbf{robust} player detection. The confidence contour map indicates sustained detections across majority of the orbital grid, highlighting peak probability zones at steep pitch angles between $50^\circ$ and $80^\circ$. This spatial bias is expected given that the VisDrone training dataset consists primarily of high-altitude aerial perspectives. The classification plot confirms this trend, displaying a ring of True Positives around the outer edge. Consequently, the model performs well when looking down at the target from above. This also validates the fidelity of the environment itself since a neural network trained exclusively on real-world photographic data can successfully detect a synthetic target within Unity. Hence, we can verify that the \textbf{simulation environment has been configured correctly}.
 
 
 \begin{figure}[htbp]
@@ -1525,7 +1525,7 @@ Under daylight conditions (Figure \ref{fig:benchmark_daylight}), the model demon
     \label{fig:benchmark_lowlight}
 \end{figure}
 
-In contrast, testing under low-light conditions (Figure \ref{fig:benchmark_lowlight}) reveals a clear limitation in the model. The confidence contour map (Figure \ref{fig:benchmark_lowlight_confidence}) shows generally low prediction certainty across the grid. The classification scatter plot (Figure \ref{fig:benchmark_lowlight_classification}) reflects this drop in performance with a high concentration of False Negatives replacing the True Positives seen in the daylight benchmark. This indicates that the model struggles to identify the target when ambient lighting is reduced. For the scope of this project, this confirms that the baseline VisDrone model is unsuitable for the target laser tag arena. To resolve this lighting gap, a synthetic dataset must be generated to train a model on the specific environment conditions it will face. 
+In contrast, testing under low-light conditions (Fig. \ref{fig:benchmark_lowlight}) reveals a clear limitation in the model. The confidence contour map (Fig. \ref{fig:benchmark_lowlight_confidence}) shows generally low prediction certainty across the grid. The classification scatter plot (Fig. \ref{fig:benchmark_lowlight_classification}) reflects this drop in performance with a high concentration of False Negatives replacing the True Positives seen in the daylight benchmark. This indicates that the model struggles to identify the target when ambient lighting is reduced. For the scope of this project, this confirms that the baseline VisDrone model is unsuitable for the target laser tag arena. To resolve this lighting gap, a synthetic dataset must be generated to train a model on the specific environment conditions it will face. 
 
 \subsection{Synthetic Dataset Generation}
 % maybe mention the lack of publicly available datasets of laser tag footage and hence this bolsters the requirement of a synthetic dataset
@@ -1576,7 +1576,7 @@ To ensure the resulting bounding boxes only encompass visually exposed regions, 
 
 \subsection{Synthetic Model Training and Deployment}
 
-To quantify the performance of the synthetic data pipeline and ensure that the network had successfully learned the target features, training metres were monitored across the 50 epoch run. The resulting loss and performance curves are detailed in Figure \ref{fig:synthetic_training_results}.
+To quantify the performance of the synthetic data pipeline and ensure that the network had successfully learned the target features, training metres were monitored across the 50 epoch run. The resulting loss and performance curves are detailed in Fig. \ref{fig:synthetic_training_results}.
 
 \begin{figure}[htbp]
     \centering
@@ -1591,7 +1591,7 @@ To quantify the performance of the synthetic data pipeline and ensure that the n
 
 The performance metrics corroborate the successful convergence. The mean Average Precision at an Intersection over Union threshold of 0.50 (mAP50) plateaus at 0.96 and the mAP50-95 metric climbs to above 0.80. These exceptionally high metrics are a direct characteristic of synthetic datasets. Unlike human-annotated real-world data, which inherently suffers from subjective or loose labelling, the Unity pipeline generates mathematically perfect ground-truth coordinates. Furthermore, evaluating the network against validation data drawn from the exact same simulated distribution naturally yields higher accuracy. Ultimately, these theoretical metrics prove the network successfully extracted the features of the simulated human targets,
 
-Beyond theoretical convergence, we determined the operational threshold for the deployment of the synthetic model. The F1-Confidence curve was evaluated to identify this balance for the simulation environment (Figure \ref{fig:synthetic_f1_curve}).
+Beyond theoretical convergence, we determined the operational threshold for the deployment of the synthetic model. The F1-Confidence curve was evaluated to identify this balance for the simulation environment (Fig. \ref{fig:synthetic_f1_curve}).
 
 \newpage
 
@@ -1604,7 +1604,7 @@ Beyond theoretical convergence, we determined the operational threshold for the 
 
 The curve demonstrates that the synthetic model reaches a peak F1 score of 0.94 at a confidence threshold of 0.524. Because the synthetic pipeline generates mathematically consistent features and ground-truth coordinates, the network achieves a high peak confidence within its own domain. Consequently, the deployment inference threshold within the Unity Sentis tensor engine was configured to this 0.524 value. Setting the threshold at this peak ensures the system effectively balances the detection of valid targets against the rejection of simulated background noise.
 
-Finally, a visual inspection of the validation holdout set was conducted. As demonstrated in the sample validation predictions (Figure \ref{fig:synthetic_val_preds}), the model successfully adapts to the severe algorithmic occlusions and varied lighting conditions generated by the Unity pipeline.
+Finally, a visual inspection of the validation holdout set was conducted. As demonstrated in the sample validation predictions (Fig. \ref{fig:synthetic_val_preds}), the model successfully adapts to the severe algorithmic occlusions and varied lighting conditions generated by the Unity pipeline.
 
 Unlike the baseline VisDrone model, which relied on high-altitude silhouettes, the synthetic model consistently draws precise bounding boxes around the exposed targets. The model accurately detects players with high confidence even when the player is prone or obscured by walls and props. This confirms that the randomisation techniques employed during dataset generation successfully produced a detection model tailored to the constraints of the simulated arena.
 
@@ -1622,9 +1622,9 @@ Unlike the baseline VisDrone model, which relied on high-altitude silhouettes, t
 
 To evaluate the synthetic model, we conducted a low-light orbital benchmark that is identical to the one completed for the VisDrone model. This test replicates the environmental constraints under which the VisDrone model experienced detection failure.
 
-The results for the synthetic model are visualised in Figure \ref{fig:benchmark_synthetic_lowlight}. The confidence score distribution (Figure \ref{fig:benchmark_synthetic_lowlight_confidence}) indicates consistent detection, maintaining confidence levels above 0.85 across the majority of yaw and pitch angles. However, a slight degradation occurs at extreme pitch angles. 
+The results for the synthetic model are visualised in Fig. \ref{fig:benchmark_synthetic_lowlight}. The confidence score distribution (Fig. \ref{fig:benchmark_synthetic_lowlight_confidence}) indicates consistent detection, maintaining confidence levels above 0.85 across the majority of yaw and pitch angles. However, a slight degradation occurs at extreme pitch angles. 
 
-This stability is supported by the TP/FP/FN categorisation (Figure \ref{fig:benchmark_synthetic_lowlight_classification}). The synthetic model records zero False Negatives (FN) across the hemisphere and a few False Positives (FP) at a high pitch angle between $135^\circ$ and $180^\circ$ yaw. When contrasted with the VisDrone model, the synthetic model performs significantly better in low light conditions and is therefore more reliable in identifying the target under arena-specific illumination.
+This stability is supported by the TP/FP/FN categorisation (Fig. \ref{fig:benchmark_synthetic_lowlight_classification}). The synthetic model records zero False Negatives (FN) across the hemisphere and a few False Positives (FP) at a high pitch angle between $135^\circ$ and $180^\circ$ yaw. When contrasted with the VisDrone model, the synthetic model performs significantly better in low light conditions and is therefore more reliable in identifying the target under arena-specific illumination.
 
 \newpage 
 
@@ -1647,7 +1647,7 @@ This stability is supported by the TP/FP/FN categorisation (Figure \ref{fig:benc
     \label{fig:benchmark_synthetic_lowlight}
 \end{figure}
 
-Alongside low-light performance, the physical geometry of a laser tag maze introduces a second operational constraint of frequent target occlusion. Players actively utilise walls and barricades for cover, meaning the drone's perception system will rarely have an unobstructed view of a complete human silhouette. To quantify how effectively each model detects partially hidden targets, a sliding occlusion test was conducted. Figure \ref{fig:occlusion_test} plots the detection confidence of both models as the percentage of the obscured target area increases.
+Alongside low-light performance, the physical geometry of a laser tag maze introduces a second operational constraint of frequent target occlusion. Players actively utilise walls and barricades for cover, meaning the drone's perception system will rarely have an unobstructed view of a complete human silhouette. To quantify how effectively each model detects partially hidden targets, a sliding occlusion test was conducted. Fig. \ref{fig:occlusion_test} plots the detection confidence of both models as the percentage of the obscured target area increases.
 
 \begin{figure}[htbp]
     \centering
@@ -1656,7 +1656,7 @@ Alongside low-light performance, the physical geometry of a laser tag maze intro
     \label{fig:occlusion_test}
 \end{figure}
 
-As shown in the detection curve (Figure \ref{fig:occlusion_test}), the VisDrone model experiences a decrease in confidence when the target is partially obscured. It falls below a 0.5 confidence threshold after 20\% occlusion, fluctuating before dropping to zero at approximately 40\% occlusion. This indicates that the baseline model, having been trained primarily on high-altitude pedestrian datasets, relies heavily on the complete humanoid silhouette to make a positive classification.
+As shown in the detection curve (Fig. \ref{fig:occlusion_test}), the VisDrone model experiences a decrease in confidence when the target is partially obscured. It falls below a 0.5 confidence threshold after 20\% occlusion, fluctuating before dropping to zero at approximately 40\% occlusion. This indicates that the baseline model, having been trained primarily on high-altitude pedestrian datasets, relies heavily on the complete humanoid silhouette to make a positive classification.
 
 In contrast, the synthetic model demonstrates a more stable detection decay curve. It maintains a confidence score above 0.9 up to 35\% occlusion and crosses the 0.5 threshold at approximately 68\% occlusion. This data suggests that the synthetic domain randomisation pipeline trained the neural network to classify partial human geometry. By learning to identify isolated features, such as an exposed shoulder or an extended arm, the synthetic model addresses the occlusion limitations observed in the Visdrone model, offering greater reliability for deployment in environments with physical barricades.
 
@@ -1665,7 +1665,7 @@ We use sensor fusion in order to bridge the gap between the 2D \gls{yolo} boundi
 
 If this centroid lies on a gap in the target's posture, a single pixel sample of the depth map may erroneously return the distance to the background wall rather than the player itself. In order to prevent this, the system samples a $N \times N$ kernel of pixels around the centroid and a median filter is applied to ensure that the output reflects the true target distance. 
 
-Using the depth $z_c$, the system performs an inverse pinhole camera projection to obtain the physical horizontal ($x_c$) and vertical ($y_c$) distances in the camera frame. The geometry of this projection is illustrated in Figure \ref{fig:projection_side} and Figure \ref{fig:projection_3d}.
+Using the depth $z_c$, the system performs an inverse pinhole camera projection to obtain the physical horizontal ($x_c$) and vertical ($y_c$) distances in the camera frame. The geometry of this projection is illustrated in Fig. \ref{fig:projection_side} and Fig. \ref{fig:projection_3d}.
 
 The image plane coordinates are related to the 3D spatial coordinates via the focal length $f$:
 
@@ -1853,7 +1853,7 @@ Throughout the development process, we changed the environment setup multiple ti
 Since we are using a manager based workflow, the code is split into multiple sections, hence the following subsections will describe how each manager term was setup.
 
 \subsubsection{Scene}
-The general scene was just setup with a flat ground plane, however, we created custom code that uses our map wall matrix (detailed in Section \ref{map}) to determine the location of the walls and loads them and the floor into the environment as collision cuboids, as shown in Figure \ref{fig:IsaacLabMap}. These collision cuboids are not used for collisions as our termination conditions will reset the environment before the drones hit the wall, so these are turned off during training to reduce computation time and used only for visualisation when playing the environment for demonstration purposes.
+The general scene was just setup with a flat ground plane, however, we created custom code that uses our map wall matrix (detailed in Section \ref{map}) to determine the location of the walls and loads them and the floor into the environment as collision cuboids, as shown in Fig. \ref{fig:IsaacLabMap}. These collision cuboids are not used for collisions as our termination conditions will reset the environment before the drones hit the wall, so these are turned off during training to reduce computation time and used only for visualisation when playing the environment for demonstration purposes.
 
 \begin{figure}[htbp]
     \centering
@@ -1946,7 +1946,7 @@ Companion apps encourage user-engagement by allowing users to track their progre
 Companion apps also serve a functional purpose. Since effectively everyone in the UK owns and uses a smartphone, they can be directly implemented into existing products. For example, budget UK pub chain JD Wetherspoon uses a companion app to allow patrons to order drinks and food directly to their table, without requiring them to break conversation and queue at a busy bar. 
 
 \subsection{Overview}
-When opened for the first time, the app prompts the user sign in using a username and password. When completed, the app displays the first of five screens that are navigated using a bottom panel: the \say{Profile} screen, the \say{Leaderboard} screen, the \say{Achievements and Challenges} screen, the \say{Community} screen, and the \say{Play in Person} screen. As an example, the \say{Leaderboard} screen is shown in Figure \ref{fig:lea-screen}. The app user can toggle between viewing a global leaderboard and a leaderboard of only their friends.
+When opened for the first time, the app prompts the user sign in using a username and password. When completed, the app displays the first of five screens that are navigated using a bottom panel: the \say{Profile} screen, the \say{Leaderboard} screen, the \say{Achievements and Challenges} screen, the \say{Community} screen, and the \say{Play in Person} screen. As an example, the \say{Leaderboard} screen is shown in Fig. \ref{fig:lea-screen}. The app user can toggle between viewing a global leaderboard and a leaderboard of only their friends.
 
 \begin{figure}[htbp]
      \centering
@@ -1981,7 +1981,7 @@ Tracking progress encourages user engagement by giving users a sense of achievem
 \subsubsection{Friends}
 Connecting friends and integrating social features encourages user engagement by allowing users to see their friends' progress. The app achieves this in many ways:
 \begin{itemize}
-    \item The Leaderboard screen allows players to compare themselves only against their friends (as shown in Figure \ref{fig:lea-fri}.
+    \item The Leaderboard screen allows players to compare themselves only against their friends (as shown in Fig. \ref{fig:lea-fri}.
     \item The Community screen allows players to see recent activity of their friends, as well as to send and accept/decline friend requests.
 \end{itemize}
 \subsubsection{Notifications and reminders}
@@ -1996,9 +1996,9 @@ Integrating Notifications and reminders prompts users to engage regularly with t
 \subsubsection{Functionality}
 The user experience of playing game in the centre, using the app, is outlined below.
 \begin{itemize}
-    \item The user signs in to the app (or create an account if this has not already been done). The Login screen is shown in Figure \ref{fig:userstory1}.
-    \item The app displays the Profile Screen. Using the bottom panel (shown in Figure \ref{fig:App-Panel}, the user navigates to the \say{Play in Person} Screen. The Profile Screen is shown in Figure \ref{fig:userstory2}.
-    \item The player uses the \say{Play in Person} screen to scan QR codes on the gun and the helmet given to them by the centre. The Play in Person screen is shown in Figure \ref{fig:userstory3}.
+    \item The user signs in to the app (or create an account if this has not already been done). The Login screen is shown in Fig. \ref{fig:userstory1}.
+    \item The app displays the Profile Screen. Using the bottom panel (shown in Fig. \ref{fig:App-Panel}, the user navigates to the \say{Play in Person} Screen. The Profile Screen is shown in Fig. \ref{fig:userstory2}.
+    \item The player uses the \say{Play in Person} screen to scan QR codes on the gun and the helmet given to them by the centre. The Play in Person screen is shown in Fig. \ref{fig:userstory3}.
     
 \end{itemize}
 \begin{figure}[htbp]
@@ -2033,7 +2033,7 @@ This allows the server to attribute the correct number of kills and deaths (infr
 \subsection{Usability Design Choices}
 In 2010, Lee et al \cite{LEE201090} identified several \say{Principles for General System Design}, with respect to complex 3D architectural design and engineering tools. While this use case is not identical to that of Lee et al, the principles are still relevant. The following are examples of these principles:
 \subsubsection{Visibility}
-Lee et al describe the use of visibility in UI design as \say{Making relevant information conspicuous and easily detectable to the user}. This has been achieved by the large panel at the bottom of the app, visible at all times, as shown in Figure \ref{fig:App-Panel}. Furthermore, the open-source React icons encourage faster visual recognition by the user, improving visibility of the relevant information (in this case the purpose of each screen).
+Lee et al describe the use of visibility in UI design as \say{Making relevant information conspicuous and easily detectable to the user}. This has been achieved by the large panel at the bottom of the app, visible at all times, as shown in Fig. \ref{fig:App-Panel}. Furthermore, the open-source React icons encourage faster visual recognition by the user, improving visibility of the relevant information (in this case the purpose of each screen).
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{figs/App_Screenshots/Bottom_Panel.png}
@@ -2041,7 +2041,7 @@ Lee et al describe the use of visibility in UI design as \say{Making relevant in
     \label{fig:App-Panel}
 \end{figure}
 \subsubsection{Feedback}
-Lee et al describe the use of feedback in UI design as \say{Response of the system to the user’s actions in order to provide information regarding the internal state of the system}. As an example of this principle in the design of this app, the icon in the bottom panel corresponding to the current screen is filled in and coloured red. When the user changes screen, the \say{internal state} of the app is reflected by the change of icon displayed in red. As another example, when a friend request is made, the user receiving the request sees a box with two buttons: \say{Accept} and \say{Decline}, as shown in Figure \ref{fig:App-Friend_Request}. When the user selects one of these options, the box disappears. While this is not required for the functionality of the system, the change to the external state of the app (the box disappearing) instinctively reinforces to the user of a change to the internal state of the app (the friends associated with a player in the database). 
+Lee et al describe the use of feedback in UI design as \say{Response of the system to the user’s actions in order to provide information regarding the internal state of the system}. As an example of this principle in the design of this app, the icon in the bottom panel corresponding to the current screen is filled in and coloured red. When the user changes screen, the \say{internal state} of the app is reflected by the change of icon displayed in red. As another example, when a friend request is made, the user receiving the request sees a box with two buttons: \say{Accept} and \say{Decline}, as shown in Fig. \ref{fig:App-Friend_Request}. When the user selects one of these options, the box disappears. While this is not required for the functionality of the system, the change to the external state of the app (the box disappearing) instinctively reinforces to the user of a change to the internal state of the app (the friends associated with a player in the database). 
 
 \begin{figure}[H]
     \centering
@@ -2050,7 +2050,7 @@ Lee et al describe the use of feedback in UI design as \say{Response of the syst
     \label{fig:App-Friend_Request}
 \end{figure}
 \subsubsection{Consistency}
-Lee et al describe the use of consistency in UI design as \say{Uniformity of system semantics across similar situations}. In this context, \say{system semantics} refers to the method the user is expected to use when interacting with the UI. As an example, the app uses a dark grey and red colour scheme. Throughout the app, red is used to mean \say{active/on} and dark grey is used to mean \say{passive/off}. This is seen in the bottom panel (Figure \ref{fig:App-Panel}) and top panel in the achievements (Figure \ref{fig:ach-screen}) and community (Figure \ref{fig:com-screen}) screens, in which the screen being displayed in shown in red. It is also seen in the player profile (Figure \ref{fig:0_Login_Screen} and login (Figure \ref{fig:1_Profile_Screen}) screens, in which the Login/Logout buttons are coloured red. It is shown in the box displayed when receiving a friend request (Figure \ref{fig:App-Friend_Request}) in which the \say{Accept} button, which changes the user's list of friends, is coloured red, and the \say{Decline} button, which leaves the user's list of friends as it is, is shown in dark grey.
+Lee et al describe the use of consistency in UI design as \say{Uniformity of system semantics across similar situations}. In this context, \say{system semantics} refers to the method the user is expected to use when interacting with the UI. As an example, the app uses a dark grey and red colour scheme. Throughout the app, red is used to mean \say{active/on} and dark grey is used to mean \say{passive/off}. This is seen in the bottom panel (Fig. \ref{fig:App-Panel}) and top panel in the achievements (Fig. \ref{fig:ach-screen}) and community (Fig. \ref{fig:com-screen}) screens, in which the screen being displayed in shown in red. It is also seen in the player profile (Fig. \ref{fig:0_Login_Screen} and login (Fig. \ref{fig:1_Profile_Screen}) screens, in which the Login/Logout buttons are coloured red. It is shown in the box displayed when receiving a friend request (Fig. \ref{fig:App-Friend_Request}) in which the \say{Accept} button, which changes the user's list of friends, is coloured red, and the \say{Decline} button, which leaves the user's list of friends as it is, is shown in dark grey.
 
 
 
@@ -2074,7 +2074,7 @@ Screenshots of all screens of the app are included in the appendix.
 \section{Safety and Risk Assessment Management}
 \label{risk-assessment}
 
-A quantitative risk assessment has been completed, and is shown in Figure \ref{fig:risk-assessment}. The most significant initial risks (before mitigations) were the the contact between guns and players' eyes, and players running into each other. After the necessary control measures, they are still most significant residual risks, along with trips and falls. This demonstrates that there is not an undue risk associated with playing the game, since trips and falls, player-on-player collision and impact with instruments used for playing (such as laser-guns, squash raquets, etc.) are risks associated with traditional laser-tag, as well as many common sports. 
+A quantitative risk assessment has been completed, and is shown in Fig. \ref{fig:risk-assessment}. The most significant initial risks (before mitigations) were the the contact between guns and players' eyes, and players running into each other. After the necessary control measures, they are still most significant residual risks, along with trips and falls. This demonstrates that there is not an undue risk associated with playing the game, since trips and falls, player-on-player collision and impact with instruments used for playing (such as laser-guns, squash raquets, etc.) are risks associated with traditional laser-tag, as well as many common sports. 
 
 
 \begin{figure}[H]
@@ -2394,7 +2394,7 @@ The Discounted Cumulative Cash Flow turns positive in Year 10 (payback; section 
 Using Apps Script, Google Sheets' equivalent of Excel macros, the following analyses were performed. In general, one variable was changed and another was observed, while all others were held constant according to the assumptions stated above.
 \subsubsection{NPV Profile}
 \label{NPVProfile}
-A common measure of a business' viability is the effect of changing the discount rate on NPV, and analysis of the NPV-Discount Rate graph that this analysis produces (shown in Figure \ref{fig:NPV-Profile}).
+A common measure of a business' viability is the effect of changing the discount rate on NPV, and analysis of the NPV-Discount Rate graph that this analysis produces (shown in Fig. \ref{fig:NPV-Profile}).
 
 \begin{figure}[H]
     \centering
@@ -2407,7 +2407,7 @@ The discount rate at which NPV is zero (Internal Rate of Return, IRR) is 22.3\%.
 
 \subsubsection{Discounted Payback Sensitivity}
 \label{DPS}
-It is also useful to investigate how payback (the time at which the cumulative discounted cash flow becomes positive) changes with discount rate (shown in Figure \ref{fig:dis-pay-sen}).
+It is also useful to investigate how payback (the time at which the cumulative discounted cash flow becomes positive) changes with discount rate (shown in Fig. \ref{fig:dis-pay-sen}).
 
 \begin{figure}[H]
     \centering
@@ -2458,7 +2458,7 @@ A reference value of elasticity \(\varepsilon=-1.1\) is chosen, since it represe
 The effect of a variation in reference elasticity is analysed in Section \ref{ElasticityAnal}
 
 \paragraph{Finding optimal price} \(\) \newline
-The variation of NPV with game price was investigated. The results are shown in Figure \ref{fig:pri-sen}.
+The variation of NPV with game price was investigated. The results are shown in Fig. \ref{fig:pri-sen}.
 
 \begin{figure}[H]
     \centering
@@ -2476,7 +2476,7 @@ NPV is only positive for prices between £160 and £240 per game (to the nearest
 
 \paragraph{Utility Sensitivity}\(\) \newline
 \label{UtilityAnalFixedPrice}
-It was assumed that the maximum number of games per year would be 2000 when the price was £200 per game. The effect of a small error is this estimate was investigated. Price per game was held constant, maximum games per year was varied and the resulting NPV was tabulated. The results are shown in Figure \ref{fig:uti-sen}.
+It was assumed that the maximum number of games per year would be 2000 when the price was £200 per game. The effect of a small error is this estimate was investigated. Price per game was held constant, maximum games per year was varied and the resulting NPV was tabulated. The results are shown in Fig. \ref{fig:uti-sen}.
 
 \begin{figure}[H]
     \centering
@@ -2489,7 +2489,7 @@ NPV is only positive for above 1900 games per year (rounded to the nearest 50) T
 
 \paragraph{How Optimal Price varies with elasticity} \(\) \newline
 \label{ElasticityAnal}
-This process was repeated for reference elasticity \(\varepsilon'\) between -0.5 (very price-insensitive) and -3 (very price-sensitive). Since the effect on NPV of changing two variables (reference elasticity and price per game) is being measured, it would be possible to create a 3D surface to demonstrate this. Since reference elasticity is only being varied in order to assess the sensitivity of the model to errors in numerical assumptions (it is not something that can be changed in order to maximise NPV), it is only useful to tabulate the optimal price per game (price that maximises NPV) and plot this against reference elasticity. This is shown in Figure \ref{fig:opt-cos-sen}.
+This process was repeated for reference elasticity \(\varepsilon'\) between -0.5 (very price-insensitive) and -3 (very price-sensitive). Since the effect on NPV of changing two variables (reference elasticity and price per game) is being measured, it would be possible to create a 3D surface to demonstrate this. Since reference elasticity is only being varied in order to assess the sensitivity of the model to errors in numerical assumptions (it is not something that can be changed in order to maximise NPV), it is only useful to tabulate the optimal price per game (price that maximises NPV) and plot this against reference elasticity. This is shown in Fig. \ref{fig:opt-cos-sen}.
 
 \begin{figure}[H]
     \centering
