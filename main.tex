@@ -9,6 +9,8 @@
 \usepackage{fontspec}
 \usepackage{amsmath}
 \usepackage{dirtytalk}
+\usepackage{subcaption}
+\captionsetup[subfigure]{labelformat=parens}
 \usepackage[colorlinks=true, linkcolor=black, citecolor=black, urlcolor=black]{hyperref}
 
 \title{Laser Tag using a Multiagent Drone System}
@@ -92,20 +94,19 @@ In addition to the technical deployment, user retention is driven by a companion
 \section{Proposed Gameplay for Drone-Based Laser Tag} % Ritchie
 \fancyhead[C]{Richard Usherwood}
 \subsection{Overview}
-Players are equipped with Laser Guns (\gls{ir} emitters that transmit encoded data), and helmets and vests, both containing \gls{ir} sensors. The drones are equipped with Turrets which emit \gls{ir} radiation (see Section \ref{Turret}) as well as \gls{ir} sensors. When they are not flying, they are dormant in a \say{standby location} where employees can replace their batteries if required. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If a player is hit, they must navigate to a designated \say{timeout} area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun will not work until their timeout has been completed (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at \(3 ~\mathrm{ m}\) height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.
-% Make sure this reference is correct
+Players are equipped with Laser Guns (\gls{ir} emitters that transmit encoded data), and helmets and vests containing \gls{ir} sensors. The drones are equipped with Turrets which emit \gls{ir} radiation (see Section \ref{Turret}) as well as \gls{ir} sensors. When not flying, they are dormant in a \say{standby location} where employees can replace their batteries. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If a player is hit, they must navigate to a designated \say{timeout} area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun is disables until their timeout ends (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at \(3 ~\mathrm{ m}\) height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
 
-\(\) \newline Two \say{game modes} have been designed: \say{Wave Mode} and \say{Objective Mode}. These are summarised in the following sections.
+\noindent Two \say{game modes} have been designed: \say{Wave Mode} and \say{Objective Mode}. These are summarised in the following sections.
 \subsection{Wave Mode}
-In \say{Wave Mode}, the players attempt to defeat a number of drones, released in an order designed to be both challenging and engaging. When the drone is hit, it returns to its standby location, where it will remain. If all of the players are timing out at the same time (having been hit), they lose. If all of the drones have been hit, they win. This constitutes a single wave. The players can choose from a catalogue of waves (in future accessible through the companion app, see Section \ref{app}), ranging from tutorial level to advanced. Each level will be marked with a numerical difficulty rating. This allows a team to end a game with an understandable, clear metric of how well they performed: the difficulty rating of the hardest wave in which they won. This will also serve as a clear metric of a team's improvement with time, encouraging them to return. In future, this will be displayed in the companion app, allowing players to compare metrics with their friends.
+In \say{Wave Mode}, the players \say{fight} a number of drones, released in an order designed to be both challenging and engaging. When hit, the drones return to their standby location, where they will remain. If all of the players are timing out at the same time (having been hit), they lose. If all of the drones have been hit, they win. This constitutes a single wave. The players can choose from a catalogue of waves (in future accessible through the companion app, see Section \ref{app}), ranging in difficulty. Each level will be given a difficulty rating. This allows a team to end a game with a clear metric of their performance: the difficulty rating of the hardest wave completed. This will also allow a team to track their improvement. In future, this will be displayed in the companion app, allowing players to compare scores with friends.
 
 \subsection{Objective Mode}
-In \say{Objective Mode}, the players must attempt to navigate the maze to complete objectives, such as \say{Hold this button for 5 seconds}, or \say{Shoot this target on the wall}, which will be communicated to the players via speakers (in future they will be communicated via a LED display embedded in the Laser-Guns). They must complete all objectives within a defined time to \say{pass} the level. While they are completing these objectives, the drones are flying overhead and attempting to shoot at the players, just as in Wave Mode. Similarly, the players must timeout for 10 seconds in a particular area of the maze if hit, and the drones will exit the game if hit, but will return after a short timeout. If all players timeout at once, they lose; if they exceed the time limit for the level, they lose; if they complete all objectives, they win. If they win, they will progress to a harder level. Just as in \say{Wave Mode}, the levels will be designed and play-tested to be both challenging, engaging; a catalogue of levels marked with a numerical difficulty can be selected in-app.\newline
+In \say{Objective Mode}, the players must navigate the maze to complete objectives, such as \say{Hold this button for 5 seconds}, or \say{Shoot this target on the wall}, which are communicated via speakers. They must complete all objectives within a time limit to \say{pass} the level. While they are completing these objectives, the drones are flying overhead and attempting to shoot at the players, just as in Wave Mode. Similarly, the players must timeout for 10 seconds in a particular area of the maze if hit, and the drones will exit the game if hit, but will return after a short timeout. If all players timeout at once, they lose; if they exceed the time limit for the level, they lose; if they complete all objectives, they win. If they win, they will progress to a harder level. Just as in \say{Wave Mode}, the levels will be designed and play-tested to be both challenging, engaging; a catalogue of levels marked with a numerical difficulty can be selected in-app.\newline
 
 \subsection{Difficulty Scaling}
-Since the levels increase in difficulty, there is little need to scale difficulty according to a players' skill: if the players are inexperienced, they will only play easy levels, and there will be levels to suit players of all skill levels. However, the difficulty of the levels may need to change according to the number of players in a team. This can be achieved in a number of ways. For example, the number of drones could be adjusted, the top speed of the drones could be capped, and artificial inaccuracy could be added to the shooting of the drones.
+Since the levels increase in difficulty, there is little need to scale difficulty according to a players' skill: if the players are inexperienced, they will only play easy levels, and there will be levels to suit players of all skill levels. However, the difficulty of the levels may need to change according to the number of players in a team. This can be achieved in a number of ways. For example, the number of drones could be adjusted, the top speed of the drones could be capped, and artificial inaccuracy could be added to the shooting of the drones.\newline
 
-\(\) \newline It is very difficult to know which methods of adjusting difficulty will result in a game that is both enjoyable and balanced, for a range of numbers of people. Hence, deciding exactly how to perform this adjustment will require play-testing in the arena, once it has been created.
+\noindent It is very difficult to know which methods of adjusting difficulty will result in a game that is both enjoyable and balanced, for a range of numbers of people. Hence, deciding exactly how to perform this adjustment will require play-testing in the arena, once it has been created.
 \newpage
 
 %%%%%%%%%----End of System Proposed Gameplay------%%%%%%%%%
@@ -1974,7 +1975,7 @@ Tracking progress encourages user engagement by giving users a sense of achievem
 \subsubsection{Friends}
 Connecting friends and integrating social features encourages user engagement by allowing users to see their friends' progress. The app achieves this in many ways:
 \begin{itemize}
-    \item The Leaderboard screen allows players to compare themselves only against their friends (as shown in Fig. \ref{fig:lea-fri}.
+    \item The Leaderboard screen allows players to compare themselves only against their friends, as shown in Fig.~\ref{fig:lea-screen}(\subref{fig:lea-fri}).
     \item The Community screen allows players to see recent activity of their friends, as well as to send and accept/decline friend requests.
 \end{itemize}
 \subsubsection{Notifications and reminders}
@@ -1989,9 +1990,9 @@ Integrating Notifications and reminders prompts users to engage regularly with t
 \subsubsection{Functionality}
 The user experience of playing game in the centre, using the app, is outlined below.
 \begin{itemize}
-    \item The user signs in to the app (or create an account if this has not already been done). The Login screen is shown in Fig. \ref{fig:userstory1}.
-    \item The app displays the Profile Screen. Using the bottom panel (shown in Fig. \ref{fig:App-Panel}, the user navigates to the \say{Play in Person} Screen. The Profile Screen is shown in Fig. \ref{fig:userstory2}.
-    \item The player uses the \say{Play in Person} screen to scan QR codes on the gun and the helmet given to them by the centre. The Play in Person screen is shown in Fig. \ref{fig:userstory3}.
+    \item The user signs in to the app (or create an account if this has not already been done). The Login screen is shown in Fig.~\ref{fig:userstory}(\subref{fig:userstory1}).
+    \item The app displays the Profile Screen. Using the bottom panel (shown in Fig.~\ref{fig:App-Panel}), the user navigates to the \say{Play in Person} Screen. The Profile Screen is shown in Fig.~\ref{fig:userstory}(\subref{fig:userstory2}).
+    \item The player uses the \say{Play in Person} screen to scan QR codes on the gun and the helmet given to them by the centre. The Play in Person screen is shown in Fig.~\ref{fig:userstory}(\subref{fig:userstory3}).
     
 \end{itemize}
 \begin{figure}[htbp]
@@ -2084,7 +2085,7 @@ It is assumed that the first year (Year 0) will be spent producing hardware, adv
 
 
 \subsubsection{Employee Costs}
-The minimum equivalent number of full-time employees required was thought to be two. The number of full-time employees was assumed to increase with utility, up to a maximum of four, as shown in Table\ref{tab:utilityandemployees}:
+The minimum equivalent number of full-time employees required was thought to be two. The number of full-time employees was assumed to increase with utility, up to a maximum of four, as shown in Table \ref{tab:utilityandemployees}:
 
 \begin{table}[h]
 \centering
@@ -2501,39 +2502,74 @@ The system should not be considered fully sustainable. Issues such as waste and 
 \section*{Appendix}
 \fancyhead[C]{Group}
 
-\paragraph{Heating cost assumptions}\(\) \newline
-\label{assumptions}
-It is also assumed that, when players enters the warehouse every hour, 50\% of the air is evacuated and replaced, and no air is evacuated when the game is being played. The first assumption is likely a significant overestimate, and the second a modest underestimate, resulting in a conservative estimate.\newline
+\paragraph{Heating cost assumptions}\label{assumptions}\(\) \newline
+\noindent Assume a complete air change every two hour-long games (\(\text{ACH}=0.5\)), a warehouse height of \(6\text{ m}\), and a square footprint.
+% \begin{equation}
+%     \dot Q=U_wA_w\Delta T+U_rA_r\Delta T+U_fA_f\Delta T +\text{ACH}\cdot \frac{\rho c_p V\Delta T}{3600}
+% \end{equation}
+\begin{equation}
+    \text{Total Wall Area}=4\times\sqrt{632\text{ m}^2}\times6\text{ m}=603\text{ m}^2
+\end{equation}
+\begin{equation}
+    \text{Floor Area}=\text{Roof Area}=6800 \text{ ft}^2=632\text{ m}^2
+\end{equation}
+\begin{equation}
+    \text{Total Volume}=632\text{ m}^2\times6\text{ m}=3792\text{ m}^3
+\end{equation}
 
-It is further assumed that the height of the warehouse is 6 metres, and that the warehouse is square. 
-\begin{equation}
-    \dot Q=U_wA_w\Delta T+U_rA_r\Delta T+U_fA_f\Delta T +\text{ACH}\cdot \frac{\rho c_p V\Delta T}{3600}
-\end{equation}
-\begin{equation}
-    \text{Floor Area}=\text{Roof Area}=6800 \text{ft}^2=632m^2
-\end{equation}
-Assume floor plan to be square, and walls to be \(6m\) tall:
-\begin{equation}
-    \text{Wall Length}=\sqrt{632m^2}=25.1m
-\end{equation}
-\begin{equation}
-    \text{Total Wall Area}=4*25.1m*6m=603m^2
-\end{equation}
-\begin{equation}
-    \text{Total Volume}=632m^2\times6m=3792m^3
-\end{equation}
-Assuming the average daytime temperature in London is \(10 ^\circ C\), and the desired temperature is \(20^\circ C\), \(\Delta T=10^\circ C\):
-\begin{equation}
-    \dot Q=U_wA_w\Delta T+U_rA_r\Delta T+U_fA_f\Delta T +\text{ACH}\cdot \frac{\rho c_p V\Delta T}{3600}
-\end{equation}
-\begin{equation}            =0.78\times603\times10+0.48\times632\times10+0.54\times632\times10+0.5\cdot \frac{1.225\times1005\times3792\times10}{3600}
-\end{equation}
-\begin{equation}  
-    \label{app:heating-calcs}
-    =17.6\text{kW}
-\end{equation}
-\newpage
 
+% \begin{equation}
+%     \text{Total Volume}=632\text{ m}^2\times6\text{ m}=3792\text{ m}^3
+% \end{equation}
+
+
+\noindent Assume average daytime temperature is \(10 ^\circ C\), and the desired temperature is \(20^\circ C\), \(\Delta T=10^\circ C\):
+\begin{equation}
+    \dot Q=U_wA_w\Delta T+U_rA_r\Delta T+U_fA_f\Delta T +\text{ACH}\cdot \frac{\rho c_p V\Delta T}{3600}=17.6\text{ kW}
+\end{equation}
+
+
+% \begin{equation}            =0.78\times603\times10+0.48\times632\times10+0.54\times632\times10+0.5\cdot \frac{1.225\times1005\times3792\times10}{3600}
+% \end{equation}
+% \begin{equation}  
+%     \label{app:heating-calcs}
+%     =17.6\text{kW}
+% \end{equation}
+
+
+
+\begin{figure}[htbp]
+     \centering
+     \begin{subfigure}[b]{0.24\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/3_1_Achievements_Lifetime.jpg}
+         \caption{Achievements Screen - Lifetime Achievements}
+         \label{fig:RemainingAppSS-ach-lif}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.24\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/3_2_Achievements_Monthly.jpg}
+         \caption{Achievements Screen - Monthly Challenges}
+         \label{fig:RemainingAppSS-ach-mon}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.24\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_1_Community_Friends.jpg}
+         \caption{Community Screen - Friends Tab}
+         \label{fig:RemainingAppSS-com-fri}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.24\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_2_2_Community_Requests_Making.jpg}
+         \caption{Community Screen - sending friend request}
+         \label{fig:RemainingAppSS-com-sen}
+     \end{subfigure}
+     \caption{Remaining App Screenshots}
+     \label{fig:RemainingAppSS}
+\end{figure}
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=1\linewidth]{figs/High-Level/Flow2.png}
@@ -2541,88 +2577,23 @@ Assuming the average daytime temperature in London is \(10 ^\circ C\), and the d
     \label{fig:FlowBig}
 \end{figure}
 
+
+
+
+
+
+
+
+
+
+
+
 % \begin{figure}[H]
 %     \centering
-%     \includegraphics[width=1\linewidth]{figs/risk-assessment}
-%     \caption{Quantitative Risk Assessment}
-%     \label{fig:risk-assessment}
+%     \includegraphics[width=1\linewidth]{figs/Database_Screenshot.png}
+%     \caption{Screenshot of SQL Database}
+%     \label{fig:Database}
 % \end{figure}
-
-\begin{figure}[htbp]
-     \centering
-     \begin{subfigure}[b]{0.25\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/0_Login_Screen.jpg}
-         \caption{Login Screen}
-         \label{fig:0_Login_Screen}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.25\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/1_Profile_Screen.jpg}
-         \caption{Profile Screen}
-         \label{fig:1_Profile_Screen}
-     \end{subfigure}
-     \caption{Login and Profile Screens}
-     \label{fig:log-pro-screen}
-\end{figure}
-
-\begin{figure}[htbp]
-     \centering
-     \begin{subfigure}[b]{0.25\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/3_1_Achievements_Lifetime.jpg}
-         \caption{Achievements Screen - Lifetime Achievements}
-         \label{fig:ach-lif}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.25\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/3_2_Achievements_Monthly.jpg}
-         \caption{Achievements Screen - Monthly Challenges}
-         \label{fig:ach-mon}
-     \end{subfigure}
-     \caption{Achievements Screen}
-     \label{fig:ach-screen}
-\end{figure}
-\begin{figure}[htbp]
-     \centering
-     \begin{subfigure}[b]{0.25\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_1_Community_Friends.jpg}
-         \caption{Community Screen - Friends Tab}
-         \label{fig:com-friends}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.25\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_2_1_Community_Requests_Receiving.jpg}
-         \caption{Community Screen - receiving friend request}
-         \label{fig:com-rec}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.25\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_2_2_Community_Requests_Making.jpg}
-         \caption{Community Screen - sending friend request}
-         \label{fig:com-sen}
-     \end{subfigure}
-     \caption{Community Screen}
-     \label{fig:com-screen}
-\end{figure}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.25\linewidth]{figs/App_Screenshots/5_Play_In_Person.jpg}
-    \caption{Play in Person Screen}
-    \label{fig:5_PiP_Screen}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\linewidth]{figs/Database_Screenshot.png}
-    \caption{Screenshot of SQL Database}
-    \label{fig:Database}
-\end{figure}
 \newpage
 \printbibliography{biblio}
 
