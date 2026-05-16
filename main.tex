@@ -92,8 +92,8 @@ In addition to the technical deployment, user retention is driven by a companion
 \section{Proposed Gameplay for Drone-Based Laser Tag} % Ritchie
 \fancyhead[C]{Richard Usherwood}
 \subsection{Overview}
-Players are equipped with Laser Guns (infrared emitters that transmit encoded data), and helmets and vests, both containing Infrared sensors. The drones are equipped with Turrets which emit Infrared radiation (see Section \ref{Turret}) as well as Infrared sensors. When they are not flying, they are dormant in a \say{standby location} where employees can replace their batteries if required. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If a player is hit, they must navigate to a designated \say{timeout} area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun will not work until their timeout has been completed (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at three metres height for safety, see Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
-
+Players are equipped with Laser Guns (infrared emitters that transmit encoded data), and helmets and vests, both containing Infrared sensors. The drones are equipped with Turrets which emit Infrared radiation (see Section \ref{Turret}) as well as Infrared sensors. When they are not flying, they are dormant in a \say{standby location} where employees can replace their batteries if required. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If a player is hit, they must navigate to a designated \say{timeout} area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun will not work until their timeout has been completed (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at \(3 ~\mathrm{ m}\) height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
+% Make sure this reference is correct
 
 Two \say{game modes} exist: \say{Wave Mode} and \say{Objective Mode}. These are summarised in the following sections.
 \subsection{Wave Mode}
@@ -1132,12 +1132,12 @@ Alternatively, a central server could be used to give drones high-level instruct
 Considering the pros and cons listed above, it was decided that a central server was the most appropriate option to perform high-level decision making. Different methods of handling communications between the drones and the server are discussed below.
 
 \subsection{Bluetooth}
-Bluetooth is a short-range wireless communication system, designed for low-power device-to-device communication. It uses 79 channels, \(1\text{MHz}\) apart, from 2.402 to 2.480 GHz. Data is encoded by changes in frequency. Classic Bluetooth uses Frequency Hopping Spread Spectrum (FHSS), switching between frequency channels to reduce interference, with Gaussian Frequency Shift Keying (GFSK) modulation. In a connection, one device acts as a \say{TERM}, and up to seven devices act as \say{TERM}. Time-Division-Duplexing is used to avoid collisions. Time is divided into \(625\mu\text{s}\) divisions. The master communicates in even slots, and the slaves communicate in odd slots.
+Bluetooth is a short-range wireless communication system, designed for low-power device-to-device communication. It uses 79 channels, \(1\mathrm{ MHz}\) apart, from 2.402 to 2.480 GHz. Data is encoded by changes in frequency. Classic Bluetooth uses Frequency Hopping Spread Spectrum (FHSS), switching between frequency channels to reduce interference, with Gaussian Frequency Shift Keying (GFSK) modulation. In a connection, one device acts as a \say{main}, and up to seven devices act as \say{followers}. Time-Division-Duplexing is used to avoid collisions. Time is divided into \(625\mu\mathrm{ s}\) divisions. The main communicates in even slots, and the followers communicate in odd slots.
 
-\(\)\newline A Bluetooth connection uses very little power. However, it has a lower bitrate than a Wi-Fi connection (1-3 \(\text{Mbps}\)). It also has a shorter intended range than a Wi-Fi connection. Furthermore, the maximum number of seven slaves connected to a single master will pose a problem since it will be necessary for up to 10 drones to be connected to the server at a time, requiring an additional master, to manage communication for some drones. This would be possible, but inconvenient and less robust.
+\(\)\newline A Bluetooth connection uses very little power. However, it has a lower bitrate than a Wi-Fi connection (1-3 \(\mathrm{ Mbps}\)). It also has a shorter intended range than a Wi-Fi connection. Furthermore, the maximum number of seven followers connected to a single main will pose a problem since it will be necessary for up to 10 drones to be connected to the server at a time, requiring an additional main, to manage communication for some drones. This would be possible, but inconvenient and less robust.
 
 \subsection{Wi-Fi}
-Wi-Fi is a medium-range wireless communication system, designed for fast and reliable server-to-device communication. It typically operates at \(\textasciitilde\)2.4\(\text{GHz}\), \(\textasciitilde\)5\(\text{GHz}\) or \(\textasciitilde\)6\(\text{GHz}\), transferring data over multiple (up to 60) non-overlapping channels of bandwidth 20\(\text{MHz}\), modulated using Orthogonal Frequency Division Multiplexing (OFDM).
+Wi-Fi is a medium-range wireless communication system, designed for fast and reliable server-to-device communication. It typically operates at \(\textasciitilde\)2.4\(\mathrm{ GHz}\), \(\textasciitilde\)5\(\mathrm{ GHz}\) or \(\textasciitilde\)6\(\mathrm{ GHz}\), transferring data over multiple (up to 60) non-overlapping channels of bandwidth 20\(\mathrm{ MHz}\), modulated using Orthogonal Frequency Division Multiplexing (OFDM).
 
 \(\) \newline A Wi-Fi connection typically has a lower latency and a much higher maximum bitrate than Bluetooth. However, the required data rate is small enough that this will not be important. Wi-Fi is generally more reliable than Bluetooth, and this is especially true at distances above ten meters; Bluetooth was designed for low bitrate, low power, short-range communication between a small number of devices, whereas Wi-Fi was designed for higher bandwidth connections between many devices.
 
@@ -1933,7 +1933,7 @@ For the collision avoidance method, we chose to use an Artificial Potential Fiel
 \newpage
 
 
-\section{App} % Ritchie
+\section{Companion App Design} % Ritchie
 \label{app}
 \fancyhead[C]{Richard Usherwood}
 \subsection{Context}
@@ -2105,28 +2105,26 @@ It is assumed that the first year (Year 0) will be spent producing hardware, adv
 % \label{tab:utility}
 % \end{table}
 
-As a first approximation, the maximum number of games per year was assumed to be 2000, corresponding to 10 hour-long games on Saturday and Sunday, and four hour-long games on weekdays, for 50 weeks per year. Note that this \say{maximum utility} refers to the value at which utility plateaus, not a fundamental limit. \newline
-
-The effect of a variation in utility is analysed in Section \ref{PriceAnal}.
+As a first approximation, the maximum number of games per year was assumed to be 2000, corresponding to 10 hour-long games on Saturday and Sunday, and four hour-long games on weekdays, for 50 weeks per year. Note that this \say{maximum utility} refers to the value at which utility plateaus, not a fundamental limit. The effect of a variation in utility is analysed in Section \ref{PriceAnal}.
 
 
 
 \subsubsection{Employee Costs}
 The minimum equivalent number of full-time employees required was thought to be two. The number of full-time employees was assumed to increase with utility, up to a maximum of four, as shown in Table \ref{tab:utilityandemployees}:
 
-% Format table better?
+
 \begin{table}[h]
 \centering
-\begin{tabular}{|c|c c c c c c|}
+\caption{Number of employees with time}
+\begin{tabular}{|c|c c c c c|}
 \hline
-Year & \qquad 0 & \quad 1 & \quad 2 & \quad 3 & \quad 4 & \quad \dots\\
+Year & \qquad 0 & \quad 1 & \quad 2 & \quad 3 & \quad 4 \\
 \hline
-Percentage of Maximum Utility & \qquad 0\% & \quad 50\% & \quad 75\% & \quad 100\% & \quad 100\% & \quad \dots \\
+Percentage of Maximum Utility & \qquad 0\% & \quad 50\% & \quad 75\% & \quad 100\% & \quad 100\%  \\
 \hline
-Full-Time employees & \qquad 2 & \quad 2 & \quad 3 & \quad 4 & \quad 4 & \quad \dots \\
+Full-Time employees & \qquad 2 & \quad 2 & \quad 3 & \quad 4 & \quad 4 \\
 \hline
 \end{tabular}
-\caption{Number of employees with time}
 \label{tab:utilityandemployees}
 \end{table}
 % \begin{table}[h]
@@ -2156,46 +2154,48 @@ The advertising budget is large, because early revenue has a disproportionate af
 Therefore, the projected required advertising budget is given by 
 \begin{equation}
     \label{equ:advertising}
-    \text{Cost [£/Year]} = \left (2000\text{ £/month} + 500\text{ £/month}\right ) \times 12\text{ months/year} = £30000\text{ £/year}
+    \text{ Cost [£/Year]} = \left (2000\text{ £/month} + 500\text{ £/month}\right ) \times 12\text{ months/year} = £30000\text{ £/year}
 \end{equation}
 
 
 
 \subsubsection{Electricity}
+Electricity costs account for heating, lighting and charging of batteries. Details are given in the following sections.
+
 \paragraph{Heating} \(\) \newline
 The warehouse is assumed to be heated electrically. The heating power is given by:
 \begin{equation}
     \dot Q=U_wA_w\Delta T+U_rA_r\Delta T+U_fA_f\Delta T +\text{ACH}\cdot \frac{\rho c_p V\Delta T}{3600}
 \end{equation}
-where \(U,A,\Delta T\) denote the U-Value (thermal transmittance), area and the indoor-outdoor temperature difference, and subscripts \(w,r,f\) the walls, roof and floor respectively. \(\text{ACH}, \rho, c_p, V\) denote the equivalent number of complete air changes per hour, air density, air specific heat capacity (constant pressure), and volume respectively. As a rough estimate, the warehouse is assumed to have U-Values three times greater (less well insulated) than the maximum specified for newly built houses under UK law \cite{UValueRegs}. This is summarised in Table \ref{tab:U-Values}.
+where \(U,A,\Delta T\) denote the U-Value (thermal transmittance), area and the indoor-outdoor temperature difference, and subscripts \(w,r,f\) the walls, roof and floor respectively. \(\text{ACH}, \rho, c_p, V\) denote the equivalent number of complete air changes per hour, air density, air specific heat capacity (constant pressure), and volume respectively. The warehouse is assumed to have U-Values three times greater than the maximum specified for newly built houses under UK law \cite{UValueRegs}. This is summarised in Table \ref{tab:U-Values}.
 \begin{table}[h]
 \centering
+\caption{U-Values}
 \begin{tabular}{|c|c|c|}
 \hline
-&Maximum U-Value [\(W/m^2K\)]& Assumed U-Value for warehouse [\(W/m^2K\)]\\
+&Max. U-Value for newly built house [\(\text{W/m}^2\text K\)]& Assumed U-Value for warehouse [\(\text{W/m}^2\text K\)]\\
 \hline
 External Walls & 0.26 & 0.78 \\
 Roof (pitched)& 0.16 & 0.48 \\
 Floor & 0.18 & 0.54 \\
 \hline
 \end{tabular}
-\caption{Maximum U-Values for newly built residential properties and assumed U-Values for the warehouse}
 \label{tab:U-Values}
 \end{table}
 
-Additional assumptions are made, as shown in the appendix in section \ref{assumptions}. As shown in equation \ref{app:heating-calcs}, it is found that the total heating power required to maintain a temperature of \(20^\circ C\) is 17.6 kW.
+Additional assumptions are made, as shown in the appendix in section \ref{assumptions}. As shown in Eq. \ref{app:heating-calcs}, it is found that the total heating power required to maintain a temperature of \(20^\circ \text{ C}\) is 17.6 kW.
 \newline
 
 \paragraph{Lighting} \(\) \newline
-To calculate the lighting costs, it is assumed the warehouse requires fifty 100W equivalent LEDs, each drawing 15W of power, to avoid dark shadows in the maze corners. However, since the game is played in (relative) darkness, the lights will only be required in between play sessions. Each game lasts 45 minutes, separated by 15 minute breaks, so the lights will only be turned on one quarter of the time. Therefore the effective power of the lighting is given by \(\dot Q = \frac 14 \times 50\times100W = 1.3kW\).
+To calculate the lighting costs, it is assumed the warehouse requires fifty 100W equivalent LEDs, each drawing 15W of power, to avoid dark shadows in the maze corners. However, since the game is played in (relative) darkness, the lights will only be required in between play sessions. Each game lasts 45 minutes, separated by 15 minute breaks, so the lights will only be turned on one quarter of the time. Therefore the effective power of the lighting is given by \(\dot Q = \frac 14 \times 50\times100\text{ W} = 1.3\text{ kW}\).
 
 \paragraph{Batteries} \(\) \newline
-Batteries in drones and laptops used by employees both must be charged. Both are assumed to be charged by standard \(65W\) chargers. There are assumed to be 20 batteries in total, and it is assumed they are all charging whenever the centre is open. The effective power draw of charging batteries is estimated at \(\dot Q=20\times 65W=1.3kW\).
+Batteries in drones and laptops used by employees both must be charged. Both are assumed to be charged by standard \(65W\) chargers. There are assumed to be 20 batteries in total, and it is assumed they are all charging whenever the centre is open. The effective power draw of charging batteries is estimated at \(\dot Q=20\times 65\text{ W}=1.3\text{ kW}\).
 
-Therefore the total power draw of the operational warehouse is approximated to \(17.6kW+1.3kW+1.3kW=20.2kW\)
+Therefore the total power draw of the operational warehouse is approximated to \(17.6\text{ kW}+1.3\text{ kW}+1.3\text{ kW}=20.2\text{ kW}\)
 
 \paragraph{Full Electricity Cost} \(\) \newline
-According to the Department for Energy Security and Net Zero's Q2 2025 Energy Prices report \cite{EnergyPrices}, the average electricity cost to non-domestic users (including Climate Change Levy) over the last three years is around 25p/kWh. This will be used to calculate an annual electricity cost. It is also assumed that the warehouse will need to be open 3000 hours per year (for 2000 hour-long games per year), to include unbooked game slots, maintenance and opening preparation time. The final electricity cost is therefore given in Equation \ref{equ:eleccost}.
+According to the Department for Energy Security and Net Zero's Q2 2025 Energy Prices report \cite{EnergyPrices}, the average electricity cost to non-domestic users (including Climate Change Levy) over the last three years is around 25p/kWh. This will be used to calculate an annual electricity cost. It is also assumed that the warehouse will need to be open 3000 hours per year (for 2000 hour-long games per year), to include unbooked game slots, maintenance and opening preparation time. The final electricity cost is therefore given in Eq. \ref{equ:eleccost}.
 \begin{equation}
     \label{equ:eleccost}
     \text{Electricity Cost [£/Year]}=20.2\text{kW}\times3000\text{ hours/year} \times 0.25 \text{ £/kWh}=£15150/\text{year}
@@ -2210,15 +2210,14 @@ Year 0 will be used to prepare the warehouse for laser-tag. From Year 1 onward, 
 The drones themselves cost a little under £500 to produce, of which 10 are required. Including other hardware (laser-guns, helmets and battery chargers), the model assumes the total cost is £10000. This is conservative estimate. The hardware will get slightly damaged during operation. Some components (such as blades) are likely to need replacing often, whereas some (such as laser-guns) are likely not to require frequent replacement. For simplicity, the model assumes that a full hardware replacement is required every 500 games, after a full set is fabricated in Year 0.
 
 \subsubsection{Revenue}
-The cost of hiring exclusive usage of a laser-tag facility is commonly around £15-£20 per person per hour. For example, LASERGAMING OXFORD charges £29.50 per person for two hours of exclusive use \cite{outdoorlaserLasergamingEXCLUSIVE}. A drone-based experience could afford to charge two to three times this fee, due to its novelty value. The game is designed to be played by three to eight people at once. The cost per game is therefore projected to be £200 per hour game per group, as a first estimate. \newline
-
-The effect of a variation in game price is analysed in Section \ref{PriceAnal}.
+The cost of hiring exclusive usage of a laser-tag facility is commonly around £15-£20 per person per hour. For example, LASERGAMING OXFORD charges £29.50 per person for two hours of exclusive use \cite{outdoorlaserLasergamingEXCLUSIVE}. A drone-based experience could afford to charge two to three times this fee, due to its novelty value. The game is designed to be played by three to eight people at once. The cost per game is therefore projected to be £200 per hour game per group, as a first estimate. The effect of a variation in game price is analysed in Section \ref{PriceAnal}.
 
 \subsubsection{Aggregate}
 Hence, the total Income \& Expenditure Table, not including tax or external financing (such as bank loans, equity etc.) is shown in Table \ref{tab:IE}.
 
 \begin{table}[h]
 \centering
+\caption{Income \& Expenditure projection - all values in £k}
 \begin{tabular}{|c| c c c c c c|}
 \hline
 Year & 0 & 1 & 2 & 3 & 4 & \dots \\
@@ -2235,7 +2234,6 @@ Revenue (Game Fees) & 0 & 200 & 300 & 400 & 400 & \dots \\
 Profit & -215 & -5 & 35 & 75 & 75 & \dots \\
 \hline
 \end{tabular}
-\caption{Income \& Expenditure projection - all values in £k}
 \label{tab:IE}
 \end{table}
 
@@ -2243,7 +2241,11 @@ It is observed that the annual non-discounted profit stabilises at £75000.
 
 \subsection{Initial Capital Investment}
 
-In Year 0, £215k of capital is required for startup costs, and will be funded through both equity (seeking investors) and bank loans. \newline Bank loans are much more \say{unforgiving}: if the company fails to do make repayments, it must declare bankruptcy. Private investment requires no such repayments. Investors make money on their investments through share appreciation and dividends, so require no fixed repayments. Because of this, they require a higher interest rate than bank loans (discussed in section \ref{DiscountRate}). This means that relying heavily on equity financing increases effective discount rate, reducing the effect of future revenue on Net Present Value.\newline As a balance, the business seeks £100k in bank loans and £115k in equity financing. 
+In Year 0, £215k of capital is required for startup costs, and will be funded through both equity (seeking investors) and bank loans.  
+
+\(\)\newline Bank loans are much more \say{unforgiving}: if the company fails to do make repayments, it must declare bankruptcy. Private investment requires no such repayments. Investors make money on their investments through share appreciation and dividends, so require no fixed repayments. Because of this, they require a higher interest rate than bank loans (discussed in section \ref{DiscountRate}). This means that relying heavily on equity financing increases effective discount rate, reducing the effect of future revenue on Net Present Value.
+
+\(\) \newline As a balance, the business seeks £100k in bank loans and £115k in equity financing. 
 
 \subsection{Discount Rate}
 \subsubsection{Overview}
@@ -2263,7 +2265,7 @@ The choice of equity-only discount rate is made by investors when choosing wheth
 \label{DiscountRate}
 Two common approaches to model discount rate are: Equity-Only Discount Rate, and Weighted Average Cost of Capital (WACC).
 \paragraph{Equity-Only Discount Rate} \(\)\newline
-Using an Equity-Only Discount Rate, the discount rate applied to future cash flows is set by investors, ignoring debt interest from the bank. Therefore the Year 0 capital injection from the bank loan \(P\) and the annual debt repayments \(A\) in subsequent years must be included in the cash flow, and the remaining balance after \(t\) years \(B_t\) on the bank loan must be considered as a liability in the terminal value (discussed in section \ref{TermValue}). These are determined by the amortisation formula, shown in equation \ref{equ:amortisation}.
+Using an Equity-Only Discount Rate, the discount rate applied to future cash flows is set by investors, ignoring debt interest from the bank. Therefore the Year 0 capital injection from the bank loan \(P\) and the annual debt repayments \(A\) in subsequent years must be included in the cash flow, and the remaining balance after \(t\) years \(B_t\) on the bank loan must be considered as a liability in the terminal value (discussed in section \ref{TermValue}). These are determined by the amortisation formula, shown in Eq. \ref{equ:amortisation}.
 
 \begin{equation}
     A=\frac{Pr_d}{1-(1+r_d)^{-N}}, \qquad\qquad B_t=P(1+r_d)^t-A\frac{(1+r_d)^t-1}{r_d}
@@ -2345,17 +2347,18 @@ A running total cash flow is tabulated. This is discounted according to the year
 \paragraph{Assumptions} \(\) \newline
 For simplicity, it is assumed that a constant WACC discount rate is applied over time. This assumes:
 \begin{itemize}
-    \item The debt held with the bank is constant, and the business is only paying the interest on the loan; in reality, the loan would likely be paid off after \(N\) years,according to equation \ref{equ:amortisation}
+    \item The debt held with the bank is constant, and the business is only paying the interest on the loan; in reality, the loan would likely be paid off after \(N\) years,according to Eq. \ref{equ:amortisation}
     \item Both the Equity-Only Discount Rate and the Loan Interest Rates are constant; in reality, both would decrease over time as the business becomes more established to reflect a decreased risk.
     \item Only the capital investments in Year 0 need to be financed. As can be seen in Table \ref{tab:IE}, Year 1 is projected to run at a small loss, which must also be financed. This is neglected for simplicity, and is insignificant compared with other assumptions made in this model.
 \end{itemize}
 
 \subsection{Full Model}
-According to the assumptions and models, the full financial model is summarised in table \ref{tab:model}
+According to the assumptions and models, the full financial model is summarised in Table \ref{tab:model}
 
 % Increase box height?
 \begin{table}[h]
 \centering
+\caption{Full Financial Model Summary - all values in £k}
 \begin{tabular}{|c| c c c c c c c c c|}
 \hline
 WACC & 17.7\% &&&&&&&&\\
@@ -2384,7 +2387,6 @@ Discount & 1 & 0.850 & 0.722 & 0.614 & 0.522 & 0.443 & 0.377 & 0.320 & \dots \\
 Discounted CCF& -215&-219&-194&-148&-109&-79.0&-56.8&-37.9& \dots \\
 \hline
 \end{tabular}
-\caption{Full Financial Model Summary - all values in £k}
 \label{tab:model}
 \end{table}
 
@@ -2394,11 +2396,11 @@ The Discounted Cumulative Cash Flow turns positive in Year 10 (payback; section 
 Using Apps Script, Google Sheets' equivalent of Excel macros, the following analyses were performed. In general, one variable was changed and another was observed, while all others were held constant according to the assumptions stated above.
 \subsubsection{NPV Profile}
 \label{NPVProfile}
-A common measure of a business' viability is the effect of changing the discount rate on NPV, and analysis of the NPV-Discount Rate graph that this analysis produces (shown in Fig. \ref{fig:NPV-Profile}).
+A common measure of a business' viability is the effect of changing the discount rate on NPV, and analysis of the NPV-Discount Rate graph that this analysis produces, asshown in Fig. \ref{fig:NPV-Profile}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\linewidth]{figs/Finance/NPV Profile.png}
+    \includegraphics[width=0.6\linewidth]{figs/Finance/NPV Profile Editted.png}
     \caption{NPV Profile}
     \label{fig:NPV-Profile}
 \end{figure}
@@ -2407,16 +2409,16 @@ The discount rate at which NPV is zero (Internal Rate of Return, IRR) is 22.3\%.
 
 \subsubsection{Discounted Payback Sensitivity}
 \label{DPS}
-It is also useful to investigate how payback (the time at which the cumulative discounted cash flow becomes positive) changes with discount rate (shown in Fig. \ref{fig:dis-pay-sen}).
+It is also useful to investigate how payback (the time at which the cumulative discounted cash flow becomes positive) changes with discount rate, as shown in Fig. \ref{fig:dis-pay-sen}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\linewidth]{figs/Finance/Discounted Payback Sensitivity.png}
-    \caption{NPV Profile}
+    \caption{Discounted Payback Sensitivity}
     \label{fig:dis-pay-sen}
 \end{figure}
 
-Payback increases with Discount Rate. However, Payback only decreses a little over the realistic values of Discount Rate, only increasing from 9 to 13 years as Discount Rate increases from 15\% to 20\%. This suggests slight errors in numerical assumptions does not hugely affect the projected business performance.
+Payback increases with Discount Rate. However, Payback only decreases a little over the realistic values of Discount Rate, only increasing from 9 to 13 years as Discount Rate increases from 15\% to 20\%. This suggests slight errors in numerical assumptions does not hugely affect the projected business performance.
 
 \subsubsection{Pricing}
 \label{PriceAnal}
