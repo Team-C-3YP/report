@@ -92,7 +92,7 @@ In addition to the technical deployment, user retention is driven by a companion
 \section{Proposed Gameplay for Drone-Based Laser Tag} % Ritchie
 \fancyhead[C]{Richard Usherwood}
 \subsection{Overview}
-Players are equipped with Laser Guns (infrared emitters that transmit encoded data), and helmets and vests, both containing Infrared sensors. The drones are equipped with Turrets which emit Infrared radiation (see Section \ref{Turret}) as well as Infrared sensors. When they are not flying, they are dormant in a \say{standby location} where employees can replace their batteries if required. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If a player is hit, they must navigate to a designated \say{timeout} area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun will not work until their timeout has been completed (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at \(3 ~\mathrm{ m}\) height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
+Players are equipped with Laser Guns (\gls{ir} emitters that transmit encoded data), and helmets and vests, both containing \gls{ir} sensors. The drones are equipped with Turrets which emit \gls{ir} radiation (see Section \ref{Turret}) as well as \gls{ir} sensors. When they are not flying, they are dormant in a \say{standby location} where employees can replace their batteries if required. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If a player is hit, they must navigate to a designated \say{timeout} area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun will not work until their timeout has been completed (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at \(3 ~\mathrm{ m}\) height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
 % Make sure this reference is correct
 
 Two \say{game modes} exist: \say{Wave Mode} and \say{Objective Mode}. These are summarised in the following sections.
@@ -2087,7 +2087,7 @@ A quantitative risk assessment has been completed, and is shown in Fig. \ref{fig
 \newpage
 \section{Commercialisation and Financial Modelling}
 \subsection{Setup}
-A discounted cash flow model was created. The model was used to track cash flow, apply a discount rate to future revenue, and to calculate the Net Present Value (NPV) of a company providing the game as a commercial enterprise.
+A discounted cash flow model was created. The model was used to track cash flow, apply a discount rate to future revenue, and to calculate the \gls{npv} of a company providing the game as a commercial enterprise.
 \subsection{Numerical Estimations}
 \subsubsection{Utility}
 It is assumed that the first year (Year 0) will be spent producing hardware, advertising the business, and decorating the playing area (a warehouse). Year 0 is therefore assumed to generate no revenue from gameplay. As the business becomes more established, its utility (games per year) is modelled to increase up to a plateau in Year 3. The modelled increase in utility is shown in Table \ref{tab:utilityandemployees}:
@@ -2149,7 +2149,7 @@ It was also estimated that the cost of employing one full-time employee (or equi
 \subsubsection{Warehouse Hiring}
 The game is assumed to be played in a converted warehouse. The size of warehouse required for the game was thought to be comparable to that of a large school hall (circa. 5000 square feet). Including space for a reception area, a small office and a break room for staff, between 6000 and 7000 square feet was thought to be an appropriate size. The warehouse should be within a short drive of a large city. A 6800 square foot warehouse in London was identified at £2000 pcm \cite{rightmoveCheckThis}. The cost of hiring the warehouse is therefore estimated at £25000 per annum.
 \subsubsection{Advertising}
-The advertising budget is large, because early revenue has a disproportionate affect on NPV due to the large discount rate. It is therefore desirable to invest heavily in advertising initially, spending as little time as possible operating below maximum utility. Advertising will continue even when maximum utility has been reached. This is necessary to keep the business reaching new audiences and to advertise new features. It is assumed that advertising costs are constant throughout operation. This may be unrealistic, but produces a conservative estimate. After conversations with Global (the advertising agency responsible for Transport for London), the cost of a \say{small-scale advertising campaign} involving one-to-two posters in several small, outer-London underground stations and a small presence in carriage poster advertising is around £2000 per month. The cost of 1000 views for a social media advertising campaign is around £10 for Facebook, Instagram, and TikTok \cite{mediaperformancePaidSocial}. So, for £500 per month, 50000 views of social media advertising can be bought. These can be localised so only users in London will be shown advertising. \newline
+The advertising budget is large, because early revenue has a disproportionate affect on \gls{npv} due to the large discount rate. It is therefore desirable to invest heavily in advertising initially, spending as little time as possible operating below maximum utility. Advertising will continue even when maximum utility has been reached. This is necessary to keep the business reaching new audiences and to advertise new features. It is assumed that advertising costs are constant throughout operation. This may be unrealistic, but produces a conservative estimate. After conversations with Global (the advertising agency responsible for Transport for London), the cost of a \say{small-scale advertising campaign} involving one-to-two posters in several small, outer-London underground stations and a small presence in carriage poster advertising is around £2000 per month. The cost of 1000 views for a social media advertising campaign is around £10 for Facebook, Instagram, and TikTok \cite{mediaperformancePaidSocial}. So, for £500 per month, 50000 views of social media advertising can be bought. These can be localised so only users in London will be shown advertising. \newline
 
 Therefore, the projected required advertising budget is given by 
 \begin{equation}
@@ -2263,7 +2263,7 @@ The choice of equity-only discount rate is made by investors when choosing wheth
 
 \subsubsection{Modelling Discount Rate}
 \label{DiscountRate}
-Two common approaches to model discount rate are: Equity-Only Discount Rate, and Weighted Average Cost of Capital (WACC).
+Two common approaches to model discount rate are: Equity-Only Discount Rate, and \gls{wacc}.
 \paragraph{Equity-Only Discount Rate} \(\)\newline
 Using an Equity-Only Discount Rate, the discount rate applied to future cash flows is set by investors, ignoring debt interest from the bank. Therefore the Year 0 capital injection from the bank loan \(P\) and the annual debt repayments \(A\) in subsequent years must be included in the cash flow, and the remaining balance after \(t\) years \(B_t\) on the bank loan must be considered as a liability in the terminal value (discussed in section \ref{TermValue}). These are determined by the amortisation formula, shown in Eq. \ref{equ:amortisation}.
 
@@ -2289,24 +2289,24 @@ Using an Equity-Only Discount Rate, the discount rate applied to future cash flo
 
 
 \paragraph{Weight Averaged Cost of Capital (WACC)} \(\) \newline
-Another approach is to weight the bank loan interest rate \(r_d\) and the equity-only discount rate \(r_e\) to produce an \say{effective} discount rate, or WACC, used in NPV calculations. The WACC is given by:
+Another approach is to weight the bank loan interest rate \(r_d\) and the equity-only discount rate \(r_e\) to produce an \say{effective} discount rate, or \gls{wacc}, used in \gls{npv} calculations. The \gls{wacc} is given by:
 \begin{equation}
     \text{WACC}=\frac{D}{D+E}r_d+\frac{E}{D+E}r_e
 \end{equation}
 where \(D\) is the initial capital of the bank loan, and \(E\) is the capital investment from equity financing. 
 
-Using WACC, it is not necessary to model the loan an the debt repayments as cash flows , or the remaining balance as a liability; these are all captured by the use of WACC. 
+Using \gls{wacc}, it is not necessary to model the loan an the debt repayments as cash flows , or the remaining balance as a liability; these are all captured by the use of \gls{wacc}. 
 
-Therefore, for the sake of simplicity, WACC is used in this model, with rates:
+Therefore, for the sake of simplicity, \gls{wacc} is used in this model, with rates:
 \begin{equation}
     r_d=15\% \qquad r_e=20\%
 \end{equation}
 
 The effect of a variation in discount rate is analysed in Sections \ref{NPVProfile} and \ref{DPS}.
 
-\subsubsection{Terminal Value}
+\subsubsection{Terminal Value (TV)}
 \label{TermValue}
-The \say{left-over} value of a business after a fixed term of \(t\), the \say{Terminal Value}, with cash flow (positive cash flow corresponding to profit) in year k, \(\text{CF}_k\), is given by:
+The \gls{tv} of a business describes its \say{left-over} value, after a given period of time. After \(t\) years, with annual cash flow (positive cash flow corresponding to profit) in year k, \(\text{CF}_k\), \gls{tv} is given by:
 \begin{equation}
     \text{TV}_t=\frac{\text{CF}_{t+1}}{1+d}+\frac{\text{CF}_{t+2}}{(1+d)^2}+\frac{\text{CF}_{t+3}}{(1+d)^3}+\dots
 \end{equation}
@@ -2319,7 +2319,7 @@ which can be rearranged to:
 \begin{equation}
     \text{TV}_t=\frac{\text{CF}}{d}
 \end{equation}
-This is the undiscounted Terminal Value; to get the present value of \(\text{TV}_t\), it must be multiplied by \(\frac1{(1+d)^t}\).
+This is the undiscounted \gls{tv}; to get the present value of \(\text{TV}_t\), it must be multiplied by \(\frac1{(1+d)^t}\).
 \begin{equation}
     \text{TV}_{t, \text{discounted}}=\frac{\text{CF}}{d}\times \frac 1{(1+d)^t}
     \label{equ:DTV}
@@ -2342,10 +2342,10 @@ NB: The marginal rate applies to total income, not just income between £50000 a
 UK corporation tax law also allows losses in one year to be carried over to the next. For example, if a business makes a loss of £20000 in Year \(n\), and makes a profit of £60000 in Year \(n+1\), its taxable income in Year \(n+1\) is £40000. Losses can be carried over indefinitely.
 
 \subsubsection{Net Present Value}
-A running total cash flow is tabulated. This is discounted according to the year in which the money is made. The Net Present Value (NPV) at a given year is given by the discounted cumulative cash flow up to that year added to the discounted terminal value. In future years, once cash flow (including tax) stabilises, NPV remains constant. \say{NPV} refers to a this stabilised value.
+A running total cash flow is tabulated. This is discounted according to the year in which the money is made. The \gls{npv} at a given year is given by the discounted cumulative cash flow up to that year added to the discounted terminal value. In future years, once cash flow (including tax) stabilises, \gls{npv} remains constant. \say{\gls{npv}} refers to a this stabilised value.
 
 \paragraph{Assumptions} \(\) \newline
-For simplicity, it is assumed that a constant WACC discount rate is applied over time. This assumes:
+For simplicity, it is assumed that a constant \gls{wacc} discount rate is applied over time. This assumes:
 \begin{itemize}
     \item The debt held with the bank is constant, and the business is only paying the interest on the loan; in reality, the loan would likely be paid off after \(N\) years,according to Eq. \ref{equ:amortisation}
     \item Both the Equity-Only Discount Rate and the Loan Interest Rates are constant; in reality, both would decrease over time as the business becomes more established to reflect a decreased risk.
@@ -2361,7 +2361,7 @@ According to the assumptions and models, the full financial model is summarised 
 \caption{Full Financial Model Summary - all values in £k}
 \begin{tabular}{|c| c c c c c c c c c|}
 \hline
-WACC & 17.7\% &&&&&&&&\\
+\gls{wacc} & 17.7\% &&&&&&&&\\
 \hline \hline
 Year & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & \dots \\
 \hline
@@ -2390,22 +2390,22 @@ Discounted CCF& -215&-219&-194&-148&-109&-79.0&-56.8&-37.9& \dots \\
 \label{tab:model}
 \end{table}
 
-The Discounted Cumulative Cash Flow turns positive in Year 10 (payback; section \ref{DPS}). It is found that the Net Present Value (NPV) is £68669. Hence, the business is viable under these assumptions.
+The Discounted Cumulative Cash Flow turns positive in Year 10 (payback; section \ref{DPS}). It is found that the \gls{npv} is £68669. Hence, the business is viable under these assumptions.
 
 \subsection{Analyses}
 Using Apps Script, Google Sheets' equivalent of Excel macros, the following analyses were performed. In general, one variable was changed and another was observed, while all others were held constant according to the assumptions stated above.
-\subsubsection{NPV Profile}
+\subsubsection{\gls{npv} Profile}
 \label{NPVProfile}
-A common measure of a business' viability is the effect of changing the discount rate on NPV, and analysis of the NPV-Discount Rate graph that this analysis produces, asshown in Fig. \ref{fig:NPV-Profile}.
+A common measure of a business' viability is the effect of changing the discount rate on \gls{npv}, and analysis of the \gls{npv}-Discount Rate graph that this analysis produces, as shown in Fig. \ref{fig:NPV-Profile}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\linewidth]{figs/Finance/NPV Profile Editted.png}
-    \caption{NPV Profile}
+    \includegraphics[width=0.6\linewidth]{figs/Finance/Cropped/NPV Profile Cropped.png}
+    \caption{\gls{npv} Profile}
     \label{fig:NPV-Profile}
 \end{figure}
 
-The discount rate at which NPV is zero (Internal Rate of Return, IRR) is 22.3\%. Using WACC calculations, a discount rate of 17.7\% was projected. This shows that the business is viable even under slightly higher discount rates than predicted. Furthermore the NPV profile shows that a small reduction in discount rate produces a large increase in NPV. This is encouraging, since discount rate is likely to decrease significantly as the business becomes more established.
+The discount rate at which \gls{npv} is zero is 22.3\%. This is known as the \gls{irr}. Using \gls{wacc} calculations, a discount rate of 17.7\% was projected. This shows that the business is viable even under slightly higher discount rates than predicted. Furthermore the \gls{npv} profile shows that a small reduction in discount rate produces a large increase in \gls{npv}. This is encouraging, since discount rate is likely to decrease significantly as the business becomes more established.
 
 \subsubsection{Discounted Payback Sensitivity}
 \label{DPS}
@@ -2413,7 +2413,7 @@ It is also useful to investigate how payback (the time at which the cumulative d
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\linewidth]{figs/Finance/Discounted Payback Sensitivity.png}
+    \includegraphics[width=0.6\linewidth]{figs/Finance/Cropped/Discounted Payback Sensitivity Cropped.png}
     \caption{Discounted Payback Sensitivity}
     \label{fig:dis-pay-sen}
 \end{figure}
@@ -2460,42 +2460,42 @@ A reference value of elasticity \(\varepsilon=-1.1\) is chosen, since it represe
 The effect of a variation in reference elasticity is analysed in Section \ref{ElasticityAnal}
 
 \paragraph{Finding optimal price} \(\) \newline
-The variation of NPV with game price was investigated. The results are shown in Fig. \ref{fig:pri-sen}.
+The variation of \gls{npv} with game price was investigated. The results are shown in Fig. \ref{fig:pri-sen}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\linewidth]{figs/Finance/Sensitivity_Analysis_Price_Elastic_Utility.png}
-    \caption{Price Sensitivity}
+    \includegraphics[width=0.6\linewidth]{figs/Finance/Cropped/Sensitivity_Analysis_Price_Elastic_Utility_Cropped.png}
+    \caption{Price Sensitivity Analysis (Reference Elasticity = -1.1)}
     \label{fig:pri-sen}
 \end{figure}
 
-It is observed that, given \(\varepsilon'=-1.1\), £200 per game is the price that maximises NPV. 
+It is observed that, given \(\varepsilon'=-1.1\), £200 per game is the price that maximises \gls{npv}. 
 
 
-The linear left-most section of the graph corresponds to a constant utility of 3000 games per year. In this section, NPV is hugely negative. Therefore, attempting to setting the game price such that the facility is running at capacity is a very poor decision.
+The linear left-most section of the graph corresponds to a constant utility of 3000 games per year. In this section, \gls{npv} is hugely negative. Therefore, attempting to setting the game price such that the facility is running at capacity is a very poor decision.
 
-NPV is only positive for prices between £160 and £240 per game (to the nearest £10). Given how narrow this range of is, this demonstrates the importance of this analysis.
+\gls{npv} is only positive for prices between £160 and £240 per game (to the nearest £10). Given how narrow this range of is, this demonstrates the importance of this analysis.
 
 \paragraph{Utility Sensitivity}\(\) \newline
 \label{UtilityAnalFixedPrice}
-It was assumed that the maximum number of games per year would be 2000 when the price was £200 per game. The effect of a small error is this estimate was investigated. Price per game was held constant, maximum games per year was varied and the resulting NPV was tabulated. The results are shown in Fig. \ref{fig:uti-sen}.
+It was assumed that the maximum number of games per year would be 2000 when the price was £200 per game. The effect of a small error is this estimate was investigated. Price per game was held constant, maximum games per year was varied and the resulting \gls{npv} was tabulated. The results are shown in Fig. \ref{fig:uti-sen}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\linewidth]{figs/Finance/Sensitivity_Analysis_Utility_Fixed_Price.png}
-    \caption{Utility Sensitivity}
+    \includegraphics[width=0.6\linewidth]{figs/Finance/Cropped/Sensitivity_Analysis_Utility_Fixed_Price_Cropped.png}
+    \caption{Utility Sensitivity Analysis (Fixed Price)}
     \label{fig:uti-sen}
 \end{figure}
 
-NPV is only positive for above 1900 games per year (rounded to the nearest 50) This is very close to the estimated 2000 games per year: a high utility is critical, justifying the high advertising budget. 
+\gls{npv} is only positive for above 1900 games per year (rounded to the nearest 50) This is very close to the estimated 2000 games per year: a high utility is critical, justifying the high advertising budget. 
 
 \paragraph{How Optimal Price varies with elasticity} \(\) \newline
 \label{ElasticityAnal}
-This process was repeated for reference elasticity \(\varepsilon'\) between -0.5 (very price-insensitive) and -3 (very price-sensitive). Since the effect on NPV of changing two variables (reference elasticity and price per game) is being measured, it would be possible to create a 3D surface to demonstrate this. Since reference elasticity is only being varied in order to assess the sensitivity of the model to errors in numerical assumptions (it is not something that can be changed in order to maximise NPV), it is only useful to tabulate the optimal price per game (price that maximises NPV) and plot this against reference elasticity. This is shown in Fig. \ref{fig:opt-cos-sen}.
+This process was repeated for reference elasticity \(\varepsilon'\) between -0.5 (very price-insensitive) and -3 (very price-sensitive). Since the effect on \gls{npv} of changing two variables (reference elasticity and price per game) is being measured, it would be possible to create a 3D surface to demonstrate this. Since reference elasticity is only being varied in order to assess the sensitivity of the model to errors in numerical assumptions (it is not something that can be changed in order to maximise \gls{npv}), it is only useful to tabulate the optimal price per game (price that maximises \gls{npv}) and plot this against reference elasticity. This is shown in Fig. \ref{fig:opt-cos-sen}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\linewidth]{figs/Finance/Optimal_Cost_per_Game_vs_Elasticity.png}
+    \includegraphics[width=0.6\linewidth]{figs/Finance/Cropped/Optimal_Cost_per_Game_vs_Ref_Elasticity_Cropped.png}
     \caption{Optimal Cost per game against Reference Elasticity}
     \label{fig:opt-cos-sen}
 \end{figure}
@@ -2504,7 +2504,7 @@ Elasticity is likely to be between -0.8 and -1.5. It is observed that, over this
 
 \subsubsection{Limitations}
 
-In general, one or more variables were changed, and another was observed, while all others were held constant according to the assumptions stated above. It is likely that, by completing a sweep, changing all values at once to create a multi-dimensional surface model of all financial values, optima of NPV will be found that were missed in the above analysis, either by brute force or multi-dimensional gradient descent.
+In general, one or more variables were changed, and another was observed, while all others were held constant according to the assumptions stated above. It is likely that, by completing a sweep, changing all values at once to create a multi-dimensional surface model of all financial values, optima of \gls{npv} will be found that were missed in the above analysis, either by brute force or multi-dimensional gradient descent.
 
 % Summing Up Section
 
