@@ -92,10 +92,10 @@ In addition to the technical deployment, user retention is driven by a companion
 \section{Proposed Gameplay for Drone-Based Laser Tag} % Ritchie
 \fancyhead[C]{Richard Usherwood}
 \subsection{Overview}
-Players are equipped with Laser Guns (\gls{ir} emitters that transmit encoded data), and helmets and vests, both containing \gls{ir} sensors. The drones are equipped with Turrets which emit \gls{ir} radiation (see Section \ref{Turret}) as well as \gls{ir} sensors. When they are not flying, they are dormant in a \say{standby location} where employees can replace their batteries if required. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If a player is hit, they must navigate to a designated \say{timeout} area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun will not work until their timeout has been completed (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at \(3 ~\mathrm{ m}\) height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
+Players are equipped with Laser Guns (\gls{ir} emitters that transmit encoded data), and helmets and vests, both containing \gls{ir} sensors. The drones are equipped with Turrets which emit \gls{ir} radiation (see Section \ref{Turret}) as well as \gls{ir} sensors. When they are not flying, they are dormant in a \say{standby location} where employees can replace their batteries if required. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If a player is hit, they must navigate to a designated \say{timeout} area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun will not work until their timeout has been completed (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at \(3 ~\mathrm{ m}\) height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.
 % Make sure this reference is correct
 
-Two \say{game modes} exist: \say{Wave Mode} and \say{Objective Mode}. These are summarised in the following sections.
+\(\) \newline Two \say{game modes} have been designed: \say{Wave Mode} and \say{Objective Mode}. These are summarised in the following sections.
 \subsection{Wave Mode}
 In \say{Wave Mode}, the players attempt to defeat a number of drones, released in an order designed to be both challenging and engaging. When the drone is hit, it returns to its standby location, where it will remain. If all of the players are timing out at the same time (having been hit), they lose. If all of the drones have been hit, they win. This constitutes a single wave. The players can choose from a catalogue of waves (in future accessible through the companion app, see Section \ref{app}), ranging from tutorial level to advanced. Each level will be marked with a numerical difficulty rating. This allows a team to end a game with an understandable, clear metric of how well they performed: the difficulty rating of the hardest wave in which they won. This will also serve as a clear metric of a team's improvement with time, encouraging them to return. In future, this will be displayed in the companion app, allowing players to compare metrics with their friends.
 
@@ -103,9 +103,9 @@ In \say{Wave Mode}, the players attempt to defeat a number of drones, released i
 In \say{Objective Mode}, the players must attempt to navigate the maze to complete objectives, such as \say{Hold this button for 5 seconds}, or \say{Shoot this target on the wall}, which will be communicated to the players via speakers (in future they will be communicated via a LED display embedded in the Laser-Guns). They must complete all objectives within a defined time to \say{pass} the level. While they are completing these objectives, the drones are flying overhead and attempting to shoot at the players, just as in Wave Mode. Similarly, the players must timeout for 10 seconds in a particular area of the maze if hit, and the drones will exit the game if hit, but will return after a short timeout. If all players timeout at once, they lose; if they exceed the time limit for the level, they lose; if they complete all objectives, they win. If they win, they will progress to a harder level. Just as in \say{Wave Mode}, the levels will be designed and play-tested to be both challenging, engaging; a catalogue of levels marked with a numerical difficulty can be selected in-app.\newline
 
 \subsection{Difficulty Scaling}
-Since the levels increase in difficulty, there is little need to scale difficulty according to a players' skill: if the players are inexperienced, they will only play easy levels, and there will be levels to suit players of all skill levels. However, the difficulty of the levels may need to change according to the number of players in a team. This can be achieved in a number of ways. For example, the number of drones could be adjusted, the top speed of the drones could be capped, and artificial inaccuracy could be added to the shooting of the drones. \newline
+Since the levels increase in difficulty, there is little need to scale difficulty according to a players' skill: if the players are inexperienced, they will only play easy levels, and there will be levels to suit players of all skill levels. However, the difficulty of the levels may need to change according to the number of players in a team. This can be achieved in a number of ways. For example, the number of drones could be adjusted, the top speed of the drones could be capped, and artificial inaccuracy could be added to the shooting of the drones.
 
-It is very difficult to know which methods of adjusting difficulty will result in a game that is both enjoyable and balanced, for a range of numbers of people. Hence, deciding exactly how to perform this adjustment will require play-testing in the arena, once it has been created.
+\(\) \newline It is very difficult to know which methods of adjusting difficulty will result in a game that is both enjoyable and balanced, for a range of numbers of people. Hence, deciding exactly how to perform this adjustment will require play-testing in the arena, once it has been created.
 \newpage
 
 \section{System Architecture and Integration} \label{system} % Everyone except Ritchie
@@ -1122,13 +1122,11 @@ Network and communications are not strictly necessary for a single wave of the g
     \item Perceived Fairness: the drones will not have access to information they have not gathered themselves, just like the human players.
     \item Robustness: if each drone acts individually, there is no single thing that can go wrong that would entirely derail the game (the way a central server crash would).
 \end{itemize}
-
 Alternatively, a central server could be used to give drones high-level instructions, and to share information pertaining to the state of the game. This method of handling information also has some advantages:
 \begin{itemize}
     \item Complexity: coordinating the movement of many drones is much easier when all information is available centrally.
     \item Hardware Costs: if the central high-level decision making is performed in a central server, rather than locally on the processer of each drone, not only will a lower-powered processor be needed in the drone, but a smaller battery will be needed to power it, so less powerful motors will be required to lift the battery, and so on, decreasing hardware costs.
 \end{itemize}
-
 Considering the pros and cons listed above, it was decided that a central server was the most appropriate option to perform high-level decision making. Different methods of handling communications between the drones and the server are discussed below.
 
 \subsection{Bluetooth}
@@ -2026,8 +2024,6 @@ The user experience of playing game in the centre, using the app, is outlined be
      \caption{From Left to Right: The user experience of using the app in for functionality}
      \label{fig:userstory}
 \end{figure}
-
-
 This allows the server to attribute the correct number of kills and deaths (infra-red strikes on drones, encoded with ID of the gun, and infra-red strikes on the helmet and vest detectors, communicated to server via Wi-Fi) to the correct player.
 
 \subsection{Usability Design Choices}
@@ -2064,11 +2060,9 @@ The app uses a hybrid state management strategy, meaning that not all states are
 \subsubsection{API Integration}
 The App uses Supabase as its backend platform, to access a PostgreSQL database. Database access is handled through a single client in \say{db.js} - after the app is loaded, the data is cached in datacache.js to avoid unnecessary loading times, especially when being used with poor internet connections. A screenshot of the database is included in the appendix.
 
+\(\)\newline A specific format had to be created for this data to be stored. For example, Game Data is stored in a format (A, B, C, \dots),(D, E, F, \dots),(G, H, I, \dots). This game data is equivalent to \say{Players A, B, C, ... played a game in which they got D, E, F, ... kills and died G, H, I, ... times, respectively}. Furthermore the \say{score} is defined as \say{number of kills squared divided by number of deaths} in a game, and the friend requests are stored as CSVs. When a change to the data is made in the app (for example sending or accepting a friend request), the database is automatically through API calls. However, the database must also be updated after every game. In the real system, this would be integrated into a system that processes communications with drones and helmets, and updates the database automatically. However, for now it is handled by a script that allows the user to input the results of the game (who was playing, how many kills they got, how many times they died etc.), and updates the database accordingly. 
 
-
-A specific format had to be created for this data to be stored. For example, Game Data is stored in a format (A, B, C, \dots),(D, E, F, \dots),(G, H, I, \dots). This game data is equivalent to \say{Players A, B, C, ... played a game in which they got D, E, F, ... kills and died G, H, I, ... times, respectively}. Furthermore the \say{score} is defined as \say{number of kills squared divided by number of deaths} in a game, and the friend requests are stored as CSVs. When a change to the data is made in the app (for example sending or accepting a friend request), the database is automatically through API calls. However, the database must also be updated after every game. In the real system, this would be integrated into a system that processes communications with drones and helmets, and updates the database automatically. However, for now it is handled by a script that allows the user to input the results of the game (who was playing, how many kills they got, how many times they died etc.), and updates the database accordingly. \newline
-
-Screenshots of all screens of the app are included in the appendix.
+\(\)\newline Screenshots of all screens of the app are included in the appendix.
 
 \newpage
 \section{Safety and Risk Assessment Management}
@@ -2088,30 +2082,14 @@ A quantitative risk assessment has been completed, and is shown in Fig. \ref{fig
 \section{Commercialisation and Financial Modelling}
 \subsection{Setup}
 A discounted cash flow model was created. The model was used to track cash flow, apply a discount rate to future revenue, and to calculate the \gls{npv} of a company providing the game as a commercial enterprise.
-\subsection{Numerical Estimations}
+\subsection{Numerical Estimations} \label{num-est}
 \subsubsection{Utility}
-It is assumed that the first year (Year 0) will be spent producing hardware, advertising the business, and decorating the playing area (a warehouse). Year 0 is therefore assumed to generate no revenue from gameplay. As the business becomes more established, its utility (games per year) is modelled to increase up to a plateau in Year 3. The modelled increase in utility is shown in Table \ref{tab:utilityandemployees}:
-
-% \begin{table}[h]
-% \centering
-% \begin{tabular}{|c|c c c c c c|}
-% \hline
-% Year & \qquad 0 & \quad 1 & \quad 2 & \quad 3 & \quad 4 & \quad \dots\\
-% \hline
-% Percentage of Maximum Utility & \qquad 0\% & \quad 50\% & \quad 75\% & \quad 100\% & \quad 100\% & \quad \dots \\
-% \hline
-% \end{tabular}
-% \caption{Utility evolution with time}
-% \label{tab:utility}
-% \end{table}
-
-As a first approximation, the maximum number of games per year was assumed to be 2000, corresponding to 10 hour-long games on Saturday and Sunday, and four hour-long games on weekdays, for 50 weeks per year. Note that this \say{maximum utility} refers to the value at which utility plateaus, not a fundamental limit. The effect of a variation in utility is analysed in Section \ref{PriceAnal}.
+It is assumed that the first year (Year 0) will be spent producing hardware, advertising the business, and decorating the playing area (a warehouse). Year 0 is therefore assumed to generate no revenue from gameplay. As the business becomes more established, its utility (games per year) is modelled to increase up to a plateau in Year 3. The modelled increase in utility is shown in Table \ref{tab:utilityandemployees}. The maximum number of games per year was assumed to be 2000, corresponding to 10 hour-long games on Saturday and Sunday, and four hour-long games on weekdays, for 50 weeks per year. Note that this \say{maximum utility} refers to the value at which utility plateaus, not a fundamental limit. The effect of a variation in utility is analysed in Section \ref{PriceAnal}.
 
 
 
 \subsubsection{Employee Costs}
-The minimum equivalent number of full-time employees required was thought to be two. The number of full-time employees was assumed to increase with utility, up to a maximum of four, as shown in Table \ref{tab:utilityandemployees}:
-
+The minimum equivalent number of full-time employees required was thought to be two. The number of full-time employees was assumed to increase with utility, up to a maximum of four, as shown in Table\ref{tab:utilityandemployees}:
 
 \begin{table}[h]
 \centering
@@ -2127,31 +2105,13 @@ Full-Time employees & \qquad 2 & \quad 2 & \quad 3 & \quad 4 & \quad 4 \\
 \end{tabular}
 \label{tab:utilityandemployees}
 \end{table}
-% \begin{table}[h]
-% \centering
-% \begin{tabular}{|c|c|c|}
-% \hline
-% Year & Percentage of Maximum Utility & Equivalent Number of Full-Time Employees\\
-% \hline
-% 0 & 0\% & 2\\
-% 1 & 50\% & 2\\
-% 2 & 75\% & 3\\
-% 3 & 100\% & 4\\
-% 4 & 100\% & 4\\
-% \vdots & \vdots & \vdots \\
-% \hline
-% \end{tabular}
-% \caption{Utility and Number of Employees with time}
-% \label{tab:utilityandemployees}
-% \end{table}
-
-It was also estimated that the cost of employing one full-time employee (or equivalent in part-time workers) would be £50000. This includes salaries, company computers, training, sick cover, annual bonuses etc.
+\noindent It was estimated that the cost of employing one full-time employee (or equivalent in part-time workers) would be £50000. This includes salaries, company computers, training, sick cover, annual bonuses etc.
 \subsubsection{Warehouse Hiring}
 The game is assumed to be played in a converted warehouse. The size of warehouse required for the game was thought to be comparable to that of a large school hall (circa. 5000 square feet). Including space for a reception area, a small office and a break room for staff, between 6000 and 7000 square feet was thought to be an appropriate size. The warehouse should be within a short drive of a large city. A 6800 square foot warehouse in London was identified at £2000 pcm \cite{rightmoveCheckThis}. The cost of hiring the warehouse is therefore estimated at £25000 per annum.
 \subsubsection{Advertising}
 The advertising budget is large, because early revenue has a disproportionate affect on \gls{npv} due to the large discount rate. It is therefore desirable to invest heavily in advertising initially, spending as little time as possible operating below maximum utility. Advertising will continue even when maximum utility has been reached. This is necessary to keep the business reaching new audiences and to advertise new features. It is assumed that advertising costs are constant throughout operation. This may be unrealistic, but produces a conservative estimate. After conversations with Global (the advertising agency responsible for Transport for London), the cost of a \say{small-scale advertising campaign} involving one-to-two posters in several small, outer-London underground stations and a small presence in carriage poster advertising is around £2000 per month. The cost of 1000 views for a social media advertising campaign is around £10 for Facebook, Instagram, and TikTok \cite{mediaperformancePaidSocial}. So, for £500 per month, 50000 views of social media advertising can be bought. These can be localised so only users in London will be shown advertising. \newline
 
-Therefore, the projected required advertising budget is given by 
+\noindent Therefore, the projected required advertising budget is given by Eq. \ref{equ:advertising}.
 \begin{equation}
     \label{equ:advertising}
     \text{ Cost [£/Year]} = \left (2000\text{ £/month} + 500\text{ £/month}\right ) \times 12\text{ months/year} = £30000\text{ £/year}
@@ -2183,7 +2143,7 @@ Floor & 0.18 & 0.54 \\
 \label{tab:U-Values}
 \end{table}
 
-Additional assumptions are made, as shown in the appendix in section \ref{assumptions}. As shown in Eq. \ref{app:heating-calcs}, it is found that the total heating power required to maintain a temperature of \(20^\circ \text{ C}\) is 17.6 kW.
+\noindent Additional assumptions are made, as shown in the appendix in section \ref{assumptions}. As shown in Eq. \ref{app:heating-calcs}, it is found that the total heating power required to maintain a temperature of \(20^\circ \text{ C}\) is 17.6 kW.
 \newline
 
 \paragraph{Lighting} \(\) \newline
@@ -2192,7 +2152,8 @@ To calculate the lighting costs, it is assumed the warehouse requires fifty 100W
 \paragraph{Batteries} \(\) \newline
 Batteries in drones and laptops used by employees both must be charged. Both are assumed to be charged by standard \(65W\) chargers. There are assumed to be 20 batteries in total, and it is assumed they are all charging whenever the centre is open. The effective power draw of charging batteries is estimated at \(\dot Q=20\times 65\text{ W}=1.3\text{ kW}\).
 
-Therefore the total power draw of the operational warehouse is approximated to \(17.6\text{ kW}+1.3\text{ kW}+1.3\text{ kW}=20.2\text{ kW}\)
+\paragraph{Total Power} \(\) \newline
+Under the assumptions outlined above, the total power draw of the operational warehouse is approximated to \(17.6\text{ kW}+1.3\text{ kW}+1.3\text{ kW}=20.2\text{ kW}\).
 
 \paragraph{Full Electricity Cost} \(\) \newline
 According to the Department for Energy Security and Net Zero's Q2 2025 Energy Prices report \cite{EnergyPrices}, the average electricity cost to non-domestic users (including Climate Change Levy) over the last three years is around 25p/kWh. This will be used to calculate an annual electricity cost. It is also assumed that the warehouse will need to be open 3000 hours per year (for 2000 hour-long games per year), to include unbooked game slots, maintenance and opening preparation time. The final electricity cost is therefore given in Eq. \ref{equ:eleccost}.
@@ -2201,7 +2162,7 @@ According to the Department for Energy Security and Net Zero's Q2 2025 Energy Pr
     \text{Electricity Cost [£/Year]}=20.2\text{kW}\times3000\text{ hours/year} \times 0.25 \text{ £/kWh}=£15150/\text{year}
 \end{equation}
 
-To keep the estimate conservative, to allow for fluctuations in electricity price and to allow for miscellaneous costs (employees boiling a kettle, for example), this value will be rounded up to a final electricity cost of £20k/year.
+\noindent To keep the estimate conservative, to allow for fluctuations in electricity price and to allow for miscellaneous costs (employees boiling a kettle, for example), this value will be rounded up to a final electricity cost of £20k/year.
 
 \subsubsection{Warehouse Decoration and Maintenance}
 Year 0 will be used to prepare the warehouse for laser-tag. From Year 1 onward, this budget will only be spent on repairing wear-and-tear. Chaboun Construction (a London-based building services provider) estimates £50000 for a basic, 3-bedroom house renovation \cite{chabounconstructionMuchDoes}. However, much of this cost is related to the kitchen and the bathrooms, and in rewiring/replumbing. None of this applies to the warehouse, and (certainly to begin), non-premium materials will suffice. However, the warehouse is much larger than a 3-bedroom house. The price of Year 0 was therefore estimated at £30000. £10000 was selected as the budget for redecoration and maintenance. This is probably higher than strictly realistic, but accounts for the fact that a complete redecoration will be necessary every few years, and maintains a conservative estimate.
@@ -2237,15 +2198,15 @@ Profit & -215 & -5 & 35 & 75 & 75 & \dots \\
 \label{tab:IE}
 \end{table}
 
-It is observed that the annual non-discounted profit stabilises at £75000. 
+\noindent It is observed that the annual non-discounted profit stabilises at £75000. 
 
 \subsection{Initial Capital Investment}
 
-In Year 0, £215k of capital is required for startup costs, and will be funded through both equity (seeking investors) and bank loans.  
+In Year 0, £215k of capital is required for startup costs, and will be funded through both equity (seeking investors) and bank loans.  \newline
 
-\(\)\newline Bank loans are much more \say{unforgiving}: if the company fails to do make repayments, it must declare bankruptcy. Private investment requires no such repayments. Investors make money on their investments through share appreciation and dividends, so require no fixed repayments. Because of this, they require a higher interest rate than bank loans (discussed in section \ref{DiscountRate}). This means that relying heavily on equity financing increases effective discount rate, reducing the effect of future revenue on Net Present Value.
+\noindent Bank loans are much more \say{unforgiving}: if the company fails to do make repayments, it must declare bankruptcy. Private investment requires no such repayments. Investors make money on their investments through share appreciation and dividends, so require no fixed repayments. Because of this, they require a higher interest rate than bank loans (discussed in section \ref{DiscountRate}). This means that relying heavily on equity financing increases effective discount rate, reducing the effect of future revenue on Net Present Value. \newline
 
-\(\) \newline As a balance, the business seeks £100k in bank loans and £115k in equity financing. 
+\noindent As a balance, the business seeks £100k in bank loans and £115k in equity financing. 
 
 \subsection{Discount Rate}
 \subsubsection{Overview}
@@ -2258,12 +2219,12 @@ The equity-only discount rate is used by investors to assess the viability of a 
     P_0=\frac{P(t)}{(1+d)^t}
 \end{equation} so the projected returns must exceed \(\frac{P(t)}{(1+d)^t}\) if the business is to be considered a profitable investment.
 
-The choice of equity-only discount rate is made by investors when choosing whether or not to invest. Investing in a small start-up is riskier than investing in a large, established business, so the applied equity-only discount rate tends to be very high for start-ups (around 15-30\%).
+% The choice of equity-only discount rate is made by investors when choosing whether or not to invest. Investing in a small start-up is riskier than investing in a large, established business, so the applied equity-only discount rate tends to be very high for start-ups (around 15-30\%).
 
 
 \subsubsection{Modelling Discount Rate}
 \label{DiscountRate}
-Two common approaches to model discount rate are: Equity-Only Discount Rate, and \gls{wacc}.
+A numerical value of discount rate, \(d\), must be chosen. Two common approaches to model discount rate are: Equity-Only Discount Rate, and \gls{wacc}.
 \paragraph{Equity-Only Discount Rate} \(\)\newline
 Using an Equity-Only Discount Rate, the discount rate applied to future cash flows is set by investors, ignoring debt interest from the bank. Therefore the Year 0 capital injection from the bank loan \(P\) and the annual debt repayments \(A\) in subsequent years must be included in the cash flow, and the remaining balance after \(t\) years \(B_t\) on the bank loan must be considered as a liability in the terminal value (discussed in section \ref{TermValue}). These are determined by the amortisation formula, shown in Eq. \ref{equ:amortisation}.
 
@@ -2293,16 +2254,14 @@ Another approach is to weight the bank loan interest rate \(r_d\) and the equity
 \begin{equation}
     \text{WACC}=\frac{D}{D+E}r_d+\frac{E}{D+E}r_e
 \end{equation}
-where \(D\) is the initial capital of the bank loan, and \(E\) is the capital investment from equity financing. 
+where \(D\) is the initial capital of the bank loan, and \(E\) is the capital investment from equity financing. Using \gls{wacc}, it is not necessary to model the loan an the debt repayments as cash flows , or the remaining balance as a liability; these are all captured by the use of \gls{wacc}. \newline
 
-Using \gls{wacc}, it is not necessary to model the loan an the debt repayments as cash flows , or the remaining balance as a liability; these are all captured by the use of \gls{wacc}. 
-
-Therefore, for the sake of simplicity, \gls{wacc} is used in this model, with rates:
+\noindent Therefore, for the sake of simplicity, \gls{wacc} is used in this model, with rates:
 \begin{equation}
     r_d=15\% \qquad r_e=20\%
 \end{equation}
 
-The effect of a variation in discount rate is analysed in Sections \ref{NPVProfile} and \ref{DPS}.
+\noindent The effect of a variation in discount rate is analysed in Sections \ref{NPVProfile} and \ref{DPS}.
 
 \subsubsection{Terminal Value (TV)}
 \label{TermValue}
@@ -2337,12 +2296,10 @@ Tax is modelled under UK corporation tax laws. For a given year, the taxable inc
     \end{cases}
 \end{equation}
 
-NB: The marginal rate applies to total income, not just income between £50000 and £250000, like personal income tax would.
-
-UK corporation tax law also allows losses in one year to be carried over to the next. For example, if a business makes a loss of £20000 in Year \(n\), and makes a profit of £60000 in Year \(n+1\), its taxable income in Year \(n+1\) is £40000. Losses can be carried over indefinitely.
+\noindent UK corporation tax law also allows losses in one year to be carried over to the next. For example, if a business makes a loss of £20000 in Year \(n\), and makes a profit of £60000 in Year \(n+1\), its taxable income in Year \(n+1\) is £40000. Losses can be carried over indefinitely.
 
 \subsubsection{Net Present Value}
-A running total cash flow is tabulated. This is discounted according to the year in which the money is made. The \gls{npv} at a given year is given by the discounted cumulative cash flow up to that year added to the discounted terminal value. In future years, once cash flow (including tax) stabilises, \gls{npv} remains constant. \say{\gls{npv}} refers to a this stabilised value.
+A running total cash flow is tabulated. This is discounted according to the year in which the money is made. The \gls{npv} at a given year is given by the discounted cumulative cash flow up to that year added to the discounted terminal value. In future years, once cash flow (including tax) stabilises, \gls{npv} remains constant. In the following sections, \say{\gls{npv}} refers to this stabilised value.
 
 \paragraph{Assumptions} \(\) \newline
 For simplicity, it is assumed that a constant \gls{wacc} discount rate is applied over time. This assumes:
@@ -2390,9 +2347,12 @@ Discounted CCF& -215&-219&-194&-148&-109&-79.0&-56.8&-37.9& \dots \\
 \label{tab:model}
 \end{table}
 
-The Discounted Cumulative Cash Flow turns positive in Year 10 (payback; section \ref{DPS}). It is found that the \gls{npv} is £68669. Hence, the business is viable under these assumptions.
+\noindent The Discounted Cumulative Cash Flow turns positive in Year 10 (payback; section \ref{DPS}).\newline
 
-\subsection{Analyses}
+
+\noindent It is found that the \gls{npv} is £68669. Hence, the business is viable under these assumptions.
+
+\subsection{Analyses} \label{anal}
 Using Apps Script, Google Sheets' equivalent of Excel macros, the following analyses were performed. In general, one variable was changed and another was observed, while all others were held constant according to the assumptions stated above.
 \subsubsection{\gls{npv} Profile}
 \label{NPVProfile}
@@ -2405,7 +2365,7 @@ A common measure of a business' viability is the effect of changing the discount
     \label{fig:NPV-Profile}
 \end{figure}
 
-The discount rate at which \gls{npv} is zero is 22.3\%. This is known as the \gls{irr}. Using \gls{wacc} calculations, a discount rate of 17.7\% was projected. This shows that the business is viable even under slightly higher discount rates than predicted. Furthermore the \gls{npv} profile shows that a small reduction in discount rate produces a large increase in \gls{npv}. This is encouraging, since discount rate is likely to decrease significantly as the business becomes more established.
+\noindent The discount rate at which \gls{npv} is zero is 22.3\%. This is known as the \gls{irr}. Using \gls{wacc} calculations, a discount rate of 17.7\% was projected. This shows that the business is viable even under slightly higher discount rates than predicted. Furthermore the \gls{npv} profile shows that a small reduction in discount rate produces a large increase in \gls{npv}. This is encouraging, since discount rate is likely to decrease significantly as the business becomes more established.
 
 \subsubsection{Discounted Payback Sensitivity}
 \label{DPS}
@@ -2418,16 +2378,15 @@ It is also useful to investigate how payback (the time at which the cumulative d
     \label{fig:dis-pay-sen}
 \end{figure}
 
-Payback increases with Discount Rate. However, Payback only decreases a little over the realistic values of Discount Rate, only increasing from 9 to 13 years as Discount Rate increases from 15\% to 20\%. This suggests slight errors in numerical assumptions does not hugely affect the projected business performance.
+\noindent Payback increases with Discount Rate. However, Payback only decreases a little over the realistic values of Discount Rate, only increasing from 9 to 13 years as Discount Rate increases from 15\% to 20\%. This suggests slight errors in numerical assumptions does not hugely affect the projected business performance.
 
 \subsubsection{Pricing}
 \label{PriceAnal}
 \paragraph{Price and Demand}\(\) \newline
+To determine the optimum price per game, the relationship between utility (games per year) and the price per game is modelled. The increase of utility shown in Table \ref{tab:utilityandemployees} is assumed to be constant. \newline
 
-To determine the optimum price per game, the relationship between utility (games per year) and the price per game is modelled. The increase of utility shown in Table \ref{tab:utilityandemployees} is assumed to be constant.
 
-
-A linear demand-price curve was assumed: demand (maximum number of games per year, \(Q_d\)) varies with price per game, \(P\), according to the equation:
+\noindent A linear demand-price curve was assumed: demand (maximum number of games per year, \(Q_d\)) varies with price per game, \(P\), according to the equation:
 \begin{equation}
     Q_d=a-bP
 \end{equation}
@@ -2437,7 +2396,7 @@ As above, it was assumed that, a price of £200 per game corresponds to a maximu
     Q_d=2000+b(200-P)
 \end{equation}
 
-The demand-price elasticity \(\varepsilon\) is defined as:
+\noindent The demand-price elasticity \(\varepsilon\) is defined as:
 \begin{equation}
     \varepsilon=\frac{dQ_d}{dP}\cdot \frac PQ
 \end{equation}
@@ -2446,7 +2405,7 @@ The demand-price elasticity \(\varepsilon\) is defined as:
 % \begin{equation}
 %     Q_d=2000-\varepsilon\frac QP(200-P)
 % \end{equation}
-In a linear model, \(\varepsilon\) is varies. Instead, a reference value of elasticity \(\varepsilon'\) will be taken at \((Q_d=2000, P=200\)), and the gradient held constant. Hence, the demand-price curve reduces to:
+\noindent In a linear model, \(\varepsilon\) is varies. Instead, a reference value of elasticity \(\varepsilon'\) will be taken at \((Q_d=2000, P=200\)), and the gradient held constant. Hence, the demand-price curve reduces to:
 \begin{equation}
     Q_d=2000-10\varepsilon'(200-P)
 \end{equation}
@@ -2455,9 +2414,7 @@ However, this model implies no limit on utility. In reality, only one game can b
 \begin{equation}
     Q_d=\min\{2000-10\varepsilon'(200-P), 3000\}
 \end{equation}
-A reference value of elasticity \(\varepsilon=-1.1\) is chosen, since it represents a moderate price-sensitivity.\newline
-
-The effect of a variation in reference elasticity is analysed in Section \ref{ElasticityAnal}
+A reference value of elasticity \(\varepsilon=-1.1\) is chosen, since it represents a moderate price-sensitivity. The effect of a variation in reference elasticity is analysed in Section \ref{ElasticityAnal}
 
 \paragraph{Finding optimal price} \(\) \newline
 The variation of \gls{npv} with game price was investigated. The results are shown in Fig. \ref{fig:pri-sen}.
@@ -2469,16 +2426,15 @@ The variation of \gls{npv} with game price was investigated. The results are sho
     \label{fig:pri-sen}
 \end{figure}
 
-It is observed that, given \(\varepsilon'=-1.1\), £200 per game is the price that maximises \gls{npv}. 
+\noindent It is observed that, given \(\varepsilon'=-1.1\), a game price of £200 per game maximises \gls{npv}. \newline
 
 
-The linear left-most section of the graph corresponds to a constant utility of 3000 games per year. In this section, \gls{npv} is hugely negative. Therefore, attempting to setting the game price such that the facility is running at capacity is a very poor decision.
+\noindent The linear left-most section of the graph corresponds to a constant utility of 3000 games per year. In this section, \gls{npv} is hugely negative. Therefore, attempting to setting the game price such that the facility is running at capacity is a very poor decision. \newline
 
-\gls{npv} is only positive for prices between £160 and £240 per game (to the nearest £10). Given how narrow this range of is, this demonstrates the importance of this analysis.
+\noindent \gls{npv} is only positive for prices between £160 and £240 per game (to the nearest £10). Given how narrow this range of is, this demonstrates the importance of this analysis. UGLY SENTENCE FIX
 
-\paragraph{Utility Sensitivity}\(\) \newline
-\label{UtilityAnalFixedPrice}
-It was assumed that the maximum number of games per year would be 2000 when the price was £200 per game. The effect of a small error is this estimate was investigated. Price per game was held constant, maximum games per year was varied and the resulting \gls{npv} was tabulated. The results are shown in Fig. \ref{fig:uti-sen}.
+\paragraph{Utility Sensitivity}\label{UtilityAnalFixedPrice} \(\) \newline
+\noindent It was assumed that the maximum number of games per year would be 2000 when the price was £200 per game. The effect of a small error is this estimate was investigated. Price per game was held constant, maximum games per year was varied and the resulting \gls{npv} was tabulated. The results are shown in Fig. \ref{fig:uti-sen}.
 
 \begin{figure}[H]
     \centering
@@ -2487,11 +2443,10 @@ It was assumed that the maximum number of games per year would be 2000 when the 
     \label{fig:uti-sen}
 \end{figure}
 
-\gls{npv} is only positive for above 1900 games per year (rounded to the nearest 50) This is very close to the estimated 2000 games per year: a high utility is critical, justifying the high advertising budget. 
+\noindent \gls{npv} is only positive for above 1900 games per year (rounded to the nearest 50) This is very close to the estimated 2000 games per year: a high utility is critical, justifying the high advertising budget. 
 
-\paragraph{How Optimal Price varies with elasticity} \(\) \newline
-\label{ElasticityAnal}
-This process was repeated for reference elasticity \(\varepsilon'\) between -0.5 (very price-insensitive) and -3 (very price-sensitive). Since the effect on \gls{npv} of changing two variables (reference elasticity and price per game) is being measured, it would be possible to create a 3D surface to demonstrate this. Since reference elasticity is only being varied in order to assess the sensitivity of the model to errors in numerical assumptions (it is not something that can be changed in order to maximise \gls{npv}), it is only useful to tabulate the optimal price per game (price that maximises \gls{npv}) and plot this against reference elasticity. This is shown in Fig. \ref{fig:opt-cos-sen}.
+\paragraph{Variation of Optimal Price with elasticity} \label{ElasticityAnal}\(\) \newline
+This process was repeated for reference elasticity \(\varepsilon'\) between -0.5 (very price-insensitive) and -3 (very price-sensitive). Since the effect on \gls{npv} of changing two variables (reference elasticity and price per game) is being measured, it would be possible to create a 3D surface to demonstrate this. Since reference elasticity is only being varied in order to assess the sensitivity of the model to errors in numerical assumptions (it is not something that can be changed in order to maximise \gls{npv}), it is only useful to tabulate the optimal price per game (price that maximises \gls{npv}) and plot this against reference elasticity, as shown in Fig. \ref{fig:opt-cos-sen}.
 
 \begin{figure}[H]
     \centering
@@ -2500,14 +2455,19 @@ This process was repeated for reference elasticity \(\varepsilon'\) between -0.5
     \label{fig:opt-cos-sen}
 \end{figure}
 
-Elasticity is likely to be between -0.8 and -1.5. It is observed that, over this range of reference elasticity, the optimal cost is almost constant, and very close to £200 per game.
+\noindent Elasticity is likely to be between -0.8 and -1.5. It is observed that, over this range of reference elasticity, the optimal cost is almost constant, and very close to £200 per game.
 
 \subsubsection{Limitations}
+The discount rate was assumed to be constant with time, which is unrealistic. This was done for the sake of simplicity, as well as conservatism. Furthermore, the analysis was conducted by changing one or more variables and observing another, while all others were held constant.. By changing all variables at once to create a multi-dimensional surface, optima of \gls{npv} may be found that were missed in the above analysis, either by brute force or multi-dimensional gradient descent.
 
-In general, one or more variables were changed, and another was observed, while all others were held constant according to the assumptions stated above. It is likely that, by completing a sweep, changing all values at once to create a multi-dimensional surface model of all financial values, optima of \gls{npv} will be found that were missed in the above analysis, either by brute force or multi-dimensional gradient descent.
-
-% Summing Up Section
-
+\subsection{Conclusions}
+Under the conservative assumptions laid out above, the value of a theoretical business offering a drone-based Laser-Tag experience was found to be approximately £69,000. From the analyses carried out in Section \ref{anal}, it was found that:
+\begin{itemize}
+    \item £200 per game is the optimal price to charge per game (per group).
+    \item The viability of the business depends greatly on early revenue and on small changes to custom, justifying a large advertising budget.
+    \item £69,000 is likely an underestimate, since the value of the business will significantly increase with time as discount rate decreases. 
+\end{itemize}
+\noindent This suggests that is it possible to offer drone-based Laser-Tag as a commercially viable service.
 \newpage
 
 
@@ -2585,13 +2545,13 @@ Assuming the average daytime temperature in London is \(10 ^\circ C\), and the d
     \caption{Flow Chart Describing High-Level Mode Changes}
     \label{fig:FlowBig}
 \end{figure}
-\label{risk-assessment}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\linewidth]{figs/risk-assessment}
-    \caption{Quantitative Risk Assessment}
-    \label{fig:risk-assessment}
-\end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=1\linewidth]{figs/risk-assessment}
+%     \caption{Quantitative Risk Assessment}
+%     \label{fig:risk-assessment}
+% \end{figure}
 
 \begin{figure}[htbp]
      \centering
