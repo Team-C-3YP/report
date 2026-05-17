@@ -14,13 +14,16 @@
 \captionsetup[figure]{labelfont=bf, textfont=it}
 \usepackage{subcaption}
 \captionsetup[subfigure]{labelformat=parens}
+\usepackage{xurl}
+% \usepackage[hidelinks]{hyperref}
+\Urlmuskip=0mu plus 1mu
 \usepackage[table]{xcolor}
-\usepackage[colorlinks=true, linkcolor=black, citecolor=black, urlcolor=black]{hyperref}
+\usepackage[colorlinks=true, linkcolor=black, citecolor=black, hidelinks]{hyperref}
 
 \title{Laser Tag using a Multiagent Drone System}
 \subtitle{Report for the system and software design of a multiagent drone system to play Laser Tag}
 \author{Shing Hei Rickie Chan, Thomas August, Rishabh Luthra, Richard Usherwood}
-\date{March 2026}
+\date{20 May 2026}
 
 \begin{document}
 \maketitle
@@ -100,23 +103,23 @@ In addition to the technical deployment, user retention is driven by a companion
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.7\textwidth]{figs/Safety Net Editted.png}
-    \caption{\textit{A simulation of player and a drone in the maze}}
+    \caption{A simulation of a player and a drone in the play arena}
     \label{fig:gameplay}
 \end{figure}
 \subsection{Overview}
-Players are equipped with Laser Guns (\gls{ir} emitters that transmit encoded data), and helmets and vests containing \gls{ir} sensors. The drones are equipped with Turrets which emit \gls{ir} radiation (see Section \ref{Turret}) as well as \gls{ir} sensors. When not flying, they are dormant in a \say{standby location} where employees can replace their batteries. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If a player is hit, they must navigate to a designated \say{timeout} area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun is disables until their timeout ends (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at \(3 ~\mathrm{ m}\) height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
+Players are equipped with Laser Guns (\gls{ir} emitters that transmit encoded data), and helmets and vests containing \gls{ir} sensors. The drones are equipped with Turrets which emit \gls{ir} radiation (see Section \ref{Turret}) as well as \gls{ir} sensors. When not flying, they are dormant in a \say{standby location} where employees can replace their batteries. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If a player is hit, they must navigate to a designated \say{timeout} area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun is disables until their timeout ends (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at 3 m height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
 
 \noindent Two \say{game modes} have been designed: \say{Wave Mode} and \say{Objective Mode}. These are summarised in the following sections.
 \subsection{Wave Mode}
-In \say{Wave Mode}, the players \say{fight} a number of drones, released in an order designed to be both challenging and engaging. When hit, the drones return to their standby location, where they will remain. If all of the players are timing out at the same time (having been hit), they lose. If all of the drones have been hit, they win. This constitutes a single wave. The players can choose from a catalogue of waves (in future accessible through the companion app, see Section \ref{app}), ranging in difficulty. Each level will be given a difficulty rating. This allows a team to end a game with a clear metric of their performance: the difficulty rating of the hardest wave completed. This will also allow a team to track their improvement. In future, this will be displayed in the companion app, allowing players to compare scores with friends.
+In \say{Wave Mode}, the players \say{fight} a number of drones, released in an order designed to be both challenging and engaging. When hit, the drones return to their standby location, where they will remain. If all of the players time out simultaneously, they lose. If all of the drones have been hit, they win. This constitutes a single wave. The players can choose from a catalogue of waves (in future accessible through the companion app, see Section \ref{app}), ranging in difficulty. Each level will be given a difficulty rating. This allows a team to end a game with a clear metric of their performance: the difficulty rating of the hardest wave completed. This will also allow a team to track their improvement. In future, this will be displayed in the companion app, allowing players to compare scores with friends.
 
 \subsection{Objective Mode}
-In \say{Objective Mode}, the players must navigate the maze to complete objectives, such as \say{Hold this button for 5 seconds}, or \say{Shoot this target on the wall}, which are communicated via speakers. They must complete all objectives within a time limit to \say{pass} the level. The other mechanics of the game are the same as in \say{Wave Mode}, other than that the drones return after a short timeout when hit. If they complete all objectives, they win. If they win, they will progress to a harder level. Just as in \say{Wave Mode}, the levels will be designed and play-tested to be both challenging, engaging; a catalogue of levels marked with a numerical difficulty can be selected in-app.\newline
+In \say{Objective Mode}, the players must navigate the maze to complete objectives, such as \say{Hold this button for 5 seconds}, or \say{Shoot this target on the wall}, which are communicated via speakers. They must complete all objectives within a time limit to \say{pass} the level. The other mechanics of the game are the same as in \say{Wave Mode}, other than that the drones return after a short timeout when hit. If they complete all objectives, they win. If they win, they will progress to a harder level. Just as in \say{Wave Mode}, the levels will be designed and play-tested to be both challenging and engaging; a catalogue of levels marked with a numerical difficulty can be selected in-app.\newline
 
 \subsection{Difficulty Scaling}
 Since the levels increase in difficulty, there is little need to scale difficulty according to a players' skill: if the players are inexperienced, they will only play easy levels, and there will be levels to suit players of all skill levels. However, the difficulty of the levels may need to change according to the number of players in a team. This can be achieved in a number of ways. For example, the number of drones could be adjusted, the top speed of the drones could be capped, and artificial inaccuracy could be added to the shooting of the drones.\newline
 
-\noindent It is very difficult to know which methods of adjusting difficulty will result in a game that is both enjoyable and balanced, for a range of numbers of people. Hence, deciding exactly how to perform this adjustment will require play-testing in the arena, once it has been created.
+\noindent It is very difficult to know which methods of adjusting difficulty will result in a game that is both enjoyable and balanced for a range of numbers of people. Hence, deciding exactly how to perform this adjustment will require play-testing, once the arena has been built.
 \newpage
 
 %%%%%%%%%----End of System Proposed Gameplay------%%%%%%%%%
@@ -1215,18 +1218,18 @@ Network and communications are not strictly necessary for a single wave of the g
 \end{itemize}
 Alternatively, a central server could be used to give drones high-level instructions, and to share information pertaining to the state of the game. This method of handling information also has some advantages:
 \begin{itemize}
-    \item Complexity: coordinating the movement of many drones is much easier when all information is available centrally.
+    \item Reduced Complexity: coordinating the movement of many drones is much easier when all information is available centrally.
     \item Hardware Costs: if the central high-level decision making is performed in a central server, rather than locally on the processer of each drone, not only will a lower-powered processor be needed in the drone, but a smaller battery will be needed to power it, so less powerful motors will be required to lift the battery, and so on, decreasing hardware costs.
 \end{itemize}
 Considering the pros and cons listed above, it was decided that a central server was the most appropriate option to perform high-level decision making. Different methods of handling communications between the drones and the server are discussed below.
 
 \subsection{Bluetooth}
-Bluetooth is a short-range wireless communication system, designed for low-power device-to-device communication. It uses 79 channels, \(1\mathrm{ MHz}\) apart, from 2.402 to 2.480 GHz. Data is encoded by changes in frequency. Classic Bluetooth uses Frequency Hopping Spread Spectrum (FHSS), switching between frequency channels to reduce interference, with Gaussian Frequency Shift Keying (GFSK) modulation. In a connection, one device acts as a \say{main}, and up to seven devices act as \say{followers}. Time-Division-Duplexing is used to avoid collisions. Time is divided into \(625\mu\mathrm{ s}\) divisions. The main communicates in even slots, and the followers communicate in odd slots.
+Bluetooth is a short-range wireless communication system, designed for low-power device-to-device communication. It uses 79 channels, 1MHz apart, from 2.402 to 2.480 GHz. Data is encoded by changes in frequency. Classic Bluetooth uses Frequency Hopping Spread Spectrum (FHSS), switching between frequency channels to reduce interference, with Gaussian Frequency Shift Keying (GFSK) modulation. In a connection, one device acts as a \say{main}, and up to seven devices act as \say{followers}. Time-Division-Duplexing is used to avoid collisions. Time is divided into 625 \(\mu\)s divisions. The main communicates in even slots, and the followers communicate in odd slots.
 
-\(\)\newline A Bluetooth connection uses very little power. However, it has a lower bitrate than a Wi-Fi connection (1-3 \(\mathrm{ Mbps}\)). It also has a shorter intended range than a Wi-Fi connection. Furthermore, the maximum number of seven followers connected to a single main will pose a problem since it will be necessary for up to 10 drones to be connected to the server at a time, requiring an additional main, to manage communication for some drones. This would be possible, but inconvenient and less robust.
+\(\)\newline A Bluetooth connection uses very little power. However, it has a lower bitrate than a Wi-Fi connection (1-3 Mbps). It also has a shorter intended range than a Wi-Fi connection. Furthermore, the maximum number of seven followers connected to a single main will pose a problem since it will be necessary for up to 10 drones to be connected to the server at a time, requiring an additional main, to manage communication for some drones. This would be possible, but inconvenient and less robust.
 
 \subsection{Wi-Fi}
-Wi-Fi is a medium-range wireless communication system, designed for fast and reliable server-to-device communication. It typically operates at \(\textasciitilde\)2.4\(\mathrm{ GHz}\), \(\textasciitilde\)5\(\mathrm{ GHz}\) or \(\textasciitilde\)6\(\mathrm{ GHz}\), transferring data over multiple (up to 60) non-overlapping channels of bandwidth 20\(\mathrm{ MHz}\), modulated using Orthogonal Frequency Division Multiplexing (OFDM).
+Wi-Fi is a medium-range wireless communication system, designed for fast and reliable server-to-device communication. It typically operates at \(\textasciitilde\)2.4 GHz, \(\textasciitilde\)5 GHz or \(\textasciitilde\)6 GHz, transferring data over multiple (up to 60) non-overlapping channels of bandwidth 20 MHz, modulated using Orthogonal Frequency Division Multiplexing (OFDM).
 
 \(\) \newline A Wi-Fi connection typically has a lower latency and a much higher maximum bitrate than Bluetooth. However, the required data rate is small enough that this will not be important. Wi-Fi is generally more reliable than Bluetooth, and this is especially true at distances above ten meters; Bluetooth was designed for low bitrate, low power, short-range communication between a small number of devices, whereas Wi-Fi was designed for higher bandwidth connections between many devices.
 
@@ -1254,7 +1257,7 @@ An overview of the purpose of each state is given below.
 \subsubsection{Dormant Mode}
 This is the default mode of the drones, designed for waiting between rounds or games on standby, when not actively involved in the game. This mode is triggered by the end of a round, or by the powering on of the drone.
 \subsubsection{Search Mode}
-This is the initial mode of a drone upon entering a game. In this mode, the drone is exploring an area of the map decided by the central server, looking for a target. The flow diagram describing the conditions under which the drone will change out of Search Mode is shown below, in Fig. \ref{fig:FlowSearch}.
+This is the initial mode of a drone upon entering a game. In this mode, the drone is exploring an area of the map decided by the central server, looking for a target. The flow diagram describing the conditions under which the drone will change out of Search Mode is shown below, in Fig.~\ref{fig:FlowSearch}.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.7\linewidth]{figs/High-Level/SearchMode.png}
@@ -2026,10 +2029,10 @@ For the collision avoidance method, we chose to use an Artificial Potential Fiel
 \label{app}
 \fancyhead[C]{Richard Usherwood}
 \subsection{Context}
-From fast-food restaurants to road cycling, apps are everywhere. Their purpose can be separated into two categories: Engagement and Functionality. % Add reference to make it sound better
+From fast-food restaurants to road cycling, apps are everywhere. As reported in the Guardian, the average UK adult year old spends over three hours on their phone every day~\cite{theguardianAdultsGreat} using apps, making apps a useful method of reaching consumers. Their purpose can be separated into two categories: Engagement and Functionality. % Add reference to make it sound better
 
 \paragraph{Engagement} \(\) \newline
-Companion apps encourage user-engagement by allowing users to track their progress through points and leaderboards, track achievements, and connect with friends. For example, the popular birdwatching app \say{Birda} is used by users to log bird sightings. It rewards users with achievement badges when they complete objectives (for example, logging ten different species), and integrates monthly challenges. It also connects birdwatchers through the \say{community} feature, allowing users to view their friends' activity and local sightings. 
+Companion apps encourage user-engagement by allowing users to track their progress through points and leaderboards, track achievements, and connect with friends. For example, the popular birdwatching app \say{Birda} allows users to log bird sightings. It rewards users with achievement badges when they complete objectives (for example, logging ten different species), and integrates monthly challenges. It also connects birdwatchers through the \say{community} feature, allowing users to view their friends' activity and local sightings. 
 
 \paragraph{Functionality} \(\) \newline
 Companion apps also serve a functional purpose. Since effectively everyone in the UK owns and uses a smartphone, they can be directly implemented into existing products. For example, budget UK pub chain JD Wetherspoon uses a companion app to allow patrons to order drinks and food directly to their table, without requiring them to break conversation and queue at a busy bar. 
@@ -2071,7 +2074,7 @@ Tracking progress encourages user engagement by giving users a sense of achievem
 Connecting friends and integrating social features encourages user engagement by allowing users to see their friends' progress. The app achieves this in many ways:
 \begin{itemize}
     \item The Leaderboard screen allows players to compare themselves only against their friends, as shown in Fig.~\ref{fig:lea-screen}(\subref{fig:lea-fri}).
-    \item The Community screen allows players to see recent activity of their friends, as well as to send and accept/decline friend requests.
+    \item The Community screen allows players to see their friends' recent activity, as well as to send and accept/decline friend requests.
 \end{itemize}
 \subsubsection{Notifications and reminders}
 Integrating Notifications and reminders prompts users to engage regularly with the app. Notifications are delivered to the phone's operating system notification bar for the following reasons:
@@ -2083,7 +2086,7 @@ Integrating Notifications and reminders prompts users to engage regularly with t
 
 
 \subsubsection{Functionality}
-The user experience of playing game in the centre, using the app, is outlined below.
+The user experience of playing the game in the centre, using the app, is outlined below.
 \begin{itemize}
     \item The user signs in to the app (or create an account if this has not already been done). The Login screen is shown in Fig.~\ref{fig:userstory}(\subref{fig:userstory1}).
     \item The app displays the Profile Screen. Using the bottom panel (shown in Fig.~\ref{fig:App-Panel}), the user navigates to the \say{Play in Person} Screen. The Profile Screen is shown in Fig.~\ref{fig:userstory}(\subref{fig:userstory2}).
@@ -2112,10 +2115,10 @@ The user experience of playing game in the centre, using the app, is outlined be
          \caption{Play in Person Screen}
          \label{fig:userstory3}
      \end{subfigure}
-     \caption{From Left to Right: The user experience of using the app in for functionality}
+     \caption{From Left to Right: The user experience of using the app for gameplay}
      \label{fig:userstory}
 \end{figure}
-This allows the server to attribute the correct number of kills and deaths (infra-red strikes on drones, encoded with ID of the gun, and infra-red strikes on the helmet and vest detectors, communicated to server via Wi-Fi) to the correct player.
+This allows the server to attribute the correct number of kills and deaths (\gls{ir} strikes on drones, encoded with ID of the gun, and \gls{ir} strikes on the helmet and vest detectors, communicated to server via Wi-Fi) to the correct player.
 
 \subsection{Usability Design Choices}
 In 2010, Lee et al \cite{LEE201090} identified several \say{Principles for General System Design}, with respect to complex 3D architectural design and engineering tools. While this use case is not identical to that of Lee et al, the principles are still relevant. The following are examples of these principles:
@@ -2185,10 +2188,10 @@ The App uses Supabase as its backend platform, to access a PostgreSQL database. 
 \(\)\newline A specific format had to be created for this data to be stored. For example, Game Data is stored in a format (A, B, C, \dots),(D, E, F, \dots),(G, H, I, \dots). This game data is equivalent to \say{Players A, B, C, ... played a game in which they got D, E, F, ... kills and died G, H, I, ... times, respectively}. Furthermore the \say{score} is defined as \say{number of kills squared divided by number of deaths} in a game, and the friend requests are stored as CSVs. When a change to the data is made in the app (for example sending or accepting a friend request), the database is automatically through API calls. However, the database must also be updated after every game. In the real system, this would be integrated into a system that processes communications with drones and helmets, and updates the database automatically. However, for now it is handled by a script that allows the user to input the results of the game (who was playing, how many kills they got, how many times they died etc.), and updates the database accordingly. 
 
 \newpage
-\section{Safety and Risk Assessment Management}
+\section{Risk Assessment and Safety Management}
 \label{risk-assessment}
 
-A quantitative risk assessment has been completed, and is shown in Table \ref{tab:risk-assessment}. The most significant initial risks were the the contact between guns and players' eyes, and players running into each other. After the necessary control measures, they are still most significant residual risks, along with trips and falls. This demonstrates that there is not an undue risk associated with playing this game, since trips and falls, player-on-player collision and impact with instruments used for playing (such as laser-guns, squash raquets, etc.) are risks associated with traditional Laser-Tag, as well as many common sports. 
+A quantitative risk assessment has been completed, and is shown in Table \ref{tab:risk-assessment}. Likelihood and Severity were both scored out of 5, and their product, \say{Risk Value} was analysed. The most significant initial risks were the contact between guns and players' eyes, and player collisions. After control measures, they are still the most significant residual risks, along with trips and falls. These risks are similar to those associated with traditional Laser-Tag and common sports, and are no more significant. This shows that the level of risk associated with playing the game is acceptable.
 
 
 \begin{table}[h]
@@ -2310,7 +2313,7 @@ Floor & 0.18 & 0.54 \\
 
 
 \paragraph{Lighting} \(\) \newline
-To calculate the lighting costs, it is assumed the warehouse requires fifty 100W equivalent LEDs, each drawing 15W of power, to avoid dark shadows in the maze corners. However, since the game is played in (relative) darkness, the lights will only be required in between play sessions. Each game lasts 45 minutes, separated by 15 minute breaks, so the lights will only be turned on one quarter of the time. Therefore the effective power of the lighting is given by \(\dot Q_\text{lighting} = \frac 14 \times 50\times100\text{ W} = 1.3\text{ kW}\).
+To calculate the lighting costs, it is assumed the warehouse requires fifty 100~W equivalent LEDs, each drawing 15~W of power, to avoid dark shadows in the maze corners. However, since the game is played in (relative) darkness, the lights will only be required in between play sessions. Each game lasts 45 minutes, separated by 15 minute breaks, so the lights will only be turned on one quarter of the time. Therefore the effective power of the lighting is given by \(\dot Q_\text{lighting} = \frac 14 \times 50\times100\text{ W} = 1.3\text{ kW}\).
 
 \paragraph{Batteries} \(\) \newline
 Batteries in drones and laptops used by employees both must be charged. Both are assumed to be charged by standard \(65W\) chargers. There are assumed to be 20 batteries in total, and it is assumed they are all charging whenever the centre is open. The effective power draw of charging batteries is estimated at \(\dot Q_\text{batteries}=20\times 65\text{ W}=1.3\text{ kW}\).
@@ -2367,7 +2370,7 @@ Profit & -215 & -5 & 35 & 75 & 75 & \dots \\
 
 In Year 0, £215k of capital is required for startup costs, and will be funded through both equity (seeking investors) and bank loans.  \newline
 
-\noindent Bank loans are much more \say{unforgiving}: if the company fails to do make repayments, it must declare bankruptcy. Private investment requires no such repayments. Investors make money on their investments through share appreciation and dividends, so require no fixed repayments. Because of this, they require a higher interest rate than bank loans (discussed in section \ref{DiscountRate}). This means that relying heavily on equity financing increases effective discount rate, reducing the effect of future revenue on Net Present Value. \newline
+\noindent Bank loans are much more \say{unforgiving}: if the company fails to make repayments, it must declare bankruptcy. Private investment requires no such repayments. Investors make money on their investments through share appreciation and dividends instead. Because of this, they require a higher interest rate than bank loans (discussed in section \ref{DiscountRate}). This means that relying heavily on equity financing increases effective discount rate, reducing the effect of future revenue on Net Present Value. \newline
 
 \noindent As a balance, the business seeks £100k in bank loans and £115k in equity financing. 
 
@@ -2568,7 +2571,7 @@ As above, it was assumed that, a price of £200 per game corresponds to a maximu
 % \begin{equation}
 %     Q_d=2000-\varepsilon\frac QP(200-P)
 % \end{equation}
-\noindent In a linear model, \(\varepsilon\) is varies. Instead, a reference value of elasticity \(\varepsilon'\) will be taken at \((Q_d=2000, P=200\)), and the gradient held constant. Hence, the demand-price curve reduces to:
+\noindent In a linear model, \(\varepsilon\) is not constant. Therefore, a reference value of elasticity \(\varepsilon'\) will be taken at \((Q_d=2000, P=200\)), and the gradient held constant. Hence, the demand-price curve reduces to:
 \begin{equation}
     Q_d=2000-10\varepsilon'(200-P)
 \end{equation}
@@ -2577,7 +2580,7 @@ However, this model implies no limit on utility. In reality, only one game can b
 \begin{equation}
     Q_d=\min\{2000-10\varepsilon'(200-P), 3000\}
 \end{equation}
-A reference value of elasticity \(\varepsilon=-1.1\) is chosen, since it represents a moderate price-sensitivity. The effect of a variation in reference elasticity is analysed in Section \ref{ElasticityAnal}
+A reference value of elasticity \(\varepsilon'=-1.1\) is chosen, since it represents a moderate price-sensitivity. The effect of a variation in reference elasticity is analysed in Section \ref{ElasticityAnal}
 
 \paragraph{Finding optimal price} \(\) \newline
 The variation of \gls{npv} with game price was investigated. The results are shown in Fig. \ref{fig:pri-sen}.
@@ -2594,10 +2597,10 @@ The variation of \gls{npv} with game price was investigated. The results are sho
 
 \noindent The linear left-most section of the graph corresponds to a constant utility of 3000 games per year. In this section, \gls{npv} is hugely negative. Therefore, attempting to setting the game price such that the facility is running at capacity is a very poor decision. \newline
 
-\noindent \gls{npv} is only positive for prices between £160 and £240 per game (to the nearest £10). Given how narrow this range of is, this demonstrates the importance of this analysis. UGLY SENTENCE FIX
+\noindent \gls{npv} is only positive for prices between £160 and £240 per game (to the nearest £10). This is a very narrow range, demonstrating the importance of this analysis.
 
 \paragraph{Utility Sensitivity}\label{UtilityAnalFixedPrice} \(\) \newline
-\noindent It was assumed that the maximum number of games per year would be 2000 when the price was £200 per game. The effect of a small error is this estimate was investigated. Price per game was held constant, maximum games per year was varied and the resulting \gls{npv} was tabulated. The results are shown in Fig. \ref{fig:uti-sen}.
+\noindent It was assumed that the maximum number of games per year would be 2000 when the price was £200 per game. The effect of a small error in this estimate was investigated. Price per game was held constant, maximum games per year was varied and the resulting \gls{npv} was tabulated. The results are shown in Fig. \ref{fig:uti-sen}.
 
 \begin{figure}[H]
     \centering
@@ -2606,7 +2609,7 @@ The variation of \gls{npv} with game price was investigated. The results are sho
     \label{fig:uti-sen}
 \end{figure}
 
-\noindent \gls{npv} is only positive for above 1900 games per year (rounded to the nearest 50) This is very close to the estimated 2000 games per year: a high utility is critical, justifying the high advertising budget. 
+\noindent \gls{npv} is only positive for a maximum utility above 1900 games per year (rounded to the nearest 50). This is very close to the estimated 2000 games per year, indicating that high utility is critical. This justifies the high advertising budget. 
 
 \paragraph{Variation of Optimal Price with elasticity} \label{ElasticityAnal}\(\) \newline
 This process was repeated for reference elasticity \(\varepsilon'\) between -0.5 (very price-insensitive) and -3 (very price-sensitive). Since the effect on \gls{npv} of changing two variables (reference elasticity and price per game) is being measured, it would be possible to create a 3D surface to demonstrate this. Since reference elasticity is only being varied in order to assess the sensitivity of the model to errors in numerical assumptions (it is not something that can be changed in order to maximise \gls{npv}), it is only useful to tabulate the optimal price per game (price that maximises \gls{npv}) and plot this against reference elasticity, as shown in Fig. \ref{fig:opt-cos-sen}.
