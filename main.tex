@@ -227,7 +227,7 @@ W = mg = 4.0 \times 9.81 = 39.2~\text{N}.
 \]
 For a quadrotor configuration with a target thrust-to-weight ratio of approximately 2:1, the total thrust was therefore around 78.5 N, or around 19.6 N per motor.
 
-The Avenger 2806.5 was selected because it provided a strong thrust margin without requiring an excessively large motor. Each motors has 41g mass, keeping the four-motor set reasonably light at 164g before propellers and mounting hardware. Its 19mm x 19mm mounting pattern also gave clear interface for motor mount design.
+The Avenger 2806.5 was selected because it provided a strong thrust margin without requiring an excessively large motor. As shown in Table~\ref{tab:motor_specifications}), each motor has 41g mass, keeping the four-motor set reasonably light at 164g before propellers and mounting hardware. Its 19mm x 19mm mounting pattern also gave clear interface for motor mount design.
 
 \begin{table}[htbp]
 \centering
@@ -256,7 +256,7 @@ Target thrust per motor & $\approx 19.6$ N & 4 motors provides approximately 78.
 
 The propeller was selected based on geometry as it directly affects the thrust, clearance, and overall rotor-arm design. The propeller was required to provide enough lift when paired with the selected motor, while remaining size-able for an indoor drone platform. 
 
-We selected using an 8x4x3 propeller, where the notation refers to 8 inch diameter, 4 inch pitch, and 3-blade configuration. A manufacturer dataset for an HQProp 8x4x3 propeller was used as a reference for dimensions and mass, which formed the basis for the certain assumptions related to the rotor-arm design.
+We selected using an 8x4x3 propeller, where the notation refers to 8 inch diameter, 4 inch pitch, and 3-blade configuration. A manufacturer dataset for an HQProp 8x4x3 propeller (summarised in Table~\ref{tab:propeller_specifications}) was used as a reference for dimensions and mass, which formed the basis for the certain assumptions related to the rotor-arm design.
 
 The 8x4x3 propeller geometry was chosen as this motor-prop configuration matched the thrust specifications of the design while also remaining within a practical size range for the airframe. The 8-inch diameter increased the swept area while the 3-blade configuration helped support higher thrust within a limited diameter - which improved lift capability without excessive propeller span in an indoor environment.
 
@@ -347,7 +347,7 @@ where \(\eta_{\text{rpm}}\) represents the fraction of no-load speed achieved un
 \end{tabular}
 \end{table}
 
-As there was no given exact thrust coefficients,therefore we tested using 0.100, 0.125, and 0.150
+As there was no given exact thrust coefficients, therefore we tested using 0.100, 0.125, and 0.150
 
 \begin{table}[htbp]
 \centering
@@ -377,6 +377,10 @@ However, the target max value is not the same as minimum thrust required for fli
 
 The ESC is used to control the speed of each motor and provide fast response to throttle commands from the flight controller. Since the propulsion system uses four motors, the design requires one ESC per motor. The selected ESC was the LittleBee Spring 40A.
 
+As shown in the Table~\ref{tab:esc_specifications}, the available LittleBee Spring 40A specifications list \(2-6~\text{S}\) LiPo input, \(40~\text{A}\) continuous current, with compact dimensions.
+
+This ESC was chosen as it matched the propulsion system requirements while remaining compact enough to fit within the airframe. However, as the ESC has no built-in BEC, the lower voltage electronics must be powered through a separate voltage regulation stage, which is addressed in the power system design.
+
 \begin{table}[htbp]
 \centering
 \caption{ESC specifications. \footnotemark}
@@ -398,12 +402,6 @@ Supported protocols & OneShot, MultiShot, DShot & Suitable for fast multirotor t
 
 \footnotetext{Data from available supplier specifications \cite{littlebee_spring_40a}}
 
-As shown in the Table~\ref{tab:esc_specifications}, the available LittleBee Spring 40A specifications list \(2-6~\text{S}\) LiPo input, \(40~\text{A}\) continuous current, with compact dimensions.
-
-%%%%%Figure: LittleBee Spring 40A ESC selected for motor speed control. Its compact size and 2–6S input range made it suitable for integration with the quadrotor propulsion system.
-
-This ESC was chosen as it matched the propulsion system requirements while remaining compact enough to fit within the airframe. However, as the ESC has no built-in BEC, the lower voltage electronics must be powered through a separate voltage regulation stage, which is addressed in the power system design.
-
 \subsubsection{Power System}
 \label{sec:power_system}
 
@@ -412,6 +410,8 @@ The power system must be designed to supply both the high-current propulsion sys
 \paragraph{Battery Selection}
 
 The battery selection was driven by the propulsion system as it was expected the motors and ESCs would consume significantly more power than other onboard electronics. The battery had to provide a suitable voltage and discharge capability for the hardware, while also remaining practical in terms of mass, size and internal packaging. A 3S LiPo option was initially considered as earlier propulsion combinations included 3S-compatible specifications. However, once the final motor-propeller configuration was selected, the 3S option was disregarded for a more suitable 4S 5000 mAH LiPo battery. This provided nominal voltage for \(14.8~\text{V}\), matching the motor and ESC requirements more appropriately, while maintaining a target capacity for approximately 10 minutes of drone operation before recharge.
+
+This battery was selected as a representative design choice as it matched the voltage requirements of the final propulsion system. The \(14.8~\text{V}\) is suitable for the selected ESC and motor configuration while the \(5000~\text{mAh}\) also provided the target \(10~\text{minutes}\) of drone operation before recharge. The mass range of \(390-589~\text{g}\) was also acceptable, leaving more than enough mass capacity for other components of the drone. 
 \begin{table}[htbp]
 \centering
 \caption{4S 5000 mAh LiPo Battery specifications. \footnotemark}
@@ -433,7 +433,6 @@ Battery count & 1 pack per drone & Simplifies packaging and recharge \\
 \end{table}
 
 \footnotetext{Data adapted from commercially viable sources\cite{tattu_bashing_4s_5000mah, gensace_4s_5000mah}}
-This battery was selected as a representative design choice as it matched the voltage requirements of the final propulsion system. The \(14.8~\text{V}\) is suitable for the selected ESC and motor configuration while the \(5000~\text{mAh}\) also provided the target \(10~\text{minutes}\) of drone operation before recharge. The mass range of \(390-589~\text{g}\) was also acceptable, leaving more than enough mass capacity for other components of the drone. 
 
 \paragraph{Proving Endurance}
 
@@ -490,7 +489,7 @@ Given the ESCs are rated \(40~\text{A}\) each, the combined theoretical maximum 
 4\times40=160\text{A}
 \]
 
-We require a high-current PDB, which was chosen to be the Holybro Power Distribution Board 300A. It is specified with a \(300~\text{A}\) continuous current rating, \(1000~\text{A}\) burst rating,\(10~\text{oz}\) copper PCB design, and XT90/XT30 connector options. The \(300~\text{A}\)continuous rating gives a clear margin above the theoretical maximum ESC demand.
+We require a high-current PDB, which was chosen to be the Holybro Power Distribution Board 300A. Shown in Table~\ref{tab:pdb_specifications}, it is specified with a \(300~\text{A}\) continuous current rating, \(1000~\text{A}\) burst rating,\(10~\text{oz}\) copper PCB design, and XT90/XT30 connector options. The \(300~\text{A}\)continuous rating gives a clear margin above the theoretical maximum ESC demand.
 
 \begin{table}[htbp]
 \centering
@@ -519,6 +518,8 @@ It should be noted that the PDB is responsible for distributing the main battery
 
 Voltage regulation is vital for ensuring the integrity of more sensitive electronics. The 4S LiPo battery supplies \(14.8~\text{V}\) which is suitable for the propulsion system but is too high for onboard electronics which require \(5~\text{V}\). For this reason, we require a dedicated step-down regulator to separate the low-voltage electronics from the high-voltage system. A good regulator considered is the Pololu D24V90F5 \(5~\text{V}\) regulator which could be used in a real prototype, as its input voltage range is compatible with the 4S battery system.
 
+Pololu D24V90F5 serves as a suitable regulator as it can step the \(14.8~\text{V}\) 4S battery Voltage down to a stable \(5~\text{V}\) voltage. As shown in Table~\ref{tab:voltage_regulator_specifications}, it has an input range of \(5-38~\text{V}\) which is compatible with the main battery while the current output is suitable for the Raspberry Pi, sensors, and other electronics.
+
 \begin{table}[htbp]
 \centering
 \caption{5 V step-down regulator specifications.\footnotemark }
@@ -541,11 +542,9 @@ Weight & Approximately 4.8 g & Low mass contribution to the overall drone design
 
 \footnotetext{Data from Pololu D24V90F5 manufacturer  \cite{pololu_d24v90f5}}
 
-Pololu D24V90F5 serves as a suitable regulator as it can step the \(14.8~\text{V}\) 4S battery Voltage down to a stable \(5~\text{V}\) voltage. It has an input range of \(5-38~\text{V}\) which is compatible with the main battery while the current output is suitable for the Raspberry Pi, sensors, and other electronics.
-
 \paragraph{Power-system Summary}
 
-The final power system is as shown in Fig.~\ref{fig:Power_Systems}, It is divided into two main sections: A high-current propulsion path and a low-voltage electronics path. The propulsion path directly draws power from the battery into the ESCs and motors, while the electronics path step-down the \(14.8~\text{V}\) Battery voltage to \(5~\text{V}\) for onboard computer and other voltage sensitive electronics. 
+The final power system is as shown in Fig.~\ref{fig:Power_Systems}, it is divided into two main sections: A high-current propulsion path and a low-voltage electronics path. The propulsion path directly draws power from the battery into the ESCs and motors, while the electronics path step-down the \(14.8~\text{V}\) Battery voltage to \(5~\text{V}\) for onboard computer and other voltage sensitive electronics. 
 
 \begin{figure}[htbp]
     \centering
@@ -606,9 +605,9 @@ Approximate cost & From \$35, depending on RAM option & From \$45, depending on 
     \label{fig:Raspberry Pi 4 Model B}
 \end{figure}
 
-Two main Rasperry Pi single-board computers were considered, the Raspberry Pi 4 Model B and the Raspberry Pi 5 - specs are shown in Table~\ref{tab:raspberrypi_comparison}.
+Two main Rasperry Pi single-board computers were considered, the Raspberry Pi 4 Model B and the Raspberry Pi 5 - comparison is shown in Table~\ref{tab:raspberrypi_comparison}.
 
-Despite the strong performance offered by the Raspberry Pi 5, its additional computing capabilities were not considered important as the project was using pre-trained models rather than training onboard. The \textbf{Raspberry Pi 4 Model B} was chosen as the onboard computer as it provided a good balance between processing, cost and integration. In addition, it provided the required Wi-Fi, GPIO, USB, and camera interfaces, while being easier to power and package inside the drone.
+Despite the strong performance offered by the Raspberry Pi 5, its additional computing capabilities were not considered important as the project was using pre-trained models rather than training onboard. The \textbf{Raspberry Pi 4 Model B} (shown in Fig.~\ref{fig:Raspberry Pi 4 Model B}) was chosen as the onboard computer as it provided a good balance between processing, cost and integration. In addition, it provided the required Wi-Fi, GPIO, USB, and camera interfaces, while being easier to power and package inside the drone.
 
 \paragraph{Communication Interface}
 
@@ -622,7 +621,7 @@ Drone electronics will connect to the onboard computer via the GPIO, serial, USB
 
 \paragraph{Camera}
 
-The camera selected by the visual perception work-stream was the OAK-D Lite used for player detection and tracking. In this hardware section, the camera is considered from an integration point of view. The OAK-D Lite connects to the Raspberry Pi through USB hence the drone body must be designed to ensure both the USB connection and cable routing are practical inside the drone body. Its power draw also need to be included in the 5V electronics power budget. Mechanically, the camera must be placed with a clear field of view - placed in line with the IR emitter inside a gimbal/turret where they can move simultaneously. There should be no obstruction by the airframe, turret structure, or wiring. More detailed reasoning behind the camera choice can be found in the visual detection pipeline covered separately under \say{Mid Level Control} % add reference to section?.
+The camera selected by the visual perception work-stream was the OAK-D Lite (shown in Fig.~\ref{fig:Camera}) used for player detection and tracking. In this hardware section, the camera is considered from an integration point of view. The OAK-D Lite connects to the Raspberry Pi through USB hence the drone body must be designed to ensure both the USB connection and cable routing are practical inside the drone body. Its power draw also need to be included in the 5V electronics power budget. Mechanically, the camera must be placed with a clear field of view - placed in line with the IR emitter inside a gimbal/turret where they can move simultaneously. There should be no obstruction by the airframe, turret structure, or wiring. More detailed reasoning behind the camera choice can be found in the visual detection pipeline covered separately under \say{Mid Level Control} % add reference to section?.
 
 \begin{figure}[htbp]
     \centering
@@ -655,9 +654,12 @@ VL53L5CX ToF sensors & Provides side obstacle awareness and short-range distance
 \end{tabularx}
 \end{table}
 
-The SparkFun ICM-20948 IMU provides local motion and orientation feedback. It is housed inside the drone, near the center of the drone body, where it can measure acceleration, angular-rate, and magnetic-field measurements representative of the airframe while simultaneously protected from impact.
 
-The VL53L1X and VL53L5CX ToF sensors are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained RL control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
+The SparkFun ICM-20948 IMU (shown in Fig.~\ref{fig:IMU}) provides local motion and orientation feedback. It is housed inside the drone, near the center of the drone body, where it can measure acceleration, angular-rate, and magnetic-field measurements representative of the airframe while simultaneously protected from impact.
+
+The VL53L1X and VL53L5CX ToF sensors (shown in Fig.~\ref{fig:Tof}) are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained RL control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
+
+A Consolidated summarisation of the flight-control sensors are shown in Table~\ref{tab:flight_control_sensors}.
 
 \begin{figure}[htbp]
     \centering
@@ -671,7 +673,7 @@ The VL53L1X and VL53L5CX ToF sensors are included based on the requirements from
     \includegraphics[width=0.25\textwidth]{Hardware/VL53L1X.png}
     \includegraphics[width=0.25\textwidth]{Hardware/VL53L5CX.png}
     \caption{Time-of-Flight Sensors}
-    \label{Tof}
+    \label{fig:Tof}
 \end{figure}
 
 \paragraph{IR Tagging System}
@@ -688,7 +690,7 @@ After investigating and selecting the main electronics, the mechanical design ai
 
 \subsubsection{Early Design Concepts}
 
-The early concepts tested out basic airframe layouts. The first concept followed a compact quadrotor arrangement, taking inspiration from commercial drones - featuring a central body, four rotor positions, and a space for a centrally mounted turret system. This gave a simple starting point, but as more electronic components were introduced into the CAD assembly, internal packaging became the main issue.
+The early concepts tested out basic airframe layouts. The first concept followed a compact quadrotor arrangement (shown in Fig.~\ref{fig:Model1}), taking inspiration from commercial drones - featuring a central body, four rotor positions, and a space for a centrally mounted turret system. This gave a simple starting point, but as more electronic components were introduced into the CAD assembly, internal packaging became the main issue.
 
 \begin{figure}[htbp]
     \centering
@@ -697,7 +699,7 @@ The early concepts tested out basic airframe layouts. The first concept followed
     \label{fig:Model1}
 \end{figure}
 
-The further concepts continued to investigate into symmetrical quadrotor layouts with increased body volume. One version even featured blade-guards, but made the drone noticeably larger, bulkier and less refined than the original concept. Scaling up the size solved some layout issues, but caused the platform to be less suitable for indoor game environment where the drone was required to be compact. In addition, earlier versions treated the airframe as one large connected body, which was not practical for assembly, manufacturing or repair. 
+The further concepts continued to investigate into symmetrical quadrotor layouts with increased body volume. One version (shown in Fig.~\ref{fig:Model 2}) even featured blade-guards, but made the drone noticeably larger, bulkier and less refined than the original concept. Scaling up the size solved some layout issues, but caused the platform to be less suitable for indoor game environment where the drone was required to be compact. In addition, earlier versions treated the airframe as one large connected body, which was not practical for assembly, manufacturing or repair. 
 
 \begin{figure}[htbp]
     \centering
@@ -713,18 +715,18 @@ The further concepts continued to investigate into symmetrical quadrotor layouts
     \label{fig:ModelFinal}
 \end{figure}
 
-This led to a complete change in direction for the final design: a modular mirrored layout, where the rotor arms are separate from the main body and secured using linkage parts and bolts. With a size of 580x420x260mm, the body, arms, linkages, and mounts are to be manufactured separately to ensure easy assembly. The key design areas are the central main body, rotor arms and motor mounts, and turret/gimbal assembly - at which we will go into detail in the following sections.
+This led to a complete change in direction for the final design (shown in Fig.~\ref{fig:ModelFinal}): a modular mirrored layout, where the rotor arms are separate from the main body and secured using linkage parts and bolts. With a size of 580x420x260mm, the body, arms, linkages, and mounts are to be manufactured separately to ensure easy assembly. The key design areas are the central main body, rotor arms and motor mounts, and turret/gimbal assembly - at which we will go into detail in the following sections.
 
 \subsubsection{Main Body Design}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.5\textwidth]{Hardware/Main Body.png}
-    \caption{Main Body}
+    \caption{Exploded View of Main Body - Top Hull(top), Electronic Basket(mid), Bottom Hull (bottom)}
     \label{fig:Main Body}
 \end{figure}
 
-The main body is composed of three main parts: the top hull, the bottom hull, and the electronics basket.
+The main body is composed of three main parts (shown in Fig.~\ref{fig:Main Body}): the top hull, the bottom hull, and the electronics basket.
 
 The \textbf{top hull} forms an upper protective cover. It acts as a shield to the internal electronics from direct contact while simultaneously ensure all components are inside. It is designed to give the drone a smooth external shape which helps avoid a bulky appearance and gives the drone a more refined final form.
 
@@ -772,9 +774,11 @@ Bottom hull + landing gear & 234.00 & 418.65 & 144.90 \\
 \end{tabular}
 \end{table}
 
+Table~\ref{tab:main_body_dimensions} shows the max CAD dimensions of the main body components, all of which is shown to be within 600mm in size as required.
+
 \subsubsection{Rotor Arm and Motor Mount Design}
 
-The rotor-arm assembly is made up of the front and rear rotor arms, blade guards, and linkage parts, which mounts the propulsion system and connect to the main body.
+The rotor-arm assembly (shown in Fig.~\ref{fig:Rotor}) is made up of the front and rear rotor arms, blade guards, and linkage parts, which mounts the propulsion system and connect to the main body.
 
 \begin{figure}[htbp]
     \centering
@@ -791,7 +795,9 @@ The \textbf{linkage parts} connect the rotor arms to the electronics basket. The
 
 The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fusion 360 CAD model using the properties assigned of ABS material. Just like the main body, the Fusion 360 reports the solid-body CAD mass, therefore we estimate the real manufactured mass using base infill assumptions. Note that this estimate does not account for wall thickness, slicing settings, print orientation, or bolt fastener mass.
 
-Note that the measurements are maximum lengths on each axis, rather than rectangular measurements. The blade guards and rotor arms have circular geometry around the propeller area - these measurements are useful for checking propeller clearance but should not be interpreted as box-shaped component dimensions.
+Note that the measurements (shown in Table~\ref{tab:rotor_arm_dimensions}) are maximum lengths (shown in  on each axis, rather than rectangular measurements. The blade guards and rotor arms have circular geometry around the propeller area - these measurements are useful for checking propeller clearance but should not be interpreted as box-shaped component dimensions.
+
+\newpage
 
 \begin{table}[htbp]
 \centering
@@ -839,7 +845,7 @@ Front lower linkage & 40.00 & 20.00 & 5.00 \\
 
 \subsubsection{Turret/Gimbal Design}
 \label{Turret}
-The gimbal turret designed included requirements from the visual learning process, where the camera was required to roll, pitch, and yaw. The design took inspiration from traditional industrial two-axis gimbals, but an with an additional yaw axis which provided a 3-axis movement. The camera and IR emitter needed to remain aligned to ensure aiming and tagging were done in the same direction. A reminder previously where the OAK D Lite camera was used as a reference to designing the dimensions of the gimbal.
+The gimbal turret design (shown in Fig.~\ref{fig:Gimbal}) included requirements from the visual learning process, where the camera was required to roll, pitch, and yaw. The design took inspiration from traditional industrial two-axis gimbals, but an with an additional yaw axis which provided a 3-axis movement. The camera and IR emitter needed to remain aligned to ensure aiming and tagging were done in the same direction. The OAK D Lite camera was used as a reference to designing the dimensions of the gimbal. (Full gimbal assembly is shown in Fig.~\ref{fig:Gimbal2})
 
 Mechanically, the gimbal is mounted through the central opening in the bottom hull and electronics basket. 
 
@@ -861,6 +867,8 @@ The \textbf{gimbal pitch axis component} acts as the moving structure for pitch 
 The \textbf{gimbal roll axis component} provides the mounting location for the OAK-D Lite camera and IR emitter. As the camera and IR emitter are mounted on the same final axis, the visual tracking direction and IR tagging direction remain aligned.
 
 Together, the yaw servo, pitch motor, and roll motor allow the turret to achieve 3-axis movement.
+
+\newpage
 
 \begin{figure}[htbp]
     \centering
@@ -895,29 +903,31 @@ Table~\ref{tab:gimbal_mass_estimate} shows the mass of the solid body from Fusio
 
 The gimbal turret uses two actuator types as mentioned previously. The MG90S servo is used for the yaw axis, while the Quanum 2208 brush-less gimbal motors are used for the pitch and roll axes. Servo was used for the Yaw stage in order to provide compact rotation at the base, while the pitch and roll may be better with smoother gimbal-style motion. 
 
+The MG90S is suitable for the yaw stage as it fits within the turret base region inside the electronic basket. The operating speed is sufficient for controlled left-right aiming at 0.10 s/60$^\circ$ at 4.8 V or 0.08 s/60$^\circ$ at 6 V. The gimbal motors are used for pitch and roll control as they are generally designed for smoother movement. They are specified for payloads in 100-200g range which fits the weight requirements for the OAK-D Lite (61g) along with the IR emitter and gimbal parts. The suggested GBM2208 dimensions are approximately 28 x 22 mm which fits the clearance for the motor mount locations. Actuator specifications are summarized in Table~\ref{tab:gimbal_actuator_specs}.
+
 \begin{table}[htbp]
 \centering
-\caption{Suggested actuator specifications for the gimbal turret. Data adapted from supplier specifications \cite{mg90s_servo, gbm2208_gimbal_motor}.}
+\caption{Suggested actuator specifications for the gimbal turret.\footnotemark}
 \label{tab:gimbal_actuator_specs}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X X @{}}
 \toprule
 \textbf{Axis} & \textbf{Suggested Actuator} & \textbf{Size / Weight}\\
 \midrule
-Yaw & MG90S servo & 22.8 mm $\times$ 12.2 mm $\times$ 28.5 mm; approximately 13.4 g\\
+Yaw & MG90S servo & 22.8 mm $\times$ 12.2 mm $\times$ 28.5 mm;  13.4 g\\
 
-Pitch & Quanum/GBM2208 brushless gimbal motor & 28 mm $\times$ 22 mm; approximately 43 g\\
+Pitch & Quanum/GBM2208 brushless gimbal motor & 28 mm $\times$ 22 mm;  43 g\\
 
-Roll & Quanum/GBM2208 brushless gimbal motor & 28 mm $\times$ 22 mm; approximately 43 g\\
+Roll & Quanum/GBM2208 brushless gimbal motor & 28 mm $\times$ 22 mm;  43 g\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-The MG90S is suitable for the yaw stage as it fits within the turret base region inside the electronic basket. The operating speed is sufficient for controlled left-right aiming at 0.10 s/60$^\circ$ at 4.8 V or 0.08 s/60$^\circ$ at 6 V. The gimbal motors are used for pitch and roll control as they are generally designed for smoother movement. They are specified for payloads in 100-200g range which fits the weight requirements for the OAK-D Lite (61g) along with the IR emitter and gimbal parts. The suggested GBM2208 dimensions are approximately 28 x 22 mm which fits the clearance for the motor mount locations.
+\footnotetext{Data adapted from supplier specifications\cite{mg90s_servo, gbm2208_gimbal_motor}.}
 
 \subsubsection{Overall Airframe Configuration - Assembly}
 
-The final airframe configuration brings the separate subsystem assemblies together into a single integrated drone assembly, shown in Fig. ~\ref{fig:Complete Assembly}. The design uses a modular central body with detachable rotor-arm, integrated with propeller protection and helicopter-based landing gears, along with a centrally mounted 3-axis gimbal turret. This layout suits the electronics, propulsion, sensors, camera, and IR-tagging system while keeping key parts accessible for maintenance. Rather than one-piece shell, all parts are designed to be separate yet connected, replaceable, and cheap making it practical for manufacture and repair.
+The final airframe configuration (shown in Fig.~\ref{fig:Complete Assembly}) brings the separate subsystem assemblies together into a single integrated drone assembly, shown in Fig. ~\ref{fig:Complete Assembly}. The design uses a modular central body with detachable rotor-arm, integrated with propeller protection and helicopter-based landing gears, along with a centrally mounted 3-axis gimbal turret. This layout suits the electronics, propulsion, sensors, camera, and IR-tagging system while keeping key parts accessible for maintenance. Rather than one-piece shell, all parts are designed to be separate yet connected, replaceable, and cheap making it practical for manufacture and repair.
 
 \begin{figure}[htbp]
     \centering
@@ -938,30 +948,31 @@ The drone parts are designed with reference to the chosen internal electronics. 
 
 The structural assessment focused on two components most exposed to loading and collision impact: the motor-body joints and the blade guards. As the project did not develop a physical prototype, the evaluation was carried out using CAD-based structural simulations rather than physical testing. 
 
-\paragraph{Rotor Arm Simulation}
-The first simulation assessed the joint between the rotor arm and the electronics basket, as this connection transfers the motor thrust load back into the main body. This area was important as any failure would affect propulsion support and the integrity of the overall airframe. A static load represent the thrust force acting through the motor and rotor arm - the applied load was above 20 N, which is close to the estimated maximum thrust per motor used in the propulsion analysis.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\textwidth]{Hardware/Rotor Arm Simulation Test Image.png}
+    \includegraphics[width=0.75\textwidth]{Hardware/Rotor Arm Simulation Test Image.png}
     \caption{Rotor Arm Simulation Test}
     \label{fig:Rotor Arm Sim}
 \end{figure}
+
+\paragraph{Rotor Arm Simulation}
+The first simulation assessed the joint between the rotor arm and the electronics basket, as this connection transfers the motor thrust load back into the main body. This area was important as any failure would affect propulsion support and the integrity of the overall airframe. A static load represent the thrust force acting through the motor and rotor arm - the applied load was above 20 N, which is close to the estimated maximum thrust per motor used in the propulsion analysis.
 
 The simulation showed that the highest stress occurred near the handle area of the electronic basket, which was expected because this is where the rotor-arm load is transferred into the central structure. Most of the rotor arm remained in the lower-stress blue/green region - which suggests that the rotor arm geometry was not the limiting factor. The minimum safety factor was approximately 2.23, as shown in Fig. ~\ref{fig:Rotor Arm Sim}, meaning the component remained above the failure threshold for the load case.
 
 This result showed that the structure was reasonable. However, this should still be treated as a preliminary CAD-based result, noting the fact it does not account for vibration, fatigue, manufacturing defects and loose bolts.
 
-\paragraph{Blade Guard Impact Simulation}
-
-The blade guard was assessed as it was one of the most exposed parts of the drone and is likely to be the primary contact point during minor collisions with walls and obstacles. A 20 N direct front impact was applied in a static structural simulation.
-
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\textwidth]{Hardware/Blade Guard Simulation.png}
+    \includegraphics[width=0.75\textwidth]{Hardware/Blade Guard Simulation.png}
     \caption{Blade Guard Simulation test}
     \label{fig:BladeGaurdSim}
 \end{figure}
+
+\paragraph{Blade Guard Impact Simulation}
+
+The blade guard was assessed as it was one of the most exposed parts of the drone and is likely to be the primary contact point during minor collisions with walls and obstacles. A 20 N direct front impact was applied in a static structural simulation.
 
 The simulation showed that the highest stress occurred near the connection between guard and arm, making this the weakest region of the blade guard design. The minimum safety factor was 1.099 as shown in Fig. ~\ref{fig:BladeGaurdSim}, slightly above 1, meaning the structure passes the load case but only by a small margin (less than 10\%) which suggests that the current design is acceptable as an early simulation result.
 
@@ -970,6 +981,8 @@ The assessment was limited to a static simulation, A dynamic impact simulation w
 \subsubsection{Feasibility of the Final Design}
 
 The final drone design can be considered feasible in the perspective CAD/simulation led concept. The selected electronics are consistent with the design requirements. The airframe provides a dedicated area for internal components and wiring while ensuring the body remains modular, detachable and easy to manufacture and assemble. An overall feasibility assessment is shown in Table~\ref{tab:final_design_feasibility}.
+
+The final design of the drone hardware is acceptable within the scope of the project. However, the design is not recommended to serve as a final prototype as many of the main areas still require proper validation with real-world testing. 
 
 \begin{table}[htbp]
 \centering
@@ -999,9 +1012,6 @@ Main limitation & The design has not been physically prototyped, so many real be
 \end{tabularx}
 \end{table}
 
-The final design of the drone hardware is acceptable within the scope of the project. However, the design is not recommended to serve as a final prototype as many of the main areas still require proper validation with real-world testing. 
-
-%------------This section can be put into System Architecture and Integration
 \subsection{Simulation Representation of Drone Hardware}
 
 The hardware design also needed a simplified representation inside the simulation environment. A Fusion 360 CAD assembly would be too detailed for use in Unity, which was the simulation environment that had been chosen.
@@ -1017,8 +1027,6 @@ The simplified drone model was exported from Blender and imported into Unity as 
 \paragraph{Simplified Physics and interaction}
 
 The Unity model used the built-in physics and collision system to represent the drone during simulation. The drone was treated as a simplified rigid body with approximate box collision boundaries. Collisions with the walls, obstacles or game-play objects were handled using Unity colliders, and the simplified model allowed basic movement and navigation tests.
-
-%%%%%FIGURE: Blender Model Drone
 
 \subsection{Player Hardware Design}
 
