@@ -520,6 +520,8 @@ Voltage regulation is vital for ensuring the integrity of more sensitive electro
 
 Pololu D24V90F5 serves as a suitable regulator as it can step the \(14.8~\text{V}\) 4S battery Voltage down to a stable \(5~\text{V}\) voltage. As shown in Table~\ref{tab:voltage_regulator_specifications}, it has an input range of \(5-38~\text{V}\) which is compatible with the main battery while the current output is suitable for the Raspberry Pi, sensors, and other electronics.
 
+\newpage
+
 \begin{table}[htbp]
 \centering
 \caption{5 V step-down regulator specifications.\footnotemark }
@@ -565,9 +567,15 @@ Several hardware options were considered for the onboard computer. The main choi
 
 A two-board Arduino setup was considered, where one board would handle lower-level hardware control and another would manage communication or higher-level tasks. However this would increase general complexity in wiring and packaging while still not solving the main processing limitation. For this reason, the design moved towards investigating the usage of Raspberry Pi.
 
+Two main Rasperry Pi single-board computers were considered, the Raspberry Pi 4 Model B and the Raspberry Pi 5 - comparison is shown in Table~\ref{tab:raspberrypi_comparison}.
+
+Despite the strong performance offered by the Raspberry Pi 5, its additional computing capabilities were not considered important as the project was using pre-trained models rather than training onboard. The \textbf{Raspberry Pi 4 Model B} (shown in Fig.~\ref{fig:Raspberry Pi 4 Model B}) was chosen as the onboard computer as it provided a good balance between processing, cost and integration. In addition, it provided the required Wi-Fi, GPIO, USB, and camera interfaces, while being easier to power and package inside the drone.
+
+\newpage
+
 \begin{table}[htbp]
 \centering
-\caption{Comparison of Raspberry Pi single-board computer. Data from official Raspberry Pi \cite{raspberrypi4_specs, raspberrypi5_specs}.}
+\caption{Comparison of Raspberry Pi single-board computer. \footnotemark}
 \label{tab:raspberrypi_comparison}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l X X @{}}
@@ -598,16 +606,14 @@ Approximate cost & From \$35, depending on RAM option & From \$45, depending on 
 \end{tabularx}
 \end{table}
 
+\footnotetext{Data from official Raspberry Pi \cite{raspberrypi4_specs, raspberrypi5_specs}}
+
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.5\textwidth]{Hardware/Raspberry Pi 4 Model B.png}
     \caption{Raspberry Pi 4 Model B}
     \label{fig:Raspberry Pi 4 Model B}
 \end{figure}
-
-Two main Rasperry Pi single-board computers were considered, the Raspberry Pi 4 Model B and the Raspberry Pi 5 - comparison is shown in Table~\ref{tab:raspberrypi_comparison}.
-
-Despite the strong performance offered by the Raspberry Pi 5, its additional computing capabilities were not considered important as the project was using pre-trained models rather than training onboard. The \textbf{Raspberry Pi 4 Model B} (shown in Fig.~\ref{fig:Raspberry Pi 4 Model B}) was chosen as the onboard computer as it provided a good balance between processing, cost and integration. In addition, it provided the required Wi-Fi, GPIO, USB, and camera interfaces, while being easier to power and package inside the drone.
 
 \paragraph{Communication Interface}
 
@@ -636,6 +642,12 @@ Suitable flight control sensors were needed to give the drone basic state inform
 
 A barometer was not selected as a height sensor despite being commonly used in drones for altitude estimation. Given the indoor environment and close proximity between walls and ceilings, pressure-based height estimation is less reliable. Instead, an upward-facing ToF sensor was considered more appropriate for indoor environment, where the ceiling height can be known in advance.
 
+The SparkFun ICM-20948 IMU (shown in Fig.~\ref{fig:IMU}) provides local motion and orientation feedback. It is housed inside the drone, near the center of the drone body, where it can measure acceleration, angular-rate, and magnetic-field measurements representative of the airframe while simultaneously protected from impact.
+
+The VL53L1X and VL53L5CX ToF sensors (shown in Fig.~\ref{fig:Tof}) are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained RL control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
+
+A Consolidated summarisation of the flight-control sensors are shown in Table~\ref{tab:flight_control_sensors} below.
+
 \begin{table}[htbp]
 \centering
 \caption{Flight-control sensors \cite{sparkfun_icm20948, st_vl53l1x, st_vl53l5cx}}
@@ -653,13 +665,6 @@ VL53L5CX ToF sensors & Provides side obstacle awareness and short-range distance
 \bottomrule
 \end{tabularx}
 \end{table}
-
-
-The SparkFun ICM-20948 IMU (shown in Fig.~\ref{fig:IMU}) provides local motion and orientation feedback. It is housed inside the drone, near the center of the drone body, where it can measure acceleration, angular-rate, and magnetic-field measurements representative of the airframe while simultaneously protected from impact.
-
-The VL53L1X and VL53L5CX ToF sensors (shown in Fig.~\ref{fig:Tof}) are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained RL control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
-
-A Consolidated summarisation of the flight-control sensors are shown in Table~\ref{tab:flight_control_sensors}.
 
 \begin{figure}[htbp]
     \centering
