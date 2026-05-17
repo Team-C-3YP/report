@@ -9,14 +9,21 @@
 \usepackage{fontspec}
 \usepackage{amsmath}
 \usepackage{dirtytalk}
+\usepackage{caption}
+\captionsetup[table]{labelfont=bf, textfont=it}
+\captionsetup[figure]{labelfont=bf, textfont=it}
 \usepackage{subcaption}
 \captionsetup[subfigure]{labelformat=parens}
-\usepackage[colorlinks=true, linkcolor=black, citecolor=black, urlcolor=black]{hyperref}
+\usepackage{xurl}
+% \usepackage[hidelinks]{hyperref}
+\Urlmuskip=0mu plus 1mu
+\usepackage[table]{xcolor}
+\usepackage[colorlinks=true, linkcolor=black, citecolor=black, hidelinks]{hyperref}
 
 \title{Laser Tag using a Multiagent Drone System}
 \subtitle{Report for the system and software design of a multiagent drone system to play Laser Tag}
 \author{Shing Hei Rickie Chan, Thomas August, Rishabh Luthra, Richard Usherwood}
-\date{March 2026}
+\date{20 May 2026}
 
 \begin{document}
 \maketitle
@@ -76,15 +83,15 @@
 \fancyhead[C]{Rishabh Luthra}
 The UK leisure market is currently defined by a distinct consumer trend: a frugality in routine choices paired with a willingness to invest in high-value experiences \cite{arrowsmith2026leisure, deloitte2026leisure_report}. This shift drives a growing demand for immersive environments that offer real-time interactivity and integrate the strategic depth of video games into the physical world. 
 
-To meet this demand, we present a novel laser tag game where human players cooperate to compete against a team of autonomous, multi-agent drones. From a user perspective, the system aims to provide an engaging, safe, and highly interactive experience defined by specific gameplay modes and dynamic objectives (Section 2). To complete these objectives, players navigate through a purpose-built indoor maze constructed from 5-metre high walls (Section 6). The project is governed by strict physical and safety boundaries to ensure a low-risk environment; the arena features a dividing net that separates the drones flying overhead from the human players below. Designed with a 1200J energy absorption capacity, this industrial netting provides a safety factor of 5.1 against a 4kg drone flying at full thrust downwards. As a result, this mitigates the risk of human-drone collisions without diminishing game immersion.
+To meet this demand, we present a novel laser tag game where human players cooperate to compete against a team of autonomous, multi-agent drones. From a user perspective, the system aims to provide an engaging, safe, and highly interactive experience defined by specific gameplay modes and dynamic objectives (Section 2). To complete these objectives, players navigate through a purpose-built indoor maze constructed from 5-metre high walls (Section 4). The project is governed by strict physical and safety boundaries to ensure a low-risk environment; the arena features a dividing net that separates the drones flying overhead from the human players below. Designed with a 1200J energy absorption capacity, this industrial netting provides a safety factor of 5.1 against a 4kg drone flying at full thrust downwards. As a result, this mitigates the risk of human-drone collisions without diminishing game immersion.
 
-From a drone perspective, the primary goal is to achieve autonomy and coordinated teamwork within a confined environment. Since off-the-shelf platforms lack the necessary flexibility, payload integration, and component protection for such close-proximity indoor operations, a custom modular quadrotor airframe was developed (Section 4). The ABS 3D-printed chassis features integrated blade guards to ensure operational continuity during minor wall collisions. To satisfy a 2:1 thrust-to-weight ratio for a 4kg maximum takeoff mass, the propulsion system utilises BrotherHobby Avenger 2806.5 1300KV brushless motors paired with 8x4x3 polycarbonate propellers, driven by a 4S 5000mAh Lithium Polymer battery to sustain approximately 10 minutes of active flight endurance. Dedicated player hardware, including sensor-equipped helmets and vests, then integrate into this ecosystem (Section 5).
+From a drone perspective, the primary goal is to achieve autonomy and coordinated teamwork within a confined environment. Since off-the-shelf platforms lack the necessary flexibility, payload integration, and component protection for such close-proximity indoor operations, a custom modular quadrotor airframe was developed (Section 3). The ABS 3D-printed chassis features integrated blade guards to ensure operational continuity during minor wall collisions. To satisfy a 2:1 thrust-to-weight ratio for a 4kg maximum takeoff mass, the propulsion system utilises BrotherHobby Avenger 2806.5 1300KV brushless motors paired with 8x4x3 polycarbonate propellers, driven by a 4S 5000mAh Lithium Polymer battery to sustain approximately 10 minutes of active flight endurance. Dedicated player hardware, including sensor-equipped helmets and vests, then integrate into this ecosystem (Section 5).
 
 For multi-agent coordination, the system relies on an IEEE 802.11ac Wi-Fi communications framework (Section 9) linking the onboard drone hardware to a central server. The server manages the high-level game logic, evaluating the global state to dynamically transition individual drones through specific operational modes such as Search, Track, Shoot, and Movement (Section 10). 
 
 To inform these high-level decisions, each drone is equipped with an OAK-D Lite passive stereoscopic camera mounted on a custom 3-axis tracking gimbal, which kinematically decouples the camera from the drone’s flight attitude to maintain continuous target lock. Visual data is ingested by a YOLOv8-nano (YOLOv8n) convolutional neural network (Section 11). To overcome the domain gap caused by the arena's low-light conditions and frequent target occlusions, this model was trained on a synthetic dataset created within Unity. Because active visual sensors would interfere with the game's infrared mechanics, and monocular depth estimation fails when a human target alters their posture, target depth is extracted passively via stereoscopic horizontal pixel disparity. This raw spatial data is smoothed using a Linear Kalman Filter, operating on a Discrete White Noise Acceleration (DWNA) model, to provide continuous, predictive 3D state estimations of the players. 
 
-These estimated player coordinates update the central server's global state, which in turn dictates the high-level navigational objectives assigned to each drone. Search mode utilises a hybrid Breadth-First Search (BFS) region-allocation and lawnmower trajectory algorithm to systematically scan the arena (Section 12). When rapid transit is required, flight control is handed over to a Reinforcement Learning (RL) policy trained offline in the Isaac Lab physics simulator, outputting body thrust and moment commands (Section 13). Furthermore, an Artificial Potential Field (APF) controller handles real-time collision avoidance by computing repulsive gradients from walls and other agents, converting them into evasive manoeuvrers (Section 14).
+These estimated player coordinates update the central server's global state, which in turn dictates the high-level navigational objectives assigned to each drone. Search mode utilises a hybrid Breadth-First Search (BFS) region-allocation and lawnmower trajectory algorithm to systematically scan the arena (Section 12). When rapid transit is required, flight control is handed over to a Reinforcement Learning (RL) policy trained offline in the Isaac Lab physics simulator, outputting body thrust and moment commands (Section 13). Furthermore, an Artificial Potential Field (APF) controller handles real-time collision avoidance by computing repulsive gradients from walls and other agents, converting them into evasive manoeuvres (Section 14).
 
 In addition to the technical deployment, user retention is driven by a companion mobile application that tracks performance metrics, leaderboards, and achievements to foster community engagement (Section 16). Finally, the technical development is supported by an evaluation of broader engineering considerations. These are validated by a quantitative risk assessment (Section 17) and a financial model (Section 18), which confirms the commercial feasibility of the enterprise by projecting a Net Present Value of £68,669 at an optimal price of £200 per game.
 % Technology Strategy, Project Financing, and Health and Safety
@@ -93,20 +100,26 @@ In addition to the technical deployment, user retention is driven by a companion
 
 \section{Proposed Gameplay for Drone-Based Laser Tag} % Ritchie
 \fancyhead[C]{Richard Usherwood}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figs/Safety Net Editted.png}
+    \caption{A simulation of a player and a drone in the play arena}
+    \label{fig:gameplay}
+\end{figure}
 \subsection{Overview}
-Players are equipped with Laser Guns (\gls{ir} emitters that transmit encoded data), and helmets and vests containing \gls{ir} sensors. The drones are equipped with Turrets which emit \gls{ir} radiation (see Section \ref{Turret}) as well as \gls{ir} sensors. When not flying, they are dormant in a \say{standby location} where employees can replace their batteries. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If a player is hit, they must navigate to a designated \say{timeout} area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun is disables until their timeout ends (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at \(3 ~\mathrm{ m}\) height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
+Players are equipped with Laser Guns (\gls{ir} emitters that transmit encoded data), and helmets and vests containing \gls{ir} sensors. The drones are equipped with Turrets which emit \gls{ir} radiation (see Section \ref{Turret}) as well as \gls{ir} sensors. When not flying, they are dormant in a \say{standby location} where employees can replace their batteries. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If a player is hit, they must navigate to a designated \say{timeout} area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun is disables until their timeout ends (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at 3 m height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
 
 \noindent Two \say{game modes} have been designed: \say{Wave Mode} and \say{Objective Mode}. These are summarised in the following sections.
 \subsection{Wave Mode}
-In \say{Wave Mode}, the players \say{fight} a number of drones, released in an order designed to be both challenging and engaging. When hit, the drones return to their standby location, where they will remain. If all of the players are timing out at the same time (having been hit), they lose. If all of the drones have been hit, they win. This constitutes a single wave. The players can choose from a catalogue of waves (in future accessible through the companion app, see Section \ref{app}), ranging in difficulty. Each level will be given a difficulty rating. This allows a team to end a game with a clear metric of their performance: the difficulty rating of the hardest wave completed. This will also allow a team to track their improvement. In future, this will be displayed in the companion app, allowing players to compare scores with friends.
+In \say{Wave Mode}, the players \say{fight} a number of drones, released in an order designed to be both challenging and engaging. When hit, the drones return to their standby location, where they will remain. If all of the players time out simultaneously, they lose. If all of the drones have been hit, they win. This constitutes a single wave. The players can choose from a catalogue of waves (in future accessible through the companion app, see Section \ref{app}), ranging in difficulty. Each level will be given a difficulty rating. This allows a team to end a game with a clear metric of their performance: the difficulty rating of the hardest wave completed. This will also allow a team to track their improvement. In future, this will be displayed in the companion app, allowing players to compare scores with friends.
 
 \subsection{Objective Mode}
-In \say{Objective Mode}, the players must navigate the maze to complete objectives, such as \say{Hold this button for 5 seconds}, or \say{Shoot this target on the wall}, which are communicated via speakers. They must complete all objectives within a time limit to \say{pass} the level. While they are completing these objectives, the drones are flying overhead and attempting to shoot at the players, just as in Wave Mode. Similarly, the players must timeout for 10 seconds in a particular area of the maze if hit, and the drones will exit the game if hit, but will return after a short timeout. If all players timeout at once, they lose; if they exceed the time limit for the level, they lose; if they complete all objectives, they win. If they win, they will progress to a harder level. Just as in \say{Wave Mode}, the levels will be designed and play-tested to be both challenging, engaging; a catalogue of levels marked with a numerical difficulty can be selected in-app.\newline
+In \say{Objective Mode}, the players must navigate the maze to complete objectives, such as \say{Hold this button for 5 seconds}, or \say{Shoot this target on the wall}, which are communicated via speakers. They must complete all objectives within a time limit to \say{pass} the level. The other mechanics of the game are the same as in \say{Wave Mode}, other than that the drones return after a short timeout when hit. If they complete all objectives, they win. If they win, they will progress to a harder level. Just as in \say{Wave Mode}, the levels will be designed and play-tested to be both challenging and engaging; a catalogue of levels marked with a numerical difficulty can be selected in-app.\newline
 
 \subsection{Difficulty Scaling}
 Since the levels increase in difficulty, there is little need to scale difficulty according to a players' skill: if the players are inexperienced, they will only play easy levels, and there will be levels to suit players of all skill levels. However, the difficulty of the levels may need to change according to the number of players in a team. This can be achieved in a number of ways. For example, the number of drones could be adjusted, the top speed of the drones could be capped, and artificial inaccuracy could be added to the shooting of the drones.\newline
 
-\noindent It is very difficult to know which methods of adjusting difficulty will result in a game that is both enjoyable and balanced, for a range of numbers of people. Hence, deciding exactly how to perform this adjustment will require play-testing in the arena, once it has been created.
+\noindent It is very difficult to know which methods of adjusting difficulty will result in a game that is both enjoyable and balanced for a range of numbers of people. Hence, deciding exactly how to perform this adjustment will require play-testing, once the arena has been built.
 \newpage
 
 %%%%%%%%%----End of System Proposed Gameplay------%%%%%%%%%
@@ -120,8 +133,7 @@ The project decision was to develop a custom drone hardware design in preference
 
 In addition, commercial drones tend to be quite closed off in terms of hardware and software access - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed more freedom to choose components, organize the internal layout, and include additional features necessary to the game-play.
 
-\subsection{Literature Review}
-%DO THIS PART
+%a small Literature review
 
 \subsection{Design Objectives and Constraints}
 \subsubsection{Operational Requirements}
@@ -160,6 +172,8 @@ The project was carried out mainly through simulation; the hardware design was d
 
 \subsubsection{Summarized Table for Design Criteria}
 
+In summary, the key design criteria are consolidated in Table~\ref{tab:starter_design_criteria}.
+
 \begin{table}[htbp]
 \centering
 \caption{Summarized starter design criteria for the drone platform.}
@@ -170,24 +184,37 @@ The project was carried out mainly through simulation; the hardware design was d
 \textbf{Design Parameter} & \textbf{Target / Requirement} \\
 \midrule
 Operating environment & Indoor arena with close proximity to players, walls, and obstacles \\
+\hline
 Operational role & Stable and maneuverable aerial platform for indoor game-play \\
+\hline
 Configuration & Compact quadrotor platform \\
+\hline
 Maximum mass & $\leq 4.0$ kg \\
+\hline
 Maximum width & $\leq 600$ mm \\
+\hline
 Target cost per unit & \pounds300--\pounds500 \\
+\hline
 Target game duration & 45 min \\
+\hline
 Target drone endurance & 8-10 min before recharge \\
+\hline
 Visibility requirement & Large enough to be clearly visible for indoor game-play \\
+\hline
 Internal space requirement & Sufficient internal volume for onboard electronics \\
+\hline
 Safety requirement & Safe indoor operation, protected moving parts, and stable landing capability \\
+\hline
 Maintainability requirement & Easy maintenance with cheap replaceable damaged parts \\
+\hline
 Structural requirement & Airframe must support normal flight loads and minor impact conditions \\
+\hline
 Game-play requirement & Agile enough to act as a believable and challenging in-game opponent \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\subsection{Electronics Design and Component Selection}
+\subsection{UAV Electronics Design}
 \label{sec:electronics_design}
 
 \subsubsection{Propulsion System}
@@ -203,11 +230,11 @@ W = mg = 4.0 \times 9.81 = 39.2~\text{N}.
 \]
 For a quadrotor configuration with a target thrust-to-weight ratio of approximately 2:1, the total thrust was therefore around 78.5 N, or around 19.6 N per motor.
 
-The Avenger 2806.5 was selected because it provided a strong thrust margin without requiring an excessively large motor. Each motors has 41g mass, keeping the four-motor set reasonably light at 164g before propellers and mounting hardware. Its 19mm x 19mm mounting pattern also gave clear interface for motor mount design.
+The Avenger 2806.5 was selected because it provided a strong thrust margin without requiring an excessively large motor. As shown in Table~\ref{tab:motor_specifications}), each motor has 41g mass, keeping the four-motor set reasonably light at 164g before propellers and mounting hardware. Its 19mm x 19mm mounting pattern also gave clear interface for motor mount design.
 
 \begin{table}[htbp]
 \centering
-\caption{Motor specifications. Data adapted from the BrotherHobby Avenger 2806.5 manufacturer specification \cite{brotherhobby_avenger28065}.}
+\caption{Motor specifications. \footnotemark}
 \label{tab:motor_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -215,28 +242,37 @@ The Avenger 2806.5 was selected because it provided a strong thrust margin witho
 \textbf{Parameter} & \textbf{Value} & \textbf{Design relevance} \\
 \midrule
 Selected motor & BrotherHobby Avenger 2806.5 1300KV & Main propulsion motor \\
+\hline
 Motor type & Brush-less & Suitable for multi-rotor propulsion \\
+\hline
 KV rating & 1300KV & Suitable for thrust-focused operation \\
+\hline
 Mass & 41 g & Four motors contribute approximately 164g \\
+\hline
 Cell compatibility & 4--6S LiPo & Sets the required battery range for the final power system \\
+\hline
 Bolt & M3, 19 mm $\times$ 19 mm & Defines the motor mounting interface \\
+\hline
 Wire specification & 18 AWG, 20 cm &  ESC and wiring  \\
+\hline
 Target thrust per motor & $\approx 19.6$ N & 4 motors provides approximately 78.5 N \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
+\footnotetext{Data adapted from the BrotherHobby Avenger 2806.5 manufacturer specification \cite{brotherhobby_avenger28065}}
+
 \paragraph{Propeller Choice}
 
 The propeller was selected based on geometry as it directly affects the thrust, clearance, and overall rotor-arm design. The propeller was required to provide enough lift when paired with the selected motor, while remaining size-able for an indoor drone platform. 
 
-We selected using an 8x4x3 propeller, where the notation refers to 8 inch diameter, 4 inch pitch, and 3-blade configuration. A manufacturer dataset for an HQProp 8x4x3 propeller was used as a reference for dimensions and mass, which formed the basis for the certain assumptions related to the rotor-arm design.
+We selected using an 8x4x3 propeller, where the notation refers to 8 inch diameter, 4 inch pitch, and 3-blade configuration. A manufacturer dataset for an HQProp 8x4x3 propeller (summarised in Table~\ref{tab:propeller_specifications}) was used as a reference for dimensions and mass, which formed the basis for the certain assumptions related to the rotor-arm design.
 
 The 8x4x3 propeller geometry was chosen as this motor-prop configuration matched the thrust specifications of the design while also remaining within a practical size range for the airframe. The 8-inch diameter increased the swept area while the 3-blade configuration helped support higher thrust within a limited diameter - which improved lift capability without excessive propeller span in an indoor environment.
 
 \begin{table}[htbp]
 \centering
-\caption{8$\times$4$\times$3 propeller specifications. Data from an HQProp 8$\times$4$\times$3 propeller dataset \cite{hqprop_8x4x3}.}
+\caption{8$\times$4$\times$3 propeller specifications. \footnotemark}
 \label{tab:propeller_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -244,54 +280,58 @@ The 8x4x3 propeller geometry was chosen as this motor-prop configuration matched
 \textbf{Parameter} & \textbf{Reference Value} & \textbf{Design Relevance} \\
 \midrule
 Propeller geometry & 8$\times$4$\times$3 & Defines the intended propeller size and type \\
+\hline
 Diameter & 8 inch & Sets swept area and required clearance from the airframe \\
+\hline
 Pitch & 4 inch & Moderate pitch suitable for thrust-focused operation \\
+\hline
 Blade count & 3 blades & Provides higher thrust capability than a comparable 2-blade propeller \\
+\hline
 Reference material & Polycarbonate & Representative lightweight multirotor propeller material \\
+\hline
 Reference mass & 13 g & Four propellers contribute approximately 52 g \\
+\hline
 Rotation requirement & 2 CW + 2 CCW & Required for balanced quadrotor operation \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
+\footnotetext{Data from an HQProp 8$\times$4$\times$3 propeller dataset\cite{hqprop_8x4x3}}
+
 \paragraph{Validity Check for Motor-Prop Configuration}
 
 To check whether the assumed thrust of the motor-propeller configuration was physically reasonable, a static propeller thrust coefficient estimate was used. For a propeller operating in static conditions, the thrust can be approximated using:
 
-\[
-T = C_T \rho n^2 D^4
-\]
+
+
+\begin{equation}
+T = C_T \rho n^2 D^4    
+\end{equation}
+
 
 where \(T\) is thrust, \(C_T\) is thrust coefficient, \(\rho\) is air density, \(n\) is rotational speed (revolutions per second), \(D\) is propeller diameter. \cite{mit_propeller_performance}.
 
-From the selected propeller geometry, the diameter was
-\[
-D = 8~\text{in} = 0.2032~\text{m}
-\]
+From the selected propeller geometry, the diameter was:
+\[D = 8~\text{in} =0.2032~\text{m}\]
+The standard sea-level air density was assumed as:
+\[\rho = 1.225~\text{kg m}^{-3}.\]
 
-The standard sea-level air density was assumed as
-\[
-\rho = 1.225~\text{kg m}^{-3}.
-\]
+The target thrust per motor was taken as previously calculated:
+\[T = 19.6~\text{N},\]
 
-The target thrust per motor was taken as previously calculated
-\[
-T = 19.6~\text{N},
-\]
+Rearranging the equations for n gives:
 
-Rearranging the equations for n gives
-
-\[
+\begin{equation}
 n = \sqrt{\frac{T}{C_T \rho D^4}}.
-\]
+\end{equation}
 
 The ideal no-load speed of the motor can be estimated from the motor \(K_V\) rating:
 
-\[
+\begin{equation}
 RPM_0= K_V V
-\]
+\end{equation}
 
-For the selected 1300KV motor on a 4S LiPo supply,
+For the selected 1300KV motor on a 4S LiPo supply:
 
 \[
 RPM_0 = 1300 \times 14.8 = 19240~\text{rpm}.
@@ -299,9 +339,10 @@ RPM_0 = 1300 \times 14.8 = 19240~\text{rpm}.
 
 However, this is an ideal case. In practice, the motor will not reach this speed when driving the propeller as the propeller applies aerodynamic load. A factor is included to account for this:
 
-\[
+\begin{equation}
 RPM_{\text{loaded}} = \eta_{\text{rpm}} RPM_0,
-\]
+\end{equation}
+
 
 where \(\eta_{\text{rpm}}\) represents the fraction of no-load speed achieved under propeller load. As a quick estimate, factors between 0.75 and 0.90 (in increments of 0.05) were considered.
 
@@ -322,7 +363,7 @@ where \(\eta_{\text{rpm}}\) represents the fraction of no-load speed achieved un
 \end{tabular}
 \end{table}
 
-As there was no given exact thrust coefficients,therefore we tested using 0.100, 0.125, and 0.150
+As there was no given exact thrust coefficients, therefore we tested using 0.100, 0.125, and 0.150
 
 \begin{table}[htbp]
 \centering
@@ -342,7 +383,7 @@ As there was no given exact thrust coefficients,therefore we tested using 0.100,
 \end{tabular}
 \end{table}
 
-From the table 4 and 5, the target thrust of approximately \(19.6~\text{N}\) per motor is not achieved under the most conservative assumptions(where \(C_T = 0.100\)). However, it becomes achievable for higher thrust coefficient values. For \(C_T = 0.125\), the combination reaches approximately \(19.4~\text{N}\) at 85\% of the no-load speed. For \(C_T = 0.150\), the target exceeded at around 80\% no load speed.
+From the Tables ~\ref{tab:loaded_rpm_factors} and~\ref{tab:motor_prop_validity_check}, the target thrust of approximately \(19.6~\text{N}\) per motor is not achieved under the most conservative assumptions(where \(C_T = 0.100\)). However, it becomes achievable for higher thrust coefficient values. For \(C_T = 0.125\), the combination reaches approximately \(19.4~\text{N}\) at 85\% of the no-load speed. For \(C_T = 0.150\), the target exceeded at around 80\% no load speed.
 
 This suggests that the target max thrust of \(19.6~\text{N}\) is theoretically plausible for this motor-propeller configuration on a 4S supply - but only when the real thrust coefficient is closer to mid-range values and the motor can maintain between 80--85\% of its no-load speed under load. This calculation does not experimentally validate the propulsion system as the real thrust would depend on a number of other factors such as ESC behavior and battery voltage sag. 
 
@@ -352,9 +393,13 @@ However, the target max value is not the same as minimum thrust required for fli
 
 The ESC is used to control the speed of each motor and provide fast response to throttle commands from the flight controller. Since the propulsion system uses four motors, the design requires one ESC per motor. The selected ESC was the LittleBee Spring 40A.
 
+As shown in the Table~\ref{tab:esc_specifications}, the available LittleBee Spring 40A specifications list \(2-6~\text{S}\) LiPo input, \(40~\text{A}\) continuous current, with compact dimensions.
+
+This ESC was chosen as it matched the propulsion system requirements while remaining compact enough to fit within the airframe. However, as the ESC has no built-in BEC, the lower voltage electronics must be powered through a separate voltage regulation stage, which is addressed in the power system design.
+
 \begin{table}[htbp]
 \centering
-\caption{ESC specifications. Data from available supplier specifications \cite{littlebee_spring_40a}.}
+\caption{ESC specifications. \footnotemark}
 \label{tab:esc_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -362,20 +407,21 @@ The ESC is used to control the speed of each motor and provide fast response to 
 \textbf{Parameter} & \textbf{Manufacturer / Supplier Specification} & \textbf{Design Relevance} \\
 \midrule
 Selected ESC & LittleBee Spring 40A & Speed controller for each brushless motor \\
+\hline
 Input voltage & 2--6S LiPo & Compatible with the intended multirotor power range \\
+\hline
 Continuous current & 40 A & Provides current capacity for high-throttle motor operation \\
+\hline
 Size & Approximately 35 mm $\times$ 17 mm & Compact \\
+\hline
 Weight & Approximately 12 g with wires & Low mass \\
+\hline
 Supported protocols & OneShot, MultiShot, DShot & Suitable for fast multirotor throttle control \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-As shown in the table 6, the available LittleBee Spring 40A specifications list \(2-6~\text{S}\) LiPo input, \(40~\text{A}\) continuous current, with compact dimensions.
-
-%%%%%Figure: LittleBee Spring 40A ESC selected for motor speed control. Its compact size and 2–6S input range made it suitable for integration with the quadrotor propulsion system.
-
-This ESC was chosen as it matched the propulsion system requirements while remaining compact enough to fit within the airframe. However, as the ESC has no built-in BEC, the lower voltage electronics must be powered through a separate voltage regulation stage, which is addressed in the power system design.
+\footnotetext{Data from available supplier specifications \cite{littlebee_spring_40a}}
 
 \subsubsection{Power System}
 \label{sec:power_system}
@@ -385,9 +431,11 @@ The power system must be designed to supply both the high-current propulsion sys
 \paragraph{Battery Selection}
 
 The battery selection was driven by the propulsion system as it was expected the motors and ESCs would consume significantly more power than other onboard electronics. The battery had to provide a suitable voltage and discharge capability for the hardware, while also remaining practical in terms of mass, size and internal packaging. A 3S LiPo option was initially considered as earlier propulsion combinations included 3S-compatible specifications. However, once the final motor-propeller configuration was selected, the 3S option was disregarded for a more suitable 4S 5000 mAH LiPo battery. This provided nominal voltage for \(14.8~\text{V}\), matching the motor and ESC requirements more appropriately, while maintaining a target capacity for approximately 10 minutes of drone operation before recharge.
+
+This battery was selected as a representative design choice as it matched the voltage requirements of the final propulsion system. The \(14.8~\text{V}\) is suitable for the selected ESC and motor configuration while the \(5000~\text{mAh}\) also provided the target \(10~\text{minutes}\) of drone operation before recharge. The mass range of \(390-589~\text{g}\) was also acceptable, leaving more than enough mass capacity for other components of the drone. 
 \begin{table}[htbp]
 \centering
-\caption{4S 5000 mAh LiPo Battery specifications. Data adapted from commercially viable sources \cite{tattu_bashing_4s_5000mah, gensace_4s_5000mah}.}
+\caption{4S 5000 mAh LiPo Battery specifications. \footnotemark}
 \label{tab:battery_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -395,26 +443,34 @@ The battery selection was driven by the propulsion system as it was expected the
 \textbf{Parameter} & \textbf{Representative Specification} & \textbf{Design Relevance} \\
 \midrule
 Battery type & LiPo battery pack & Suitable for high-current drone propulsion \\
+\hline
 Cell count & 4S / 4 cells & Matches propulsion requirements \\
+\hline
 Nominal voltage & 14.8 V & Used for motor speed and power-system calculations \\
+\hline
 Capacity & 5000 mAh / 5 Ah & Supports the target endurance before recharge \\
+\hline
 Representative mass range & 390--589 g & Gives a realistic range for mass \\
+\hline
 Representative dimensions & 32 $\times$ 42 $\times$ 132 mm to 138 $\times$ 46 $\times$ 50 mm & realistic range for battery bay sizing and packaging \\
+\hline
 Battery count & 1 pack per drone & Simplifies packaging and recharge \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-This battery was selected as a representative design choice as it matched the voltage requirements of the final propulsion system. The \(14.8~\text{V}\) is suitable for the selected ESC and motor configuration while the \(5000~\text{mAh}\) also provided the target \(10~\text{minutes}\) of drone operation before recharge. The mass range of \(390-589~\text{g}\) was also acceptable, leaving more than enough mass capacity for other components of the drone. 
+\footnotetext{Data adapted from commercially viable sources\cite{tattu_bashing_4s_5000mah, gensace_4s_5000mah}}
 
 \paragraph{Proving Endurance}
 
 To prove the 5000mAH capacity can theoretically last around 10 minutes of flight time before recharge, we may use the representative data.
 
 For a 4S 5000 mAh LiPo battery, the nominal voltage is \(14.8~\text{V}\) and the capacity is \(5~\text{Ah}\). The nominal battery energy is therefore
-\[
-E=VC = 14.8 \times 5 = 74~\text{Wh}
-\]
+
+\begin{equation}
+E=VC
+\end{equation}
+\[E= 14.8 \times 5 = 74~\text{Wh}\]
 
 In practice, it is not recommended to fully discharge a LiPo battery as doing so may reduce its lifespan. We may assume that 80\% of the nominal capacity is usable, the available energy becomes
 \[
@@ -427,17 +483,17 @@ t = \frac{10}{60} = 0.167~\text{h}
 \]
 
 The maximum average power draw is therefore
-\[
+\begin{equation}
 P_{\text{avg,max}} = \frac{E_{\text{usable}}}{t}
-\]
+\end{equation}
 \[
 P_{\text{avg,max}} = \frac{59.2}{0.167} \approx 355~\text{W}.
 \]
 
 The corresponding current draw is
-\[
+\begin{equation}
 I_{\text{avg}} = \frac{P_{\text{avg,max}}}{V}
-\]
+\end{equation}
 \[
 I_{\text{avg}} = \frac{355}{14.8} \approx 24~\text{A}.
 \]
@@ -460,11 +516,11 @@ Given the ESCs are rated \(40~\text{A}\) each, the combined theoretical maximum 
 4\times40=160\text{A}
 \]
 
-We require a high-current PDB, which was chosen to be the Holybro Power Distribution Board 300A. It is specified with a \(300~\text{A}\) continuous current rating, \(1000~\text{A}\) burst rating,\(10~\text{oz}\) copper PCB design, and XT90/XT30 connector options. The \(300~\text{A}\)continuous rating gives a clear margin above the theoretical maximum ESC demand.
+We require a high-current PDB, which was chosen to be the Holybro Power Distribution Board 300A. Shown in Table~\ref{tab:pdb_specifications}, it is specified with a \(300~\text{A}\) continuous current rating, \(1000~\text{A}\) burst rating,\(10~\text{oz}\) copper PCB design, and XT90/XT30 connector options. The \(300~\text{A}\)continuous rating gives a clear margin above the theoretical maximum ESC demand.
 
 \begin{table}[htbp]
 \centering
-\caption{PDB specifications. Data from the Holybro PDB 300A specification \cite{holybro_pdb_300a}.}
+\caption{PDB specifications.\footnotemark}
 \label{tab:pdb_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -472,14 +528,21 @@ We require a high-current PDB, which was chosen to be the Holybro Power Distribu
 \textbf{Parameter} & \textbf{Manufacturer / Supplier Specification} & \textbf{Design Relevance} \\
 \midrule
 Selected PDB & Holybro Power Distribution Board 300A & Main  PDB \\
+\hline
 Continuous current rating & 300 A & Provides margin above theoretical maximum \\
+\hline
 Burst current rating & 1000 A & Provides tolerance for short-duration spikes \\
+\hline
 PCB design & 10 oz copper & Safe method of wiring \\
+\hline
 Connector options & XT90 and XT30 options available & Main connection route \\
+\hline
 Mounting holes & M3 mounting holes & Main attachment to drone hull \\
 \bottomrule
 \end{tabularx}
 \end{table}
+
+\footnotetext{Data from the Holybro PDB 300A specification \cite{holybro_pdb_300a}}
 
 It should be noted that the PDB is responsible for distributing the main battery power. Other components such as the onboard computer, sensors and other electronics may require regulated lower-voltage supplies. Direct connection may cause damage to the components.
 
@@ -487,9 +550,13 @@ It should be noted that the PDB is responsible for distributing the main battery
 
 Voltage regulation is vital for ensuring the integrity of more sensitive electronics. The 4S LiPo battery supplies \(14.8~\text{V}\) which is suitable for the propulsion system but is too high for onboard electronics which require \(5~\text{V}\). For this reason, we require a dedicated step-down regulator to separate the low-voltage electronics from the high-voltage system. A good regulator considered is the Pololu D24V90F5 \(5~\text{V}\) regulator which could be used in a real prototype, as its input voltage range is compatible with the 4S battery system.
 
+Pololu D24V90F5 serves as a suitable regulator as it can step the \(14.8~\text{V}\) 4S battery Voltage down to a stable \(5~\text{V}\) voltage. As shown in Table~\ref{tab:voltage_regulator_specifications}, it has an input range of \(5-38~\text{V}\) which is compatible with the main battery while the current output is suitable for the Raspberry Pi, sensors, and other electronics.
+
+\newpage
+
 \begin{table}[htbp]
 \centering
-\caption{ 5 V step-down regulator specifications. Data from Pololu D24V90F5 manufacturer  \cite{pololu_d24v90f5}.}
+\caption{5 V step-down regulator specifications.\footnotemark }
 \label{tab:voltage_regulator_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -497,39 +564,27 @@ Voltage regulation is vital for ensuring the integrity of more sensitive electro
 \textbf{Parameter} & \textbf{Manufacturer Specification} & \textbf{Design Relevance} \\
 \midrule
 Regulator & Pololu D24V90F5 & 5 V step-down regulator \\
+\hline
 Regulator type & Step-down / buck regulator & steps down the higher 4S battery voltage \\
+\hline
 Input voltage range & 5--38 V & Compatible with the 14.8 V 4S LiPo battery \\
+\hline
 Output voltage & Fixed 5 V & Suitable for the Raspberry Pi and other 5 V electronics \\
+\hline
 Efficiency & 80--95\% & Reduces power loss and heating \\
+\hline
 Size & 40.6 mm $\times$ 20.3 mm $\times$ 7.6 mm & Sizable for integration into drone electronics circuit \\
+\hline
 Weight & Approximately 4.8 g & Low mass contribution to the overall drone design \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-Pololu D24V90F5 serves as a suitable regulator as it can step the \(14.8~\text{V}\) 4S battery Voltage down to a stable \(5~\text{V}\) voltage. It has an input range of \(5-38~\text{V}\) which is compatible with the main battery while the current output is suitable for the Raspberry Pi, sensors, and other electronics.
+\footnotetext{Data from Pololu D24V90F5 manufacturer  \cite{pololu_d24v90f5}}
 
 \paragraph{Power-system Summary}
 
-The final power system will be divided into two main sections: A high-current propulsion path and a low-voltage electronics path. The propulsion path directly draws power from the battery into the ESCs and motors, while the electronics path step-down the \(14.8~\text{V}\) Battery voltage to \(5~\text{V}\) for onboard computer and other voltage sensitive electronics. 
-
-\begin{table}[htbp]
-\centering
-\caption{Summary of the drone power-system architecture.}
-\label{tab:power_system_summary}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\textwidth}{@{} l l X @{}}
-\toprule
-\textbf{Power System Component} & \textbf{Selected Choice} & \textbf{Main Role} \\
-\midrule
-Main battery & 4S 5000 mAh LiPo & Supplies the entire electronic system \\
-High-current distribution & Holybro PDB 300A & Distributes battery power to the four ESCs \\
-Motor control & 4 $\times$ LittleBee Spring 40A ESCs & Controls power delivery to each brush-less motor \\
-Propulsion loads & 4 $\times$ brush-less motors & Generate lift and maneuvering thrust \\
-Voltage regulation & Pololu D24V90F5 5 V regulator & Steps battery voltage down to a regulated 5 V \\
-\bottomrule
-\end{tabularx}
-\end{table}
+The final power system is as shown in Fig.~\ref{fig:Power_Systems}, it is divided into two main sections: A high-current propulsion path and a low-voltage electronics path. The propulsion path directly draws power from the battery into the ESCs and motors, while the electronics path step-down the \(14.8~\text{V}\) Battery voltage to \(5~\text{V}\) for onboard computer and other voltage sensitive electronics. 
 
 \begin{figure}[htbp]
     \centering
@@ -550,9 +605,15 @@ Several hardware options were considered for the onboard computer. The main choi
 
 A two-board Arduino setup was considered, where one board would handle lower-level hardware control and another would manage communication or higher-level tasks. However this would increase general complexity in wiring and packaging while still not solving the main processing limitation. For this reason, the design moved towards investigating the usage of Raspberry Pi.
 
+Two main Rasperry Pi single-board computers were considered, the Raspberry Pi 4 Model B and the Raspberry Pi 5 - comparison is shown in Table~\ref{tab:raspberrypi_comparison}.
+
+Despite the strong performance offered by the Raspberry Pi 5, its additional computing capabilities were not considered important as the project was using pre-trained models rather than training onboard. The \textbf{Raspberry Pi 4 Model B} (shown in Fig.~\ref{fig:Raspberry Pi 4 Model B}) was chosen as the onboard computer as it provided a good balance between processing, cost and integration. In addition, it provided the required Wi-Fi, GPIO, USB, and camera interfaces, while being easier to power and package inside the drone.
+
+\newpage
+
 \begin{table}[htbp]
 \centering
-\caption{Comparison of Raspberry Pi single-board computer. Data from official Raspberry Pi \cite{raspberrypi4_specs, raspberrypi5_specs}.}
+\caption{Comparison of Raspberry Pi single-board computer. \footnotemark}
 \label{tab:raspberrypi_comparison}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l X X @{}}
@@ -560,28 +621,30 @@ A two-board Arduino setup was considered, where one board would handle lower-lev
 \textbf{Parameter} & \textbf{Raspberry Pi 4 Model B} & \textbf{Raspberry Pi 5} \\
 \midrule
 Processor & Broadcom BCM2711 quad-core Cortex-A72 64-bit SoC & Broadcom BCM2712 quad-core Cortex-A76 64-bit SoC \\
-
+\hline
 Clock speed & 1.8 GHz & 2.4 GHz \\
-
+\hline
 Relative performance & sufficient for deployed models & Approximately 2--3$\times$ CPU performance relative to Raspberry Pi 4 \\
-
+\hline
 Memory options & 1 GB, 2 GB, 4 GB, or 8 GB LPDDR4 & 1 GB, 2 GB, 4 GB, 8 GB, or 16 GB LPDDR4X \\
-
+\hline
 Wireless LAN & 2.4 GHz and 5.0 GHz IEEE 802.11ac Wi-Fi & Dual-band 802.11ac Wi-Fi \\
-
+\hline
 Bluetooth & Bluetooth 5.0, BLE & Bluetooth 5.0, BLE \\
-
+\hline
 GPIO & Raspberry Pi standard 40-pin GPIO header & Raspberry Pi standard 40-pin GPIO header \\
-
+\hline
 Camera interface & 2-lane MIPI CSI camera port & 2 $\times$ 4-lane MIPI camera/display transceivers \\
-
+\hline
 USB & 2 $\times$ USB 3.0, 2 $\times$ USB 2.0 & 2 $\times$ USB 3.0, 2 $\times$ USB 2.0 \\
-
+\hline
 Approximate cost & From \$35, depending on RAM option & From \$45, depending on RAM option \\
 
 \bottomrule
 \end{tabularx}
 \end{table}
+
+\footnotetext{Data from official Raspberry Pi \cite{raspberrypi4_specs, raspberrypi5_specs}}
 
 \begin{figure}[htbp]
     \centering
@@ -589,10 +652,6 @@ Approximate cost & From \$35, depending on RAM option & From \$45, depending on 
     \caption{Raspberry Pi 4 Model B}
     \label{fig:Raspberry Pi 4 Model B}
 \end{figure}
-
-Two main Rasperry Pi single-board computers were considered, the Raspberry Pi 4 Model B and the Raspberry Pi 5 - specs are shown in Table~\ref{tab:raspberrypi_comparison}.
-
-Despite the strong performance offered by the Raspberry Pi 5, its additional computing capabilities were not considered important as the project was using pre-trained models rather than training onboard. The \textbf{Raspberry Pi 4 Model B} was chosen as the onboard computer as it provided a good balance between processing, cost and integration. In addition, it provided the required Wi-Fi, GPIO, USB, and camera interfaces, while being easier to power and package inside the drone.
 
 \paragraph{Communication Interface}
 
@@ -606,7 +665,7 @@ Drone electronics will connect to the onboard computer via the GPIO, serial, USB
 
 \paragraph{Camera}
 
-The camera selected by the visual perception work-stream was the OAK-D Lite used for player detection and tracking. In this hardware section, the camera is considered from an integration point of view. The OAK-D Lite connects to the Raspberry Pi through USB hence the drone body must be designed to ensure both the USB connection and cable routing are practical inside the drone body. Its power draw also need to be included in the 5V electronics power budget. Mechanically, the camera must be placed with a clear field of view - placed in line with the IR emitter inside a gimbal/turret where they can move simultaneously. There should be no obstruction by the airframe, turret structure, or wiring. More detailed reasoning behind the camera choice can be found in the visual detection pipeline covered separately under \say{Mid Level Control} % add reference to section?.
+The camera selected by the visual perception work-stream was the OAK-D Lite (shown in Fig.~\ref{fig:Camera}) used for player detection and tracking. In this hardware section, the camera is considered from an integration point of view. The OAK-D Lite connects to the Raspberry Pi through USB hence the drone body must be designed to ensure both the USB connection and cable routing are practical inside the drone body. Its power draw also need to be included in the 5V electronics power budget. Mechanically, the camera must be placed with a clear field of view - placed in line with the IR emitter inside a gimbal/turret where they can move simultaneously. There should be no obstruction by the airframe, turret structure, or wiring. More detailed reasoning behind the camera choice can be found in the visual detection pipeline covered separately under \say{Mid Level Control} % add reference to section?.
 
 \begin{figure}[htbp]
     \centering
@@ -621,6 +680,12 @@ Suitable flight control sensors were needed to give the drone basic state inform
 
 A barometer was not selected as a height sensor despite being commonly used in drones for altitude estimation. Given the indoor environment and close proximity between walls and ceilings, pressure-based height estimation is less reliable. Instead, an upward-facing ToF sensor was considered more appropriate for indoor environment, where the ceiling height can be known in advance.
 
+The SparkFun ICM-20948 IMU (shown in Fig.~\ref{fig:IMU}) provides local motion and orientation feedback. It is housed inside the drone, near the center of the drone body, where it can measure acceleration, angular-rate, and magnetic-field measurements representative of the airframe while simultaneously protected from impact.
+
+The VL53L1X and VL53L5CX ToF sensors are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained RL control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
+
+A Consolidated summarisation of the flight-control sensors are shown in Table~\ref{tab:flight_control_sensors} below.
+
 \begin{table}[htbp]
 \centering
 \caption{Flight-control sensors \cite{sparkfun_icm20948, st_vl53l1x, st_vl53l5cx}}
@@ -631,31 +696,19 @@ A barometer was not selected as a height sensor despite being commonly used in d
 \textbf{Sensor} & \textbf{Role} & \textbf{Placement / Orientation} & \textbf{Key Specification} \\
 \midrule
 SparkFun ICM-20948 IMU & Measures drone motion and orientation/state & Housed inside hull, near the centre & 9-axis IMU: 3-axis accelerometer, 3-axis gyroscope, 3-axis magnetometer; I\textsuperscript{2}C/SPI support \\
-
+\hline
 VL53L1X ToF sensor & Provides vertical distance reference & Mounted pointing upwards & ToF ranging up to approximately 4 m; up to 50 Hz ranging frequency \\
-
+\hline
 VL53L5CX ToF sensors & Provides side obstacle awareness and short-range distance sensing & Mounted facing outwards on multiple sides of the drone & 8$\times$8 multizone ToF sensing; up to 4 m range; \\
 \bottomrule
 \end{tabularx}
 \end{table}
-
-The SparkFun ICM-20948 IMU provides local motion and orientation feedback. It is housed inside the drone, near the center of the drone body, where it can measure acceleration, angular-rate, and magnetic-field measurements representative of the airframe while simultaneously protected from impact.
-
-The VL53L1X and VL53L5CX ToF sensors are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained RL control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.3\textwidth]{Hardware/Sparkfun IMU.png}
     \caption{SparkFun IMU}
     \label{fig:IMU}
-\end{figure}
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.25\textwidth]{Hardware/VL53L1X.png}
-    \includegraphics[width=0.25\textwidth]{Hardware/VL53L5CX.png}
-    \caption{Time-of-Flight Sensors}
-    \label{Tof}
 \end{figure}
 
 \paragraph{IR Tagging System}
@@ -672,7 +725,7 @@ After investigating and selecting the main electronics, the mechanical design ai
 
 \subsubsection{Early Design Concepts}
 
-The early concepts tested out basic airframe layouts. The first concept followed a compact quadrotor arrangement, taking inspiration from commercial drones - featuring a central body, four rotor positions, and a space for a centrally mounted turret system. This gave a simple starting point, but as more electronic components were introduced into the CAD assembly, internal packaging became the main issue.
+The early concepts tested out basic airframe layouts. The first concept followed a compact quadrotor arrangement (shown in Fig.~\ref{fig:Model1}), taking inspiration from commercial drones - featuring a central body, four rotor positions, and a space for a centrally mounted turret system. This gave a simple starting point, but as more electronic components were introduced into the CAD assembly, internal packaging became the main issue.
 
 \begin{figure}[htbp]
     \centering
@@ -681,7 +734,11 @@ The early concepts tested out basic airframe layouts. The first concept followed
     \label{fig:Model1}
 \end{figure}
 
-The further concepts continued to investigate into symmetrical quadrotor layouts with increased body volume. One version even featured blade-guards, but made the drone noticeably larger, bulkier and less refined than the original concept. Scaling up the size solved some layout issues, but caused the platform to be less suitable for indoor game environment where the drone was required to be compact. In addition, earlier versions treated the airframe as one large connected body, which was not practical for assembly, manufacturing or repair. 
+The further concepts continued to investigate into symmetrical quadrotor layouts with increased body volume. One version (shown in Fig.~\ref{fig:Model 2}) even featured blade-guards, but made the drone noticeably larger, bulkier and less refined than the original concept. Scaling up the size solved some layout issues, but caused the platform to be less suitable for indoor game environment where the drone was required to be compact. In addition, earlier versions treated the airframe as one large connected body, which was not practical for assembly, manufacturing or repair. 
+
+This led to a complete change in direction for the final design (shown in Fig.~\ref{fig:ModelFinal}): a modular mirrored layout, where the rotor arms are separate from the main body and secured using linkage parts and bolts. With a size of 580x420x260mm, the body, arms, linkages, and mounts are to be manufactured separately to ensure easy assembly. The key design areas are the central main body, rotor arms and motor mounts, and turret/gimbal assembly - at which we will go into detail in the following sections.
+
+\newpage
 
 \begin{figure}[htbp]
     \centering
@@ -697,22 +754,20 @@ The further concepts continued to investigate into symmetrical quadrotor layouts
     \label{fig:ModelFinal}
 \end{figure}
 
-This led to a complete change in direction for the final design: a modular mirrored layout, where the rotor arms are separate from the main body and secured using linkage parts and bolts. With a size of 580x420x260mm, the body, arms, linkages, and mounts are to be manufactured separately to ensure easy assembly. The key design areas are the central main body, rotor arms and motor mounts, and turret/gimbal assembly - at which we will go into detail in the following sections.
-
 \subsubsection{Main Body Design}
+
+The main body is composed of three main parts (shown in Fig.~\ref{fig:Main Body}): the top hull, the bottom hull, and the electronics basket.
+
+The \textbf{top hull} forms an upper protective cover. It acts as a shield to the internal electronics from direct contact while simultaneously ensure all components are inside. It is designed to give the drone a smooth external shape which helps avoid a bulky appearance and gives the drone a more refined final form.
+
+The \textbf{bottom hull} forms the lower section of the drone and includes the landing gear. It has a boat-like shape that helps enclose the electronics bay while providing a stable base structure. The helicopter-style skid landing gear is directly integrated into the lower section. This landing gear layout was chosen such that it provides a simple, lightweight, and low-maintenance structure. The wide stance improves stability during take-off and landing.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.5\textwidth]{Hardware/Main Body.png}
-    \caption{Main Body}
+    \caption{Exploded View of Main Body - Top Hull(top), Electronic Basket(mid), Bottom Hull (bottom)}
     \label{fig:Main Body}
 \end{figure}
-
-The main body is composed of three main parts: the top hull, the bottom hull, and the electronics basket.
-
-The \textbf{top hull} forms an upper protective cover. It acts as a shield to the internal electronics from direct contact while simultaneously ensure all components are inside. It is designed to give the drone a smooth external shape which helps avoid a bulky appearance and gives the drone a more refined final form.
-
-The \textbf{bottom hull} forms the lower section of the drone and includes the landing gear. It has a boat-like shape that helps enclose the electronics bay while providing a stable base structure. The helicopter-style skid landing gear is directly integrated into the lower section. This landing gear layout was chosen such that it provides a simple, lightweight, and low-maintenance structure. The wide stance improves stability during take-off and landing. 
 
 The \textbf{electronics basket} acts as a removable internal frame used to hold the main electronics, wiring, and mounting points. It also connects the structure between the central body, and the rotor-arm assemblies. Keeping the basket separate from the outer hull means the electronic components can be accessed for maintenance without dismantling the entire drone.
 
@@ -756,9 +811,11 @@ Bottom hull + landing gear & 234.00 & 418.65 & 144.90 \\
 \end{tabular}
 \end{table}
 
+Table~\ref{tab:main_body_dimensions} shows the max CAD dimensions of the main body components, all of which is shown to be within 600mm in size as required.
+
 \subsubsection{Rotor Arm and Motor Mount Design}
 
-The rotor-arm assembly is made up of the front and rear rotor arms, blade guards, and linkage parts, which mounts the propulsion system and connect to the main body.
+The rotor-arm assembly (shown in Fig.~\ref{fig:Rotor}) is made up of the front and rear rotor arms, blade guards, and linkage parts, which mounts the propulsion system and connect to the main body.
 
 \begin{figure}[htbp]
     \centering
@@ -774,8 +831,6 @@ The \textbf{blade guards} surround the propeller area and acts as a protective s
 The \textbf{linkage parts} connect the rotor arms to the electronics basket. These small parts allow the arms to be assembled separately from the main body and are secured using bolt fasteners. This type of assembly allows damaged arm or linkage to be replaced without rebuilding the full drone body. As these parts transfer load between arms and body, they are treated as vital structural components and will use higher infill then the rest of the body.
 
 The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fusion 360 CAD model using the properties assigned of ABS material. Just like the main body, the Fusion 360 reports the solid-body CAD mass, therefore we estimate the real manufactured mass using base infill assumptions. Note that this estimate does not account for wall thickness, slicing settings, print orientation, or bolt fastener mass.
-
-Note that the measurements are maximum lengths on each axis, rather than rectangular measurements. The blade guards and rotor arms have circular geometry around the propeller area - these measurements are useful for checking propeller clearance but should not be interpreted as box-shaped component dimensions.
 
 \begin{table}[htbp]
 \centering
@@ -800,37 +855,16 @@ Front lower linkage & 3.7 g & 80\% & 3.0 g \\
 \end{tabularx}
 \end{table}
 
-\begin{table}[htbp]
-\centering
-\caption{Maximum length of one side of the rotor-arm and blade-guard assembly}
-\label{tab:rotor_arm_dimensions}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabular}{@{} l r r r @{}}
-\toprule
-\textbf{Component} & \textbf{X (mm)} & \textbf{Y (mm)} & \textbf{Z (mm)} \\
-\midrule
-Rear blade guard & 207.51 & 167.16 & 113.00 \\
-Front blade guard & 117.50 & 207.51 & 118.00 \\
-Rear rotor arm + motor mount & 75.00 & 50.00 & 120.00 \\
-Rear linkage 1 & 40.00 & 20.00 & 5.00 \\
-Rear linkage 2 & 40.00 & 20.00 & 5.00 \\
-Front rotor arm + motor mount & 75.00 & 50.00 & 140.00 \\
-Front upper linkage & 40.00 & 20.00 & 5.00 \\
-Front lower linkage & 40.00 & 20.00 & 5.00 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
 \subsubsection{Turret/Gimbal Design}
 \label{Turret}
-The gimbal turret designed included requirements from the visual learning process, where the camera was required to roll, pitch, and yaw. The design took inspiration from traditional industrial two-axis gimbals, but an with an additional yaw axis which provided a 3-axis movement. The camera and IR emitter needed to remain aligned to ensure aiming and tagging were done in the same direction. A reminder previously where the OAK D Lite camera was used as a reference to designing the dimensions of the gimbal.
+The gimbal turret design (shown in Fig.~\ref{fig:Gimbal}) included requirements from the visual learning process, where the camera was required to roll, pitch, and yaw. The design took inspiration from traditional industrial two-axis gimbals, but an with an additional yaw axis which provided a 3-axis movement. The camera and IR emitter needed to remain aligned to ensure aiming and tagging were done in the same direction. The OAK D Lite camera was used as a reference to designing the dimensions of the gimbal. (Full gimbal assembly is shown in Fig.~\ref{fig:Gimbal2})
 
 Mechanically, the gimbal is mounted through the central opening in the bottom hull and electronics basket. 
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.5\textwidth]{Hardware/Blueprint for Gimbal (without motor and servos).png}
-    \caption{Gimbal Design (without motor and servos}
+    \caption{Gimbal Design (without motor and servos)}
     \label{fig:Gimbal}
 \end{figure}
 
@@ -879,29 +913,31 @@ Table~\ref{tab:gimbal_mass_estimate} shows the mass of the solid body from Fusio
 
 The gimbal turret uses two actuator types as mentioned previously. The MG90S servo is used for the yaw axis, while the Quanum 2208 brush-less gimbal motors are used for the pitch and roll axes. Servo was used for the Yaw stage in order to provide compact rotation at the base, while the pitch and roll may be better with smoother gimbal-style motion. 
 
+The MG90S is suitable for the yaw stage as it fits within the turret base region inside the electronic basket. The operating speed is sufficient for controlled left-right aiming at 0.10 s/60$^\circ$ at 4.8 V or 0.08 s/60$^\circ$ at 6 V. The gimbal motors are used for pitch and roll control as they are generally designed for smoother movement. They are specified for payloads in 100-200g range which fits the weight requirements for the OAK-D Lite (61g) along with the IR emitter and gimbal parts. The suggested GBM2208 dimensions are approximately 28 x 22 mm which fits the clearance for the motor mount locations. Actuator specifications are summarized in Table~\ref{tab:gimbal_actuator_specs}.
+
 \begin{table}[htbp]
 \centering
-\caption{Suggested actuator specifications for the gimbal turret. Data adapted from supplier specifications \cite{mg90s_servo, gbm2208_gimbal_motor}.}
+\caption{Suggested actuator specifications for the gimbal turret.\footnotemark}
 \label{tab:gimbal_actuator_specs}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X X @{}}
 \toprule
 \textbf{Axis} & \textbf{Suggested Actuator} & \textbf{Size / Weight}\\
 \midrule
-Yaw & MG90S servo & 22.8 mm $\times$ 12.2 mm $\times$ 28.5 mm; approximately 13.4 g\\
+Yaw & MG90S servo & 22.8 mm $\times$ 12.2 mm $\times$ 28.5 mm;  13.4 g\\
 
-Pitch & Quanum/GBM2208 brushless gimbal motor & 28 mm $\times$ 22 mm; approximately 43 g\\
+Pitch & Quanum/GBM2208 brushless gimbal motor & 28 mm $\times$ 22 mm;  43 g\\
 
-Roll & Quanum/GBM2208 brushless gimbal motor & 28 mm $\times$ 22 mm; approximately 43 g\\
+Roll & Quanum/GBM2208 brushless gimbal motor & 28 mm $\times$ 22 mm;  43 g\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-The MG90S is suitable for the yaw stage as it fits within the turret base region inside the electronic basket. The operating speed is sufficient for controlled left-right aiming at 0.10 s/60$^\circ$ at 4.8 V or 0.08 s/60$^\circ$ at 6 V. The gimbal motors are used for pitch and roll control as they are generally designed for smoother movement. They are specified for payloads in 100-200g range which fits the weight requirements for the OAK-D Lite (61g) along with the IR emitter and gimbal parts. The suggested GBM2208 dimensions are approximately 28 x 22 mm which fits the clearance for the motor mount locations.
+\footnotetext{Data adapted from supplier specifications\cite{mg90s_servo, gbm2208_gimbal_motor}.}
 
 \subsubsection{Overall Airframe Configuration - Assembly}
 
-The final airframe configuration brings the separate subsystem assemblies together into a single integrated drone assembly, shown in Fig. ~\ref{fig:Complete Assembly}. The design uses a modular central body with detachable rotor-arm, integrated with propeller protection and helicopter-based landing gears, along with a centrally mounted 3-axis gimbal turret. This layout suits the electronics, propulsion, sensors, camera, and IR-tagging system while keeping key parts accessible for maintenance. Rather than one-piece shell, all parts are designed to be separate yet connected, replaceable, and cheap making it practical for manufacture and repair.
+The final airframe configuration (shown in Fig.~\ref{fig:Complete Assembly}) brings the separate subsystem assemblies together into a single integrated drone assembly, shown in Fig. ~\ref{fig:Complete Assembly}. The design uses a modular central body with detachable rotor-arm, integrated with propeller protection and helicopter-based landing gears, along with a centrally mounted 3-axis gimbal turret. This layout suits the electronics, propulsion, sensors, camera, and IR-tagging system while keeping key parts accessible for maintenance. Rather than one-piece shell, all parts are designed to be separate yet connected, replaceable, and cheap making it practical for manufacture and repair.
 
 \begin{figure}[htbp]
     \centering
@@ -922,30 +958,31 @@ The drone parts are designed with reference to the chosen internal electronics. 
 
 The structural assessment focused on two components most exposed to loading and collision impact: the motor-body joints and the blade guards. As the project did not develop a physical prototype, the evaluation was carried out using CAD-based structural simulations rather than physical testing. 
 
-\paragraph{Rotor Arm Simulation}
-The first simulation assessed the joint between the rotor arm and the electronics basket, as this connection transfers the motor thrust load back into the main body. This area was important as any failure would affect propulsion support and the integrity of the overall airframe. A static load represent the thrust force acting through the motor and rotor arm - the applied load was above 20 N, which is close to the estimated maximum thrust per motor used in the propulsion analysis.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\textwidth]{Hardware/Rotor Arm Simulation Test Image.png}
+    \includegraphics[width=0.75\textwidth]{Hardware/Rotor Arm Simulation Test Image.png}
     \caption{Rotor Arm Simulation Test}
     \label{fig:Rotor Arm Sim}
 \end{figure}
+
+\paragraph{Rotor Arm Simulation}
+The first simulation assessed the joint between the rotor arm and the electronics basket, as this connection transfers the motor thrust load back into the main body. This area was important as any failure would affect propulsion support and the integrity of the overall airframe. A static load represent the thrust force acting through the motor and rotor arm - the applied load was above 20 N, which is close to the estimated maximum thrust per motor used in the propulsion analysis.
 
 The simulation showed that the highest stress occurred near the handle area of the electronic basket, which was expected because this is where the rotor-arm load is transferred into the central structure. Most of the rotor arm remained in the lower-stress blue/green region - which suggests that the rotor arm geometry was not the limiting factor. The minimum safety factor was approximately 2.23, as shown in Fig. ~\ref{fig:Rotor Arm Sim}, meaning the component remained above the failure threshold for the load case.
 
 This result showed that the structure was reasonable. However, this should still be treated as a preliminary CAD-based result, noting the fact it does not account for vibration, fatigue, manufacturing defects and loose bolts.
 
-\paragraph{Blade Guard Impact Simulation}
-
-The blade guard was assessed as it was one of the most exposed parts of the drone and is likely to be the primary contact point during minor collisions with walls and obstacles. A 20 N direct front impact was applied in a static structural simulation.
-
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\textwidth]{Hardware/Blade Guard Simulation.png}
+    \includegraphics[width=0.75\textwidth]{Hardware/Blade Guard Simulation.png}
     \caption{Blade Guard Simulation test}
     \label{fig:BladeGaurdSim}
 \end{figure}
+
+\paragraph{Blade Guard Impact Simulation}
+
+The blade guard was assessed as it was one of the most exposed parts of the drone and is likely to be the primary contact point during minor collisions with walls and obstacles. A 20 N direct front impact was applied in a static structural simulation.
 
 The simulation showed that the highest stress occurred near the connection between guard and arm, making this the weakest region of the blade guard design. The minimum safety factor was 1.099 as shown in Fig. ~\ref{fig:BladeGaurdSim}, slightly above 1, meaning the structure passes the load case but only by a small margin (less than 10\%) which suggests that the current design is acceptable as an early simulation result.
 
@@ -953,56 +990,13 @@ The assessment was limited to a static simulation, A dynamic impact simulation w
 
 \subsubsection{Feasibility of the Final Design}
 
-The final drone design can be considered feasible in the perspective CAD/simulation led concept. The selected electronics are consistent with the design requirements. The airframe provides a dedicated area for internal components and wiring while ensuring the body remains modular, detachable and easy to manufacture and assemble. An overall feasibility assessment is shown in Table~\ref{tab:final_design_feasibility}.
+The final drone design can be considered feasible in the perspective of a CAD/simulation led concept. The selected electronics are consistent with the design requirements. The airframe provides a dedicated area for internal components and wiring while ensuring the body remains modular, detachable and easy to manufacture and assemble.
 
-\begin{table}[htbp]
-\centering
-\caption{Feasibility assessment.}
-\label{tab:final_design_feasibility}
-\renewcommand{\arraystretch}{1.25}
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Design Area} & \textbf{Feasibility Assessment} \\
-\hline
-Electronics integration & The main electronic components can be housed within the central body and removable electronics basket. \\
-\hline
-Propulsion system & The motor-propeller configuration provides a theoretical thrust margin suitable for the target drone mass. \\
-\hline
-Power system & The 4S battery, PDB, and 5~V regulator provide a clear separation between propulsion power and low-voltage electronics. \\
-\hline
-Mechanical structure & The modular body, rotor arms, blade guards, and gimbal turret form a complete and practical airframe layout. \\
-\hline
-Manufacturability & PLA/ABS 3D-printed parts and bolt fasteners make the design low-cost and easy to assemble. \\
-\hline
-Maintainability & Separate hull sections, rotor arms, linkages, electronics basket, and gimbal parts allow damaged or faulty parts to be replaced individually. \\
-\hline
-Safety features & Blade guards, enclosed electronics, and helicopter-style landing gear improve landing safety and stability. \\
-\hline
-Main limitation & The design has not been physically prototyped, so many real behaviors remain unevaluated. \\
-\hline
-\end{tabularx}
-\end{table}
+The final design of the drone hardware is acceptable within the scope of the project. However, the design is not recommended to serve as a final validated prototype as many of the main areas still require proper validation with real-world testing. The main limitations are the lack of physical testing which is vital if we wish to commercialize the product through physical implementation.
 
-The final design of the drone hardware is acceptable within the scope of the project. However, the design is not recommended to serve as a final prototype as many of the main areas still require proper validation with real-world testing. 
+\subsubsection{Simulation Representation of Drone Hardware}
 
-%------------This section can be put into System Architecture and Integration
-\subsection{Simulation Representation of Drone Hardware}
-
-The hardware design also needed a simplified representation inside the simulation environment. A Fusion 360 CAD assembly would be too detailed for use in Unity, which was the simulation environment that had been chosen.
-
-\paragraph{Simulation models}
-
-Instead of using the full Fusion 360 assembly,  a lower-detail version was built in Blender. This model kept the main features needed for visual recognition and game play - mainly rotor arms and central body. Smaller details such as bolt holes, internal electronics, linkages were removed to reduce complexity. This allowed the drone to be represented clearly in the simulation. Unity also allowed model mass and size scaling with an in-built physics system, hence could be used to model the simplified drone more accurately.
-
-\paragraph{Importing and setting up the Model}
-
-The simplified drone model was exported from Blender and imported into Unity as a game asset. Once inside Unity, the model was arranged so that movement and animation could be controlled. The rotor propellers were kept separate from the main body to allow spinning animation while following the physics controller.
-
-\paragraph{Simplified Physics and interaction}
-
-The Unity model used the built-in physics and collision system to represent the drone during simulation. The drone was treated as a simplified rigid body with approximate box collision boundaries. Collisions with the walls, obstacles or game-play objects were handled using Unity colliders, and the simplified model allowed basic movement and navigation tests.
-
-%%%%%FIGURE: Blender Model Drone
+The final CAD model was simplified for use in Unity. Given the full Fusion 360 assembly contained many unnecessary mechanical detail for real-time simulation, a low-poly version was created in Blender and Imported into Unity as a game asset. The simplified model preserved the main visible features such as the drone body and propellers, while small details such as bolt holes and linkages were removed. These were deemed unnecessary as Unity's built-in collision mechanisms and physics engine mainly uses approximated cuboid or spherical boundaries defined by the developer, and developing a custom solid-boundary model would require additional setup time without adding much value.
 
 \subsection{Player Hardware Design}
 
@@ -1255,18 +1249,18 @@ Network and communications are not strictly necessary for a single wave of the g
 \end{itemize}
 Alternatively, a central server could be used to give drones high-level instructions, and to share information pertaining to the state of the game. This method of handling information also has some advantages:
 \begin{itemize}
-    \item Complexity: coordinating the movement of many drones is much easier when all information is available centrally.
+    \item Reduced Complexity: coordinating the movement of many drones is much easier when all information is available centrally.
     \item Hardware Costs: if the central high-level decision making is performed in a central server, rather than locally on the processer of each drone, not only will a lower-powered processor be needed in the drone, but a smaller battery will be needed to power it, so less powerful motors will be required to lift the battery, and so on, decreasing hardware costs.
 \end{itemize}
 Considering the pros and cons listed above, it was decided that a central server was the most appropriate option to perform high-level decision making. Different methods of handling communications between the drones and the server are discussed below.
 
 \subsection{Bluetooth}
-Bluetooth is a short-range wireless communication system, designed for low-power device-to-device communication. It uses 79 channels, \(1\mathrm{ MHz}\) apart, from 2.402 to 2.480 GHz. Data is encoded by changes in frequency. Classic Bluetooth uses Frequency Hopping Spread Spectrum (FHSS), switching between frequency channels to reduce interference, with Gaussian Frequency Shift Keying (GFSK) modulation. In a connection, one device acts as a \say{main}, and up to seven devices act as \say{followers}. Time-Division-Duplexing is used to avoid collisions. Time is divided into \(625\mu\mathrm{ s}\) divisions. The main communicates in even slots, and the followers communicate in odd slots.
+Bluetooth is a short-range wireless communication system, designed for low-power device-to-device communication. It uses 79 channels, 1MHz apart, from 2.402 to 2.480 GHz. Data is encoded by changes in frequency. Classic Bluetooth uses Frequency Hopping Spread Spectrum (FHSS), switching between frequency channels to reduce interference, with Gaussian Frequency Shift Keying (GFSK) modulation. In a connection, one device acts as a \say{main}, and up to seven devices act as \say{followers}. Time-Division-Duplexing is used to avoid collisions. Time is divided into 625 \(\mu\)s divisions. The main communicates in even slots, and the followers communicate in odd slots.
 
-\(\)\newline A Bluetooth connection uses very little power. However, it has a lower bitrate than a Wi-Fi connection (1-3 \(\mathrm{ Mbps}\)). It also has a shorter intended range than a Wi-Fi connection. Furthermore, the maximum number of seven followers connected to a single main will pose a problem since it will be necessary for up to 10 drones to be connected to the server at a time, requiring an additional main, to manage communication for some drones. This would be possible, but inconvenient and less robust.
+\(\)\newline A Bluetooth connection uses very little power. However, it has a lower bitrate than a Wi-Fi connection (1-3 Mbps). It also has a shorter intended range than a Wi-Fi connection. Furthermore, the maximum number of seven followers connected to a single main will pose a problem since it will be necessary for up to 10 drones to be connected to the server at a time, requiring an additional main, to manage communication for some drones. This would be possible, but inconvenient and less robust.
 
 \subsection{Wi-Fi}
-Wi-Fi is a medium-range wireless communication system, designed for fast and reliable server-to-device communication. It typically operates at \(\textasciitilde\)2.4\(\mathrm{ GHz}\), \(\textasciitilde\)5\(\mathrm{ GHz}\) or \(\textasciitilde\)6\(\mathrm{ GHz}\), transferring data over multiple (up to 60) non-overlapping channels of bandwidth 20\(\mathrm{ MHz}\), modulated using Orthogonal Frequency Division Multiplexing (OFDM).
+Wi-Fi is a medium-range wireless communication system, designed for fast and reliable server-to-device communication. It typically operates at \(\textasciitilde\)2.4 GHz, \(\textasciitilde\)5 GHz or \(\textasciitilde\)6 GHz, transferring data over multiple (up to 60) non-overlapping channels of bandwidth 20 MHz, modulated using Orthogonal Frequency Division Multiplexing (OFDM).
 
 \(\) \newline A Wi-Fi connection typically has a lower latency and a much higher maximum bitrate than Bluetooth. However, the required data rate is small enough that this will not be important. Wi-Fi is generally more reliable than Bluetooth, and this is especially true at distances above ten meters; Bluetooth was designed for low bitrate, low power, short-range communication between a small number of devices, whereas Wi-Fi was designed for higher bandwidth connections between many devices.
 
@@ -1294,7 +1288,7 @@ An overview of the purpose of each state is given below.
 \subsubsection{Dormant Mode}
 This is the default mode of the drones, designed for waiting between rounds or games on standby, when not actively involved in the game. This mode is triggered by the end of a round, or by the powering on of the drone.
 \subsubsection{Search Mode}
-This is the initial mode of a drone upon entering a game. In this mode, the drone is exploring an area of the map decided by the central server, looking for a target. The flow diagram describing the conditions under which the drone will change out of Search Mode is shown below, in Fig. \ref{fig:FlowSearch}.
+This is the initial mode of a drone upon entering a game. In this mode, the drone is exploring an area of the map decided by the central server, looking for a target. The flow diagram describing the conditions under which the drone will change out of Search Mode is shown below, in Fig.~\ref{fig:FlowSearch}.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.7\linewidth]{figs/High-Level/SearchMode.png}
@@ -2066,10 +2060,10 @@ For the collision avoidance method, we chose to use an Artificial Potential Fiel
 \label{app}
 \fancyhead[C]{Richard Usherwood}
 \subsection{Context}
-From fast-food restaurants to road cycling, apps are everywhere. Their purpose can be separated into two categories: Engagement and Functionality. % Add reference to make it sound better
+From fast-food restaurants to road cycling, apps are everywhere. As reported in the Guardian, the average UK adult year old spends over three hours on their phone every day~\cite{theguardianAdultsGreat} using apps, making apps a useful method of reaching consumers. Their purpose can be separated into two categories: Engagement and Functionality. % Add reference to make it sound better
 
 \paragraph{Engagement} \(\) \newline
-Companion apps encourage user-engagement by allowing users to track their progress through points and leaderboards, track achievements, and connect with friends. For example, the popular birdwatching app \say{Birda} is used by users to log bird sightings. It rewards users with achievement badges when they complete objectives (for example, logging ten different species), and integrates monthly challenges. It also connects birdwatchers through the \say{community} feature, allowing users to view their friends' activity and local sightings. 
+Companion apps encourage user-engagement by allowing users to track their progress through points and leaderboards, track achievements, and connect with friends. For example, the popular birdwatching app \say{Birda} allows users to log bird sightings. It rewards users with achievement badges when they complete objectives (for example, logging ten different species), and integrates monthly challenges. It also connects birdwatchers through the \say{community} feature, allowing users to view their friends' activity and local sightings. 
 
 \paragraph{Functionality} \(\) \newline
 Companion apps also serve a functional purpose. Since effectively everyone in the UK owns and uses a smartphone, they can be directly implemented into existing products. For example, budget UK pub chain JD Wetherspoon uses a companion app to allow patrons to order drinks and food directly to their table, without requiring them to break conversation and queue at a busy bar. 
@@ -2085,7 +2079,7 @@ When opened for the first time, the app prompts the user sign in using a usernam
          \caption{Leaderboard Screen - Global Leaderboard Tab}
          \label{fig:lea-glo}
      \end{subfigure}
-     \hfill
+     \hspace{1cm}
      \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/2_2_1_Leaderboard_Friends_No_Alice.jpg}
@@ -2111,7 +2105,7 @@ Tracking progress encourages user engagement by giving users a sense of achievem
 Connecting friends and integrating social features encourages user engagement by allowing users to see their friends' progress. The app achieves this in many ways:
 \begin{itemize}
     \item The Leaderboard screen allows players to compare themselves only against their friends, as shown in Fig.~\ref{fig:lea-screen}(\subref{fig:lea-fri}).
-    \item The Community screen allows players to see recent activity of their friends, as well as to send and accept/decline friend requests.
+    \item The Community screen allows players to see their friends' recent activity, as well as to send and accept/decline friend requests.
 \end{itemize}
 \subsubsection{Notifications and reminders}
 Integrating Notifications and reminders prompts users to engage regularly with the app. Notifications are delivered to the phone's operating system notification bar for the following reasons:
@@ -2123,7 +2117,7 @@ Integrating Notifications and reminders prompts users to engage regularly with t
 
 
 \subsubsection{Functionality}
-The user experience of playing game in the centre, using the app, is outlined below.
+The user experience of playing the game in the centre, using the app, is outlined below.
 \begin{itemize}
     \item The user signs in to the app (or create an account if this has not already been done). The Login screen is shown in Fig.~\ref{fig:userstory}(\subref{fig:userstory1}).
     \item The app displays the Profile Screen. Using the bottom panel (shown in Fig.~\ref{fig:App-Panel}), the user navigates to the \say{Play in Person} Screen. The Profile Screen is shown in Fig.~\ref{fig:userstory}(\subref{fig:userstory2}).
@@ -2138,24 +2132,24 @@ The user experience of playing game in the centre, using the app, is outlined be
          \caption{Login Screen}
          \label{fig:userstory1}
      \end{subfigure}
-     \hfill
+     \hspace{0.5cm}
      \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/1_Profile_Screen.jpg}
          \caption{Profile Screen}
          \label{fig:userstory2}
      \end{subfigure}
-     \hfill
+     \hspace{0.5cm}
      \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/5_Play_In_Person.jpg}
          \caption{Play in Person Screen}
          \label{fig:userstory3}
      \end{subfigure}
-     \caption{From Left to Right: The user experience of using the app in for functionality}
+     \caption{From Left to Right: The user experience of using the app for gameplay}
      \label{fig:userstory}
 \end{figure}
-This allows the server to attribute the correct number of kills and deaths (infra-red strikes on drones, encoded with ID of the gun, and infra-red strikes on the helmet and vest detectors, communicated to server via Wi-Fi) to the correct player.
+This allows the server to attribute the correct number of kills and deaths (\gls{ir} strikes on drones, encoded with ID of the gun, and \gls{ir} strikes on the helmet and vest detectors, communicated to server via Wi-Fi) to the correct player.
 
 \subsection{Usability Design Choices}
 In 2010, Lee et al \cite{LEE201090} identified several \say{Principles for General System Design}, with respect to complex 3D architectural design and engineering tools. While this use case is not identical to that of Lee et al, the principles are still relevant. The following are examples of these principles:
@@ -2177,13 +2171,44 @@ Lee et al describe the use of feedback in UI design as \say{Response of the syst
     \label{fig:App-Friend_Request}
 \end{figure}
 \subsubsection{Consistency}
-Lee et al describe the use of consistency in UI design as \say{Uniformity of system semantics across similar situations}. In this context, \say{system semantics} refers to the method the user is expected to use when interacting with the UI. As an example, the app uses a dark grey and red colour scheme. Throughout the app, red is used to mean \say{active/on} and dark grey is used to mean \say{passive/off}. This is seen in the bottom panel (Fig. \ref{fig:App-Panel}) and top panel in the achievements (Fig. \ref{fig:ach-screen}) and community (Fig. \ref{fig:com-screen}) screens, in which the screen being displayed in shown in red. It is also seen in the player profile (Fig. \ref{fig:0_Login_Screen} and login (Fig. \ref{fig:1_Profile_Screen}) screens, in which the Login/Logout buttons are coloured red. It is shown in the box displayed when receiving a friend request (Fig. \ref{fig:App-Friend_Request}) in which the \say{Accept} button, which changes the user's list of friends, is coloured red, and the \say{Decline} button, which leaves the user's list of friends as it is, is shown in dark grey.
-
+Lee et al describe the use of consistency in UI design as \say{Uniformity of system semantics across similar situations}. In this context, \say{system semantics} refers to the method the user is expected to use when interacting with the UI. As an example, the app uses a dark grey and red colour scheme. Throughout the app, red is used to mean \say{active/on} and dark grey is used to mean \say{passive/off}. This is seen in the bottom panel (Fig. \ref{fig:App-Panel}) and top panel in the achievements (Fig.~\ref{fig:RemainingAppSS}(\subref{fig:RemainingAppSS-ach-lif}, \subref{fig:RemainingAppSS-ach-mon})) and community (Fig.~\ref{fig:RemainingAppSS}(\subref{fig:RemainingAppSS-com-fri}, \subref{fig:RemainingAppSS-com-sen})) screens, in which the screen being displayed in shown in red. It is also seen in the login (Fig.~\ref{fig:userstory}(\subref{fig:userstory1})) and player profile (Fig.~\ref{fig:userstory}(\subref{fig:userstory2})) screens, in which the Login/Logout buttons are coloured red. It is shown in the box displayed when receiving a friend request (Fig. \ref{fig:App-Friend_Request}) in which the \say{Accept} button, which changes the user's list of friends, is coloured red, and the \say{Decline} button, which leaves the user's list of friends as it is, is shown in dark grey.
+\begin{figure}[htbp]
+     \centering
+     \begin{subfigure}[b]{0.24\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/3_1_Achievements_Lifetime.jpg}
+         \caption{Achievements Screen - Lifetime Achievements}
+         \label{fig:RemainingAppSS-ach-lif}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.24\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/3_2_Achievements_Monthly.jpg}
+         \caption{Achievements Screen - Monthly Challenges}
+         \label{fig:RemainingAppSS-ach-mon}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.24\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_1_Community_Friends.jpg}
+         \caption{Community Screen - Friends Tab}
+         \label{fig:RemainingAppSS-com-fri}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.24\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_2_2_Community_Requests_Making.jpg}
+         \caption{Community Screen - sending friend request}
+         \label{fig:RemainingAppSS-com-sen}
+     \end{subfigure}
+     \caption{App Screenshots}
+     \label{fig:RemainingAppSS}
+\end{figure}
 
 
 \subsection{Technical Details}
 \subsubsection{Overview}
-The app was created using Expo. Expo is a development framework built to create React Native apps. React Native is a framework that allows mobile apps to be built using React. Finally, React is a JavaScript library built for user interface design. % rephrase
+The app was created using Expo, a development environment used to create React Native apps. React Native is a framework that allows mobile apps to be built using React, which is a JavaScript library designed for user interface design.
 \subsubsection{Project Structure}
 When the app is run, it opens a \say{package.json} file which sets the rest of the app in motion. From here, it exectutes index.js which imports App.js, which opens MainContainer.js. MainContainer.js serves as the app's navigation hub. MainContainer.js decides which \say{navigation flow} to show, based on whether the app is in state \say{Auth} or \say{Main} (whether the user is signed in or not). From here, MainContainer.js accesses each of the displayed screens, each of which has a dedicated JavaScript file in the \say{screens} subfolder.
 \subsubsection{State Management}
@@ -2193,21 +2218,54 @@ The App uses Supabase as its backend platform, to access a PostgreSQL database. 
 
 \(\)\newline A specific format had to be created for this data to be stored. For example, Game Data is stored in a format (A, B, C, \dots),(D, E, F, \dots),(G, H, I, \dots). This game data is equivalent to \say{Players A, B, C, ... played a game in which they got D, E, F, ... kills and died G, H, I, ... times, respectively}. Furthermore the \say{score} is defined as \say{number of kills squared divided by number of deaths} in a game, and the friend requests are stored as CSVs. When a change to the data is made in the app (for example sending or accepting a friend request), the database is automatically through API calls. However, the database must also be updated after every game. In the real system, this would be integrated into a system that processes communications with drones and helmets, and updates the database automatically. However, for now it is handled by a script that allows the user to input the results of the game (who was playing, how many kills they got, how many times they died etc.), and updates the database accordingly. 
 
-\(\)\newline Screenshots of all screens of the app are included in the appendix.
-
 \newpage
-\section{Safety and Risk Assessment Management}
+\section{Risk Assessment and Safety Management}
 \label{risk-assessment}
 
-A quantitative risk assessment has been completed, and is shown in Fig. \ref{fig:risk-assessment}. The most significant initial risks (before mitigations) were the the contact between guns and players' eyes, and players running into each other. After the necessary control measures, they are still most significant residual risks, along with trips and falls. This demonstrates that there is not an undue risk associated with playing the game, since trips and falls, player-on-player collision and impact with instruments used for playing (such as laser-guns, squash raquets, etc.) are risks associated with traditional laser-tag, as well as many common sports. 
+A quantitative risk assessment has been completed, and is shown in Table \ref{tab:risk-assessment}. Likelihood and Severity were both scored out of 5, and their product, \say{Risk Value} was analysed. The most significant initial risks were the contact between guns and players' eyes, and player collisions. After control measures, they are still the most significant residual risks, along with trips and falls. These risks are similar to those associated with traditional Laser-Tag and common sports, and are no more significant. This shows that the level of risk associated with playing the game is acceptable.
 
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.75\linewidth]{figs/risk-assessment}
-    \caption{Quantitative Risk Assessment}
-    \label{fig:risk-assessment}
-\end{figure}
+\begin{table}[h]
+\centering
+\caption{Quantitative Risk Assessment (L=Likelihood, S=Severity, RV=Risk Value)}
+\begin{tabular}{|c|c|p{4cm}|p{0.5cm}|p{0.5cm}|p{0.6cm}|p{5cm}|p{0.55cm}|p{0.55cm}|p{0.6cm}|}
+\hline
+\multicolumn{3}{|c|}{\cellcolor{gray! 30}} &
+\multicolumn{3}{c|}{\cellcolor{gray! 30}\textbf{Initial Risk}}&
+\multicolumn{1}{c|}{\cellcolor{gray! 30}} &
+\multicolumn{3}{c|}{\cellcolor{gray! 30}\textbf{Residual Risk}}\\
+\hline
+\cellcolor{gray! 30}\textbf{\#}&\cellcolor{gray! 30}\textbf{Hazard}&\cellcolor{gray! 30}\textbf{Risk}&\cellcolor{gray! 30}\textbf{L[5]}&\cellcolor{gray! 30}\textbf{S[5]}&\cellcolor{gray! 30}\textbf{RV}&\cellcolor{gray! 30}\textbf{Control Measures}&\cellcolor{gray! 30}\textbf{L[5]}&\cellcolor{gray! 30}\textbf{S[5]}&\cellcolor{gray! 30}\textbf{RV}\\
+\hline
+\cellcolor{gray! 30}\textbf{1}&Drones&Drone fails and falls on player’s head&3&4&\cellcolor{orange! 90}12&Net separates drones from players; players wear helmets&1&3&\cellcolor{green! 100}3\\
+\hline
+\cellcolor{gray! 30}\textbf{2}&Walls&Players run into walls in the dark&5&2&\cellcolor{orange! 90} 10&Players wear helmets; reflective tape placed on wall edges&2&1&\cellcolor{green! 100} 2\\
+\hline
+\cellcolor{gray! 30}\textbf{3}&Drones&Drone fails and blade shards fall of player’s head/in eyes&2&3&\cellcolor{yellow! 100}6&Net separates drones from players; players wear helmets; players wear eye protection&2&1&\cellcolor{green! 90}2\\
+\hline
+\cellcolor{gray! 30}\textbf{4}&N/A&Heart/asthma attack from exercise&1&5&\cellcolor{yellow! 100}5&Players are barred from playing if they have serious pre-existing health conditions; employees are trained in first aid and will call first responders&1&3&\cellcolor{green! 100}3\\
+\hline
+\cellcolor{gray! 30}\textbf{5}&N/A&Trips and Falls&4&3&\cellcolor{orange! 90}12&First aid kits are distributed; employees are trained in first aid - players must wear appropriate footwear&3&2&\cellcolor{yellow! 100}6\\
+\hline
+\cellcolor{gray! 30}\textbf{6}&N/A&Fire&2&5&\cellcolor{orange! 90}10&Sprinkler systems are installed; employees are familiar with evacuation plans; no smoking laws are enforced&1&3&\cellcolor{green! 100}3\\
+\hline
+\cellcolor{gray! 30}\textbf{7}&Guns&Contact with Eyes&4&4&\cellcolor{red! 85}16&Players wear eye protection; guns marked with reflective tape&3&2&\cellcolor{yellow! 100}6\\
+\hline
+\cellcolor{gray! 30}\textbf{8}&N/A&Players run into each other in the dark&5&3&\cellcolor{red! 85}15&Players wear helmets; vests are marked with reflective tape&4&2&\cellcolor{yellow! 100} 8\\
+\hline
+\cellcolor{gray! 30}\textbf{9}&Battery&Explosion/Fire&2&5&\cellcolor{orange! 90}10&Battery is charged according to guidelines and are regularly inspected by qualified persons&1&5&\cellcolor{green! 100}5\\
+\hline
+\end{tabular}
+\label{tab:risk-assessment}
+\end{table}
+
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.75\linewidth]{figs/risk-assessment}
+%     \caption{Quantitative Risk Assessment}
+%     \label{fig:risk-assessment}
+% \end{figure}
 
 \newpage
 \section{Commercialisation and Financial Modelling}
@@ -2272,16 +2330,24 @@ Floor & 0.18 & 0.54 \\
 \hline
 \end{tabular}
 \label{tab:U-Values}
-\end{table}
+\end{table} \newline
+\noindent Assuming the air changes completely every two hour-long games (\(\text{ACH}=0.5\)), the height of the warehouse is \(6\text{ m}\), and a the footprint is square:
+    \begin{align}
+        &\text{Total Wall Area}=4 \times \sqrt{632}\text{ m} \times 6\text{ m}=603\text{ m}^2 \\
+        &\text{Floor Area}=\text{Roof Area}=6800 \text{ ft}^2=632\text{ m}^2 \\
+        &\text{Total Volume}=632\text{ m}^2 \times 6\text{ m}=3792\text{ m}^3
+    \end{align}
+\noindent Assuming average daytime temperature is \(10 ^\circ C\), and the desired temperature is \(20^\circ C\), \(\Delta T=10^\circ C\):
+\begin{equation}
+\dot Q_\text{heating}=0.78\times603\times10+0.48\times632\times10+0.54\times632\times10+0.5\cdot \frac{1.225\times1005\times3792\times10}{3600}=17.6\text{ kW}
+\end{equation}
 
-\noindent Additional assumptions are made, as shown in the appendix in section \ref{assumptions}. As shown in Eq. \ref{app:heating-calcs}, it is found that the total heating power required to maintain a temperature of \(20^\circ \text{ C}\) is 17.6 kW.
-\newline
 
 \paragraph{Lighting} \(\) \newline
-To calculate the lighting costs, it is assumed the warehouse requires fifty 100W equivalent LEDs, each drawing 15W of power, to avoid dark shadows in the maze corners. However, since the game is played in (relative) darkness, the lights will only be required in between play sessions. Each game lasts 45 minutes, separated by 15 minute breaks, so the lights will only be turned on one quarter of the time. Therefore the effective power of the lighting is given by \(\dot Q = \frac 14 \times 50\times100\text{ W} = 1.3\text{ kW}\).
+To calculate the lighting costs, it is assumed the warehouse requires fifty 100~W equivalent LEDs, each drawing 15~W of power, to avoid dark shadows in the maze corners. However, since the game is played in (relative) darkness, the lights will only be required in between play sessions. Each game lasts 45 minutes, separated by 15 minute breaks, so the lights will only be turned on one quarter of the time. Therefore the effective power of the lighting is given by \(\dot Q_\text{lighting} = \frac 14 \times 50\times100\text{ W} = 1.3\text{ kW}\).
 
 \paragraph{Batteries} \(\) \newline
-Batteries in drones and laptops used by employees both must be charged. Both are assumed to be charged by standard \(65W\) chargers. There are assumed to be 20 batteries in total, and it is assumed they are all charging whenever the centre is open. The effective power draw of charging batteries is estimated at \(\dot Q=20\times 65\text{ W}=1.3\text{ kW}\).
+Batteries in drones and laptops used by employees both must be charged. Both are assumed to be charged by standard \(65W\) chargers. There are assumed to be 20 batteries in total, and it is assumed they are all charging whenever the centre is open. The effective power draw of charging batteries is estimated at \(\dot Q_\text{batteries}=20\times 65\text{ W}=1.3\text{ kW}\).
 
 \paragraph{Total Power} \(\) \newline
 Under the assumptions outlined above, the total power draw of the operational warehouse is approximated to \(17.6\text{ kW}+1.3\text{ kW}+1.3\text{ kW}=20.2\text{ kW}\).
@@ -2335,7 +2401,7 @@ Profit & -215 & -5 & 35 & 75 & 75 & \dots \\
 
 In Year 0, £215k of capital is required for startup costs, and will be funded through both equity (seeking investors) and bank loans.  \newline
 
-\noindent Bank loans are much more \say{unforgiving}: if the company fails to do make repayments, it must declare bankruptcy. Private investment requires no such repayments. Investors make money on their investments through share appreciation and dividends, so require no fixed repayments. Because of this, they require a higher interest rate than bank loans (discussed in section \ref{DiscountRate}). This means that relying heavily on equity financing increases effective discount rate, reducing the effect of future revenue on Net Present Value. \newline
+\noindent Bank loans are much more \say{unforgiving}: if the company fails to make repayments, it must declare bankruptcy. Private investment requires no such repayments. Investors make money on their investments through share appreciation and dividends instead. Because of this, they require a higher interest rate than bank loans (discussed in section \ref{DiscountRate}). This means that relying heavily on equity financing increases effective discount rate, reducing the effect of future revenue on Net Present Value. \newline
 
 \noindent As a balance, the business seeks £100k in bank loans and £115k in equity financing. 
 
@@ -2357,7 +2423,7 @@ The equity-only discount rate is used by investors to assess the viability of a 
 \label{DiscountRate}
 A numerical value of discount rate, \(d\), must be chosen. Two common approaches to model discount rate are: Equity-Only Discount Rate, and \gls{wacc}.
 \paragraph{Equity-Only Discount Rate} \(\)\newline
-Using an Equity-Only Discount Rate, the discount rate applied to future cash flows is set by investors, ignoring debt interest from the bank. Therefore the Year 0 capital injection from the bank loan \(P\) and the annual debt repayments \(A\) in subsequent years must be included in the cash flow, and the remaining balance after \(t\) years \(B_t\) on the bank loan must be considered as a liability in the terminal value (discussed in section \ref{TermValue}). These are determined by the amortisation formula, shown in Eq. \ref{equ:amortisation}.
+Using an Equity-Only Discount Rate, the discount rate \(r_e\) applied to future cash flows is set by investors. For a small, high-risk start-up, \(r_e=20\%\) alligns with the estimates of business advisors~\cite{EquityDiscountRate}. This ignores debt interest from the bank, so the Year 0 capital injection from the bank loan \(P\) and the annual debt repayments \(A\) in subsequent years must be included in the cash flow, and the remaining balance after \(t\) years \(B_t\) on the bank loan must be considered as a liability in the terminal value (discussed in section \ref{TermValue}). These are determined by the amortisation formula, shown in Eq. \ref{equ:amortisation}.
 
 \begin{equation}
     A=\frac{Pr_d}{1-(1+r_d)^{-N}}, \qquad\qquad B_t=P(1+r_d)^t-A\frac{(1+r_d)^t-1}{r_d}
@@ -2385,9 +2451,9 @@ Another approach is to weight the bank loan interest rate \(r_d\) and the equity
 \begin{equation}
     \text{WACC}=\frac{D}{D+E}r_d+\frac{E}{D+E}r_e
 \end{equation}
-where \(D\) is the initial capital of the bank loan, and \(E\) is the capital investment from equity financing. Using \gls{wacc}, it is not necessary to model the loan an the debt repayments as cash flows , or the remaining balance as a liability; these are all captured by the use of \gls{wacc}. \newline
+where \(D\) is the initial capital of the bank loan, and \(E\) is the capital investment from equity financing. Using \gls{wacc}, it is not necessary to model the loan an the debt repayments as cash flows , or the remaining balance as a liability; these are all captured by the use of \gls{wacc}. According to venture finance consultancy Phoenix Strategy, a realistic value of the cost of debt is \(r_d\approx 8\textendash 15\%\)~\cite{CostOfDebt}.\newline
 
-\noindent Therefore, for the sake of simplicity, \gls{wacc} is used in this model, with rates:
+\noindent Therefore, for the sake of simplicity, and conservatism, \gls{wacc} is used in this model, with rates:
 \begin{equation}
     r_d=15\% \qquad r_e=20\%
 \end{equation}
@@ -2536,7 +2602,7 @@ As above, it was assumed that, a price of £200 per game corresponds to a maximu
 % \begin{equation}
 %     Q_d=2000-\varepsilon\frac QP(200-P)
 % \end{equation}
-\noindent In a linear model, \(\varepsilon\) is varies. Instead, a reference value of elasticity \(\varepsilon'\) will be taken at \((Q_d=2000, P=200\)), and the gradient held constant. Hence, the demand-price curve reduces to:
+\noindent In a linear model, \(\varepsilon\) is not constant. Therefore, a reference value of elasticity \(\varepsilon'\) will be taken at \((Q_d=2000, P=200\)), and the gradient held constant. Hence, the demand-price curve reduces to:
 \begin{equation}
     Q_d=2000-10\varepsilon'(200-P)
 \end{equation}
@@ -2545,7 +2611,7 @@ However, this model implies no limit on utility. In reality, only one game can b
 \begin{equation}
     Q_d=\min\{2000-10\varepsilon'(200-P), 3000\}
 \end{equation}
-A reference value of elasticity \(\varepsilon=-1.1\) is chosen, since it represents a moderate price-sensitivity. The effect of a variation in reference elasticity is analysed in Section \ref{ElasticityAnal}
+A reference value of elasticity \(\varepsilon'=-1.1\) is chosen, since it represents a moderate price-sensitivity. The effect of a variation in reference elasticity is analysed in Section \ref{ElasticityAnal}
 
 \paragraph{Finding optimal price} \(\) \newline
 The variation of \gls{npv} with game price was investigated. The results are shown in Fig. \ref{fig:pri-sen}.
@@ -2562,10 +2628,10 @@ The variation of \gls{npv} with game price was investigated. The results are sho
 
 \noindent The linear left-most section of the graph corresponds to a constant utility of 3000 games per year. In this section, \gls{npv} is hugely negative. Therefore, attempting to setting the game price such that the facility is running at capacity is a very poor decision. \newline
 
-\noindent \gls{npv} is only positive for prices between £160 and £240 per game (to the nearest £10). Given how narrow this range of is, this demonstrates the importance of this analysis. UGLY SENTENCE FIX
+\noindent \gls{npv} is only positive for prices between £160 and £240 per game (to the nearest £10). This is a very narrow range, demonstrating the importance of this analysis.
 
 \paragraph{Utility Sensitivity}\label{UtilityAnalFixedPrice} \(\) \newline
-\noindent It was assumed that the maximum number of games per year would be 2000 when the price was £200 per game. The effect of a small error is this estimate was investigated. Price per game was held constant, maximum games per year was varied and the resulting \gls{npv} was tabulated. The results are shown in Fig. \ref{fig:uti-sen}.
+\noindent It was assumed that the maximum number of games per year would be 2000 when the price was £200 per game. The effect of a small error in this estimate was investigated. Price per game was held constant, maximum games per year was varied and the resulting \gls{npv} was tabulated. The results are shown in Fig. \ref{fig:uti-sen}.
 
 \begin{figure}[H]
     \centering
@@ -2574,7 +2640,7 @@ The variation of \gls{npv} with game price was investigated. The results are sho
     \label{fig:uti-sen}
 \end{figure}
 
-\noindent \gls{npv} is only positive for above 1900 games per year (rounded to the nearest 50) This is very close to the estimated 2000 games per year: a high utility is critical, justifying the high advertising budget. 
+\noindent \gls{npv} is only positive for a maximum utility above 1900 games per year (rounded to the nearest 50). This is very close to the estimated 2000 games per year, indicating that high utility is critical. This justifies the high advertising budget. 
 
 \paragraph{Variation of Optimal Price with elasticity} \label{ElasticityAnal}\(\) \newline
 This process was repeated for reference elasticity \(\varepsilon'\) between -0.5 (very price-insensitive) and -3 (very price-sensitive). Since the effect on \gls{npv} of changing two variables (reference elasticity and price per game) is being measured, it would be possible to create a 3D surface to demonstrate this. Since reference elasticity is only being varied in order to assess the sensitivity of the model to errors in numerical assumptions (it is not something that can be changed in order to maximise \gls{npv}), it is only useful to tabulate the optimal price per game (price that maximises \gls{npv}) and plot this against reference elasticity, as shown in Fig. \ref{fig:opt-cos-sen}.
@@ -2599,15 +2665,10 @@ Under the conservative assumptions laid out above, the value of a theoretical bu
     \item £69,000 is likely an underestimate, since the value of the business will significantly increase with time as discount rate decreases. 
 \end{itemize}
 \noindent This suggests that is it possible to offer drone-based Laser-Tag as a commercially viable service.
+
 \newpage
 
-
-% Appendix
-% Essential content that interrupts the flow of the document can be placed here, e.g. technical drawings, detailed lists of equations used, etc.
-\addcontentsline{toc}{section}{Appendix}
-
-%%%%%%%%%%%%%%%%-----------End of Commercialisation-------------%%%%%%%%%%%%%%%
-\newpage
+%%%%%%%%%%%%%%%%-----------End of Commercialisation----%%%%%%%%%%%%%%%
 
 \section{Sustainability} %Rickie
 \fancyhead[C]{Shing Hei Rickie Chan}
@@ -2629,28 +2690,27 @@ The economic impact is considered through the commercial model, which tests whet
 \paragraph{Limitations}
 
 The system should not be considered fully sustainable. Issues such as waste and replacement of electronic components, general consumptions of arena management, and usage of non-biodegradable ABS material mean that the system cannot be considered impact-free.
-
+\newpage
 %%%%%%%%%%%%%%%----------End of Sustainability--------------%%%%%%%%%%%%%%%
 
-\newpage
-
+% Appendix
+% Essential content that interrupts the flow of the document can be placed here, e.g. technical drawings, detailed lists of equations used, etc.
+\addcontentsline{toc}{section}{Appendix}
 \section*{Appendix}
 \fancyhead[C]{Group}
 
-\paragraph{Heating cost assumptions}\label{assumptions}\(\) \newline
-\noindent Assume a complete air change every two hour-long games (\(\text{ACH}=0.5\)), a warehouse height of \(6\text{ m}\), and a square footprint.
+% \paragraph{Heating cost assumptions}\label{assumptions}\(\) \newline
+% \noindent Assume a complete air change every two hour-long games (\(\text{ACH}=0.5\)), a warehouse height of \(6\text{ m}\), and a square footprint.
 % \begin{equation}
 %     \dot Q=U_wA_w\Delta T+U_rA_r\Delta T+U_fA_f\Delta T +\text{ACH}\cdot \frac{\rho c_p V\Delta T}{3600}
 % \end{equation}
-\begin{equation}
-    \text{Total Wall Area}=4\times\sqrt{632\text{ m}^2}\times6\text{ m}=603\text{ m}^2
-\end{equation}
-\begin{equation}
-    \text{Floor Area}=\text{Roof Area}=6800 \text{ ft}^2=632\text{ m}^2
-\end{equation}
-\begin{equation}
-    \text{Total Volume}=632\text{ m}^2\times6\text{ m}=3792\text{ m}^3
-\end{equation}
+% \begin{equation}
+%     \text{Total Wall Area}=4\times\sqrt{632\text{ m}^2}\times6\text{ m}=603\text{ m}^2
+% \end{equation}
+% \begin{equation}
+%     \text{Floor Area}=\text{Roof Area}=6800 \text{ ft}^2=632\text{ m}^2\qquad \text{Total Volume}=632\text{ m}^2\times6\text{ m}=3792\text{ m}^3
+% \end{equation}
+
 
 
 % \begin{equation}
@@ -2658,10 +2718,10 @@ The system should not be considered fully sustainable. Issues such as waste and 
 % \end{equation}
 
 
-\noindent Assume average daytime temperature is \(10 ^\circ C\), and the desired temperature is \(20^\circ C\), \(\Delta T=10^\circ C\):
-\begin{equation}
-    \dot Q=U_wA_w\Delta T+U_rA_r\Delta T+U_fA_f\Delta T +\text{ACH}\cdot \frac{\rho c_p V\Delta T}{3600}=17.6\text{ kW}
-\end{equation}
+% \noindent Assume average daytime temperature is \(10 ^\circ C\), and the desired temperature is \(20^\circ C\), \(\Delta T=10^\circ C\):
+% \begin{equation}
+%     \dot Q=U_wA_w\Delta T+U_rA_r\Delta T+U_fA_f\Delta T +\text{ACH}\cdot \frac{\rho c_p V\Delta T}{3600}=17.6\text{ kW}
+% \end{equation}
 
 
 % \begin{equation}            =0.78\times603\times10+0.48\times632\times10+0.54\times632\times10+0.5\cdot \frac{1.225\times1005\times3792\times10}{3600}
@@ -2673,41 +2733,10 @@ The system should not be considered fully sustainable. Issues such as waste and 
 
 
 
-\begin{figure}[htbp]
-     \centering
-     \begin{subfigure}[b]{0.24\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/3_1_Achievements_Lifetime.jpg}
-         \caption{Achievements Screen - Lifetime Achievements}
-         \label{fig:RemainingAppSS-ach-lif}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.24\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/3_2_Achievements_Monthly.jpg}
-         \caption{Achievements Screen - Monthly Challenges}
-         \label{fig:RemainingAppSS-ach-mon}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.24\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_1_Community_Friends.jpg}
-         \caption{Community Screen - Friends Tab}
-         \label{fig:RemainingAppSS-com-fri}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.24\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_2_2_Community_Requests_Making.jpg}
-         \caption{Community Screen - sending friend request}
-         \label{fig:RemainingAppSS-com-sen}
-     \end{subfigure}
-     \caption{Remaining App Screenshots}
-     \label{fig:RemainingAppSS}
-\end{figure}
+
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1\linewidth]{figs/High-Level/Flow2.png}
+    \includegraphics[width=1\linewidth]{figs/High-Level/FlowChart0.png}
     \caption{Flow Chart Describing High-Level Mode Changes}
     \label{fig:FlowBig}
 \end{figure}
