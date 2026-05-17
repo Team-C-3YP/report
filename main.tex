@@ -239,12 +239,19 @@ The Avenger 2806.5 was selected because it provided a strong thrust margin witho
 \textbf{Parameter} & \textbf{Value} & \textbf{Design relevance} \\
 \midrule
 Selected motor & BrotherHobby Avenger 2806.5 1300KV & Main propulsion motor \\
+\hline
 Motor type & Brush-less & Suitable for multi-rotor propulsion \\
+\hline
 KV rating & 1300KV & Suitable for thrust-focused operation \\
+\hline
 Mass & 41 g & Four motors contribute approximately 164g \\
+\hline
 Cell compatibility & 4--6S LiPo & Sets the required battery range for the final power system \\
+\hline
 Bolt & M3, 19 mm $\times$ 19 mm & Defines the motor mounting interface \\
+\hline
 Wire specification & 18 AWG, 20 cm &  ESC and wiring  \\
+\hline
 Target thrust per motor & $\approx 19.6$ N & 4 motors provides approximately 78.5 N \\
 \bottomrule
 \end{tabularx}
@@ -270,11 +277,17 @@ The 8x4x3 propeller geometry was chosen as this motor-prop configuration matched
 \textbf{Parameter} & \textbf{Reference Value} & \textbf{Design Relevance} \\
 \midrule
 Propeller geometry & 8$\times$4$\times$3 & Defines the intended propeller size and type \\
+\hline
 Diameter & 8 inch & Sets swept area and required clearance from the airframe \\
+\hline
 Pitch & 4 inch & Moderate pitch suitable for thrust-focused operation \\
+\hline
 Blade count & 3 blades & Provides higher thrust capability than a comparable 2-blade propeller \\
+\hline
 Reference material & Polycarbonate & Representative lightweight multirotor propeller material \\
+\hline
 Reference mass & 13 g & Four propellers contribute approximately 52 g \\
+\hline
 Rotation requirement & 2 CW + 2 CCW & Required for balanced quadrotor operation \\
 \bottomrule
 \end{tabularx}
@@ -391,10 +404,15 @@ This ESC was chosen as it matched the propulsion system requirements while remai
 \textbf{Parameter} & \textbf{Manufacturer / Supplier Specification} & \textbf{Design Relevance} \\
 \midrule
 Selected ESC & LittleBee Spring 40A & Speed controller for each brushless motor \\
+\hline
 Input voltage & 2--6S LiPo & Compatible with the intended multirotor power range \\
+\hline
 Continuous current & 40 A & Provides current capacity for high-throttle motor operation \\
+\hline
 Size & Approximately 35 mm $\times$ 17 mm & Compact \\
+\hline
 Weight & Approximately 12 g with wires & Low mass \\
+\hline
 Supported protocols & OneShot, MultiShot, DShot & Suitable for fast multirotor throttle control \\
 \bottomrule
 \end{tabularx}
@@ -422,11 +440,17 @@ This battery was selected as a representative design choice as it matched the vo
 \textbf{Parameter} & \textbf{Representative Specification} & \textbf{Design Relevance} \\
 \midrule
 Battery type & LiPo battery pack & Suitable for high-current drone propulsion \\
+\hline
 Cell count & 4S / 4 cells & Matches propulsion requirements \\
+\hline
 Nominal voltage & 14.8 V & Used for motor speed and power-system calculations \\
+\hline
 Capacity & 5000 mAh / 5 Ah & Supports the target endurance before recharge \\
+\hline
 Representative mass range & 390--589 g & Gives a realistic range for mass \\
+\hline
 Representative dimensions & 32 $\times$ 42 $\times$ 132 mm to 138 $\times$ 46 $\times$ 50 mm & realistic range for battery bay sizing and packaging \\
+\hline
 Battery count & 1 pack per drone & Simplifies packaging and recharge \\
 \bottomrule
 \end{tabularx}
@@ -501,10 +525,15 @@ We require a high-current PDB, which was chosen to be the Holybro Power Distribu
 \textbf{Parameter} & \textbf{Manufacturer / Supplier Specification} & \textbf{Design Relevance} \\
 \midrule
 Selected PDB & Holybro Power Distribution Board 300A & Main  PDB \\
+\hline
 Continuous current rating & 300 A & Provides margin above theoretical maximum \\
+\hline
 Burst current rating & 1000 A & Provides tolerance for short-duration spikes \\
+\hline
 PCB design & 10 oz copper & Safe method of wiring \\
+\hline
 Connector options & XT90 and XT30 options available & Main connection route \\
+\hline
 Mounting holes & M3 mounting holes & Main attachment to drone hull \\
 \bottomrule
 \end{tabularx}
@@ -532,11 +561,17 @@ Pololu D24V90F5 serves as a suitable regulator as it can step the \(14.8~\text{V
 \textbf{Parameter} & \textbf{Manufacturer Specification} & \textbf{Design Relevance} \\
 \midrule
 Regulator & Pololu D24V90F5 & 5 V step-down regulator \\
+\hline
 Regulator type & Step-down / buck regulator & steps down the higher 4S battery voltage \\
+\hline
 Input voltage range & 5--38 V & Compatible with the 14.8 V 4S LiPo battery \\
+\hline
 Output voltage & Fixed 5 V & Suitable for the Raspberry Pi and other 5 V electronics \\
+\hline
 Efficiency & 80--95\% & Reduces power loss and heating \\
+\hline
 Size & 40.6 mm $\times$ 20.3 mm $\times$ 7.6 mm & Sizable for integration into drone electronics circuit \\
+\hline
 Weight & Approximately 4.8 g & Low mass contribution to the overall drone design \\
 \bottomrule
 \end{tabularx}
@@ -583,23 +618,23 @@ Despite the strong performance offered by the Raspberry Pi 5, its additional com
 \textbf{Parameter} & \textbf{Raspberry Pi 4 Model B} & \textbf{Raspberry Pi 5} \\
 \midrule
 Processor & Broadcom BCM2711 quad-core Cortex-A72 64-bit SoC & Broadcom BCM2712 quad-core Cortex-A76 64-bit SoC \\
-
+\hline
 Clock speed & 1.8 GHz & 2.4 GHz \\
-
+\hline
 Relative performance & sufficient for deployed models & Approximately 2--3$\times$ CPU performance relative to Raspberry Pi 4 \\
-
+\hline
 Memory options & 1 GB, 2 GB, 4 GB, or 8 GB LPDDR4 & 1 GB, 2 GB, 4 GB, 8 GB, or 16 GB LPDDR4X \\
-
+\hline
 Wireless LAN & 2.4 GHz and 5.0 GHz IEEE 802.11ac Wi-Fi & Dual-band 802.11ac Wi-Fi \\
-
+\hline
 Bluetooth & Bluetooth 5.0, BLE & Bluetooth 5.0, BLE \\
-
+\hline
 GPIO & Raspberry Pi standard 40-pin GPIO header & Raspberry Pi standard 40-pin GPIO header \\
-
+\hline
 Camera interface & 2-lane MIPI CSI camera port & 2 $\times$ 4-lane MIPI camera/display transceivers \\
-
+\hline
 USB & 2 $\times$ USB 3.0, 2 $\times$ USB 2.0 & 2 $\times$ USB 3.0, 2 $\times$ USB 2.0 \\
-
+\hline
 Approximate cost & From \$35, depending on RAM option & From \$45, depending on RAM option \\
 
 \bottomrule
@@ -658,9 +693,9 @@ A Consolidated summarisation of the flight-control sensors are shown in Table~\r
 \textbf{Sensor} & \textbf{Role} & \textbf{Placement / Orientation} & \textbf{Key Specification} \\
 \midrule
 SparkFun ICM-20948 IMU & Measures drone motion and orientation/state & Housed inside hull, near the centre & 9-axis IMU: 3-axis accelerometer, 3-axis gyroscope, 3-axis magnetometer; I\textsuperscript{2}C/SPI support \\
-
+\hline
 VL53L1X ToF sensor & Provides vertical distance reference & Mounted pointing upwards & ToF ranging up to approximately 4 m; up to 50 Hz ranging frequency \\
-
+\hline
 VL53L5CX ToF sensors & Provides side obstacle awareness and short-range distance sensing & Mounted facing outwards on multiple sides of the drone & 8$\times$8 multizone ToF sensing; up to 4 m range; \\
 \bottomrule
 \end{tabularx}
@@ -802,8 +837,6 @@ The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fu
 
 Note that the measurements (shown in Table~\ref{tab:rotor_arm_dimensions}) are maximum lengths (shown in  on each axis, rather than rectangular measurements. The blade guards and rotor arms have circular geometry around the propeller area - these measurements are useful for checking propeller clearance but should not be interpreted as box-shaped component dimensions.
 
-\newpage
-
 \begin{table}[htbp]
 \centering
 \caption{Estimated printed mass of one side of the rotor-arm and blade-guard assembly.}
@@ -872,8 +905,6 @@ The \textbf{gimbal pitch axis component} acts as the moving structure for pitch 
 The \textbf{gimbal roll axis component} provides the mounting location for the OAK-D Lite camera and IR emitter. As the camera and IR emitter are mounted on the same final axis, the visual tracking direction and IR tagging direction remain aligned.
 
 Together, the yaw servo, pitch motor, and roll motor allow the turret to achieve 3-axis movement.
-
-\newpage
 
 \begin{figure}[htbp]
     \centering
@@ -983,12 +1014,6 @@ The simulation showed that the highest stress occurred near the connection betwe
 
 The assessment was limited to a static simulation, A dynamic impact simulation would have been more realistic in a collision case but the tools were not available without paid access. As a result, the safety factor should be treated as an initial indicator.
 
-\subsubsection{Feasibility of the Final Design}
-
-The final drone design can be considered feasible in the perspective CAD/simulation led concept. The selected electronics are consistent with the design requirements. The airframe provides a dedicated area for internal components and wiring while ensuring the body remains modular, detachable and easy to manufacture and assemble. An overall feasibility assessment is shown in Table~\ref{tab:final_design_feasibility}.
-
-The final design of the drone hardware is acceptable within the scope of the project. However, the design is not recommended to serve as a final prototype as many of the main areas still require proper validation with real-world testing. 
-
 \begin{table}[htbp]
 \centering
 \caption{Feasibility assessment.}
@@ -1016,6 +1041,12 @@ Main limitation & The design has not been physically prototyped, so many real be
 \hline
 \end{tabularx}
 \end{table}
+
+\subsubsection{Feasibility of the Final Design}
+
+The final drone design can be considered feasible in the perspective of a CAD/simulation led concept. The selected electronics are consistent with the design requirements. The airframe provides a dedicated area for internal components and wiring while ensuring the body remains modular, detachable and easy to manufacture and assemble. An overall feasibility assessment is shown in Table~\ref{tab:final_design_feasibility}.
+
+The final design of the drone hardware is acceptable within the scope of the project. However, the design is not recommended to serve as a final prototype as many of the main areas still require proper validation with real-world testing. 
 
 \subsection{Simulation Representation of Drone Hardware}
 
