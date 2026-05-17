@@ -1270,7 +1270,7 @@ Wi-Fi is a medium-range wireless communication system, designed for fast and rel
 \section{High Level Control} \label{high level control} % Ritchie
 \fancyhead[C]{Richard Usherwood} % Ritchie
 \subsection{Context}
-The objective of the High Level Control Protocol is to define algorithms that take game states (positions of human players, positions of drones, etc.) as their inputs, and give a high-level behaviour of a drone as their output. This is achieved by splitting the drones' behaviour into several \say{modes}, in which some information and computation is performed in the server, and transmitted to the drones via Wi-Fi, and some information storage and computing is performed onboard the drone, according to an Information Responsibility Protocol.
+The objective of the High Level Control Protocol is to define algorithms that take game states (positions of human players, positions of drones, etc.) as their inputs, and give a high-level behaviour of a drone as their output. This is achieved by splitting the drones' behaviour into several \say{modes}, in which some information and computation is performed in the server, and transmitted to the drones via Wi-Fi, and some information storage and computing is performed onboard the drone.
 
 
 \subsection{Drone Modes}
@@ -1318,12 +1318,6 @@ This mode is triggered either when the drone detects it is about to collide into
 
 \subsection{Logic}
 The flow charts shown in Fig. \ref{fig:FlowSearch}, \ref{fig:FlowTrack} and \ref{fig:FlowShoot} are sections of a larger flowchart describing the state change logic of the drones, included in the appendix. The red boxes denote information shared between drones (managed by the server via Wi-Fi). It is worth noting that Dormant Mode and Collision Avoidance Mode have been omitted for the sake of readability. Since these two states are considered higher priority than the others, each decision chain implicitly contains the decision boxes: \say{Am I about to crash?} and \say{Has the wave ended?}.
-
-\newpage
-
-
-\subsection{Information Responsibility}
-\fancyhead[C]{Thomas August} % Tommy
 
 
 \newpage
@@ -2697,7 +2691,7 @@ The system should not be considered fully sustainable. Issues such as waste and 
 % Essential content that interrupts the flow of the document can be placed here, e.g. technical drawings, detailed lists of equations used, etc.
 \addcontentsline{toc}{section}{Appendix}
 \section*{Appendix}
-\fancyhead[C]{Group}
+\fancyhead[C]{Richard Usherwood}
 
 % \paragraph{Heating cost assumptions}\label{assumptions}\(\) \newline
 % \noindent Assume a complete air change every two hour-long games (\(\text{ACH}=0.5\)), a warehouse height of \(6\text{ m}\), and a square footprint.
