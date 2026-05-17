@@ -107,7 +107,7 @@ In addition to the technical deployment, user retention is driven by a companion
     \label{fig:gameplay}
 \end{figure}
 \subsection{Overview}
-Players are equipped with Laser Guns (\gls{ir} emitters that transmit encoded data), and helmets and vests containing \gls{ir} sensors. The drones are equipped with Turrets which emit \gls{ir} radiation (see Section \ref{Turret}) as well as \gls{ir} sensors. When not flying, they are dormant in a \say{standby location} where employees can replace their batteries. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If a player is hit, they must navigate to a designated \say{timeout} area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun is disables until their timeout ends (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at 3 m height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
+Players are equipped with laser guns (\gls{ir} emitters that transmit encoded data), and helmets and vests containing \gls{ir} sensors. The drones are equipped with Turrets which emit \gls{ir} radiation (see Section \ref{Turret}) as well as \gls{ir} sensors. When not flying, they are dormant in a \say{standby location} where employees can replace their batteries. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If a player is hit, they must navigate to a designated \say{timeout} area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun is disables until their timeout ends (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at 3 m height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
 
 \noindent Two \say{game modes} have been designed: \say{Wave Mode} and \say{Objective Mode}. These are summarised in the following sections.
 \subsection{Wave Mode}
@@ -129,7 +129,7 @@ Since the levels increase in difficulty, there is little need to scale difficult
 
 \subsection{Context}
 
-The project decision was to develop a custom drone hardware design in preference to using an existing commercial platform. This was motivated by the need to co-design the airframe, electronics, sensing equipment, and game-specific payload around the requirements of an indoor multi-agent laser-tag system. Various options may offer good flight performance and easy maintenance, but are generally optimized for less intense activities and outdoor environments, and therefore provide limited flexibility for integrating custom sensing, weapon-tagged hardware, and protective structures. 
+The project decision was to develop a custom drone hardware design in preference to using an existing commercial platform. This was motivated by the need to co-design the airframe, electronics, sensing equipment, and game-specific payload around the requirements of an indoor multi-agent laser tag system. Various options may offer good flight performance and easy maintenance, but are generally optimized for less intense activities and outdoor environments, and therefore provide limited flexibility for integrating custom sensing, weapon-tagged hardware, and protective structures. 
 
 In addition, commercial drones tend to be quite closed off in terms of hardware and software access - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed more freedom to choose components, organize the internal layout, and include additional features necessary to the game-play.
 
@@ -1000,7 +1000,7 @@ The final CAD model was simplified for use in Unity. Given the full Fusion 360 a
 
 \subsection{Player Hardware Design}
 
-The player hardware shows how human players would interact with the multi-agent laser-tag system. These components were not developed in detail compared with the drone hardware, and therefore will only focus on representative and illustrative models, as shown in Fig. ~\ref{fig:Player Vest and Helmet}.
+The player hardware shows how human players would interact with the multi-agent laser tag system. These components were not developed in detail compared with the drone hardware, and therefore will only focus on representative and illustrative models, as shown in Fig. ~\ref{fig:Player Vest and Helmet}.
 
 \begin{figure}[htbp]
     \centering
@@ -2216,7 +2216,7 @@ The App uses Supabase as its backend platform, to access a PostgreSQL database. 
 \section{Risk Assessment and Safety Management}
 \label{risk-assessment}
 
-A quantitative risk assessment has been completed, and is shown in Table \ref{tab:risk-assessment}. Likelihood and Severity were both scored out of 5, and their product, \say{Risk Value} was analysed. The most significant initial risks were the contact between guns and players' eyes, and player collisions. After control measures, they are still the most significant residual risks, along with trips and falls. These risks are similar to those associated with traditional Laser-Tag and common sports, and are no more significant. This shows that the level of risk associated with playing the game is acceptable.
+A quantitative risk assessment has been completed, and is shown in Table \ref{tab:risk-assessment}. Likelihood and Severity were both scored out of 5, and their product, \say{Risk Value} was analysed. The most significant initial risks were the contact between guns and players' eyes, and player collisions. After control measures, they are still the most significant residual risks, along with trips and falls. These risks are similar to those associated with traditional laser tag and common sports, and are no more significant. This shows that the level of risk associated with playing the game is acceptable.
 
 
 \begin{table}[h]
@@ -2356,13 +2356,13 @@ According to the Department for Energy Security and Net Zero's Q2 2025 Energy Pr
 \noindent To keep the estimate conservative, to allow for fluctuations in electricity price and to allow for miscellaneous costs (employees boiling a kettle, for example), this value will be rounded up to a final electricity cost of £20k/year.
 
 \subsubsection{Warehouse Decoration and Maintenance}
-Year 0 will be used to prepare the warehouse for laser-tag. From Year 1 onward, this budget will only be spent on repairing wear-and-tear. Chaboun Construction (a London-based building services provider) estimates £50000 for a basic, 3-bedroom house renovation \cite{chabounconstructionMuchDoes}. However, much of this cost is related to the kitchen and the bathrooms, and in rewiring/replumbing. None of this applies to the warehouse, and (certainly to begin), non-premium materials will suffice. However, the warehouse is much larger than a 3-bedroom house. The price of Year 0 was therefore estimated at £30000. £10000 was selected as the budget for redecoration and maintenance. This is probably higher than strictly realistic, but accounts for the fact that a complete redecoration will be necessary every few years, and maintains a conservative estimate.
+Year 0 will be used to prepare the warehouse for laser tag. From Year 1 onward, this budget will only be spent on repairing wear-and-tear. Chaboun Construction (a London-based building services provider) estimates £50000 for a basic, 3-bedroom house renovation \cite{chabounconstructionMuchDoes}. However, much of this cost is related to the kitchen and the bathrooms, and in rewiring/replumbing. None of this applies to the warehouse, and (certainly to begin), non-premium materials will suffice. However, the warehouse is much larger than a 3-bedroom house. The price of Year 0 was therefore estimated at £30000. £10000 was selected as the budget for redecoration and maintenance. This is probably higher than strictly realistic, but accounts for the fact that a complete redecoration will be necessary every few years, and maintains a conservative estimate.
 
 \subsubsection{Hardware}
-The drones themselves cost a little under £500 to produce, of which 10 are required. Including other hardware (laser-guns, helmets and battery chargers), the model assumes the total cost is £10000. This is conservative estimate. The hardware will get slightly damaged during operation. Some components (such as blades) are likely to need replacing often, whereas some (such as laser-guns) are likely not to require frequent replacement. For simplicity, the model assumes that a full hardware replacement is required every 500 games, after a full set is fabricated in Year 0.
+The drones themselves cost a little under £500 to produce, of which 10 are required. Including other hardware (laser guns, helmets and battery chargers), the model assumes the total cost is £10000. This is conservative estimate. The hardware will get slightly damaged during operation. Some components (such as blades) are likely to need replacing often, whereas some (such as laser guns) are likely not to require frequent replacement. For simplicity, the model assumes that a full hardware replacement is required every 500 games, after a full set is fabricated in Year 0.
 
 \subsubsection{Revenue}
-The cost of hiring exclusive usage of a laser-tag facility is commonly around £15-£20 per person per hour. For example, LASERGAMING OXFORD charges £29.50 per person for two hours of exclusive use \cite{outdoorlaserLasergamingEXCLUSIVE}. A drone-based experience could afford to charge two to three times this fee, due to its novelty value. The game is designed to be played by three to eight people at once. The cost per game is therefore projected to be £200 per hour game per group, as a first estimate. The effect of a variation in game price is analysed in Section \ref{PriceAnal}.
+The cost of hiring exclusive usage of a laser tag facility is commonly around £15-£20 per person per hour. For example, LASERGAMING OXFORD charges £29.50 per person for two hours of exclusive use \cite{outdoorlaserLasergamingEXCLUSIVE}. A drone-based experience could afford to charge two to three times this fee, due to its novelty value. The game is designed to be played by three to eight people at once. The cost per game is therefore projected to be £200 per hour game per group, as a first estimate. The effect of a variation in game price is analysed in Section \ref{PriceAnal}.
 
 \subsubsection{Aggregate}
 Hence, the total Income \& Expenditure Table, not including tax or external financing (such as bank loans, equity etc.) is shown in Table \ref{tab:IE}.
@@ -2652,13 +2652,13 @@ This process was repeated for reference elasticity \(\varepsilon'\) between -0.5
 The discount rate was assumed to be constant with time, which is unrealistic. This was done for the sake of simplicity, as well as conservatism. Furthermore, the analysis was conducted by changing one or more variables and observing another, while all others were held constant.. By changing all variables at once to create a multi-dimensional surface, optima of \gls{npv} may be found that were missed in the above analysis, either by brute force or multi-dimensional gradient descent.
 
 \subsection{Conclusions}
-Under the conservative assumptions laid out above, the value of a theoretical business offering a drone-based Laser-Tag experience was found to be approximately £69,000. From the analyses carried out in Section \ref{anal}, it was found that:
+Under the conservative assumptions laid out above, the value of a theoretical business offering a drone-based laser tag experience was found to be approximately £69,000. From the analyses carried out in Section \ref{anal}, it was found that:
 \begin{itemize}
     \item £200 per game is the optimal price to charge per game (per group).
     \item The viability of the business depends greatly on early revenue and on small changes to custom, justifying a large advertising budget.
     \item £69,000 is likely an underestimate, since the value of the business will significantly increase with time as discount rate decreases. 
 \end{itemize}
-\noindent This suggests that is it possible to offer drone-based Laser-Tag as a commercially viable service.
+\noindent This suggests that is it possible to offer drone-based laser tag as a commercially viable service.
 
 \newpage
 
