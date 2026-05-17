@@ -126,6 +126,71 @@ Since the levels increase in difficulty, there is little need to scale difficult
 
 %%%%%%%%%----End of System Proposed Gameplay------%%%%%%%%%
 
+\section{Game Arena Map Design} \label{map}
+\fancyhead[C]{Thomas August}
+In our game, we will have humans and drones interacting with each other in close proximity within the same arena, and hence we need to design a map for this arena which is accessible to both players and drones and allows the two to safely interact with each other. We discussed this as a group, considering player enjoyment, game complexity, drone localisation, and drone movement, and concluded that a floor to ceiling maze design would be best.
+
+\subsection{Maze Design}
+For continuity throughout our project, we decided to design an exact map layout in order to use the same one for all parts of this project. Since we plan to hire a warehouse for the arena to be setup in, we want to utilise the space as much as possible, and hence we chose to use a grid graph with edge constraints for our map design. This means that all cells on the map are accessible and the walls are represented by the edges connecting the cells which can either be blocked if there is a wall or not blocked if there is no wall. We designed the map by adding borders to cells in an Excel document and used a python script to convert this to a csv file containing a 2 bit integer for each grid cell. The least and most significant bits of this integer indicate if there is a wall on the north and west sides of the cell respectively. The presence of south or east walls are found by checking the north or west walls of the corresponding adjacent cell to avoid repeating information and increasing the size of the stored map matrix. An example of a map and it's wall matrix are shown below.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=0.6\textwidth]{figs/3x3 map.png}
+        \caption{3x3 map}
+        \label{fig:3x3Map}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{figs/3x3 map matrix.png}
+        \caption{Wall matrix for the 3x3 map}
+        \label{fig:3x3WallMatrix}
+    \end{subfigure}
+    
+    \caption{An example 3x3 map, (\subref{fig:3x3Map}), and its corresponding wall matrix, (\subref{fig:3x3WallMatrix}).}
+    \label{fig:wallMatrixDemo}
+\end{figure}
+
+\newpage % REPLACE WITH IMAGE 
+
+\subsection{Map Separation}
+In order to make the maze a safe environment for the players and drones to occupy at the same time and interact with each other, we decided to implement a safety net above the players to separate the drones from the players and mitigate injuries due to a drone falling onto a player during a malfunction. This safety net will run throughout the whole maze and we will have the home base of the drones and players on opposite sides with half walls connecting the net to the floor or ceiling for the drone and player home bases respectively. This completely separates the drones from the players with a physical barrier at all times, greatly reducing the risk of a human-drone collision incident. This separation between players and drones also allows us to customise each section independently so that we can have obstacles, doorways and windows in the player area while keeping the drone area free of obstructions. This setup allows us to have a more interesting arena for the players while minimising the chance of collision for the drones.
+
+\subsection{Map Dimensions}
+After deciding on the general design and layout of the map, we next looked at the exact dimensions of the map. The dimensions we chose are, 2x2m grid squares, with the net and ceiling at 3m and 5m height respectively. The grid square dimensions allow sufficient space for the drones to move around without feeling too large for the players. The net height is high enough to be out of reach from players allowing them to move around freely as if it was not there, and the ceiling height allows sufficient space for the drones to move around without being too tall to fit in a small warehouse.
+
+\subsection{Net Material}
+We plan to use industrial safety nets to separate the players from the drones as these are tested and reliable. From our research we found a company called SafetyNet365 that make custom safety nets with many different variants, allowing us to choose the mesh size and material diameter among other parameters. We first considered their fall safety nets, which are designed for construction sites to catch workers if they fall, and we chose the largest mesh size of to minimise the area blocked by the net. This net we will call net A, \cite{testedSafetyNet}. As seen in Table \ref{} below, this has an energy absorption of 4.8kJ, but if we calculate the kinetic energy of our $4kg$ drone falling the maximum distance of $2m$ with maximum thrust downwards and a thrust to weight ratio of $2$, the kinetic energy at impact would be $235J$, assuming $g=9.81$. Therefore, the energy absorption of this net far exceeds our needs, so we next considered nets with thinner material diameter. The only nets on their website that have energy absorption listed have $5mm$ material diameter, so in order to consider the energy absorption of other nets we will have to estimate it ourselves. Since the specifications include the maximum tensile force $F$ and breaking elongation $\Delta$ for a single rope, we can calculate the maximum energy stored in each rope as $E=F\Delta L$, where $L$ is the mesh size, the distance between two rope connections. If we then assume that the energy absorption of the net is proportional to the maximum energy stored in a single thread, then we can estimate the energy absorption of an identical net with only the tensile strength, breaking elongation, and mesh size changed. Since this is already a bold assumption, we chose to keep the breaking elongation and mesh size the same and look for a net with thinner material diameter and therefore less maximum tensile force, while keeping all other parameters the same. This simplifies the proportion equation to $EA = k F$, where $EA$ is the energy absorption and $k$ is a constant. We then picked the net with the thinnest material diameter but all other parameters the same to get a lower bound of the energy absorption. This net we will call net B, \cite{thinSafetyNet}. Using the values in Table \ref{} below, we can estimate the energy absorption of net B, $EA_B$, from that of net A, $EA_A$, using the formula $EA_B = EA_A \cdot F_B/F_A$, giving $EA_B = 375J$. This is larger than the predicted maximum energy of the drone upon impact with a safety factor of 1.6, however this is not a very large safety factor, especially with the bold assumptions made above. Ideally we would like a safety factor of at least 3 to cover us from the assumptions made above so we increased the material diameter until this condition was met, giving us the final choice of net C, \cite{usedSafetyNet}. Calculating the energy absorption for this net gives $EA_C = EA_A \cdot F_C/F_A = 1200J$, which gives a safety factor of 5.1 which is well above the proposed minimum of 3.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Net specifications}
+    \begin{tabular}{|c| c c c|}
+        \hline
+        \textbf{} & \textbf{Net A} & \textbf{Net B} & \textbf{Net C}\\
+        \hline 
+        Material Diameter / mm & 5 & 1.5 & 0.5\\
+        \hline
+        Mesh Size / mm & 100x100 & 100x100 & 100x100 \\
+        \hline
+        Max Tensile Strength / N & 3200 & 250& 800 \\
+        \hline
+        Breaking Elongation / \%        & 15                & 15                & 15                \\
+        \hline
+        Energy Absorption / J           & 4800              & 375               & 1200              \\
+        \hline
+        Energy Absorption Safety Factor & 20.4              & 1.6               & 5.1               \\
+        \hline
+    \end{tabular}
+    \label{tab:net}
+\end{table}
+
+\newpage
+
+%%%%%%%%%----End of Map Design------%%%%%%%%%
+
 \section{Drone Hardware and Electronics Design} % Rickie
 \fancyhead[C]{Shing Hei Rickie Chan}
 
@@ -1024,69 +1089,6 @@ The helmet provides an upper-body hit detection area and improved IR coverage ar
 The weapon can be treated as a proposed handheld IR tagging device. Its purpose would be to allow players to tag drones with a trigger. The device would likely contain a compartment with all required electronics just as the other player hardware. As stated before, all tagging systems will be using \gls{ir} rather than actual lasers for safety and regulatory reasons.
 
 %%%%%%%%%----------------end of Hardware---------------%%%%%%%%%
-
-\newpage
-
-\section{Map} \label{map}
-\fancyhead[C]{Thomas August}
-In our game, we will have humans and drones interacting with each other in close proximity within the same arena, and hence we need to design a map for this arena which is accessible to both players and drones and allows the two to safely interact with each other. We discussed this as a group, considering player enjoyment, game complexity, drone localisation, and drone movement, and concluded that a floor to ceiling maze design would be best.
-
-\subsection{Maze Design}
-For continuity throughout our project, we decided to design an exact map layout in order to use the same one for all parts of this project. Since we plan to hire a warehouse for the arena to be setup in, we want to utilise the space as much as possible, and hence we chose to use a grid graph with edge constraints for our map design. This means that all cells on the map are accessible and the walls are represented by the edges connecting the cells which can either be blocked if there is a wall or not blocked if there is no wall. We designed the map by adding borders to cells in an Excel document and used a python script to convert this to a csv file containing a 2 bit integer for each grid cell. The least and most significant bits of this integer indicate if there is a wall on the north and west sides of the cell respectively. The presence of south or east walls are found by checking the north or west walls of the corresponding adjacent cell to avoid repeating information and increasing the size of the stored map matrix. An example of a map and it's wall matrix are shown below.
-
-\begin{figure}[htbp]
-    \centering
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=0.6\textwidth]{figs/3x3 map.png}
-        \caption{3x3 map}
-        \label{fig:3x3Map}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=0.8\textwidth]{figs/3x3 map matrix.png}
-        \caption{Wall matrix for the 3x3 map}
-        \label{fig:3x3WallMatrix}
-    \end{subfigure}
-    
-    \caption{An example 3x3 map, (\subref{fig:3x3Map}), and its corresponding wall matrix, (\subref{fig:3x3WallMatrix}).}
-    \label{fig:wallMatrixDemo}
-\end{figure}
-
-\newpage % REPLACE WITH IMAGE 
-
-\subsection{Map Separation}
-In order to make the maze a safe environment for the players and drones to occupy at the same time and interact with each other, we decided to implement a safety net above the players to separate the drones from the players and mitigate injuries due to a drone falling onto a player during a malfunction. This safety net will run throughout the whole maze and we will have the home base of the drones and players on opposite sides with half walls connecting the net to the floor or ceiling for the drone and player home bases respectively. This completely separates the drones from the players with a physical barrier at all times, greatly reducing the risk of a human-drone collision incident. This separation between players and drones also allows us to customise each section independently so that we can have obstacles, doorways and windows in the player area while keeping the drone area free of obstructions. This setup allows us to have a more interesting arena for the players while minimising the chance of collision for the drones.
-
-\subsection{Map Dimensions}
-After deciding on the general design and layout of the map, we next looked at the exact dimensions of the map. The dimensions we chose are, 2x2m grid squares, with the net and ceiling at 3m and 5m height respectively. The grid square dimensions allow sufficient space for the drones to move around without feeling too large for the players. The net height is high enough to be out of reach from players allowing them to move around freely as if it was not there, and the ceiling height allows sufficient space for the drones to move around without being too tall to fit in a small warehouse.
-
-\subsection{Net Material}
-We plan to use industrial safety nets to separate the players from the drones as these are tested and reliable. From our research we found a company called SafetyNet365 that make custom safety nets with many different variants, allowing us to choose the mesh size and material diameter among other parameters. We first considered their fall safety nets, which are designed for construction sites to catch workers if they fall, and we chose the largest mesh size of to minimise the area blocked by the net. This net we will call net A, \cite{testedSafetyNet}. As seen in Table \ref{} below, this has an energy absorption of 4.8kJ, but if we calculate the kinetic energy of our $4kg$ drone falling the maximum distance of $2m$ with maximum thrust downwards and a thrust to weight ratio of $2$, the kinetic energy at impact would be $235J$, assuming $g=9.81$. Therefore, the energy absorption of this net far exceeds our needs, so we next considered nets with thinner material diameter. The only nets on their website that have energy absorption listed have $5mm$ material diameter, so in order to consider the energy absorption of other nets we will have to estimate it ourselves. Since the specifications include the maximum tensile force $F$ and breaking elongation $\Delta$ for a single rope, we can calculate the maximum energy stored in each rope as $E=F\Delta L$, where $L$ is the mesh size, the distance between two rope connections. If we then assume that the energy absorption of the net is proportional to the maximum energy stored in a single thread, then we can estimate the energy absorption of an identical net with only the tensile strength, breaking elongation, and mesh size changed. Since this is already a bold assumption, we chose to keep the breaking elongation and mesh size the same and look for a net with thinner material diameter and therefore less maximum tensile force, while keeping all other parameters the same. This simplifies the proportion equation to $EA = k F$, where $EA$ is the energy absorption and $k$ is a constant. We then picked the net with the thinnest material diameter but all other parameters the same to get a lower bound of the energy absorption. This net we will call net B, \cite{thinSafetyNet}. Using the values in Table \ref{} below, we can estimate the energy absorption of net B, $EA_B$, from that of net A, $EA_A$, using the formula $EA_B = EA_A \cdot F_B/F_A$, giving $EA_B = 375J$. This is larger than the predicted maximum energy of the drone upon impact with a safety factor of 1.6, however this is not a very large safety factor, especially with the bold assumptions made above. Ideally we would like a safety factor of at least 3 to cover us from the assumptions made above so we increased the material diameter until this condition was met, giving us the final choice of net C, \cite{usedSafetyNet}. Calculating the energy absorption for this net gives $EA_C = EA_A \cdot F_C/F_A = 1200J$, which gives a safety factor of 5.1 which is well above the proposed minimum of 3.
-
-\begin{table}[htbp]
-    \centering
-    \caption{Net specifications}
-    \begin{tabular}{|c| c c c|}
-        \hline
-        \textbf{} & \textbf{Net A} & \textbf{Net B} & \textbf{Net C}\\
-        \hline 
-        Material Diameter / mm & 5 & 1.5 & 0.5\\
-        \hline
-        Mesh Size / mm & 100x100 & 100x100 & 100x100 \\
-        \hline
-        Max Tensile Strength / N & 3200 & 250& 800 \\
-        \hline
-        Breaking Elongation / \%        & 15                & 15                & 15                \\
-        \hline
-        Energy Absorption / J           & 4800              & 375               & 1200              \\
-        \hline
-        Energy Absorption Safety Factor & 20.4              & 1.6               & 5.1               \\
-        \hline
-    \end{tabular}
-    \label{tab:net}
-\end{table}
 
 \newpage
 
