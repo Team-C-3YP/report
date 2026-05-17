@@ -85,22 +85,23 @@ The UK leisure market is currently defined by a distinct consumer trend: a fruga
 
 Since its introduction in 1984, the core mechanics of laser tag have remained largely unchanged~\cite{LaserTagHistory}. An estimated 76 million games are played every year~\cite{trutneeLaserTag}. This suggests that innovation within the laser tag industry has significant demand and commercial potential.
 
-To meet this demand, we present a novel laser tag game where human players cooperate to compete against a team of autonomous, multi-agent drones. From a user perspective, the system aims to provide an engaging, safe, and highly interactive experience defined by specific gameplay modes and dynamic objectives (Section 2). To complete these objectives, players navigate through a purpose-built indoor maze constructed from 5-metre high walls (Section 4). The project is governed by strict physical and safety boundaries to ensure a low-risk environment; the arena features a dividing net that separates the drones flying overhead from the human players below. Designed with a 1200J energy absorption capacity, this industrial netting provides a safety factor of 5.1 against a 4kg drone flying at full thrust downwards. As a result, this mitigates the risk of human-drone collisions without diminishing game immersion.
+To meet this demand, we present a novel laser tag game where human players cooperate to compete against a team of autonomous, multi-agent drones. From a user perspective, the system aims to provide an engaging, safe, and highly interactive experience defined by specific gameplay modes and dynamic objectives (Section \ref{gameplay}). To complete these objectives, players navigate through a purpose-built indoor maze constructed from 5-metre high walls (Section \ref{map}). The project is governed by strict physical and safety boundaries to ensure a low-risk environment; the arena features a dividing net that separates the drones flying overhead from the human players below. Designed with a 1200J energy absorption capacity, this industrial netting provides a safety factor of 5.1 against a 4kg drone flying at full thrust downwards. As a result, this mitigates the risk of human-drone collisions without diminishing game immersion.
 
-From a drone perspective, the primary goal is to achieve autonomy and coordinated teamwork within a confined environment. Since off-the-shelf platforms lack the necessary flexibility, payload integration, and component protection for such close-proximity indoor operations, a custom modular quadrotor airframe was developed (Section 3). The ABS 3D-printed chassis features integrated blade guards to ensure operational continuity during minor wall collisions. To satisfy a 2:1 thrust-to-weight ratio for a 4kg maximum takeoff mass, the propulsion system utilises BrotherHobby Avenger 2806.5 1300KV brushless motors paired with 8x4x3 polycarbonate propellers, driven by a 4S 5000mAh Lithium Polymer battery to sustain approximately 10 minutes of active flight endurance. Dedicated player hardware, including sensor-equipped helmets and vests, then integrate into this ecosystem (Section 5).
+From a drone perspective, the primary goal is to achieve autonomy and coordinated teamwork within a confined environment. Since off-the-shelf platforms lack the necessary flexibility, payload integration, and component protection for such close-proximity indoor operations, a custom modular quadrotor airframe was developed (Section \ref{hardware}). The ABS 3D-printed chassis features integrated blade guards to ensure operational continuity during minor wall collisions. To satisfy a 2:1 thrust-to-weight ratio for a 4kg maximum takeoff mass, the propulsion system utilises BrotherHobby Avenger 2806.5 1300KV brushless motors paired with 8x4x3 polycarbonate propellers, driven by a 4S 5000mAh Lithium Polymer battery to sustain approximately 10 minutes of active flight endurance. Dedicated player hardware, including sensor-equipped helmets and vests, then integrate into this ecosystem (Section \ref{player_hardware}).
 
-For multi-agent coordination, the system relies on an IEEE 802.11ac Wi-Fi communications framework (Section 9) linking the onboard drone hardware to a central server. The server manages the high-level game logic, evaluating the global state to dynamically transition individual drones through specific operational modes such as Search, Track, Shoot, and Movement (Section 10). 
+For multi-agent coordination, the system relies on an IEEE 802.11ac Wi-Fi communications framework (Section \ref{network}) linking the onboard drone hardware to a central server. The server manages the high-level game logic, evaluating the global state to dynamically transition individual drones through specific operational modes such as Search, Track, Shoot, and Movement (Section \ref{high level control}). 
 
-To inform these high-level decisions, each drone is equipped with an OAK-D Lite passive stereoscopic camera mounted on a custom 3-axis tracking gimbal, which kinematically decouples the camera from the drone’s flight attitude to maintain continuous target lock. Visual data is ingested by a YOLOv8-nano (YOLOv8n) convolutional neural network (Section 11). To overcome the domain gap caused by the arena's low-light conditions and frequent target occlusions, this model was trained on a synthetic dataset created within Unity. Because active visual sensors would interfere with the game's \gls{ir} mechanics, and monocular depth estimation fails when a human target alters their posture, target depth is extracted passively via stereoscopic horizontal pixel disparity. This raw spatial data is smoothed using a Linear Kalman Filter, operating on a Discrete White Noise Acceleration (DWNA) model, to provide continuous, predictive 3D state estimations of the players. 
+To inform these high-level decisions, each drone is equipped with an OAK-D Lite passive stereoscopic camera mounted on a custom 3-axis tracking gimbal, which kinematically decouples the camera from the drone’s flight attitude to maintain continuous target lock. Visual data is ingested by a YOLOv8-nano (YOLOv8n) convolutional neural network (Section \ref{visual_perception}). To overcome the domain gap caused by the arena's low-light conditions and frequent target occlusions, this model was trained on a synthetic dataset created within Unity. Because active visual sensors would interfere with the game's \gls{ir} mechanics, and monocular depth estimation fails when a human target alters their posture, target depth is extracted passively via stereoscopic horizontal pixel disparity. This raw spatial data is smoothed using a Linear Kalman Filter, operating on a Discrete White Noise Acceleration (DWNA) model, to provide continuous, predictive 3D state estimations of the players. 
 
-These estimated player coordinates update the central server's global state, which in turn dictates the high-level navigational objectives assigned to each drone. Search mode utilises a hybrid Breadth-First Search (BFS) region-allocation and lawnmower trajectory algorithm to systematically scan the arena (Section 12). When rapid transit is required, flight control is handed over to a Reinforcement Learning (RL) policy trained offline in the Isaac Lab physics simulator, outputting body thrust and moment commands (Section 13). Furthermore, an Artificial Potential Field (APF) controller handles real-time collision avoidance by computing repulsive gradients from walls and other agents, converting them into evasive manoeuvres (Section 14).
+These estimated player coordinates update the central server's global state, which in turn dictates the high-level navigational objectives assigned to each drone. Search mode utilises a hybrid Breadth-First Search (BFS) region-allocation and lawnmower trajectory algorithm to systematically scan the arena (Section \ref{search mode}). When rapid transit is required, flight control is handed over to a Reinforcement Learning (RL) policy trained offline in the Isaac Lab physics simulator, outputting body thrust and moment commands (Section \ref{movement mode}). Furthermore, an Artificial Potential Field (APF) controller handles real-time collision avoidance by computing repulsive gradients from walls and other agents, converting them into evasive manoeuvres (Section \ref{collision avoidance mode}).
 
-In addition to the technical deployment, user retention is driven by a companion mobile application that tracks performance metrics, leaderboards, and achievements to foster community engagement (Section 16). Finally, the technical development is supported by an evaluation of broader engineering considerations. These are validated by a quantitative risk assessment (Section 17) and a financial model (Section 18), which confirms the commercial feasibility of the enterprise by projecting a Net Present Value of £68,669 at an optimal price of £200 per game.
+In addition to the technical deployment, user retention is driven by a companion mobile application that tracks performance metrics, leaderboards, and achievements to foster community engagement (Section \ref{app}). Finally, the technical development is supported by an evaluation of broader engineering considerations. These are validated by a quantitative risk assessment (Section \ref{risk-assessment}) and a financial model (Section \ref{commercialisation}), which confirms the commercial feasibility of the enterprise by projecting a Net Present Value of £68,669 at an optimal price of £200 per game.
 % Technology Strategy, Project Financing, and Health and Safety
 
 \newpage
 
 \section{Proposed Gameplay for Drone-Based Laser Tag} % Ritchie
+\label{gameplay}
 \fancyhead[C]{Richard Usherwood}
 \begin{figure}[htbp]
     \centering
@@ -127,6 +128,7 @@ Since the levels increase in difficulty, there is little need to scale difficult
 %%%%%%%%%----End of System Proposed Gameplay------%%%%%%%%%
 
 \section{Drone Hardware and Electronics Design} % Rickie
+\label{hardware}
 \fancyhead[C]{Shing Hei Rickie Chan}
 
 \subsection{Context}
@@ -983,6 +985,7 @@ The final design of the drone hardware is acceptable within the scope of the pro
 The final CAD model was simplified for use in Unity. Given the full Fusion 360 assembly contained many unnecessary mechanical detail for real-time simulation, a low-poly version was created in Blender and Imported into Unity as a game asset. The simplified model preserved the main visible features such as the drone body and propellers, while small details such as bolt holes and linkages were removed. These were deemed unnecessary as Unity's built-in collision mechanisms and physics engine mainly uses approximated cuboid or spherical boundaries defined by the developer, and developing a custom solid-boundary model would require additional setup time without adding much value.
 
 \subsection{Player Hardware Design}
+\label{player_hardware}
 
 The player hardware shows how human players would interact with the multi-agent laser tag system. These components were not developed in detail compared with the drone hardware, and therefore will only focus on representative and illustrative models, as shown in Fig. ~\ref{fig:Player Vest and Helmet}.
 
@@ -1222,6 +1225,7 @@ To use these equations, we need to define all parameters in the model, Eq. \ref{
 \newpage
 
 \section{Network and Communications}
+\label{network}
 \fancyhead[C]{Richard Usherwood}
 \subsection{Overview}
 % Define N&C?
@@ -1306,6 +1310,7 @@ The flow charts shown in Fig. \ref{fig:FlowSearch}, \ref{fig:FlowTrack} and \ref
 \newpage
 \fancyhead[C]{Rishabh Luthra}
 \section{Visual Perception and Player Tracking} % Rishabh
+\label{visual_perception}
 \subsection{Context}
 
 The fundamental objective of the autonomous multiagent system is to actively compete against human players in a dynamic laser environment. To play the game effectively, the drones require a reliable way to identify and track opponents whilst navigating through the maze environment. While pathfinding algorithms can navigate the fixed geometry of a maze, human players represent highly dynamic variables. Therefore, a real-time perception system is required to continuously locate the targets, maintain visual lock, and output kinematic commands to the drone's flight controller and gimbal.
@@ -1927,6 +1932,7 @@ Now that we have planned a trajectory for each drone, the drones need a method o
 \newpage
 
 \section{Movement Mode} % Tommy
+\label{movement mode}
 \fancyhead[C]{Thomas August}
 
 All of our play modes are team based meaning we need a method of coordinating the drones to work as a team against the human players. In order to make the game fair for the players we decided not to give the central server full control over every aspect of the drone team. For example, if a drone has detected a player's location, we have not allowed the central server to pass this information to all other drones meaning a player should not be faced with many drones against them at one time. To provide a compromise between full information sharing and no information sharing, we decided to introduce a protocol where a drone can call for backup if multiple players are detected within its view. The central server will then find the closest unoccupied drone and put it into this movement mode, in which it is given a target location where the other drone needs backup and the objective is to get there as quickly as possible. The information provided here is to give some context to why we produced a movement mode and what it's purpose is; further information regarding the interaction of the modes and the call for backup protocol can be found in Section \ref{high level control}.
@@ -2246,6 +2252,7 @@ A quantitative risk assessment has been completed, and is shown in Table \ref{ta
 
 \newpage
 \section{Commercialisation and Financial Modelling}
+\label{commercialisation}
 \subsection{Setup}
 A discounted cash flow model was created. The model was used to track cash flow, apply a discount rate to future revenue, and to calculate the \gls{npv} of a company providing the game as a commercial enterprise.
 \subsection{Numerical Estimations} \label{num-est}
