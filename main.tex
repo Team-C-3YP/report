@@ -119,8 +119,7 @@ The project decision was to develop a custom drone hardware design in preference
 
 In addition, commercial drones tend to be quite closed off in terms of hardware and software access - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed more freedom to choose components, organize the internal layout, and include additional features necessary to the game-play.
 
-\subsection{Literature Review}
-%DO THIS PART
+%a small Literature review
 
 \subsection{Design Objectives and Constraints}
 \subsubsection{Operational Requirements}
@@ -159,6 +158,8 @@ The project was carried out mainly through simulation; the hardware design was d
 
 \subsubsection{Summarized Table for Design Criteria}
 
+In summary, the key design criteria are consolidated in Table~\ref{tab:starter_design_criteria}.
+
 \begin{table}[htbp]
 \centering
 \caption{Summarized starter design criteria for the drone platform.}
@@ -169,24 +170,37 @@ The project was carried out mainly through simulation; the hardware design was d
 \textbf{Design Parameter} & \textbf{Target / Requirement} \\
 \midrule
 Operating environment & Indoor arena with close proximity to players, walls, and obstacles \\
+\hline
 Operational role & Stable and maneuverable aerial platform for indoor game-play \\
+\hline
 Configuration & Compact quadrotor platform \\
+\hline
 Maximum mass & $\leq 4.0$ kg \\
+\hline
 Maximum width & $\leq 600$ mm \\
+\hline
 Target cost per unit & \pounds300--\pounds500 \\
+\hline
 Target game duration & 45 min \\
+\hline
 Target drone endurance & 8-10 min before recharge \\
+\hline
 Visibility requirement & Large enough to be clearly visible for indoor game-play \\
+\hline
 Internal space requirement & Sufficient internal volume for onboard electronics \\
+\hline
 Safety requirement & Safe indoor operation, protected moving parts, and stable landing capability \\
+\hline
 Maintainability requirement & Easy maintenance with cheap replaceable damaged parts \\
+\hline
 Structural requirement & Airframe must support normal flight loads and minor impact conditions \\
+\hline
 Game-play requirement & Agile enough to act as a believable and challenging in-game opponent \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\subsection{Electronics Design and Component Selection}
+\subsection{UAV Electronics Design}
 \label{sec:electronics_design}
 
 \subsubsection{Propulsion System}
@@ -206,7 +220,7 @@ The Avenger 2806.5 was selected because it provided a strong thrust margin witho
 
 \begin{table}[htbp]
 \centering
-\caption{Motor specifications. Data adapted from the BrotherHobby Avenger 2806.5 manufacturer specification \cite{brotherhobby_avenger28065}.}
+\caption{Motor specifications. \footnotemark}
 \label{tab:motor_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -225,6 +239,8 @@ Target thrust per motor & $\approx 19.6$ N & 4 motors provides approximately 78.
 \end{tabularx}
 \end{table}
 
+\footnotetext{Data adapted from the BrotherHobby Avenger 2806.5 manufacturer specification \cite{brotherhobby_avenger28065}}
+
 \paragraph{Propeller Choice}
 
 The propeller was selected based on geometry as it directly affects the thrust, clearance, and overall rotor-arm design. The propeller was required to provide enough lift when paired with the selected motor, while remaining size-able for an indoor drone platform. 
@@ -235,7 +251,7 @@ The 8x4x3 propeller geometry was chosen as this motor-prop configuration matched
 
 \begin{table}[htbp]
 \centering
-\caption{8$\times$4$\times$3 propeller specifications. Data from an HQProp 8$\times$4$\times$3 propeller dataset \cite{hqprop_8x4x3}.}
+\caption{8$\times$4$\times$3 propeller specifications. \footnotemark}
 \label{tab:propeller_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -253,44 +269,42 @@ Rotation requirement & 2 CW + 2 CCW & Required for balanced quadrotor operation 
 \end{tabularx}
 \end{table}
 
+\footnotetext{Data from an HQProp 8$\times$4$\times$3 propeller dataset\cite{hqprop_8x4x3}}
+
 \paragraph{Validity Check for Motor-Prop Configuration}
 
 To check whether the assumed thrust of the motor-propeller configuration was physically reasonable, a static propeller thrust coefficient estimate was used. For a propeller operating in static conditions, the thrust can be approximated using:
 
-\[
-T = C_T \rho n^2 D^4
-\]
+
+
+\begin{equation}
+T = C_T \rho n^2 D^4    
+\end{equation}
+
 
 where \(T\) is thrust, \(C_T\) is thrust coefficient, \(\rho\) is air density, \(n\) is rotational speed (revolutions per second), \(D\) is propeller diameter. \cite{mit_propeller_performance}.
 
-From the selected propeller geometry, the diameter was
-\[
-D = 8~\text{in} = 0.2032~\text{m}
-\]
+From the selected propeller geometry, the diameter was:
+\[D = 8~\text{in} =0.2032~\text{m}\]
+The standard sea-level air density was assumed as:
+\[\rho = 1.225~\text{kg m}^{-3}.\]
 
-The standard sea-level air density was assumed as
-\[
-\rho = 1.225~\text{kg m}^{-3}.
-\]
+The target thrust per motor was taken as previously calculated:
+\[T = 19.6~\text{N},\]
 
-The target thrust per motor was taken as previously calculated
-\[
-T = 19.6~\text{N},
-\]
+Rearranging the equations for n gives:
 
-Rearranging the equations for n gives
-
-\[
+\begin{equation}
 n = \sqrt{\frac{T}{C_T \rho D^4}}.
-\]
+\end{equation}
 
 The ideal no-load speed of the motor can be estimated from the motor \(K_V\) rating:
 
-\[
+\begin{equation}
 RPM_0= K_V V
-\]
+\end{equation}
 
-For the selected 1300KV motor on a 4S LiPo supply,
+For the selected 1300KV motor on a 4S LiPo supply:
 
 \[
 RPM_0 = 1300 \times 14.8 = 19240~\text{rpm}.
@@ -298,9 +312,10 @@ RPM_0 = 1300 \times 14.8 = 19240~\text{rpm}.
 
 However, this is an ideal case. In practice, the motor will not reach this speed when driving the propeller as the propeller applies aerodynamic load. A factor is included to account for this:
 
-\[
+\begin{equation}
 RPM_{\text{loaded}} = \eta_{\text{rpm}} RPM_0,
-\]
+\end{equation}
+
 
 where \(\eta_{\text{rpm}}\) represents the fraction of no-load speed achieved under propeller load. As a quick estimate, factors between 0.75 and 0.90 (in increments of 0.05) were considered.
 
@@ -341,7 +356,7 @@ As there was no given exact thrust coefficients,therefore we tested using 0.100,
 \end{tabular}
 \end{table}
 
-From the table 4 and 5, the target thrust of approximately \(19.6~\text{N}\) per motor is not achieved under the most conservative assumptions(where \(C_T = 0.100\)). However, it becomes achievable for higher thrust coefficient values. For \(C_T = 0.125\), the combination reaches approximately \(19.4~\text{N}\) at 85\% of the no-load speed. For \(C_T = 0.150\), the target exceeded at around 80\% no load speed.
+From the Tables ~\ref{tab:loaded_rpm_factors} and~\ref{tab:motor_prop_validity_check}, the target thrust of approximately \(19.6~\text{N}\) per motor is not achieved under the most conservative assumptions(where \(C_T = 0.100\)). However, it becomes achievable for higher thrust coefficient values. For \(C_T = 0.125\), the combination reaches approximately \(19.4~\text{N}\) at 85\% of the no-load speed. For \(C_T = 0.150\), the target exceeded at around 80\% no load speed.
 
 This suggests that the target max thrust of \(19.6~\text{N}\) is theoretically plausible for this motor-propeller configuration on a 4S supply - but only when the real thrust coefficient is closer to mid-range values and the motor can maintain between 80--85\% of its no-load speed under load. This calculation does not experimentally validate the propulsion system as the real thrust would depend on a number of other factors such as ESC behavior and battery voltage sag. 
 
@@ -353,7 +368,7 @@ The ESC is used to control the speed of each motor and provide fast response to 
 
 \begin{table}[htbp]
 \centering
-\caption{ESC specifications. Data from available supplier specifications \cite{littlebee_spring_40a}.}
+\caption{ESC specifications. \footnotemark}
 \label{tab:esc_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -370,7 +385,9 @@ Supported protocols & OneShot, MultiShot, DShot & Suitable for fast multirotor t
 \end{tabularx}
 \end{table}
 
-As shown in the table 6, the available LittleBee Spring 40A specifications list \(2-6~\text{S}\) LiPo input, \(40~\text{A}\) continuous current, with compact dimensions.
+\footnotetext{Data from available supplier specifications \cite{littlebee_spring_40a}}
+
+As shown in the Table~\ref{tab:esc_specifications}, the available LittleBee Spring 40A specifications list \(2-6~\text{S}\) LiPo input, \(40~\text{A}\) continuous current, with compact dimensions.
 
 %%%%%Figure: LittleBee Spring 40A ESC selected for motor speed control. Its compact size and 2–6S input range made it suitable for integration with the quadrotor propulsion system.
 
@@ -386,7 +403,7 @@ The power system must be designed to supply both the high-current propulsion sys
 The battery selection was driven by the propulsion system as it was expected the motors and ESCs would consume significantly more power than other onboard electronics. The battery had to provide a suitable voltage and discharge capability for the hardware, while also remaining practical in terms of mass, size and internal packaging. A 3S LiPo option was initially considered as earlier propulsion combinations included 3S-compatible specifications. However, once the final motor-propeller configuration was selected, the 3S option was disregarded for a more suitable 4S 5000 mAH LiPo battery. This provided nominal voltage for \(14.8~\text{V}\), matching the motor and ESC requirements more appropriately, while maintaining a target capacity for approximately 10 minutes of drone operation before recharge.
 \begin{table}[htbp]
 \centering
-\caption{4S 5000 mAh LiPo Battery specifications. Data adapted from commercially viable sources \cite{tattu_bashing_4s_5000mah, gensace_4s_5000mah}.}
+\caption{4S 5000 mAh LiPo Battery specifications. \footnotemark}
 \label{tab:battery_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -404,6 +421,7 @@ Battery count & 1 pack per drone & Simplifies packaging and recharge \\
 \end{tabularx}
 \end{table}
 
+\footnotetext{Data adapted from commercially viable sources\cite{tattu_bashing_4s_5000mah, gensace_4s_5000mah}}
 This battery was selected as a representative design choice as it matched the voltage requirements of the final propulsion system. The \(14.8~\text{V}\) is suitable for the selected ESC and motor configuration while the \(5000~\text{mAh}\) also provided the target \(10~\text{minutes}\) of drone operation before recharge. The mass range of \(390-589~\text{g}\) was also acceptable, leaving more than enough mass capacity for other components of the drone. 
 
 \paragraph{Proving Endurance}
@@ -411,9 +429,11 @@ This battery was selected as a representative design choice as it matched the vo
 To prove the 5000mAH capacity can theoretically last around 10 minutes of flight time before recharge, we may use the representative data.
 
 For a 4S 5000 mAh LiPo battery, the nominal voltage is \(14.8~\text{V}\) and the capacity is \(5~\text{Ah}\). The nominal battery energy is therefore
-\[
-E=VC = 14.8 \times 5 = 74~\text{Wh}
-\]
+
+\begin{equation}
+E=VC
+\end{equation}
+\[E= 14.8 \times 5 = 74~\text{Wh}\]
 
 In practice, it is not recommended to fully discharge a LiPo battery as doing so may reduce its lifespan. We may assume that 80\% of the nominal capacity is usable, the available energy becomes
 \[
@@ -426,17 +446,17 @@ t = \frac{10}{60} = 0.167~\text{h}
 \]
 
 The maximum average power draw is therefore
-\[
+\begin{equation}
 P_{\text{avg,max}} = \frac{E_{\text{usable}}}{t}
-\]
+\end{equation}
 \[
 P_{\text{avg,max}} = \frac{59.2}{0.167} \approx 355~\text{W}.
 \]
 
 The corresponding current draw is
-\[
+\begin{equation}
 I_{\text{avg}} = \frac{P_{\text{avg,max}}}{V}
-\]
+\end{equation}
 \[
 I_{\text{avg}} = \frac{355}{14.8} \approx 24~\text{A}.
 \]
@@ -463,7 +483,7 @@ We require a high-current PDB, which was chosen to be the Holybro Power Distribu
 
 \begin{table}[htbp]
 \centering
-\caption{PDB specifications. Data from the Holybro PDB 300A specification \cite{holybro_pdb_300a}.}
+\caption{PDB specifications.\footnotemark}
 \label{tab:pdb_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -480,6 +500,8 @@ Mounting holes & M3 mounting holes & Main attachment to drone hull \\
 \end{tabularx}
 \end{table}
 
+\footnotetext{Data from the Holybro PDB 300A specification \cite{holybro_pdb_300a}}
+
 It should be noted that the PDB is responsible for distributing the main battery power. Other components such as the onboard computer, sensors and other electronics may require regulated lower-voltage supplies. Direct connection may cause damage to the components.
 
 \paragraph{Voltage Regulation}
@@ -488,7 +510,7 @@ Voltage regulation is vital for ensuring the integrity of more sensitive electro
 
 \begin{table}[htbp]
 \centering
-\caption{ 5 V step-down regulator specifications. Data from Pololu D24V90F5 manufacturer  \cite{pololu_d24v90f5}.}
+\caption{5 V step-down regulator specifications.\footnotemark }
 \label{tab:voltage_regulator_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -506,29 +528,13 @@ Weight & Approximately 4.8 g & Low mass contribution to the overall drone design
 \end{tabularx}
 \end{table}
 
+\footnotetext{Data from Pololu D24V90F5 manufacturer  \cite{pololu_d24v90f5}}
+
 Pololu D24V90F5 serves as a suitable regulator as it can step the \(14.8~\text{V}\) 4S battery Voltage down to a stable \(5~\text{V}\) voltage. It has an input range of \(5-38~\text{V}\) which is compatible with the main battery while the current output is suitable for the Raspberry Pi, sensors, and other electronics.
 
 \paragraph{Power-system Summary}
 
-The final power system will be divided into two main sections: A high-current propulsion path and a low-voltage electronics path. The propulsion path directly draws power from the battery into the ESCs and motors, while the electronics path step-down the \(14.8~\text{V}\) Battery voltage to \(5~\text{V}\) for onboard computer and other voltage sensitive electronics. 
-
-\begin{table}[htbp]
-\centering
-\caption{Summary of the drone power-system architecture.}
-\label{tab:power_system_summary}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\textwidth}{@{} l l X @{}}
-\toprule
-\textbf{Power System Component} & \textbf{Selected Choice} & \textbf{Main Role} \\
-\midrule
-Main battery & 4S 5000 mAh LiPo & Supplies the entire electronic system \\
-High-current distribution & Holybro PDB 300A & Distributes battery power to the four ESCs \\
-Motor control & 4 $\times$ LittleBee Spring 40A ESCs & Controls power delivery to each brush-less motor \\
-Propulsion loads & 4 $\times$ brush-less motors & Generate lift and maneuvering thrust \\
-Voltage regulation & Pololu D24V90F5 5 V regulator & Steps battery voltage down to a regulated 5 V \\
-\bottomrule
-\end{tabularx}
-\end{table}
+The final power system is as shown in Fig.~\ref{fig:Power_Systems}, It is divided into two main sections: A high-current propulsion path and a low-voltage electronics path. The propulsion path directly draws power from the battery into the ESCs and motors, while the electronics path step-down the \(14.8~\text{V}\) Battery voltage to \(5~\text{V}\) for onboard computer and other voltage sensitive electronics. 
 
 \begin{figure}[htbp]
     \centering
@@ -829,7 +835,7 @@ Mechanically, the gimbal is mounted through the central opening in the bottom hu
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.5\textwidth]{Hardware/Blueprint for Gimbal (without motor and servos).png}
-    \caption{Gimbal Design (without motor and servos}
+    \caption{Gimbal Design (without motor and servos)}
     \label{fig:Gimbal}
 \end{figure}
 
@@ -2463,15 +2469,10 @@ Under the conservative assumptions laid out above, the value of a theoretical bu
     \item £69,000 is likely an underestimate, since the value of the business will significantly increase with time as discount rate decreases. 
 \end{itemize}
 \noindent This suggests that is it possible to offer drone-based Laser-Tag as a commercially viable service.
+
 \newpage
 
-
-% Appendix
-% Essential content that interrupts the flow of the document can be placed here, e.g. technical drawings, detailed lists of equations used, etc.
-\addcontentsline{toc}{section}{Appendix}
-
-%%%%%%%%%%%%%%%%-----------End of Commercialisation-------------%%%%%%%%%%%%%%%
-\newpage
+%%%%%%%%%%%%%%%%-----------End of Commercialisation----%%%%%%%%%%%%%%%
 
 \section{Sustainability} %Rickie
 \fancyhead[C]{Shing Hei Rickie Chan}
@@ -2493,11 +2494,12 @@ The economic impact is considered through the commercial model, which tests whet
 \paragraph{Limitations}
 
 The system should not be considered fully sustainable. Issues such as waste and replacement of electronic components, general consumptions of arena management, and usage of non-biodegradable ABS material mean that the system cannot be considered impact-free.
-
+\newpage
 %%%%%%%%%%%%%%%----------End of Sustainability--------------%%%%%%%%%%%%%%%
 
-\newpage
-
+% Appendix
+% Essential content that interrupts the flow of the document can be placed here, e.g. technical drawings, detailed lists of equations used, etc.
+\addcontentsline{toc}{section}{Appendix}
 \section*{Appendix}
 \fancyhead[C]{Group}
 
