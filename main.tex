@@ -1092,7 +1092,7 @@ We plan to use industrial safety nets to separate the players from the drones as
  \section{Drone State Estimation} \label{drone state estimation} % Tommy
 \fancyhead[C]{Thomas August} % 
 
-Our drones fly autonomously and hence need to know their state, including pose, velocity, angular velocity and acceleration, in order to control their movement through the map. The output rate of this state estimator should be at least 50Hz in order to be compatible with all of our control algorithms.
+Our drones fly autonomously and hence need to know their state, including position, $\mathbf{p}$, orientation, $\mathbf{q}$, velocity, $\mathbf{v}$, angular velocity, $\boldsymbol{\omega}$, and acceleration, $\mathbf{a}$, in order to control their movement through the map. The output rate of this state estimator should be at least 50Hz in order to be compatible with all of our control algorithms.
 
 \subsection{Chosen Method}
 In order to determine the best method for estimating the state of our drones, we first did a literature review to determine what the common methods were. From this research, we found 3 main methods: offboard optical motion capture \cite{liu2018viconmavlinksoftwaretoolindoor}, cameras with april tags, and onboard sensor fusion with a state estimator. 
@@ -1104,7 +1104,7 @@ In order to determine the best method for estimating the state of our drones, we
 \paragraph{Onboard Sensor Fusion} This method uses a combination of onboard sensors to estimate and track the drone's state within the arena. Due to this method being fully onboard, it will have low latency and no special arena setup, and hence is the simplest of these three options which is why we chose this method. This method is very broad so we next needed to choose the sensors and state estimator.
 
 \subsection{Sensor Array}
-For the sensors, we chose to use an Inertial Measurement Unit (IMU) with Time of Flight (ToF) sensors. We chose this sensor array because the IMU provides accurate acceleration data which can be used to infer the motion of the drone and the ToF sensors provide map geometry data to correct for drift in the IMU estimations. In this situation, it is common to use an IMU, however, there are many different sensors that can provide the map geometry data. We also considered using cameras and LiDAR instead of the ToF sensors, however, as mentioned in the previous paragraph, the cameras will likely have poor performance in our dark lighting conditions, and LiDAR sensors would be heavy and bulky, so we chose ToF sensors as a compromise between weight and accuracy. 
+For the sensors, we chose to use an Inertial Measurement Unit (IMU) with Time of Flight (ToF) sensors. We chose these because the IMU provides accurate acceleration data which can be used to infer the motion of the drone and the ToF sensors provide map geometry data to correct for drift in the IMU estimations. In this situation, it is common to use an IMU, however, there are many different sensors that can provide the map geometry data. We also considered using cameras and LiDAR instead of the ToF sensors, however, as mentioned in the previous paragraph, the cameras will likely have poor performance in our dark lighting conditions, and LiDAR sensors would be heavy and bulky, so we chose ToF sensors as a compromise between weight and accuracy. 
 
 \subsection{Sensor Measurements}
 \paragraph{IMU} Our chosen IMU, the SparkFun ICM-20948 IMU \cite{sparkfun_icm20948}, includes a 3-axis accelerometer, a 3-axis gyroscope, and a 3-axis magnetometer. Due to our arena being in a warehouse, there will likely be significant distortion of the earths magnetic field, and hence we will use the IMU in mode 6, Accel + Gyro Mode, which saves power by turning the magnetometer off. This means that our IMU will output 3-axis angular velocity from the gyroscope, and 3-axis acceleration from the accelerometer. Additionally, the gyroscope and accelerometer each have their own operational modes, and we have chosen to run them both in low noise mode with the digital low pass filter activated (GYRO\_FCHOICE=1 and ACCEL\_FCHOICE=1). We will tune configuration of the digital low pass filter cut-off frequencies (GYRO\_DLPFCFG and ACCEL\_DLPFCFG) experimentally to achieve the optimal noise and response trade-off. These modes both have a base Data Output Rate (DOR) of 1.125kHz, however, to reduce computational load, we set the sample rate division parameters to 1 (GYRO\_SMPLRT\_DIV=1 and ACCEL\_SMPLRT\_DIV=1) in order to reduce the DOR to 562.5Hz using Eq.\ref{equ:EstSMPLRT_DIV} below. This allows us to reduce the computational load while still keeping the data rate much higher than our state estimation output rate of 50Hz. 
@@ -1116,47 +1116,43 @@ For the sensors, we chose to use an Inertial Measurement Unit (IMU) with Time of
 \paragraph{ToF}
 Our drone is equipped with two different types of ToF sensors. As mentioned in Section \ref{sensorArray}, we will have a single VL53L1X ToF sensor \cite{st_vl53l1x} mounted on the top of the drone pointing upwards, and four VL53L5CX ToF sensors \cite{st_vl53l5cx} mounted on each side of the drone pointing horizontally outwards. The vertical ToF sensor is a single beam sensor, however the horizontal sensors produce multizone distance measurements which can be configured in two modes: 8x8 15Hz and 4x4 30Hz. Since our map geometry is simple, the 4x4 array of 16 measurements will be enough to reliably estimate the position of the surrounding walls, and hence we chose the 4x4 30Hz mode, providing a higher measurement rate.
 
-\subsection{Estimator Parameters}
+\subsection{Acceleration Modelling}
 
-For the drone control algorithms, we need to know the following parameters: position, $p$, orientation, $q$, velocity, $v$, angular velocity, $\omega$, and acceleration, $a$, all of which are 3-axis. As mentioned above, the IMU measures the angular velocity and the acceleration, however, these can not be assumed accurate. For the angular velocity, there may be a bias on the reading which could change over time, so to mitigate the effect of that we will estimate the 3-axis bias of the gyroscope, $b_g$, and we will estimate the true angular velocity using Eq.\ref{equ:EstAngularVelocity} below, where $\omega_b$ is the estimated angular velocity in the body frame and $\omega_m$ is the measurement from the gyroscope.
-\begin{equation} \label{equ:EstAngularVelocity}
-    \omega_b = \omega_m - b_g
-\end{equation}
-For the acceleration, there may also be a similar 3-axis bias which we will estimate, but the acceleration due to gravity will also be present in this reading, so we need to account for that. In order to do so, we chose to model the acceleration measurement using Eq.\ref{equ:EstAcceleration} below, where $a_m$ is the measurement from the accelerometer, $a_{T\_b}$ is the estimated acceleration due to thrust in the body frame, $a_{D\_b}$ is the estimated acceleration due to drag in the body frame, $b_a$ is the estimated accelerometer bias, and $g_b$ is the acceleration due to gravity in the body frame.
-\begin{equation} \label{equ:EstAcceleration}
-    a_m = a_{T\_b} + a_{D\_b} + b_a + g_b
+It is a common approximation for drone attitude estimation systems to assume that the accelerometer measurement is dominated by gravity and hence use the normalised reading as an approximation for the world z axis expressed in the body frame, as is done by Mahony et al. \cite{4608934}. In our system, specifically the movement mode, there may be large accelerations causing this assumption to break down. To avoid errors from this assumption and allow us to extract information about both the orientation and acceleration of the drone from the accelerometer reading, we decided to use a model based approach to predicting the acceleration. 
+
+Our model uses the motor commands and estimated velocity to estimate the acceleration due to thrust, $\mathbf{a}_{T,b}$, and drag, $\mathbf{a}_{D,b}$, in the body frame and transforms these into the world frame using the estimated orientation, $\mathbf{q}$, before combining these with the acceleration due to gravity, $g$, to obtain an estimate for the body acceleration in the world frame, $\mathbf{a}_w$, as detailed in Eq. \ref{equ:EstAccelModel} below, where $\mathbf{R}(\mathbf{q})$ is the rotation matrix corresponding to orientation $\mathbf{q}$.
+\begin{equation} \label{equ:EstAccelModel}
+    \mathbf{a}_w = \mathbf{R}(\mathbf{q})(\mathbf{a}_{T,b} + \mathbf{a}_{D,b}) + \begin{bmatrix}
+        0 & 0 & -g
+    \end{bmatrix}^\top
 \end{equation}
 
-Since we do not have a method for measuring the RPM of the motors directly, we  chose to estimate the thrust per motor using the ESC control commands, $u_i$ and assumed that the ESC command is proportional to the propeller RPM and that the thrust of that motor is proportional to the RPM squared, producing the following relationship for each motor: $T_i = k_i \cdot u_i^2 $, where $T_i$ is the thrust produced by that motor, and $k_i$ is the thrust coefficient for that motor-propeller combination. The drone thrust is then the sum of all the motor thrusts and we chose to combine all the thrust coefficients into a single coefficient, $k_T$, producing, $T = k_T \cdot \sum_i u_i^2$, since all the motors and propellers are the same, so the individual coefficients should be almost identical. To calculate the acceleration from this thrust we also need to know the mass of the drone, $m$, and both this and the thrust coefficient, $k_T$, will be experimentally determined before the drone is deployed. Finally, we decided to implement a thrust scale factor, $\alpha_T$, which will be estimated online to account for any inaccuracy in the thrust coefficient, $k_T$, and deal with any temporal scaling changes of the propeller dynamics, such as thrust reductions when the battery is low or when the motors are hot. The thrust scale factor will also be initialised to 1 as our prior belief is that the pre-calculated coefficient is correct. Eq.\ref{equ:EstThrustAccel} below combines all of these effects into a single model. 
+Since we do not have a method for measuring the RPM of the motors directly, we  chose to estimate the thrust per motor using the ESC control commands, $\mathbf{c}$, and assumed that the ESC command is proportional to the propeller RPM and that the thrust of that motor is proportional to the RPM squared, producing the following relationship for each motor: $T_i = k_i \cdot c_i^2 $, where $T_i$ is the thrust produced by that motor, and $k_i$ is the thrust coefficient for that motor-propeller combination. The drone thrust is then the sum of all the motor thrusts and we chose to combine all the thrust coefficients into a single coefficient, $k_T$, producing, $T = k_T \ \mathbf{c} \cdot \mathbf{c}$, since all the motors and propellers are the same, so the individual coefficients should be almost identical. To calculate the acceleration from this thrust we also need to know the mass of the drone, $m$, and both this and the thrust coefficient, $k_T$, will be experimentally determined before the drone is deployed. Finally, we decided to implement a thrust scale factor, $\alpha_T$, which will be estimated online to account for any inaccuracy in the thrust coefficient, $k_T$, and deal with any temporal scaling changes of the propeller dynamics, such as thrust reductions when the battery is low or when the motors are hot. The thrust scale factor will also be initialised to 1 as our prior belief is that the pre-calculated coefficient is correct. Eq.\ref{equ:EstThrustAccel} below combines all of these effects into a single model. 
 \begin{equation} \label{equ:EstThrustAccel}
-    a_{T\_b} = \frac{\alpha_T}{m} \begin{bmatrix} 0 \\ 0 \\ T \end{bmatrix} = \alpha_T \cdot \frac{k_T}{m} \cdot \sum_i u_i^2  \cdot \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix} 
+    \mathbf{a}_{T\_b} = \frac{\alpha_T}{m} \begin{bmatrix} 0 \\ 0 \\ T \end{bmatrix} = \alpha_T\frac{k_T}{m}\mathbf{c} \cdot \mathbf{c} \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix} 
 \end{equation}
-To estimate the acceleration due to drag, $a_{D\_b}$, we will use the estimated velocity and assume that acceleration due to drag is proportional to velocity squared in all directions, producing Eq. \ref{equ:EstDragAccel} below, where the drag coefficients, $k_{D\_x}$, $k_{D\_y}$, and $k_{D\_z}$, are estimated online to avoid the need to pre-calculate them, however, if this causes excessive conversion time, we may decide to pre-compute them and estimate a scale factor online which is initialised to 1.
+To estimate the acceleration due to drag in the body frame, $\mathbf{a}_{D\_b}$, we will calculate the velocity in the base frame, $\mathbf{v}_b$, from the velocity in the world frame, $\mathbf{v}_w$, using the orientation and assume that acceleration due to drag is proportional to velocity in the base frame squared in all directions, producing Eq. \ref{equ:EstDragAccel} below, where the drag coefficients, $\mathbf{k}_D$, are estimated online to avoid the need to pre-calculate them, however, if this causes excessive conversion time, we may decide to pre-compute them and estimate a scale factor online which is initialised to 1, similar to what we did with thrust.
 \begin{equation} \label{equ:EstDragAccel}
-    a_{D\_b} = K_d \cdot v_b^2 = 
+    \mathbf{a}_{D\_b} = \mathbf{k}_d^\top \cdot \mathbf{v}_b^2 = 
     \begin{bmatrix} 
-    k_{d\_x} & 0 & 0 \\
-    0 & k_{d\_y} & 0 \\
-    0 & 0 & k_{d\_z} 
+    k_{d\_x} & k_{d\_y} & k_{d\_z} \\
     \end{bmatrix} 
-    \cdot v_b^2
-\end{equation}
-The two models above in Eq. \ref{equ:EstThrustAccel} and \ref{equ:EstDragAccel} are then combined in Eq. \ref{equ:EstBodyAccel} below to estimate the true acceleration of the drone, $a_b$.
-\begin{equation} \label{equ:EstBodyAccel}
-    a_b = a_{T\_b} + a_{D\_b}
+    \cdot \mathbf{R}^\top(\mathbf{q}) \cdot \mathbf{v}_w^2
 \end{equation}
 
-We now have a model based method of determining angular velocity and acceleration, so these do not need to be estimated, however, our model includes other parameters that need to be estimated. This means that the state our estimator needs to track is $[p, q, v, b_g, b_a, K_D, \alpha_T]$, where all parameters except $\alpha_T$ are 3-axis\footnote{the orientation will be represented as a unit quaternion which has 4 values, but the unit condition reduces this to 3 degrees of freedom}, so we have 19 parameters to estimate.
+\subsection{State Parameters}
+
+Our state estimator now needs to estimate the parameters needed for control as well as the acceleration model parameters, however, the gyroscope and accelerometer may each have a bias, $\mathbf{b}_g$ and $\mathbf{b}_a$ respectively, which would cause significant drift in the position, orientation and velocity, if not accounted for, because our only way of obtaining these values from the IMU data is to integrate the angular velocity and acceleration. To account for this we will include the biases in the state as well, because these may change slightly over time. Considering everything mentioned above, the full state of our estimator is: $[\mathbf{p}, \mathbf{q}, \mathbf{v}, \boldsymbol{\omega}, \mathbf{a}, \mathbf{b_g}, \mathbf{b_a}, \mathbf{k_D}, \alpha_T]$. All parameters except $\alpha_T$ in the state are 3 parameter vectors\footnote{the orientation will be represented as a unit quaternion which has 4 values, but the unit condition reduces this to 3 degrees of freedom}, so we have 25 parameters to estimate.
 
 \subsection{Estimation Method}
 
 We initially considered two different estimators, a Particle Filter (PF) and an Extended Kalman Filter\footnote{We specifically looked at using an EKF rather than a regular Kalman Filter (KF) because some of our system dynamics, such as the acceleration model, involve non-linear components that cannot be accurately estimated by a regular KF.}  (EKF).
 
-The PF would facilitate a multi-modal belief of the state which is specifically necessary for the position and yaw, because the belief of these parameters will mostly come from the ToF sensor readings which can produce similar readings for multiple locations on our map due to its simplicity. Although it is not ideal to have a multi-modal belief, it is important to have the ability to maintain this while the estimate is converging to avoid rejecting the true state early on. Using a PF to estimate such a large number of parameters, however, is not feasible as it necessitate distributing the particles across 19 dimensions which would require a large number of particles and a large computational cost to cover even a small range of the parameters. 
+The PF would facilitate a multi-modal belief of the state which is specifically necessary for the position and yaw, because the belief of these parameters will mostly come from the ToF sensor readings which can produce similar readings for multiple locations on our map due to its simplicity. Although it is not ideal to have a multi-modal belief, it is important to have the ability to maintain this while the estimate is converging to avoid rejecting the true state early on. Using a PF to estimate such a large number of parameters, however, is not feasible as it necessitate distributing the particles across 25 dimensions which would require a large number of particles and a large computational cost to cover even a small range of the parameters. 
 
-The EKF would facilitate tracking all 19 parameters with a much lower computational cost as it stores only the mean and covariance matrix of the state and updates this using a few recursive matrix equations. It would also be much more efficient at estimating the approximately Gaussian parameters such as the biases, thrust scale factor, and drag coefficients, however, it would struggle to maintain a good estimate of anything multi-modal such as the position and yaw, as mentioned previously, and it would be sensitive to the initialisation conditions, causing a problem if the state is lost.
+The EKF would facilitate tracking all 25 parameters with a much lower computational cost as it stores only the mean and covariance matrix of the state and updates this using a few recursive matrix equations. It would also be much more efficient at estimating the approximately Gaussian parameters such as the biases, thrust scale factor, and drag coefficients, however, it would struggle to maintain a good estimate of anything multi-modal such as the position and yaw, as mentioned previously, and it would be sensitive to the initialisation conditions, causing a problem if the state is lost.
 
-Having considered these methods, it is clear that both have their advantages, however, the disadvantages of each make them infeasible or impracticable, resulting in us looking to other methods. Grisetti et al. \cite{RBPF} suggest a method called Rao-Blackwellized Particle Filter (RBPF) applied to a simultaneous location and mapping problem, which we can easily alter to solve our localisation and state estimation problem. The RBPF method allows us to decompose this state estimation problem into two coupled sub-problems which can each be solved by different methods. This allows us to use a PF to estimate the highly non-linear and possibly multi-modal position and yaw while using an EKF within each particle to estimate the rest of the state, providing us with the benefits of using a particle filter without the need for excessive particles while estimating the approximately Gaussian parameters much more efficiently.
+Having considered these methods, it is clear that both have their advantages, however, the disadvantages of each make them infeasible or impracticable, resulting in us looking to other methods. Grisetti et al. \cite{RBPF} suggest a method called Rao-Blackwellized Particle Filter (RBPF) applied to a simultaneous location and mapping problem, which we can easily alter to solve our localisation and state estimation problem. The RBPF method allows us to decompose this state estimation problem into two coupled sub-problems which can each be solved by different methods. This allows us to use a PF to estimate the possibly multi-modal position and yaw while using an EKF within each particle to estimate the rest of the state, providing us with the benefits of using a particle filter without the need for excessive particles while estimating the approximately Gaussian parameters much more efficiently.
 
 \subsection{Rao-Blackwellized Particle Filter Setup}
 
@@ -1179,8 +1175,62 @@ In order to reduce the computational load and avoid quickly reducing particle di
 If the particles are to be resampled, then the highest weight particle is taken as the Maximum A Posterior (MAP) estimate. To resample the particles, we partition the range $[0,1]$ into segments of length equal to the weight of each particle, for example, the first particle would span the range $[0,w_1]$. Next, a random number from 0 to 1 is generated and the particle whose segment contains that value is copied to make the new particle and this is repeated N times to sample a full set of new particles. All particle weights are then set uniform again, $w_i = 1/N$, because the belief is not represented by the number of particles at each location rather than the weight of individual particles. This means there may now be identical particles, however these will diverge due to the random nature of the EKF allowing exploration from the mode. As mentioned previously, the particle which had the highest weight before resampling was flagged as the MAP estimate and the output of the state estimator will be the mean state of all children of this particle. In the extremely rare case that this particle has no children, we will fall back to the children of the particle which had the second highest weight before resampling and so on.
 
 \subsubsection{Extended Kalman Filter Update}
+The EKF will update whenever new IMU data is received. We will use the model and recursive update in Eq.\ref{equ:EstEKFStateTransition}-\ref{equ:EstEKFUpdateMeasurementCov} below, adapted from the regular KF equations on pg 210 of the Engineering Tables and Data 4th Edition \cite{HLT} with matrices A and B replaced by non-linear function f and matrix C replaced by non-linear function h.
+\begin{align}
+    x_{k+1} & = f(x_k,u_k) + w_k \label{equ:EstEKFStateTransition} \\
+    y_k & = h(x_k) + v_k  \label{equ:EstEKFMeasurements}
+\end{align}
+\vspace{-1.5cm}
+\begin{align}
+    \mathrm{Dynamics\ Jacobian: \ } F_k = \frac{\partial f}{\partial x} \label{equ:EstEKFDynamicsJacobian} \\
+    \mathrm{Measurement\ Jacobian: \ } H_k = \frac{\partial h}{\partial x} \label{equ:EstEKFMeasurementJacobian}
+\end{align}
+\vspace{-1.5cm}
+\begin{align}
+    \mathrm{Process\ Noise\ Covariance: \ } Q_k = \mathrm{E}[w_kw_k^\top] \label{equ:EstEKFProcessNoiseCov} \\
+    \mathrm{Measurement\ Noise\ Covariance: \ } R_k = \mathrm{E}[v_kv_k^\top]  \label{equ:EstEKFMeasurementNoiseCov}
+\end{align}
+\vspace{-1.5cm}
+\begin{align}
+    \hat{x}_{k|k-1} & = f(\hat{x}_{k-1|k-1},u_{k-1}) \label{equ:EstEKFUpdatePredictionState} \\
+    P_{k|k-1} & = F_k P_{k-1|k-1} F_k^\top + Q_k \label{equ:EstEKFUpdatePredictionCov} \\
+    S_k & = H_k P_{k|k-1} H_k^\top + R_k \label{equ:EstEKFUpdateMeasurementS} \\
+    K_k & = P_{k|k-1} H_k^\top S_k^{-1} \label{equ:EstEKFUpdateMeasurementK} \\
+    r_k & = y_k - h(\hat{x}_{k|k-1}, u_k) \label{equ:EstEKFUpdateMeasurementResidual} \\
+    \hat{x}_{k|k} & = \hat{x}_{k|k-1} + K_k r_k \label{equ:EstEKFUpdateMeasurementState} \\
+    P_{k|k} & = (I - K_k H_k) P_{k|k-1} \label{equ:EstEKFUpdateMeasurementCov} 
+\end{align}
 
+To use these equations, we need to define all parameters in the model, Eq. \ref{equ:EstEKFStateTransition} and \ref{equ:EstEKFMeasurements}. Process noise, $w_k$, and measurement noise, $v_k$, will be estimated experimentally before deployment. The state, $x$, input, $u$, and measurement, $y$, vectors are defined below in Eq. \ref{equ:EstEKFStateVector}, \ref{equ:EstEKFInputVector}, and \ref{equ:EstEKFMeasurementVector} respectively, where . Functions f and h are defined below in Eq. d and e
 
+\begin{align}
+    \mathbf{x} & = \begin{bmatrix}\mathbf{p}^\top, \mathbf{q}^\top, \mathbf{v}^\top, \boldsymbol{\omega}^\top, \mathbf{a}^\top, \mathbf{b}_g^\top, \mathbf{b}_a^\top, \mathbf{k}_D^\top, \alpha_T^\top\end{bmatrix}^\top \label{equ:EstEKFStateVector}\\
+    \mathbf{u} & = \begin{bmatrix} \boldsymbol{\omega}_{gyro}^\top, \mathbf{c}^\top\end{bmatrix}^\top \label{equ:EstEKFInputVector}\\
+    \mathbf{y} & = \mathbf{a}_{acc} \label{equ:EstEKFMeasurementVector}
+\end{align}
+
+\begin{align}
+        f(x_k,u_k) =  \begin{bmatrix}
+        p_k + v_k \Delta t + \frac{1}{2} a_k \Delta t ^2 \\
+        q_k + \frac{1}{2}\boldsymbol{\Omega}(\boldsymbol{\omega_k})\mathbf{q}_k \\
+        v_k + a_k \Delta t \\
+        b_{a,k} \\
+        b_{g,k} \\
+        \alpha_{T,k} \\
+        K_{D,k} \\        
+    \end{bmatrix} 
+    &&
+    \mathrm{where} && a_k = \begin{bmatrix} 0 \\ 0 \\ -g \end{bmatrix} +
+\end{align}
+\begin{equation}\label{equ:EstEKFEquations}
+\begin{split}
+    h(x_k, u_k) =  a_{T\_b,k} + a_{D_b,k} + b_{a,k} + g_{b,k} = \alpha_{T,k} \frac{k_T}{m}\sum_i u_{i,k}^2 \begin{bmatrix}
+        0 \\ 0 \\ 1 
+    \end{bmatrix} + K_d (R^\top(q_k) v_k)^2 + b_{a,k} + R^\top(q_k) \begin{bmatrix}
+        0 \\ 0 \\ -g
+    \end{bmatrix}
+\end{split}
+\end{equation}
 
 
 
