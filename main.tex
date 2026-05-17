@@ -131,7 +131,7 @@ Since the levels increase in difficulty, there is little need to scale difficult
 
 \subsection{Context}
 
-The project decision was to develop a custom drone hardware design in preference to using an existing commercial platform. This was motivated by the need to co-design the airframe, electronics, sensing equipment, and game-specific payload around the requirements of an indoor multi-agent laser tag system. Various options may offer good flight performance and easy maintenance, but are generally optimized for less intense activities and outdoor environments, and therefore provide limited flexibility for integrating custom sensing, weapon-tagged hardware, and protective structures. 
+The project decision was to develop a custom drone hardware design in preference to using an existing commercial platform. This was motivated by the need to co-design the airframe, electronics, sensing equipment, and game-specific payload around the requirements of an indoor multi-agent laser tag system. Various options may offer good flight performance and easy maintenance, but are generally optimized for less intense activities and outdoor environments, and therefore provide limited flexibility for integrating custom sensing, tag-hardware, and protective structures. 
 
 In addition, commercial drones tend to be quite closed off in terms of hardware and software access - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed more freedom to choose components, organize the internal layout, and include additional features necessary to the game-play.
 
@@ -921,14 +921,14 @@ Roll & Quanum/GBM2208 brushless gimbal motor & 28 mm $\times$ 22 mm;  43 g\\
 
 \subsubsection{Overall Airframe Configuration - Assembly}
 
-The final airframe configuration (shown in Fig.~\ref{fig:Complete Assembly}) brings the separate subsystem assemblies together into a single integrated drone assembly, shown in Fig. ~\ref{fig:Complete Assembly}. The design uses a modular central body with detachable rotor-arm, integrated with propeller protection and helicopter-based landing gears, along with a centrally mounted 3-axis gimbal turret. This layout suits the electronics, propulsion, sensors, camera, and IR-tagging system while keeping key parts accessible for maintenance. Rather than one-piece shell, all parts are designed to be separate yet connected, replaceable, and cheap making it practical for manufacture and repair.
-
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\textwidth]{Hardware/Complete Assembly.png}
+    \includegraphics[width=0.75\textwidth]{Hardware/Complete Assembly.png}
     \caption{Complete Assembly}
     \label{fig:Complete Assembly}
 \end{figure}
+
+The final airframe configuration (shown in Fig.~\ref{fig:Complete Assembly}) brings the separate subsystem assemblies together into a single integrated drone assembly, shown in Fig. ~\ref{fig:Complete Assembly}. The design uses a modular central body with detachable rotor-arm, integrated with propeller protection and helicopter-based landing gears, along with a centrally mounted 3-axis gimbal turret. This layout suits the electronics, propulsion, sensors, camera, and IR-tagging system while keeping key parts accessible for maintenance. Rather than one-piece shell, all parts are designed to be separate yet connected, replaceable, and cheap making it practical for manufacture and repair.
 
 \paragraph{Component Layout}
 
@@ -945,7 +945,7 @@ The structural assessment focused on two components most exposed to loading and 
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.75\textwidth]{Hardware/Rotor Arm Simulation Test Image.png}
+    \includegraphics[width=1\textwidth]{Hardware/Rotor Arm Simulation Test Image.png}
     \caption{Rotor Arm Simulation Test}
     \label{fig:Rotor Arm Sim}
 \end{figure}
@@ -959,7 +959,7 @@ This result showed that the structure was reasonable. However, this should still
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.75\textwidth]{Hardware/Blade Guard Simulation.png}
+    \includegraphics[width=1\textwidth]{Hardware/Blade Guard Simulation.png}
     \caption{Blade Guard Simulation test}
     \label{fig:BladeGaurdSim}
 \end{figure}
@@ -1001,9 +1001,9 @@ The vest is used as the main hit-detection surface for the player. The intended 
 
 The helmet provides an upper-body hit detection area and improved IR coverage around the player. Similar to the vest, IR receivers will be positioned around the helmet surface so the signals can be detected. Again, a compartment will house all the required electronics and circuitry for the hit-detection and status updates. The helmet also acts as an additional protective element, alongside the overhead net, against falling drones and other collisions.
 
-\paragraph{Weapon}
+\paragraph{Laser Tagging Device}
 
-The weapon can be treated as a proposed handheld IR tagging device. Its purpose would be to allow players to tag drones with a trigger. The device would likely contain a compartment with all required electronics just as the other player hardware. As stated before, all tagging systems will be using \gls{ir} rather than actual lasers for safety and regulatory reasons.
+The equipment for tagging used by players is proposed to be a handheld IR tagging device. Its purpose would be to allow players to tag drones with a trigger. The device would likely contain a compartment with all required electronics just as the other player hardware. As stated before, all tagging systems will be using \gls{ir} rather than actual lasers for safety and regulatory reasons.
 
 %%%%%%%%%----------------end of Hardware---------------%%%%%%%%%
 
