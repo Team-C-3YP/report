@@ -83,13 +83,15 @@
 \fancyhead[C]{Rishabh Luthra}
 The UK leisure market is currently defined by a distinct consumer trend: a frugality in routine choices paired with a willingness to invest in high-value experiences \cite{arrowsmith2026leisure, deloitte2026leisure_report}. This shift drives a growing demand for immersive environments that offer real-time interactivity and integrate the strategic depth of video games into the physical world. 
 
+Since its introduction in 1984, the basics of laser tag have remain
+
 To meet this demand, we present a novel laser tag game where human players cooperate to compete against a team of autonomous, multi-agent drones. From a user perspective, the system aims to provide an engaging, safe, and highly interactive experience defined by specific gameplay modes and dynamic objectives (Section 2). To complete these objectives, players navigate through a purpose-built indoor maze constructed from 5-metre high walls (Section 4). The project is governed by strict physical and safety boundaries to ensure a low-risk environment; the arena features a dividing net that separates the drones flying overhead from the human players below. Designed with a 1200J energy absorption capacity, this industrial netting provides a safety factor of 5.1 against a 4kg drone flying at full thrust downwards. As a result, this mitigates the risk of human-drone collisions without diminishing game immersion.
 
 From a drone perspective, the primary goal is to achieve autonomy and coordinated teamwork within a confined environment. Since off-the-shelf platforms lack the necessary flexibility, payload integration, and component protection for such close-proximity indoor operations, a custom modular quadrotor airframe was developed (Section 3). The ABS 3D-printed chassis features integrated blade guards to ensure operational continuity during minor wall collisions. To satisfy a 2:1 thrust-to-weight ratio for a 4kg maximum takeoff mass, the propulsion system utilises BrotherHobby Avenger 2806.5 1300KV brushless motors paired with 8x4x3 polycarbonate propellers, driven by a 4S 5000mAh Lithium Polymer battery to sustain approximately 10 minutes of active flight endurance. Dedicated player hardware, including sensor-equipped helmets and vests, then integrate into this ecosystem (Section 5).
 
 For multi-agent coordination, the system relies on an IEEE 802.11ac Wi-Fi communications framework (Section 9) linking the onboard drone hardware to a central server. The server manages the high-level game logic, evaluating the global state to dynamically transition individual drones through specific operational modes such as Search, Track, Shoot, and Movement (Section 10). 
 
-To inform these high-level decisions, each drone is equipped with an OAK-D Lite passive stereoscopic camera mounted on a custom 3-axis tracking gimbal, which kinematically decouples the camera from the drone’s flight attitude to maintain continuous target lock. Visual data is ingested by a YOLOv8-nano (YOLOv8n) convolutional neural network (Section 11). To overcome the domain gap caused by the arena's low-light conditions and frequent target occlusions, this model was trained on a synthetic dataset created within Unity. Because active visual sensors would interfere with the game's infrared mechanics, and monocular depth estimation fails when a human target alters their posture, target depth is extracted passively via stereoscopic horizontal pixel disparity. This raw spatial data is smoothed using a Linear Kalman Filter, operating on a Discrete White Noise Acceleration (DWNA) model, to provide continuous, predictive 3D state estimations of the players. 
+To inform these high-level decisions, each drone is equipped with an OAK-D Lite passive stereoscopic camera mounted on a custom 3-axis tracking gimbal, which kinematically decouples the camera from the drone’s flight attitude to maintain continuous target lock. Visual data is ingested by a YOLOv8-nano (YOLOv8n) convolutional neural network (Section 11). To overcome the domain gap caused by the arena's low-light conditions and frequent target occlusions, this model was trained on a synthetic dataset created within Unity. Because active visual sensors would interfere with the game's \gls{ir} mechanics, and monocular depth estimation fails when a human target alters their posture, target depth is extracted passively via stereoscopic horizontal pixel disparity. This raw spatial data is smoothed using a Linear Kalman Filter, operating on a Discrete White Noise Acceleration (DWNA) model, to provide continuous, predictive 3D state estimations of the players. 
 
 These estimated player coordinates update the central server's global state, which in turn dictates the high-level navigational objectives assigned to each drone. Search mode utilises a hybrid Breadth-First Search (BFS) region-allocation and lawnmower trajectory algorithm to systematically scan the arena (Section 12). When rapid transit is required, flight control is handed over to a Reinforcement Learning (RL) policy trained offline in the Isaac Lab physics simulator, outputting body thrust and moment commands (Section 13). Furthermore, an Artificial Potential Field (APF) controller handles real-time collision avoidance by computing repulsive gradients from walls and other agents, converting them into evasive manoeuvres (Section 14).
 
@@ -107,7 +109,7 @@ In addition to the technical deployment, user retention is driven by a companion
     \label{fig:gameplay}
 \end{figure}
 \subsection{Overview}
-Players are equipped with Laser Guns (\gls{ir} emitters that transmit encoded data), and helmets and vests containing \gls{ir} sensors. The drones are equipped with Turrets which emit \gls{ir} radiation (see Section \ref{Turret}) as well as \gls{ir} sensors. When not flying, they are dormant in a \say{standby location} where employees can replace their batteries. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If a player is hit, they must navigate to a designated \say{timeout} area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun is disables until their timeout ends (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at 3 m height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
+Players are equipped with laser guns (\gls{ir} emitters that transmit encoded data), and helmets and vests containing \gls{ir} sensors. The drones are equipped with Turrets which emit \gls{ir} radiation (see Section \ref{Turret}) as well as \gls{ir} sensors. When not flying, they are dormant in a \say{standby location} where employees can replace their batteries. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If a player is hit, they must navigate to a designated \say{timeout} area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun is disables until their timeout ends (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at 3 m height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
 
 \noindent Two \say{game modes} have been designed: \say{Wave Mode} and \say{Objective Mode}. These are summarised in the following sections.
 \subsection{Wave Mode}
@@ -129,7 +131,7 @@ Since the levels increase in difficulty, there is little need to scale difficult
 
 \subsection{Context}
 
-The project decision was to develop a custom drone hardware design in preference to using an existing commercial platform. This was motivated by the need to co-design the airframe, electronics, sensing equipment, and game-specific payload around the requirements of an indoor multi-agent laser-tag system. Various options may offer good flight performance and easy maintenance, but are generally optimized for less intense activities and outdoor environments, and therefore provide limited flexibility for integrating custom sensing, weapon-tagged hardware, and protective structures. 
+The project decision was to develop a custom drone hardware design in preference to using an existing commercial platform. This was motivated by the need to co-design the airframe, electronics, sensing equipment, and game-specific payload around the requirements of an indoor multi-agent laser tag system. Various options may offer good flight performance and easy maintenance, but are generally optimized for less intense activities and outdoor environments, and therefore provide limited flexibility for integrating custom sensing, weapon-tagged hardware, and protective structures. 
 
 In addition, commercial drones tend to be quite closed off in terms of hardware and software access - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed more freedom to choose components, organize the internal layout, and include additional features necessary to the game-play.
 
@@ -176,7 +178,7 @@ In summary, the key design criteria are consolidated in Table~\ref{tab:starter_d
 
 \begin{table}[htbp]
 \centering
-\caption{Summarized starter design criteria for the drone platform.}
+\caption{Summarized starter design criteria for the drone platform}
 \label{tab:starter_design_criteria}
 \renewcommand{\arraystretch}{1}
 \begin{tabularx}{\textwidth}{@{} l X @{}}
@@ -234,7 +236,7 @@ The Avenger 2806.5 was selected because it provided a strong thrust margin witho
 
 \begin{table}[htbp]
 \centering
-\caption{Motor specifications. \footnotemark}
+\caption[Motor specifications]{Motor specifications\footnotemark}
 \label{tab:motor_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -272,7 +274,7 @@ The 8x4x3 propeller geometry was chosen as this motor-prop configuration matched
 
 \begin{table}[htbp]
 \centering
-\caption{8$\times$4$\times$3 propeller specifications. \footnotemark}
+\caption[8$\times$4$\times$3 propeller specifications]{8$\times$4$\times$3 propeller specifications\footnotemark}
 \label{tab:propeller_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -348,7 +350,7 @@ where \(\eta_{\text{rpm}}\) represents the fraction of no-load speed achieved un
 
 \begin{table}[htbp]
 \centering
-\caption{Estimated loaded motor speeds for different loaded RPM factors.}
+\caption{Estimated loaded motor speeds for different loaded RPM factors}
 \label{tab:loaded_rpm_factors}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabular}{@{} c c @{}}
@@ -367,7 +369,7 @@ As there was no given exact thrust coefficients, therefore we tested using 0.100
 
 \begin{table}[htbp]
 \centering
-\caption{Estimated thrust per motor for different loaded RPM factors and thrust coefficients.}
+\caption{Estimated thrust per motor for different loaded RPM factors and thrust coefficients}
 \label{tab:motor_prop_validity_check}
 \renewcommand{\arraystretch}{1.15}
 \small
@@ -399,7 +401,7 @@ This ESC was chosen as it matched the propulsion system requirements while remai
 
 \begin{table}[htbp]
 \centering
-\caption{ESC specifications. \footnotemark}
+\caption[ESC specifications]{ESC specifications\footnotemark}
 \label{tab:esc_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -435,7 +437,7 @@ The battery selection was driven by the propulsion system as it was expected the
 This battery was selected as a representative design choice as it matched the voltage requirements of the final propulsion system. The \(14.8~\text{V}\) is suitable for the selected ESC and motor configuration while the \(5000~\text{mAh}\) also provided the target \(10~\text{minutes}\) of drone operation before recharge. The mass range of \(390-589~\text{g}\) was also acceptable, leaving more than enough mass capacity for other components of the drone. 
 \begin{table}[htbp]
 \centering
-\caption{4S 5000 mAh LiPo Battery specifications. \footnotemark}
+\caption[4S 5000 mAh LiPo Battery specifications]{4S 5000 mAh LiPo Battery specifications\footnotemark}
 \label{tab:battery_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -520,7 +522,7 @@ We require a high-current PDB, which was chosen to be the Holybro Power Distribu
 
 \begin{table}[htbp]
 \centering
-\caption{PDB specifications.\footnotemark}
+\caption[PDB specifications]{PDB specifications\footnotemark}
 \label{tab:pdb_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -556,7 +558,7 @@ Pololu D24V90F5 serves as a suitable regulator as it can step the \(14.8~\text{V
 
 \begin{table}[htbp]
 \centering
-\caption{5 V step-down regulator specifications.\footnotemark }
+\caption[5 V step-down regulator specifications]{5 V step-down regulator specifications\footnotemark}
 \label{tab:voltage_regulator_specifications}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X @{}}
@@ -613,7 +615,7 @@ Despite the strong performance offered by the Raspberry Pi 5, its additional com
 
 \begin{table}[htbp]
 \centering
-\caption{Comparison of Raspberry Pi single-board computer. \footnotemark}
+\caption[Comparison of Raspberry Pi single-board computer]{Comparison of Raspberry Pi single-board computer\footnotemark}
 \label{tab:raspberrypi_comparison}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l X X @{}}
@@ -713,7 +715,7 @@ VL53L5CX ToF sensors & Provides side obstacle awareness and short-range distance
 
 \paragraph{IR Tagging System}
 
-For game-specific components, the drone is required to have an infrared tagging system capable of tagging players and detecting when it has been tagged. Despite the project name, the physical hardware uses infrared rather than actual lasers. This is due to safety and regulatory reasons: laser products usage are subject to classification and safety requirements under UK regulations - such as the BS EN/IEC 60825-1 \cite{bsi_laser_safety_60825}, and guidance notes that laser radiation risks harm to eyes and skin \cite{ukhsa_laser_safety}. Using Infra-red based system is therefore more appropriate for indoor game-play, where players and drones operate near each other. In terms of hardware, we focus on how the IR components are physically installed into the overall drone design.
+For game-specific components, the drone is required to have an \gls{ir} tagging system capable of tagging players and detecting when it has been tagged. Despite the project name, the physical hardware uses \gls{ir} rather than actual lasers. This is due to safety and regulatory reasons: laser products usage are subject to classification and safety requirements under UK regulations - such as the BS EN/IEC 60825-1 \cite{bsi_laser_safety_60825}, and guidance notes that laser radiation risks harm to eyes and skin \cite{ukhsa_laser_safety}. Using \gls{ir} based system is therefore more appropriate for indoor game-play, where players and drones operate near each other. In terms of hardware, we focus on how the IR components are physically installed into the overall drone design.
 
 \textbf{IR emitter} - Mounted on the gimbal/turret alongside the camera so tagging direction is aligned with the aiming direction. The emitter is housed in a compact cylindrical mount - around 10mm in diameter. 
 
@@ -917,7 +919,7 @@ The MG90S is suitable for the yaw stage as it fits within the turret base region
 
 \begin{table}[htbp]
 \centering
-\caption{Suggested actuator specifications for the gimbal turret.\footnotemark}
+\caption[Suggested actuator specifications for the gimbal turret]{Suggested actuator specifications for the gimbal turret\footnotemark}
 \label{tab:gimbal_actuator_specs}
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{} l l X X @{}}
@@ -1000,7 +1002,7 @@ The final CAD model was simplified for use in Unity. Given the full Fusion 360 a
 
 \subsection{Player Hardware Design}
 
-The player hardware shows how human players would interact with the multi-agent laser-tag system. These components were not developed in detail compared with the drone hardware, and therefore will only focus on representative and illustrative models, as shown in Fig. ~\ref{fig:Player Vest and Helmet}.
+The player hardware shows how human players would interact with the multi-agent laser tag system. These components were not developed in detail compared with the drone hardware, and therefore will only focus on representative and illustrative models, as shown in Fig. ~\ref{fig:Player Vest and Helmet}.
 
 \begin{figure}[htbp]
     \centering
@@ -1019,7 +1021,7 @@ The helmet provides an upper-body hit detection area and improved IR coverage ar
 
 \paragraph{Weapon}
 
-The weapon can be treated as a proposed handheld IR tagging device. Its purpose would be to allow players to tag drones with a trigger. The device would likely contain a compartment with all required electronics just as the other player hardware. As stated before, all tagging systems will be using infrared rather than actual lasers for safety and regulatory reasons.
+The weapon can be treated as a proposed handheld IR tagging device. Its purpose would be to allow players to tag drones with a trigger. The device would likely contain a compartment with all required electronics just as the other player hardware. As stated before, all tagging systems will be using \gls{ir} rather than actual lasers for safety and regulatory reasons.
 
 %%%%%%%%%----------------end of Hardware---------------%%%%%%%%%
 
@@ -1066,25 +1068,24 @@ We plan to use industrial safety nets to separate the players from the drones as
 \begin{table}[htbp]
     \centering
     \caption{Net specifications}
-    \label{tab:net}
-    \small
-    \begin{tabularx}{\textwidth}{cccc}
-        \toprule 
+    \begin{tabular}{|c| c c c|}
+        \hline
         \textbf{} & \textbf{Net A} & \textbf{Net B} & \textbf{Net C}\\
-        \midrule
+        \hline 
         Material Diameter / mm & 5 & 1.5 & 0.5\\
-        \midrule
+        \hline
         Mesh Size / mm & 100x100 & 100x100 & 100x100 \\
-        \midrule
+        \hline
         Max Tensile Strength / N & 3200 & 250& 800 \\
-        \midrule
+        \hline
         Breaking Elongation / \%        & 15                & 15                & 15                \\
-        \midrule
+        \hline
         Energy Absorption / J           & 4800              & 375               & 1200              \\
-        \midrule
+        \hline
         Energy Absorption Safety Factor & 20.4              & 1.6               & 5.1               \\
-        \bottomrule
-    \end{tabularx}
+        \hline
+    \end{tabular}
+    \label{tab:net}
 \end{table}
 
 \newpage
@@ -1391,7 +1392,7 @@ On the other hand, a passive stereoscopic system, such as the Luxonis OAK-D Lite
 \begin{equation}
     Z = \frac{f \cdot B}{d}
 \end{equation}
-Geometrically, as the target moves closer to the sensors, the viewing angle from each lens becomes more acute. This leads to the feature shifting further apart horizontally across the two image planes and hence $d$ increases. Since this calculation relies entirely on the horizontal parallax of a specific coordinate rather than the total pixel area of the bounding box ($A_{px}$), the depth estimation remains stable even if the player turns sideways. Furthermore, since this disparity mapping relies purely on ambient light, it ensures that there is no infrared interference with the game mechanics.
+Geometrically, as the target moves closer to the sensors, the viewing angle from each lens becomes more acute. This leads to the feature shifting further apart horizontally across the two image planes and hence $d$ increases. Since this calculation relies entirely on the horizontal parallax of a specific coordinate rather than the total pixel area of the bounding box ($A_{px}$), the depth estimation remains stable even if the player turns sideways. Furthermore, since this disparity mapping relies purely on ambient light, it ensures that there is no \gls{ir} interference with the game mechanics.
 
 To compare the performance of monocular and stereo depth estimation under geometric transformations, we constructed a simulation environment of the proposed hardware in Unity. The cameras were configured with a 1920x1080 resolution, with a $60^\circ$ \gls{fov}, a focal length of 935.31px, and a stereo baseline of 0.075m. We used a cuboid measuring 0.5m wide, 1.8m tall, and 0.2m deep to represent an average player. The objective was to observe how both camera architectures respond to changes in the target across three scenarios.
 
@@ -1446,7 +1447,7 @@ This scenario highlights the advantage of the stereo system with the stereo esti
 
 \textbf{Consequently, the passive stereoscopic system is selected for the sensor payload attached to the drone's gimbal. While the monocular camera presents a favourable \gls{swapc} profile, the simulations demonstrate that area-based depth estimation is insufficient for reliable depth estimation. The system cannot reliably distinguish between a change in the target posture or orientation from a change in physical depth. 
 }
-The passive stereo system resolves this by estimating depth via horizontal pixel disparity ($d$) and provides a \textbf{robust} depth estimate. Crucially, its reliance on ambient light means that there will be no interference with the infrared game mechanics.  
+The passive stereo system resolves this by estimating depth via horizontal pixel disparity ($d$) and provides a \textbf{robust} depth estimate. Crucially, its reliance on ambient light means that there will be no interference with the \gls{ir} game mechanics.  
 
 \subsection{Computer Vision Architecture}
 The hardware of this system is comprised of a camera array consisting of three cameras. It features a high-resolution central RGB camera with two greyscale sensors either side that are dedicated to computing the stereoscopic disparity depth map. These visual streams are sequentially processed to meet both the tracking objectives described above: reliably distinguishing a human player from the background to lock onto the correct target, and calculating the target's 3D Cartesian coordinates relative to the drone's local frame. Together, these stages form the sensor pipeline (Fig. \ref{fig:pipeline_diagram}). 
@@ -2216,7 +2217,7 @@ The App uses Supabase as its backend platform, to access a PostgreSQL database. 
 \section{Risk Assessment and Safety Management}
 \label{risk-assessment}
 
-A quantitative risk assessment has been completed, and is shown in Table \ref{tab:risk-assessment}. Likelihood and Severity were both scored out of 5, and their product, \say{Risk Value} was analysed. The most significant initial risks were the contact between guns and players' eyes, and player collisions. After control measures, they are still the most significant residual risks, along with trips and falls. These risks are similar to those associated with traditional Laser-Tag and common sports, and are no more significant. This shows that the level of risk associated with playing the game is acceptable.
+A quantitative risk assessment has been completed, and is shown in Table \ref{tab:risk-assessment}. Likelihood and Severity were both scored out of 5, and their product, \say{Risk Value} was analysed. The most significant initial risks were the contact between guns and players' eyes, and player collisions. After control measures, they are still the most significant residual risks, along with trips and falls. These risks are similar to those associated with traditional laser tag and common sports, and are no more significant. This shows that the level of risk associated with playing the game is acceptable.
 
 
 \begin{table}[h]
@@ -2356,13 +2357,13 @@ According to the Department for Energy Security and Net Zero's Q2 2025 Energy Pr
 \noindent To keep the estimate conservative, to allow for fluctuations in electricity price and to allow for miscellaneous costs (employees boiling a kettle, for example), this value will be rounded up to a final electricity cost of £20k/year.
 
 \subsubsection{Warehouse Decoration and Maintenance}
-Year 0 will be used to prepare the warehouse for laser-tag. From Year 1 onward, this budget will only be spent on repairing wear-and-tear. Chaboun Construction (a London-based building services provider) estimates £50000 for a basic, 3-bedroom house renovation \cite{chabounconstructionMuchDoes}. However, much of this cost is related to the kitchen and the bathrooms, and in rewiring/replumbing. None of this applies to the warehouse, and (certainly to begin), non-premium materials will suffice. However, the warehouse is much larger than a 3-bedroom house. The price of Year 0 was therefore estimated at £30000. £10000 was selected as the budget for redecoration and maintenance. This is probably higher than strictly realistic, but accounts for the fact that a complete redecoration will be necessary every few years, and maintains a conservative estimate.
+Year 0 will be used to prepare the warehouse for laser tag. From Year 1 onward, this budget will only be spent on repairing wear-and-tear. Chaboun Construction (a London-based building services provider) estimates £50000 for a basic, 3-bedroom house renovation \cite{chabounconstructionMuchDoes}. However, much of this cost is related to the kitchen and the bathrooms, and in rewiring/replumbing. None of this applies to the warehouse, and (certainly to begin), non-premium materials will suffice. However, the warehouse is much larger than a 3-bedroom house. The price of Year 0 was therefore estimated at £30000. £10000 was selected as the budget for redecoration and maintenance. This is probably higher than strictly realistic, but accounts for the fact that a complete redecoration will be necessary every few years, and maintains a conservative estimate.
 
 \subsubsection{Hardware}
-The drones themselves cost a little under £500 to produce, of which 10 are required. Including other hardware (laser-guns, helmets and battery chargers), the model assumes the total cost is £10000. This is conservative estimate. The hardware will get slightly damaged during operation. Some components (such as blades) are likely to need replacing often, whereas some (such as laser-guns) are likely not to require frequent replacement. For simplicity, the model assumes that a full hardware replacement is required every 500 games, after a full set is fabricated in Year 0.
+The drones themselves cost a little under £500 to produce, of which 10 are required. Including other hardware (laser guns, helmets and battery chargers), the model assumes the total cost is £10000. This is conservative estimate. The hardware will get slightly damaged during operation. Some components (such as blades) are likely to need replacing often, whereas some (such as laser guns) are likely not to require frequent replacement. For simplicity, the model assumes that a full hardware replacement is required every 500 games, after a full set is fabricated in Year 0.
 
 \subsubsection{Revenue}
-The cost of hiring exclusive usage of a laser-tag facility is commonly around £15-£20 per person per hour. For example, LASERGAMING OXFORD charges £29.50 per person for two hours of exclusive use \cite{outdoorlaserLasergamingEXCLUSIVE}. A drone-based experience could afford to charge two to three times this fee, due to its novelty value. The game is designed to be played by three to eight people at once. The cost per game is therefore projected to be £200 per hour game per group, as a first estimate. The effect of a variation in game price is analysed in Section \ref{PriceAnal}.
+The cost of hiring exclusive usage of a laser tag facility is commonly around £15-£20 per person per hour. For example, LASERGAMING OXFORD charges £29.50 per person for two hours of exclusive use \cite{outdoorlaserLasergamingEXCLUSIVE}. A drone-based experience could afford to charge two to three times this fee, due to its novelty value. The game is designed to be played by three to eight people at once. The cost per game is therefore projected to be £200 per hour game per group, as a first estimate. The effect of a variation in game price is analysed in Section \ref{PriceAnal}.
 
 \subsubsection{Aggregate}
 Hence, the total Income \& Expenditure Table, not including tax or external financing (such as bank loans, equity etc.) is shown in Table \ref{tab:IE}.
@@ -2652,13 +2653,13 @@ This process was repeated for reference elasticity \(\varepsilon'\) between -0.5
 The discount rate was assumed to be constant with time, which is unrealistic. This was done for the sake of simplicity, as well as conservatism. Furthermore, the analysis was conducted by changing one or more variables and observing another, while all others were held constant.. By changing all variables at once to create a multi-dimensional surface, optima of \gls{npv} may be found that were missed in the above analysis, either by brute force or multi-dimensional gradient descent.
 
 \subsection{Conclusions}
-Under the conservative assumptions laid out above, the value of a theoretical business offering a drone-based Laser-Tag experience was found to be approximately £69,000. From the analyses carried out in Section \ref{anal}, it was found that:
+Under the conservative assumptions laid out above, the value of a theoretical business offering a drone-based laser tag experience was found to be approximately £69,000. From the analyses carried out in Section \ref{anal}, it was found that:
 \begin{itemize}
     \item £200 per game is the optimal price to charge per game (per group).
     \item The viability of the business depends greatly on early revenue and on small changes to custom, justifying a large advertising budget.
     \item £69,000 is likely an underestimate, since the value of the business will significantly increase with time as discount rate decreases. 
 \end{itemize}
-\noindent This suggests that is it possible to offer drone-based Laser-Tag as a commercially viable service.
+\noindent This suggests that is it possible to offer drone-based laser tag as a commercially viable service.
 
 \newpage
 
@@ -2675,7 +2676,7 @@ The drones are electrically powered, so they produce no direct emissions during 
 
 \paragraph{Social Impact}
 
-The main social impact of the project is its ability to provide entertainment while maintaining safety. The game design uses infrared tagging rather than physical projectiles or laser systems. The drones are separated from players by overhead net, while blade guards, collision avoidance, helmets and vest provide an additional layer of protection. This ensures the system is acceptable for use in a commercial arena, where players of many different backgrounds and ages come to enjoy the game. The cooperative modes and companion app encourages teamwork and repeat engagement, although this may depend on careful supervision during game-play.
+The main social impact of the project is its ability to provide entertainment while maintaining safety. The game design uses \gls{ir} tagging rather than physical projectiles or laser systems. The drones are separated from players by overhead net, while blade guards, collision avoidance, helmets and vest provide an additional layer of protection. This ensures the system is acceptable for use in a commercial arena, where players of many different backgrounds and ages come to enjoy the game. The cooperative modes and companion app encourages teamwork and repeat engagement, although this may depend on careful supervision during game-play.
 
 \paragraph{Economic Impact}
 
