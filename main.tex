@@ -180,11 +180,10 @@ In summary, the key design criteria are consolidated in Table~\ref{tab:starter_d
 \centering
 \caption{Summarized starter design criteria for the drone platform}
 \label{tab:starter_design_criteria}
-\renewcommand{\arraystretch}{1}
-\begin{tabularx}{\textwidth}{@{} l X @{}}
-\toprule
+\begin{tabular}{|c|c|}
+\hline
 \textbf{Design Parameter} & \textbf{Target / Requirement} \\
-\midrule
+\hline
 Operating environment & Indoor arena with close proximity to players, walls, and obstacles \\
 \hline
 Operational role & Stable and maneuverable aerial platform for indoor game-play \\
@@ -205,15 +204,15 @@ Visibility requirement & Large enough to be clearly visible for indoor game-play
 \hline
 Internal space requirement & Sufficient internal volume for onboard electronics \\
 \hline
-Safety requirement & Safe indoor operation, protected moving parts, and stable landing capability \\
+Safety requirement & Safe operation, protected parts \\
 \hline
 Maintainability requirement & Easy maintenance with cheap replaceable damaged parts \\
 \hline
 Structural requirement & Airframe must support normal flight loads and minor impact conditions \\
 \hline
 Game-play requirement & Agile enough to act as a believable and challenging in-game opponent \\
-\bottomrule
-\end{tabularx}
+\hline
+\end{tabular}
 \end{table}
 
 \subsection{UAV Electronics Design}
@@ -234,32 +233,31 @@ For a quadrotor configuration with a target thrust-to-weight ratio of approximat
 
 The Avenger 2806.5 was selected because it provided a strong thrust margin without requiring an excessively large motor. As shown in Table~\ref{tab:motor_specifications}), each motor has 41g mass, keeping the four-motor set reasonably light at 164g before propellers and mounting hardware. Its 19mm x 19mm mounting pattern also gave clear interface for motor mount design.
 
-\begin{table}[htbp]
+\begin{table}[h]
 \centering
 \caption[Motor specifications]{Motor specifications\footnotemark}
 \label{tab:motor_specifications}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\textwidth}{@{} l l X @{}}
-\toprule
+\begin{tabular}{|c|c|c|}
+\hline
 \textbf{Parameter} & \textbf{Value} & \textbf{Design relevance} \\
-\midrule
+\hline
 Selected motor & BrotherHobby Avenger 2806.5 1300KV & Main propulsion motor \\
 \hline
-Motor type & Brush-less & Suitable for multi-rotor propulsion \\
+Motor type & Brush-less & Suitable for  propulsion \\
 \hline
-KV rating & 1300KV & Suitable for thrust-focused operation \\
+KV rating & 1300KV & Suitable for operation \\
 \hline
-Mass & 41 g & Four motors contribute approximately 164g \\
+Mass & 41 g & 4 motors contribute 164g \\
 \hline
-Cell compatibility & 4--6S LiPo & Sets the required battery range for the final power system \\
+Cell compatibility & 4--6S LiPo & required battery range\\
 \hline
-Bolt & M3, 19 mm $\times$ 19 mm & Defines the motor mounting interface \\
+Bolt & M3, 19 mm $\times$ 19 mm & Defines mounting interface \\
 \hline
 Wire specification & 18 AWG, 20 cm &  ESC and wiring  \\
 \hline
-Target thrust per motor & $\approx 19.6$ N & 4 motors provides approximately 78.5 N \\
-\bottomrule
-\end{tabularx}
+Target thrust per motor & $\approx 19.6$ N & 4 motors provides 78.5 N \\
+\hline
+\end{tabular}
 \end{table}
 
 \footnotetext{Data adapted from the BrotherHobby Avenger 2806.5 manufacturer specification \cite{brotherhobby_avenger28065}}
@@ -276,26 +274,25 @@ The 8x4x3 propeller geometry was chosen as this motor-prop configuration matched
 \centering
 \caption[8$\times$4$\times$3 propeller specifications]{8$\times$4$\times$3 propeller specifications\footnotemark}
 \label{tab:propeller_specifications}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\textwidth}{@{} l l X @{}}
-\toprule
+\begin{tabular}{|c|c|c|}
+\hline
 \textbf{Parameter} & \textbf{Reference Value} & \textbf{Design Relevance} \\
-\midrule
-Propeller geometry & 8$\times$4$\times$3 & Defines the intended propeller size and type \\
 \hline
-Diameter & 8 inch & Sets swept area and required clearance from the airframe \\
+Propeller geometry & 8$\times$4$\times$3 & Defines propeller geometry \\
 \hline
-Pitch & 4 inch & Moderate pitch suitable for thrust-focused operation \\
+Diameter & 8 inch & Sets swept area \\
 \hline
-Blade count & 3 blades & Provides higher thrust capability than a comparable 2-blade propeller \\
+Pitch & 4 inch & Moderate pitch suitable for thrust operation \\
 \hline
-Reference material & Polycarbonate & Representative lightweight multirotor propeller material \\
+Blade count & 3 blades &  higher thrust capability  \\
 \hline
-Reference mass & 13 g & Four propellers contribute approximately 52 g \\
+Reference material & Polycarbonate & lightweight propeller material \\
 \hline
-Rotation requirement & 2 CW + 2 CCW & Required for balanced quadrotor operation \\
-\bottomrule
-\end{tabularx}
+Reference mass & 13 g & 4 propellers contribute 52 g \\
+\hline
+Rotation requirement & 2 CW + 2 CCW & Balanced quadrotor operation \\
+\hline
+\end{tabular}
 \end{table}
 
 \footnotetext{Data from an HQProp 8$\times$4$\times$3 propeller dataset\cite{hqprop_8x4x3}}
@@ -352,16 +349,15 @@ where \(\eta_{\text{rpm}}\) represents the fraction of no-load speed achieved un
 \centering
 \caption{Estimated loaded motor speeds for different loaded RPM factors}
 \label{tab:loaded_rpm_factors}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabular}{@{} c c @{}}
-\toprule
+\begin{tabular}{|c|c|}
+\hline
 \textbf{Loaded RPM Factor, \(\eta_{\text{rpm}}\)} & \textbf{Loaded RPM} \\
-\midrule
+\hline
 0.75 & 14,430 rpm \\
 0.80 & 15,392 rpm \\
 0.85 & 16,354 rpm \\
 0.90 & 17,316 rpm \\
-\bottomrule
+\hline
 \end{tabular}
 \end{table}
 
@@ -371,17 +367,15 @@ As there was no given exact thrust coefficients, therefore we tested using 0.100
 \centering
 \caption{Estimated thrust per motor for different loaded RPM factors and thrust coefficients}
 \label{tab:motor_prop_validity_check}
-\renewcommand{\arraystretch}{1.15}
-\small
-\begin{tabular}{@{} c c c c c @{}}
-\toprule
+\begin{tabular}{|c|c|c|c|c|}
+\hline
 \textbf{\(\eta_{\text{rpm}}\)} & \textbf{Loaded RPM} & \textbf{\(T\), \(C_T=0.100\)} & \textbf{\(T\), \(C_T=0.125\)} & \textbf{\(T\), \(C_T=0.150\)} \\
-\midrule
+\hline
 0.75 & 14,430 rpm & 12.1 N & 15.1 N & 18.1 N \\
 0.80 & 15,392 rpm & 13.7 N & 17.2 N & 20.6 N \\
 0.85 & 16,354 rpm & 15.5 N & 19.4 N & 23.3 N \\
 0.90 & 17,316 rpm & 17.4 N & 21.7 N & 26.1 N \\
-\bottomrule
+\hline
 \end{tabular}
 \end{table}
 
@@ -403,24 +397,23 @@ This ESC was chosen as it matched the propulsion system requirements while remai
 \centering
 \caption[ESC specifications]{ESC specifications\footnotemark}
 \label{tab:esc_specifications}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\textwidth}{@{} l l X @{}}
-\toprule
+\begin{tabular}{|c|c|c|}
+\hline
 \textbf{Parameter} & \textbf{Manufacturer / Supplier Specification} & \textbf{Design Relevance} \\
-\midrule
-Selected ESC & LittleBee Spring 40A & Speed controller for each brushless motor \\
 \hline
-Input voltage & 2--6S LiPo & Compatible with the intended multirotor power range \\
+Selected ESC & LittleBee Spring 40A & Speed controller for motor \\
 \hline
-Continuous current & 40 A & Provides current capacity for high-throttle motor operation \\
+Input voltage & 2--6S LiPo & Compatible with power range \\
 \hline
-Size & Approximately 35 mm $\times$ 17 mm & Compact \\
+Continuous current & 40 A & Provides current capacity  \\
 \hline
-Weight & Approximately 12 g with wires & Low mass \\
+Size &  35 mm $\times$ 17 mm & Compact \\
 \hline
-Supported protocols & OneShot, MultiShot, DShot & Suitable for fast multirotor throttle control \\
-\bottomrule
-\end{tabularx}
+Weight &  12 g with wires & Low mass \\
+\hline
+Supported protocols & OneShot, MultiShot, DShot & Suitable for throttle control \\
+\hline
+\end{tabular}
 \end{table}
 
 \footnotetext{Data from available supplier specifications \cite{littlebee_spring_40a}}
@@ -439,26 +432,25 @@ This battery was selected as a representative design choice as it matched the vo
 \centering
 \caption[4S 5000 mAh LiPo Battery specifications]{4S 5000 mAh LiPo Battery specifications\footnotemark}
 \label{tab:battery_specifications}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\textwidth}{@{} l l X @{}}
-\toprule
+\begin{tabular}{|c|c|c|}
+\hline
 \textbf{Parameter} & \textbf{Representative Specification} & \textbf{Design Relevance} \\
-\midrule
+\hline
 Battery type & LiPo battery pack & Suitable for high-current drone propulsion \\
 \hline
 Cell count & 4S / 4 cells & Matches propulsion requirements \\
 \hline
-Nominal voltage & 14.8 V & Used for motor speed and power-system calculations \\
+Nominal voltage & 14.8 V & Used for calculations \\
 \hline
-Capacity & 5000 mAh / 5 Ah & Supports the target endurance before recharge \\
+Capacity & 5000 mAh / 5 Ah & Supports the target endurance \\
 \hline
-Representative mass range & 390--589 g & Gives a realistic range for mass \\
+Representative mass range & 390--589 g & Gives a range for mass \\
 \hline
-Representative dimensions & 32 $\times$ 42 $\times$ 132 mm to 138 $\times$ 46 $\times$ 50 mm & realistic range for battery bay sizing and packaging \\
+Representative dimensions & 32 $\times$ 42 $\times$ 132 mm & realistic size \\
 \hline
 Battery count & 1 pack per drone & Simplifies packaging and recharge \\
-\bottomrule
-\end{tabularx}
+\hline
+\end{tabular}
 \end{table}
 
 \footnotetext{Data adapted from commercially viable sources\cite{tattu_bashing_4s_5000mah, gensace_4s_5000mah}}
@@ -524,24 +516,23 @@ We require a high-current PDB, which was chosen to be the Holybro Power Distribu
 \centering
 \caption[PDB specifications]{PDB specifications\footnotemark}
 \label{tab:pdb_specifications}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\textwidth}{@{} l l X @{}}
-\toprule
+\begin{tabular}{|c|c|c|}
+\hline
 \textbf{Parameter} & \textbf{Manufacturer / Supplier Specification} & \textbf{Design Relevance} \\
-\midrule
+\hline
 Selected PDB & Holybro Power Distribution Board 300A & Main  PDB \\
 \hline
-Continuous current rating & 300 A & Provides margin above theoretical maximum \\
+Continuous current rating & 300 A & Margin above theoretical maximum \\
 \hline
-Burst current rating & 1000 A & Provides tolerance for short-duration spikes \\
+Burst current rating & 1000 A & Tolerance for spikes \\
 \hline
 PCB design & 10 oz copper & Safe method of wiring \\
 \hline
 Connector options & XT90 and XT30 options available & Main connection route \\
 \hline
 Mounting holes & M3 mounting holes & Main attachment to drone hull \\
-\bottomrule
-\end{tabularx}
+\hline
+\end{tabular}
 \end{table}
 
 \footnotetext{Data from the Holybro PDB 300A specification \cite{holybro_pdb_300a}}
@@ -554,32 +545,29 @@ Voltage regulation is vital for ensuring the integrity of more sensitive electro
 
 Pololu D24V90F5 serves as a suitable regulator as it can step the \(14.8~\text{V}\) 4S battery Voltage down to a stable \(5~\text{V}\) voltage. As shown in Table~\ref{tab:voltage_regulator_specifications}, it has an input range of \(5-38~\text{V}\) which is compatible with the main battery while the current output is suitable for the Raspberry Pi, sensors, and other electronics.
 
-\newpage
-
 \begin{table}[htbp]
 \centering
 \caption[5 V step-down regulator specifications]{5 V step-down regulator specifications\footnotemark}
 \label{tab:voltage_regulator_specifications}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\textwidth}{@{} l l X @{}}
-\toprule
+\begin{tabular}{|c|c|c|}
+\hline
 \textbf{Parameter} & \textbf{Manufacturer Specification} & \textbf{Design Relevance} \\
-\midrule
+\hline
 Regulator & Pololu D24V90F5 & 5 V step-down regulator \\
 \hline
 Regulator type & Step-down / buck regulator & steps down the higher 4S battery voltage \\
 \hline
 Input voltage range & 5--38 V & Compatible with the 14.8 V 4S LiPo battery \\
 \hline
-Output voltage & Fixed 5 V & Suitable for the Raspberry Pi and other 5 V electronics \\
+Output voltage & Fixed 5 V & Suitable for the 5 V electronics \\
 \hline
 Efficiency & 80--95\% & Reduces power loss and heating \\
 \hline
-Size & 40.6 mm $\times$ 20.3 mm $\times$ 7.6 mm & Sizable for integration into drone electronics circuit \\
+Size & 40.6 mm $\times$ 20.3 mm $\times$ 7.6 mm & Sizable for integration into drone \\
 \hline
-Weight & Approximately 4.8 g & Low mass contribution to the overall drone design \\
-\bottomrule
-\end{tabularx}
+Weight & Approximately 4.8 g & Low mass contribution \\
+\hline
+\end{tabular}
 \end{table}
 
 \footnotetext{Data from Pololu D24V90F5 manufacturer  \cite{pololu_d24v90f5}}
@@ -611,17 +599,14 @@ Two main Rasperry Pi single-board computers were considered, the Raspberry Pi 4 
 
 Despite the strong performance offered by the Raspberry Pi 5, its additional computing capabilities were not considered important as the project was using pre-trained models rather than training onboard. The \textbf{Raspberry Pi 4 Model B} (shown in Fig.~\ref{fig:Raspberry Pi 4 Model B}) was chosen as the onboard computer as it provided a good balance between processing, cost and integration. In addition, it provided the required Wi-Fi, GPIO, USB, and camera interfaces, while being easier to power and package inside the drone.
 
-\newpage
-
 \begin{table}[htbp]
 \centering
 \caption[Comparison of Raspberry Pi single-board computer]{Comparison of Raspberry Pi single-board computer\footnotemark}
 \label{tab:raspberrypi_comparison}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\textwidth}{@{} l X X @{}}
-\toprule
+\begin{tabularx}{\textwidth}{|p{3cm}|X|X|}
+\hline
 \textbf{Parameter} & \textbf{Raspberry Pi 4 Model B} & \textbf{Raspberry Pi 5} \\
-\midrule
+\hline
 Processor & Broadcom BCM2711 quad-core Cortex-A72 64-bit SoC & Broadcom BCM2712 quad-core Cortex-A76 64-bit SoC \\
 \hline
 Clock speed & 1.8 GHz & 2.4 GHz \\
@@ -642,7 +627,7 @@ USB & 2 $\times$ USB 3.0, 2 $\times$ USB 2.0 & 2 $\times$ USB 3.0, 2 $\times$ US
 \hline
 Approximate cost & From \$35, depending on RAM option & From \$45, depending on RAM option \\
 
-\bottomrule
+\hline
 \end{tabularx}
 \end{table}
 
@@ -692,17 +677,16 @@ A Consolidated summarisation of the flight-control sensors are shown in Table~\r
 \centering
 \caption{Flight-control sensors \cite{sparkfun_icm20948, st_vl53l1x, st_vl53l5cx}}
 \label{tab:flight_control_sensors}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\textwidth}{@{} l X X X @{}}
-\toprule
+\begin{tabularx}{\textwidth}{|p{3cm}|X|X|X|}
+\hline
 \textbf{Sensor} & \textbf{Role} & \textbf{Placement / Orientation} & \textbf{Key Specification} \\
-\midrule
+\hline
 SparkFun ICM-20948 IMU & Measures drone motion and orientation/state & Housed inside hull, near the centre & 9-axis IMU: 3-axis accelerometer, 3-axis gyroscope, 3-axis magnetometer; I\textsuperscript{2}C/SPI support \\
 \hline
 VL53L1X ToF sensor & Provides vertical distance reference & Mounted pointing upwards & ToF ranging up to approximately 4 m; up to 50 Hz ranging frequency \\
 \hline
 VL53L5CX ToF sensors & Provides side obstacle awareness and short-range distance sensing & Mounted facing outwards on multiple sides of the drone & 8$\times$8 multizone ToF sensing; up to 4 m range; \\
-\bottomrule
+\hline
 \end{tabularx}
 \end{table}
 
@@ -783,33 +767,31 @@ The values in Table~\ref{tab:main_body_mass_estimate} were estimated from the Fu
 \centering
 \caption{Estimated printed mass of central body}
 \label{tab:main_body_mass_estimate}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\textwidth}{@{} l r r r @{}}
-\toprule
+\begin{tabular}{|c|c|c|c|}
+\hline
 \textbf{Component} & \textbf{Solid CAD Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
-\midrule
+\hline
 Top hull & 764.457 g & 20\% & 152.9 g \\
 Bottom hull + landing gear & 1163.830 g & 25\% & 291.0 g \\
 Electronics basket & 604.322 g & 30\% & 181.3 g \\
-\midrule
+\hline
 \textbf{Total main body assembly} & \textbf{2532.609 g} & -- & \textbf{625.1 g} \\
-\bottomrule
-\end{tabularx}
+\hline
+\end{tabular}
 \end{table}
 
 \begin{table}[htbp]
 \centering
 \caption{Maximum CAD dimensions of the main body components}
 \label{tab:main_body_dimensions}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabular}{@{} l r r r @{}}
-\toprule
+\begin{tabular}{|c|c|c|c|}
+\hline
 \textbf{Component} & \textbf{X (mm)} & \textbf{Y (mm)} & \textbf{Z (mm)} \\
-\midrule
+\hline
 Top hull & 207.47 & 360.64 & 65.02 \\
 Electronics basket & 255.20 & 260.20 & 70.00 \\
 Bottom hull + landing gear & 234.00 & 418.65 & 144.90 \\
-\bottomrule
+\hline
 \end{tabular}
 \end{table}
 
@@ -839,10 +821,10 @@ The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fu
 \caption{Estimated printed mass of one side of the rotor-arm and blade-guard assembly.}
 \label{tab:rotor_arm_mass_estimate}
 \renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\textwidth}{@{} l r r r @{}}
+\begin{tabular}{|c|c|c|c|}
 \toprule
 \textbf{Component} & \textbf{Solid CAD Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
-\midrule
+\hline
 Rear blade guard & 91.2 g & 35\% & 31.9 g \\
 Front blade guard & 86.3 g & 35\% & 30.2 g \\
 Rear rotor arm & 129.1 g & 60\% & 77.5 g \\
@@ -851,10 +833,10 @@ Rear lower linkage & 3.8 g & 80\% & 3.0 g \\
 Front rotor arm & 171.5 g & 60\% & 102.9 g \\
 Front upper linkage & 3.7 g & 80\% & 3.0 g \\
 Front lower linkage & 3.7 g & 80\% & 3.0 g \\
-\midrule
+\hline
 \textbf{Total one-side assembly} & \textbf{493.1 g} & -- & \textbf{254.5 g} \\
-\bottomrule
-\end{tabularx}
+\hline
+\end{tabular}
 \end{table}
 
 \subsubsection{Turret/Gimbal Design}
@@ -894,19 +876,19 @@ Together, the yaw servo, pitch motor, and roll motor allow the turret to achieve
 \caption{Estimated printed mass of gimbal turret components using Fusion 360 solid-body mass and assumed 3D-print infill percentages.}
 \label{tab:gimbal_mass_estimate}
 \renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\textwidth}{@{} l r r r @{}}
-\toprule
+\begin{tabular}{|c|c|c|c|}
+\hline
 \textbf{Component} & \textbf{Solid CAD Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
-\midrule
+\hline
 Gimbal installation plate & 21.58 g & 50\% & 10.8 g \\
 Square axial component & 12.23 g & 70\% & 8.6 g \\
 Gimbal pitch axis component & 6.65 g & 70\% & 4.7 g \\
 Gimbal roll axis component & 5.21 g & 70\% & 3.6 g \\
 Coupler & 20.89 g & 80\% & 16.7 g \\
-\midrule
+\hline
 \textbf{Total gimbal assembly} & \textbf{66.55 g} & -- & \textbf{44.4 g} \\
-\bottomrule
-\end{tabularx}
+\hline
+\end{tabular}
 \end{table}
 
 Table~\ref{tab:gimbal_mass_estimate} shows the mass of the solid body from Fusion 360 using assigned ABS material properties. Estimations were made, shown in Table~\ref{tab:gimbal_mass_estimate}, using infill assumptions for each component which reduced the final mass from 66.55g to 44.4g - excluding the camera, IR emitter, gimbal motors and servo. 
@@ -922,17 +904,17 @@ The MG90S is suitable for the yaw stage as it fits within the turret base region
 \caption[Suggested actuator specifications for the gimbal turret]{Suggested actuator specifications for the gimbal turret\footnotemark}
 \label{tab:gimbal_actuator_specs}
 \renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\textwidth}{@{} l l X X @{}}
-\toprule
+\begin{tabular}{|c|c|c|}
+\hline
 \textbf{Axis} & \textbf{Suggested Actuator} & \textbf{Size / Weight}\\
-\midrule
+\hline
 Yaw & MG90S servo & 22.8 mm $\times$ 12.2 mm $\times$ 28.5 mm;  13.4 g\\
 
 Pitch & Quanum/GBM2208 brushless gimbal motor & 28 mm $\times$ 22 mm;  43 g\\
 
 Roll & Quanum/GBM2208 brushless gimbal motor & 28 mm $\times$ 22 mm;  43 g\\
-\bottomrule
-\end{tabularx}
+\hline
+\end{tabular}
 \end{table}
 
 \footnotetext{Data adapted from supplier specifications\cite{mg90s_servo, gbm2208_gimbal_motor}.}
