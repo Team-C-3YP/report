@@ -679,7 +679,7 @@ A barometer was not selected as a height sensor despite being commonly used in d
 
 The SparkFun ICM-20948 IMU (shown in Fig.~\ref{fig:IMU}) provides local motion and orientation feedback. It is housed inside the drone, near the center of the drone body, where it can measure acceleration, angular-rate, and magnetic-field measurements representative of the airframe while simultaneously protected from impact.
 
-The VL53L1X and VL53L5CX ToF sensors (shown in Fig.~\ref{fig:Tof}) are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained RL control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
+The VL53L1X and VL53L5CX ToF sensors are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained RL control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
 
 A Consolidated summarisation of the flight-control sensors are shown in Table~\ref{tab:flight_control_sensors} below.
 
@@ -708,14 +708,6 @@ VL53L5CX ToF sensors & Provides side obstacle awareness and short-range distance
     \label{fig:IMU}
 \end{figure}
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.25\textwidth]{Hardware/VL53L1X.png}
-    \includegraphics[width=0.25\textwidth]{Hardware/VL53L5CX.png}
-    \caption{Time-of-Flight Sensors}
-    \label{fig:Tof}
-\end{figure}
-
 \paragraph{IR Tagging System}
 
 For game-specific components, the drone is required to have an infrared tagging system capable of tagging players and detecting when it has been tagged. Despite the project name, the physical hardware uses infrared rather than actual lasers. This is due to safety and regulatory reasons: laser products usage are subject to classification and safety requirements under UK regulations - such as the BS EN/IEC 60825-1 \cite{bsi_laser_safety_60825}, and guidance notes that laser radiation risks harm to eyes and skin \cite{ukhsa_laser_safety}. Using Infra-red based system is therefore more appropriate for indoor game-play, where players and drones operate near each other. In terms of hardware, we focus on how the IR components are physically installed into the overall drone design.
@@ -741,6 +733,10 @@ The early concepts tested out basic airframe layouts. The first concept followed
 
 The further concepts continued to investigate into symmetrical quadrotor layouts with increased body volume. One version (shown in Fig.~\ref{fig:Model 2}) even featured blade-guards, but made the drone noticeably larger, bulkier and less refined than the original concept. Scaling up the size solved some layout issues, but caused the platform to be less suitable for indoor game environment where the drone was required to be compact. In addition, earlier versions treated the airframe as one large connected body, which was not practical for assembly, manufacturing or repair. 
 
+This led to a complete change in direction for the final design (shown in Fig.~\ref{fig:ModelFinal}): a modular mirrored layout, where the rotor arms are separate from the main body and secured using linkage parts and bolts. With a size of 580x420x260mm, the body, arms, linkages, and mounts are to be manufactured separately to ensure easy assembly. The key design areas are the central main body, rotor arms and motor mounts, and turret/gimbal assembly - at which we will go into detail in the following sections.
+
+\newpage
+
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.5\textwidth]{Hardware/Model 2.png}
@@ -755,9 +751,13 @@ The further concepts continued to investigate into symmetrical quadrotor layouts
     \label{fig:ModelFinal}
 \end{figure}
 
-This led to a complete change in direction for the final design (shown in Fig.~\ref{fig:ModelFinal}): a modular mirrored layout, where the rotor arms are separate from the main body and secured using linkage parts and bolts. With a size of 580x420x260mm, the body, arms, linkages, and mounts are to be manufactured separately to ensure easy assembly. The key design areas are the central main body, rotor arms and motor mounts, and turret/gimbal assembly - at which we will go into detail in the following sections.
-
 \subsubsection{Main Body Design}
+
+The main body is composed of three main parts (shown in Fig.~\ref{fig:Main Body}): the top hull, the bottom hull, and the electronics basket.
+
+The \textbf{top hull} forms an upper protective cover. It acts as a shield to the internal electronics from direct contact while simultaneously ensure all components are inside. It is designed to give the drone a smooth external shape which helps avoid a bulky appearance and gives the drone a more refined final form.
+
+The \textbf{bottom hull} forms the lower section of the drone and includes the landing gear. It has a boat-like shape that helps enclose the electronics bay while providing a stable base structure. The helicopter-style skid landing gear is directly integrated into the lower section. This landing gear layout was chosen such that it provides a simple, lightweight, and low-maintenance structure. The wide stance improves stability during take-off and landing.
 
 \begin{figure}[htbp]
     \centering
@@ -765,12 +765,6 @@ This led to a complete change in direction for the final design (shown in Fig.~\
     \caption{Exploded View of Main Body - Top Hull(top), Electronic Basket(mid), Bottom Hull (bottom)}
     \label{fig:Main Body}
 \end{figure}
-
-The main body is composed of three main parts (shown in Fig.~\ref{fig:Main Body}): the top hull, the bottom hull, and the electronics basket.
-
-The \textbf{top hull} forms an upper protective cover. It acts as a shield to the internal electronics from direct contact while simultaneously ensure all components are inside. It is designed to give the drone a smooth external shape which helps avoid a bulky appearance and gives the drone a more refined final form.
-
-The \textbf{bottom hull} forms the lower section of the drone and includes the landing gear. It has a boat-like shape that helps enclose the electronics bay while providing a stable base structure. The helicopter-style skid landing gear is directly integrated into the lower section. This landing gear layout was chosen such that it provides a simple, lightweight, and low-maintenance structure. The wide stance improves stability during take-off and landing. 
 
 The \textbf{electronics basket} acts as a removable internal frame used to hold the main electronics, wiring, and mounting points. It also connects the structure between the central body, and the rotor-arm assemblies. Keeping the basket separate from the outer hull means the electronic components can be accessed for maintenance without dismantling the entire drone.
 
@@ -835,8 +829,6 @@ The \textbf{linkage parts} connect the rotor arms to the electronics basket. The
 
 The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fusion 360 CAD model using the properties assigned of ABS material. Just like the main body, the Fusion 360 reports the solid-body CAD mass, therefore we estimate the real manufactured mass using base infill assumptions. Note that this estimate does not account for wall thickness, slicing settings, print orientation, or bolt fastener mass.
 
-Note that the measurements (shown in Table~\ref{tab:rotor_arm_dimensions}) are maximum lengths (shown in  on each axis, rather than rectangular measurements. The blade guards and rotor arms have circular geometry around the propeller area - these measurements are useful for checking propeller clearance but should not be interpreted as box-shaped component dimensions.
-
 \begin{table}[htbp]
 \centering
 \caption{Estimated printed mass of one side of the rotor-arm and blade-guard assembly.}
@@ -858,27 +850,6 @@ Front lower linkage & 3.7 g & 80\% & 3.0 g \\
 \textbf{Total one-side assembly} & \textbf{493.1 g} & -- & \textbf{254.5 g} \\
 \bottomrule
 \end{tabularx}
-\end{table}
-
-\begin{table}[htbp]
-\centering
-\caption{Maximum length of one side of the rotor-arm and blade-guard assembly}
-\label{tab:rotor_arm_dimensions}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabular}{@{} l r r r @{}}
-\toprule
-\textbf{Component} & \textbf{X (mm)} & \textbf{Y (mm)} & \textbf{Z (mm)} \\
-\midrule
-Rear blade guard & 207.51 & 167.16 & 113.00 \\
-Front blade guard & 117.50 & 207.51 & 118.00 \\
-Rear rotor arm + motor mount & 75.00 & 50.00 & 120.00 \\
-Rear linkage 1 & 40.00 & 20.00 & 5.00 \\
-Rear linkage 2 & 40.00 & 20.00 & 5.00 \\
-Front rotor arm + motor mount & 75.00 & 50.00 & 140.00 \\
-Front upper linkage & 40.00 & 20.00 & 5.00 \\
-Front lower linkage & 40.00 & 20.00 & 5.00 \\
-\bottomrule
-\end{tabular}
 \end{table}
 
 \subsubsection{Turret/Gimbal Design}
@@ -1014,55 +985,15 @@ The simulation showed that the highest stress occurred near the connection betwe
 
 The assessment was limited to a static simulation, A dynamic impact simulation would have been more realistic in a collision case but the tools were not available without paid access. As a result, the safety factor should be treated as an initial indicator.
 
-\begin{table}[htbp]
-\centering
-\caption{Feasibility assessment.}
-\label{tab:final_design_feasibility}
-\renewcommand{\arraystretch}{1.25}
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Design Area} & \textbf{Feasibility Assessment} \\
-\hline
-Electronics integration & The main electronic components can be housed within the central body and removable electronics basket. \\
-\hline
-Propulsion system & The motor-propeller configuration provides a theoretical thrust margin suitable for the target drone mass. \\
-\hline
-Power system & The 4S battery, PDB, and 5~V regulator provide a clear separation between propulsion power and low-voltage electronics. \\
-\hline
-Mechanical structure & The modular body, rotor arms, blade guards, and gimbal turret form a complete and practical airframe layout. \\
-\hline
-Manufacturability & PLA/ABS 3D-printed parts and bolt fasteners make the design low-cost and easy to assemble. \\
-\hline
-Maintainability & Separate hull sections, rotor arms, linkages, electronics basket, and gimbal parts allow damaged or faulty parts to be replaced individually. \\
-\hline
-Safety features & Blade guards, enclosed electronics, and helicopter-style landing gear improve landing safety and stability. \\
-\hline
-Main limitation & The design has not been physically prototyped, so many real behaviors remain unevaluated. \\
-\hline
-\end{tabularx}
-\end{table}
-
 \subsubsection{Feasibility of the Final Design}
 
-The final drone design can be considered feasible in the perspective of a CAD/simulation led concept. The selected electronics are consistent with the design requirements. The airframe provides a dedicated area for internal components and wiring while ensuring the body remains modular, detachable and easy to manufacture and assemble. An overall feasibility assessment is shown in Table~\ref{tab:final_design_feasibility}.
+The final drone design can be considered feasible in the perspective of a CAD/simulation led concept. The selected electronics are consistent with the design requirements. The airframe provides a dedicated area for internal components and wiring while ensuring the body remains modular, detachable and easy to manufacture and assemble.
 
-The final design of the drone hardware is acceptable within the scope of the project. However, the design is not recommended to serve as a final prototype as many of the main areas still require proper validation with real-world testing. 
+The final design of the drone hardware is acceptable within the scope of the project. However, the design is not recommended to serve as a final validated prototype as many of the main areas still require proper validation with real-world testing. The main limitations are the lack of physical testing which is vital if we wish to commercialize the product through physical implementation.
 
-\subsection{Simulation Representation of Drone Hardware}
+\subsubsection{Simulation Representation of Drone Hardware}
 
-The hardware design also needed a simplified representation inside the simulation environment. A Fusion 360 CAD assembly would be too detailed for use in Unity, which was the simulation environment that had been chosen.
-
-\paragraph{Simulation models}
-
-Instead of using the full Fusion 360 assembly,  a lower-detail version was built in Blender. This model kept the main features needed for visual recognition and game play - mainly rotor arms and central body. Smaller details such as bolt holes, internal electronics, linkages were removed to reduce complexity. This allowed the drone to be represented clearly in the simulation. Unity also allowed model mass and size scaling with an in-built physics system, hence could be used to model the simplified drone more accurately.
-
-\paragraph{Importing and setting up the Model}
-
-The simplified drone model was exported from Blender and imported into Unity as a game asset. Once inside Unity, the model was arranged so that movement and animation could be controlled. The rotor propellers were kept separate from the main body to allow spinning animation while following the physics controller.
-
-\paragraph{Simplified Physics and interaction}
-
-The Unity model used the built-in physics and collision system to represent the drone during simulation. The drone was treated as a simplified rigid body with approximate box collision boundaries. Collisions with the walls, obstacles or game-play objects were handled using Unity colliders, and the simplified model allowed basic movement and navigation tests.
+The final CAD model was simplified for use in Unity. Given the full Fusion 360 assembly contained many unnecessary mechanical detail for real-time simulation, a low-poly version was created in Blender and Imported into Unity as a game asset. The simplified model preserved the main visible features such as the drone body and propellers, while small details such as bolt holes and linkages were removed. These were deemed unnecessary as Unity's built-in collision mechanisms and physics engine mainly uses approximated cuboid or spherical boundaries defined by the developer, and developing a custom solid-boundary model would require additional setup time without adding much value.
 
 \subsection{Player Hardware Design}
 
