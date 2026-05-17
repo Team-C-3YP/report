@@ -93,6 +93,12 @@ In addition to the technical deployment, user retention is driven by a companion
 
 \section{Proposed Gameplay for Drone-Based Laser Tag} % Ritchie
 \fancyhead[C]{Richard Usherwood}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figs/Safety Net Editted.png}
+    \caption{A simulation of player and a drone in the maze}
+    \label{fig:gameplay}
+\end{figure}
 \subsection{Overview}
 Players are equipped with Laser Guns (\gls{ir} emitters that transmit encoded data), and helmets and vests containing \gls{ir} sensors. The drones are equipped with Turrets which emit \gls{ir} radiation (see Section \ref{Turret}) as well as \gls{ir} sensors. When not flying, they are dormant in a \say{standby location} where employees can replace their batteries. The drones, guns, helmets and vests connect via Wi-Fi to a central server. If a player is hit, they must navigate to a designated \say{timeout} area of the maze, in which they are safe from drones, and wait for 10 seconds. The player's gun and helmet/vest sensors are connected via the central server, so, when a player is hit, their gun is disables until their timeout ends (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at \(3 ~\mathrm{ m}\) height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
 
@@ -101,7 +107,7 @@ Players are equipped with Laser Guns (\gls{ir} emitters that transmit encoded da
 In \say{Wave Mode}, the players \say{fight} a number of drones, released in an order designed to be both challenging and engaging. When hit, the drones return to their standby location, where they will remain. If all of the players are timing out at the same time (having been hit), they lose. If all of the drones have been hit, they win. This constitutes a single wave. The players can choose from a catalogue of waves (in future accessible through the companion app, see Section \ref{app}), ranging in difficulty. Each level will be given a difficulty rating. This allows a team to end a game with a clear metric of their performance: the difficulty rating of the hardest wave completed. This will also allow a team to track their improvement. In future, this will be displayed in the companion app, allowing players to compare scores with friends.
 
 \subsection{Objective Mode}
-In \say{Objective Mode}, the players must navigate the maze to complete objectives, such as \say{Hold this button for 5 seconds}, or \say{Shoot this target on the wall}, which are communicated via speakers. They must complete all objectives within a time limit to \say{pass} the level. While they are completing these objectives, the drones are flying overhead and attempting to shoot at the players, just as in Wave Mode. Similarly, the players must timeout for 10 seconds in a particular area of the maze if hit, and the drones will exit the game if hit, but will return after a short timeout. If all players timeout at once, they lose; if they exceed the time limit for the level, they lose; if they complete all objectives, they win. If they win, they will progress to a harder level. Just as in \say{Wave Mode}, the levels will be designed and play-tested to be both challenging, engaging; a catalogue of levels marked with a numerical difficulty can be selected in-app.\newline
+In \say{Objective Mode}, the players must navigate the maze to complete objectives, such as \say{Hold this button for 5 seconds}, or \say{Shoot this target on the wall}, which are communicated via speakers. They must complete all objectives within a time limit to \say{pass} the level. The other mechanics of the game are the same as in \say{Wave Mode}, other than that the drones return after a short timeout when hit. If they complete all objectives, they win. If they win, they will progress to a harder level. Just as in \say{Wave Mode}, the levels will be designed and play-tested to be both challenging, engaging; a catalogue of levels marked with a numerical difficulty can be selected in-app.\newline
 
 \subsection{Difficulty Scaling}
 Since the levels increase in difficulty, there is little need to scale difficulty according to a players' skill: if the players are inexperienced, they will only play easy levels, and there will be levels to suit players of all skill levels. However, the difficulty of the levels may need to change according to the number of players in a team. This can be achieved in a number of ways. For example, the number of drones could be adjusted, the top speed of the drones could be capped, and artificial inaccuracy could be added to the shooting of the drones.\newline
@@ -2035,7 +2041,7 @@ When opened for the first time, the app prompts the user sign in using a usernam
          \caption{Leaderboard Screen - Global Leaderboard Tab}
          \label{fig:lea-glo}
      \end{subfigure}
-     \hfill
+     \hspace{1cm}
      \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/2_2_1_Leaderboard_Friends_No_Alice.jpg}
@@ -2088,14 +2094,14 @@ The user experience of playing game in the centre, using the app, is outlined be
          \caption{Login Screen}
          \label{fig:userstory1}
      \end{subfigure}
-     \hfill
+     \hspace{0.5cm}
      \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/1_Profile_Screen.jpg}
          \caption{Profile Screen}
          \label{fig:userstory2}
      \end{subfigure}
-     \hfill
+     \hspace{0.5cm}
      \begin{subfigure}[b]{0.25\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/App_Screenshots/5_Play_In_Person.jpg}
@@ -2127,8 +2133,39 @@ Lee et al describe the use of feedback in UI design as \say{Response of the syst
     \label{fig:App-Friend_Request}
 \end{figure}
 \subsubsection{Consistency}
-Lee et al describe the use of consistency in UI design as \say{Uniformity of system semantics across similar situations}. In this context, \say{system semantics} refers to the method the user is expected to use when interacting with the UI. As an example, the app uses a dark grey and red colour scheme. Throughout the app, red is used to mean \say{active/on} and dark grey is used to mean \say{passive/off}. This is seen in the bottom panel (Fig. \ref{fig:App-Panel}) and top panel in the achievements (Fig. \ref{fig:ach-screen}) and community (Fig. \ref{fig:com-screen}) screens, in which the screen being displayed in shown in red. It is also seen in the player profile (Fig. \ref{fig:0_Login_Screen} and login (Fig. \ref{fig:1_Profile_Screen}) screens, in which the Login/Logout buttons are coloured red. It is shown in the box displayed when receiving a friend request (Fig. \ref{fig:App-Friend_Request}) in which the \say{Accept} button, which changes the user's list of friends, is coloured red, and the \say{Decline} button, which leaves the user's list of friends as it is, is shown in dark grey.
-
+Lee et al describe the use of consistency in UI design as \say{Uniformity of system semantics across similar situations}. In this context, \say{system semantics} refers to the method the user is expected to use when interacting with the UI. As an example, the app uses a dark grey and red colour scheme. Throughout the app, red is used to mean \say{active/on} and dark grey is used to mean \say{passive/off}. This is seen in the bottom panel (Fig. \ref{fig:App-Panel}) and top panel in the achievements (Fig.~\ref{fig:RemainingAppSS}(\subref{fig:RemainingAppSS-ach-lif}, \subref{fig:RemainingAppSS-ach-mon})) and community (Fig.~\ref{fig:RemainingAppSS}(\subref{fig:RemainingAppSS-com-fri}, \subref{fig:RemainingAppSS-com-sen})) screens, in which the screen being displayed in shown in red. It is also seen in the login (Fig.~\ref{fig:userstory}(\subref{fig:userstory1})) and player profile (Fig.~\ref{fig:userstory}(\subref{fig:userstory2})) screens, in which the Login/Logout buttons are coloured red. It is shown in the box displayed when receiving a friend request (Fig. \ref{fig:App-Friend_Request}) in which the \say{Accept} button, which changes the user's list of friends, is coloured red, and the \say{Decline} button, which leaves the user's list of friends as it is, is shown in dark grey.
+\begin{figure}[htbp]
+     \centering
+     \begin{subfigure}[b]{0.24\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/3_1_Achievements_Lifetime.jpg}
+         \caption{Achievements Screen - Lifetime Achievements}
+         \label{fig:RemainingAppSS-ach-lif}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.24\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/3_2_Achievements_Monthly.jpg}
+         \caption{Achievements Screen - Monthly Challenges}
+         \label{fig:RemainingAppSS-ach-mon}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.24\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_1_Community_Friends.jpg}
+         \caption{Community Screen - Friends Tab}
+         \label{fig:RemainingAppSS-com-fri}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.24\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_2_2_Community_Requests_Making.jpg}
+         \caption{Community Screen - sending friend request}
+         \label{fig:RemainingAppSS-com-sen}
+     \end{subfigure}
+     \caption{App Screenshots}
+     \label{fig:RemainingAppSS}
+\end{figure}
 
 
 \subsection{Technical Details}
@@ -2142,8 +2179,6 @@ The app uses a hybrid state management strategy, meaning that not all states are
 The App uses Supabase as its backend platform, to access a PostgreSQL database. Database access is handled through a single client in \say{db.js} - after the app is loaded, the data is cached in datacache.js to avoid unnecessary loading times, especially when being used with poor internet connections. A screenshot of the database is included in the appendix.
 
 \(\)\newline A specific format had to be created for this data to be stored. For example, Game Data is stored in a format (A, B, C, \dots),(D, E, F, \dots),(G, H, I, \dots). This game data is equivalent to \say{Players A, B, C, ... played a game in which they got D, E, F, ... kills and died G, H, I, ... times, respectively}. Furthermore the \say{score} is defined as \say{number of kills squared divided by number of deaths} in a game, and the friend requests are stored as CSVs. When a change to the data is made in the app (for example sending or accepting a friend request), the database is automatically through API calls. However, the database must also be updated after every game. In the real system, this would be integrated into a system that processes communications with drones and helmets, and updates the database automatically. However, for now it is handled by a script that allows the user to input the results of the game (who was playing, how many kills they got, how many times they died etc.), and updates the database accordingly. 
-
-\(\)\newline Screenshots of all screens of the app are included in the appendix.
 
 \newpage
 \section{Safety and Risk Assessment Management}
@@ -2596,11 +2631,9 @@ The system should not be considered fully sustainable. Issues such as waste and 
     \text{Total Wall Area}=4\times\sqrt{632\text{ m}^2}\times6\text{ m}=603\text{ m}^2
 \end{equation}
 \begin{equation}
-    \text{Floor Area}=\text{Roof Area}=6800 \text{ ft}^2=632\text{ m}^2
+    \text{Floor Area}=\text{Roof Area}=6800 \text{ ft}^2=632\text{ m}^2\qquad \text{Total Volume}=632\text{ m}^2\times6\text{ m}=3792\text{ m}^3
 \end{equation}
-\begin{equation}
-    \text{Total Volume}=632\text{ m}^2\times6\text{ m}=3792\text{ m}^3
-\end{equation}
+
 
 
 % \begin{equation}
@@ -2623,41 +2656,10 @@ The system should not be considered fully sustainable. Issues such as waste and 
 
 
 
-\begin{figure}[htbp]
-     \centering
-     \begin{subfigure}[b]{0.24\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/3_1_Achievements_Lifetime.jpg}
-         \caption{Achievements Screen - Lifetime Achievements}
-         \label{fig:RemainingAppSS-ach-lif}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.24\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/3_2_Achievements_Monthly.jpg}
-         \caption{Achievements Screen - Monthly Challenges}
-         \label{fig:RemainingAppSS-ach-mon}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.24\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_1_Community_Friends.jpg}
-         \caption{Community Screen - Friends Tab}
-         \label{fig:RemainingAppSS-com-fri}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.24\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{figs/App_Screenshots/4_2_2_Community_Requests_Making.jpg}
-         \caption{Community Screen - sending friend request}
-         \label{fig:RemainingAppSS-com-sen}
-     \end{subfigure}
-     \caption{Remaining App Screenshots}
-     \label{fig:RemainingAppSS}
-\end{figure}
+
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1\linewidth]{figs/High-Level/Flow2.png}
+    \includegraphics[width=0.8\linewidth]{figs/High-Level/Flow-Chard-Even-Bigger-Text.png}
     \caption{Flow Chart Describing High-Level Mode Changes}
     \label{fig:FlowBig}
 \end{figure}
