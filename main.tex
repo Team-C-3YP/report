@@ -83,6 +83,8 @@
 \fancyhead[C]{Rishabh Luthra}
 The UK leisure market is currently defined by a distinct consumer trend: a frugality in routine choices paired with a willingness to invest in high-value experiences \cite{arrowsmith2026leisure, deloitte2026leisure_report}. This shift drives a growing demand for immersive environments that offer real-time interactivity and integrate the strategic depth of video games into the physical world. 
 
+Since its introduction in 1984, the basics of laser tag have remain
+
 To meet this demand, we present a novel laser tag game where human players cooperate to compete against a team of autonomous, multi-agent drones. From a user perspective, the system aims to provide an engaging, safe, and highly interactive experience defined by specific gameplay modes and dynamic objectives (Section 2). To complete these objectives, players navigate through a purpose-built indoor maze constructed from 5-metre high walls (Section 4). The project is governed by strict physical and safety boundaries to ensure a low-risk environment; the arena features a dividing net that separates the drones flying overhead from the human players below. Designed with a 1200J energy absorption capacity, this industrial netting provides a safety factor of 5.1 against a 4kg drone flying at full thrust downwards. As a result, this mitigates the risk of human-drone collisions without diminishing game immersion.
 
 From a drone perspective, the primary goal is to achieve autonomy and coordinated teamwork within a confined environment. Since off-the-shelf platforms lack the necessary flexibility, payload integration, and component protection for such close-proximity indoor operations, a custom modular quadrotor airframe was developed (Section 3). The ABS 3D-printed chassis features integrated blade guards to ensure operational continuity during minor wall collisions. To satisfy a 2:1 thrust-to-weight ratio for a 4kg maximum takeoff mass, the propulsion system utilises BrotherHobby Avenger 2806.5 1300KV brushless motors paired with 8x4x3 polycarbonate propellers, driven by a 4S 5000mAh Lithium Polymer battery to sustain approximately 10 minutes of active flight endurance. Dedicated player hardware, including sensor-equipped helmets and vests, then integrate into this ecosystem (Section 5).
@@ -1066,25 +1068,24 @@ We plan to use industrial safety nets to separate the players from the drones as
 \begin{table}[htbp]
     \centering
     \caption{Net specifications}
-    \label{tab:net}
-    \small
-    \begin{tabularx}{\textwidth}{cccc}
-        \toprule
+    \begin{tabular}{|c| c c c|}
+        \hline
         \textbf{} & \textbf{Net A} & \textbf{Net B} & \textbf{Net C}\\
-        \midrule
+        \hline 
         Material Diameter / mm & 5 & 1.5 & 0.5\\
-        \midrule
+        \hline
         Mesh Size / mm & 100x100 & 100x100 & 100x100 \\
-        \midrule
+        \hline
         Max Tensile Strength / N & 3200 & 250& 800 \\
-        \midrule
+        \hline
         Breaking Elongation / \%        & 15                & 15                & 15                \\
-        \midrule
+        \hline
         Energy Absorption / J           & 4800              & 375               & 1200              \\
-        \midrule
+        \hline
         Energy Absorption Safety Factor & 20.4              & 1.6               & 5.1               \\
-        \bottomrule
-    \end{tabularx}
+        \hline
+    \end{tabular}
+    \label{tab:net}
 \end{table}
 
 \newpage
