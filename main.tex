@@ -9,8 +9,12 @@
 \usepackage{fontspec}
 \usepackage{amsmath}
 \usepackage{dirtytalk}
+\usepackage{caption}
+\captionsetup[table]{labelfont=bf, textfont=it}
+\captionsetup[figure]{labelfont=bf, textfont=it}
 \usepackage{subcaption}
 \captionsetup[subfigure]{labelformat=parens}
+\usepackage[table]{xcolor}
 \usepackage[colorlinks=true, linkcolor=black, citecolor=black, urlcolor=black]{hyperref}
 
 \title{Laser Tag using a Multiagent Drone System}
@@ -96,7 +100,7 @@ In addition to the technical deployment, user retention is driven by a companion
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.7\textwidth]{figs/Safety Net Editted.png}
-    \caption{A simulation of player and a drone in the maze}
+    \caption{\textit{A simulation of player and a drone in the maze}}
     \label{fig:gameplay}
 \end{figure}
 \subsection{Overview}
@@ -2170,7 +2174,7 @@ Lee et al describe the use of consistency in UI design as \say{Uniformity of sys
 
 \subsection{Technical Details}
 \subsubsection{Overview}
-The app was created using Expo. Expo is a development framework built to create React Native apps. React Native is a framework that allows mobile apps to be built using React. Finally, React is a JavaScript library built for user interface design. % rephrase
+The app was created using Expo, a development environment used to create React Native apps. React Native is a framework that allows mobile apps to be built using React, which is a JavaScript library designed for user interface design.
 \subsubsection{Project Structure}
 When the app is run, it opens a \say{package.json} file which sets the rest of the app in motion. From here, it exectutes index.js which imports App.js, which opens MainContainer.js. MainContainer.js serves as the app's navigation hub. MainContainer.js decides which \say{navigation flow} to show, based on whether the app is in state \say{Auth} or \say{Main} (whether the user is signed in or not). From here, MainContainer.js accesses each of the displayed screens, each of which has a dedicated JavaScript file in the \say{screens} subfolder.
 \subsubsection{State Management}
@@ -2184,15 +2188,50 @@ The App uses Supabase as its backend platform, to access a PostgreSQL database. 
 \section{Safety and Risk Assessment Management}
 \label{risk-assessment}
 
-A quantitative risk assessment has been completed, and is shown in Fig. \ref{fig:risk-assessment}. The most significant initial risks (before mitigations) were the the contact between guns and players' eyes, and players running into each other. After the necessary control measures, they are still most significant residual risks, along with trips and falls. This demonstrates that there is not an undue risk associated with playing the game, since trips and falls, player-on-player collision and impact with instruments used for playing (such as laser-guns, squash raquets, etc.) are risks associated with traditional laser-tag, as well as many common sports. 
+A quantitative risk assessment has been completed, and is shown in Table \ref{tab:risk-assessment}. The most significant initial risks were the the contact between guns and players' eyes, and players running into each other. After the necessary control measures, they are still most significant residual risks, along with trips and falls. This demonstrates that there is not an undue risk associated with playing this game, since trips and falls, player-on-player collision and impact with instruments used for playing (such as laser-guns, squash raquets, etc.) are risks associated with traditional Laser-Tag, as well as many common sports. 
 
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.75\linewidth]{figs/risk-assessment}
-    \caption{Quantitative Risk Assessment}
-    \label{fig:risk-assessment}
-\end{figure}
+\begin{table}[h]
+\centering
+\caption{Quantitative Risk Assessment (L=Likelihood, S=Severity, RV=Risk Value)}
+\begin{tabular}{|c|c|p{4cm}|p{0.5cm}|p{0.5cm}|p{0.6cm}|p{5cm}|p{0.55cm}|p{0.55cm}|p{0.6cm}|}
+\hline
+\multicolumn{3}{|c|}{\cellcolor{gray! 30}} &
+\multicolumn{3}{c|}{\cellcolor{gray! 30}\textbf{Initial Risk}}&
+\multicolumn{1}{c|}{\cellcolor{gray! 30}} &
+\multicolumn{3}{c|}{\cellcolor{gray! 30}\textbf{Residual Risk}}\\
+\hline
+\cellcolor{gray! 30}\textbf{\#}&\cellcolor{gray! 30}\textbf{Hazard}&\cellcolor{gray! 30}\textbf{Risk}&\cellcolor{gray! 30}\textbf{L[5]}&\cellcolor{gray! 30}\textbf{S[5]}&\cellcolor{gray! 30}\textbf{RV}&\cellcolor{gray! 30}\textbf{Control Measures}&\cellcolor{gray! 30}\textbf{L[5]}&\cellcolor{gray! 30}\textbf{S[5]}&\cellcolor{gray! 30}\textbf{RV}\\
+\hline
+\cellcolor{gray! 30}\textbf{1}&Drones&Drone fails and falls on player’s head&3&4&\cellcolor{orange! 90}12&Net separates drones from players; players wear helmets&1&3&\cellcolor{green! 100}3\\
+\hline
+\cellcolor{gray! 30}\textbf{2}&Walls&Players run into walls in the dark&5&2&\cellcolor{orange! 90} 10&Players wear helmets; reflective tape placed on wall edges&2&1&\cellcolor{green! 100} 2\\
+\hline
+\cellcolor{gray! 30}\textbf{3}&Drones&Drone fails and blade shards fall of player’s head/in eyes&2&3&\cellcolor{yellow! 100}6&Net separates drones from players; players wear helmets; players wear eye protection&2&1&\cellcolor{green! 90}2\\
+\hline
+\cellcolor{gray! 30}\textbf{4}&N/A&Heart/asthma attack from exercise&1&5&\cellcolor{yellow! 100}5&Players are barred from playing if they have serious pre-existing health conditions; employees are trained in first aid and will call first responders&1&3&\cellcolor{green! 100}3\\
+\hline
+\cellcolor{gray! 30}\textbf{5}&N/A&Trips and Falls&4&3&\cellcolor{orange! 90}12&First aid kits are distributed; employees are trained in first aid - players must wear appropriate footwear&3&2&\cellcolor{yellow! 100}6\\
+\hline
+\cellcolor{gray! 30}\textbf{6}&N/A&Fire&2&5&\cellcolor{orange! 90}10&Sprinkler systems are installed; employees are familiar with evacuation plans; no smoking laws are enforced&1&3&\cellcolor{green! 100}3\\
+\hline
+\cellcolor{gray! 30}\textbf{7}&Guns&Contact with Eyes&4&4&\cellcolor{red! 85}16&Players wear eye protection; guns marked with reflective tape&3&2&\cellcolor{yellow! 100}6\\
+\hline
+\cellcolor{gray! 30}\textbf{8}&N/A&Players run into each other in the dark&5&3&\cellcolor{red! 85}15&Players wear helmets; vests are marked with reflective tape&4&2&\cellcolor{yellow! 100} 8\\
+\hline
+\cellcolor{gray! 30}\textbf{9}&Battery&Explosion/Fire&2&5&\cellcolor{orange! 90}10&Battery is charged according to guidelines and are regularly inspected by qualified persons&1&5&\cellcolor{green! 100}5\\
+\hline
+\end{tabular}
+\label{tab:risk-assessment}
+\end{table}
+
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.75\linewidth]{figs/risk-assessment}
+%     \caption{Quantitative Risk Assessment}
+%     \label{fig:risk-assessment}
+% \end{figure}
 
 \newpage
 \section{Commercialisation and Financial Modelling}
@@ -2350,7 +2389,7 @@ The equity-only discount rate is used by investors to assess the viability of a 
 \label{DiscountRate}
 A numerical value of discount rate, \(d\), must be chosen. Two common approaches to model discount rate are: Equity-Only Discount Rate, and \gls{wacc}.
 \paragraph{Equity-Only Discount Rate} \(\)\newline
-Using an Equity-Only Discount Rate, the discount rate applied to future cash flows is set by investors, ignoring debt interest from the bank. Therefore the Year 0 capital injection from the bank loan \(P\) and the annual debt repayments \(A\) in subsequent years must be included in the cash flow, and the remaining balance after \(t\) years \(B_t\) on the bank loan must be considered as a liability in the terminal value (discussed in section \ref{TermValue}). These are determined by the amortisation formula, shown in Eq. \ref{equ:amortisation}.
+Using an Equity-Only Discount Rate, the discount rate \(r_e\) applied to future cash flows is set by investors. For a small, high-risk start-up, \(r_e=20\%\) alligns with the estimates of business advisors~\cite{EquityDiscountRate}. This ignores debt interest from the bank, so the Year 0 capital injection from the bank loan \(P\) and the annual debt repayments \(A\) in subsequent years must be included in the cash flow, and the remaining balance after \(t\) years \(B_t\) on the bank loan must be considered as a liability in the terminal value (discussed in section \ref{TermValue}). These are determined by the amortisation formula, shown in Eq. \ref{equ:amortisation}.
 
 \begin{equation}
     A=\frac{Pr_d}{1-(1+r_d)^{-N}}, \qquad\qquad B_t=P(1+r_d)^t-A\frac{(1+r_d)^t-1}{r_d}
@@ -2378,9 +2417,9 @@ Another approach is to weight the bank loan interest rate \(r_d\) and the equity
 \begin{equation}
     \text{WACC}=\frac{D}{D+E}r_d+\frac{E}{D+E}r_e
 \end{equation}
-where \(D\) is the initial capital of the bank loan, and \(E\) is the capital investment from equity financing. Using \gls{wacc}, it is not necessary to model the loan an the debt repayments as cash flows , or the remaining balance as a liability; these are all captured by the use of \gls{wacc}. \newline
+where \(D\) is the initial capital of the bank loan, and \(E\) is the capital investment from equity financing. Using \gls{wacc}, it is not necessary to model the loan an the debt repayments as cash flows , or the remaining balance as a liability; these are all captured by the use of \gls{wacc}. According to venture finance consultancy Phoenix Strategy, a realistic value of the cost of debt is \(r_d\approx 8\textendash 15\%\)~\cite{CostOfDebt}.\newline
 
-\noindent Therefore, for the sake of simplicity, \gls{wacc} is used in this model, with rates:
+\noindent Therefore, for the sake of simplicity, and conservatism, \gls{wacc} is used in this model, with rates:
 \begin{equation}
     r_d=15\% \qquad r_e=20\%
 \end{equation}
