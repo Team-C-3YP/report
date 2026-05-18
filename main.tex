@@ -198,21 +198,19 @@ We plan to use industrial safety nets to separate the players from the drones as
 
 \subsection{Context}
 
-The project decision was to develop a custom drone hardware design in preference to using an existing commercial platform. This was motivated by the need to co-design the airframe, electronics, sensing equipment, and game-specific payload around the requirements of an indoor multi-agent laser tag system. Various options may offer good flight performance and easy maintenance, but are generally optimized for less intense activities and outdoor environments, and therefore provide limited flexibility for integrating custom sensing, tag-hardware, and protective structures. 
+The project decision was to develop a custom drone hardware design in preference to using an existing commercial platform. This was motivated by the need to co-design the airframe, electronics, sensing equipment, and game-specific payload around the requirements of an indoor multi-agent laser tag system. Various options may offer good flight performance and easy maintenance, but are generally optimised for less intense activities and outdoor environments, and therefore provide limited flexibility for integrating custom sensing, tag-hardware, and protective structures. 
 
-In addition, commercial drones tend to be quite closed off in terms of hardware and software access - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed more freedom to choose components, organize the internal layout, and include additional features necessary to the game-play.
-
-%a small Literature review
+In addition, commercial drones tend to be quite closed off in terms of hardware and software access - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed for more freedom to choose components, organise the internal layout, and include additional features necessary to the game-play.
 
 \subsection{Design Objectives and Constraints}
 \subsubsection{Operational Requirements}
 
 At core level, the drone design must be able to achieve basic drone operations for game-play - being able to function as a usable aerial game platform within an indoor environment:
 \begin{itemize}
-    \item sufficient thrust for stable flight
-    \item reliable movement for indoor environment
-    \item have required electronics and payload onboard platform
-    \item enough battery-life for meaningful game-play
+    \item Sufficient thrust for stable flight
+    \item Reliable movement for indoor environment
+    \item Have required electronics and payload onboard platform
+    \item Enough battery-life for meaningful game-play
 \end{itemize}
 
 \subsubsection{Safety Constraints}
@@ -230,22 +228,22 @@ As the drone is intended to operate indoors in relative proximity to players dur
  The drone needs to be a capable opponent - able to dodge, attack and wander throughout the arena - and able to support the systems needed for the overall project itself (which includes being cost-effective). This led to several requirements that influences the size, layout, performance, and maintainability of the final design.
 \begin{itemize}
     \item \textbf{Indoor Movement: } Contrary to the safety requirement, the drone must also be a capable opponent rather than a still target. This means the design must be able to allow for navigation and some form of evasive movement. This poses as a tradeoff between game-play and safety.
-    \item \textbf{Visibility and challenge: } The drone had to be large and visible enough for players to clearly recognize the target during game-play, while still being agile enough to move around. A design too small would be difficult to engage while a design too large or too slow would reduce game-play quality.
+    \item \textbf{Visibility and challenge: } The drone had to be large and visible enough for players to clearly recognise the target during game-play, while still being agile enough to move around. A design too small would be difficult to engage while a design too large or too slow would reduce game-play quality.
     \item \textbf{Supporting game systems and battery: } The drone needs to carry additional hardware required for game-play, such as IR transmitters and receivers, cameras, sensors, and onboard computing. These systems add weight and take up internal space. In addition, the design needs to allow for enough operating time for meaningful game-play.
     \item \textbf{Easy maintenance and replace-ability: } Given the game is a multi-agent system rather than a single platform, the design needs to remain practical to maintain, to repair, and to replace. Minor damage during operation should not require a whole drone to be rebuilt, so replaceable parts and a maintainable layout becomes an important constraint.
 \end{itemize}
 
 \subsubsection{Simulation Scope and General Design Assumptions}
 
-The project was carried out mainly through simulation; the hardware design was developed as a realistic engineering model rather than as a fully built and tested prototype. This means that the design was based on CAD modeling, component data sheets, and estimated performance values through online data and program testing. The simulation provided a means of presenting how the drone would be integrated into the wider system consistently. As a result, some real-world effects, such as full electronics integration, dynamic flight behavior, and measured sensor performance, were simplified or left for future work.
+The project was carried out mainly through simulation; the hardware design was developed as a realistic engineering model rather than as a fully built and tested prototype. This means that the design was based on CAD modelling, component data sheets, and estimated performance values through online data and programme testing. The simulation provided a means of presenting how the drone would be integrated into the wider system consistently. As a result, some real-world effects, such as full electronics integration, dynamic flight behaviour, and measured sensor performance, were simplified or left for future work.
 
-\subsubsection{Summarized Table for Design Criteria}
+\subsubsection{Summarised Table for Design Criteria}
 
 In summary, the key design criteria are consolidated in Table~\ref{tab:starter_design_criteria}.
 
 \begin{table}[htbp]
 \centering
-\caption{Summarized starter design criteria for the drone platform}
+\caption{Summarised starter design criteria for the drone platform}
 \label{tab:starter_design_criteria}
 \begin{tabular}{|c|c|}
 \hline
@@ -253,7 +251,7 @@ In summary, the key design criteria are consolidated in Table~\ref{tab:starter_d
 \hline
 Operating environment & Indoor arena with close proximity to players, walls, and obstacles \\
 \hline
-Operational role & Stable and maneuverable aerial platform for indoor game-play \\
+Operational role & Stable and manoeuvrable aerial platform for indoor game-play \\
 \hline
 Configuration & Compact quadrotor platform \\
 \hline
@@ -310,7 +308,7 @@ The Avenger 2806.5 was selected because it provided a strong thrust margin witho
 \hline
 Selected motor & BrotherHobby Avenger 2806.5 1300KV & Main propulsion motor \\
 \hline
-Motor type & Brush-less & Suitable for  propulsion \\
+Motor type & Brushless & Suitable for  propulsion \\
 \hline
 KV rating & 1300KV & Suitable for operation \\
 \hline
@@ -331,9 +329,9 @@ Target thrust per motor & $\approx 19.6$ N & 4 motors provides 78.5 N \\
 
 \paragraph{Propeller Choice}
 
-The propeller was selected based on geometry as it directly affects the thrust, clearance, and overall rotor-arm design. The propeller was required to provide enough lift when paired with the selected motor, while remaining size-able for an indoor drone platform. 
+The propeller was selected based on geometry as it directly affects the thrust, clearance, and overall rotor-arm design. The propeller was required to provide enough lift when paired with the selected motor, while remaining sizeable for an indoor drone platform. 
 
-We selected using an 8x4x3 propeller, where the notation refers to 8 inch diameter, 4 inch pitch, and 3-blade configuration. A manufacturer dataset for an HQProp 8x4x3 propeller (summarised in Table~\ref{tab:propeller_specifications}) was used as a reference for dimensions and mass, which formed the basis for the certain assumptions related to the rotor-arm design.
+We selected using an 8x4x3 propeller, where the notation refers to 8 inch diameter, 4 inch pitch, and 3-blade configuration. A manufacturer dataset for an HQProp 8x4x3 propeller (summarised in Table~\ref{tab:propeller_specifications}) was used as a reference for dimensions and mass, which formed the basis for certain assumptions related to the rotor-arm design.
 
 The 8x4x3 propeller geometry was chosen as this motor-prop configuration matched the thrust specifications of the design while also remaining within a practical size range for the airframe. The 8-inch diameter increased the swept area while the 3-blade configuration helped support higher thrust within a limited diameter - which improved lift capability without excessive propeller span in an indoor environment.
 
@@ -351,9 +349,9 @@ Diameter & 8 inch & Sets swept area \\
 \hline
 Pitch & 4 inch & Moderate pitch suitable for thrust operation \\
 \hline
-Blade count & 3 blades &  higher thrust capability  \\
+Blade count & 3 blades &  Higher thrust capability  \\
 \hline
-Reference material & Polycarbonate & lightweight propeller material \\
+Reference material & Polycarbonate & Lightweight propeller material \\
 \hline
 Reference mass & 13 g & 4 propellers contribute 52 g \\
 \hline
@@ -448,17 +446,15 @@ As there was no given exact thrust coefficients, therefore we tested using 0.100
 
 From the Tables ~\ref{tab:loaded_rpm_factors} and~\ref{tab:motor_prop_validity_check}, the target thrust of approximately \(19.6~\text{N}\) per motor is not achieved under the most conservative assumptions(where \(C_T = 0.100\)). However, it becomes achievable for higher thrust coefficient values. For \(C_T = 0.125\), the combination reaches approximately \(19.4~\text{N}\) at 85\% of the no-load speed. For \(C_T = 0.150\), the target exceeded at around 80\% no load speed.
 
-This suggests that the target max thrust of \(19.6~\text{N}\) is theoretically plausible for this motor-propeller configuration on a 4S supply - but only when the real thrust coefficient is closer to mid-range values and the motor can maintain between 80--85\% of its no-load speed under load. This calculation does not experimentally validate the propulsion system as the real thrust would depend on a number of other factors such as ESC behavior and battery voltage sag. 
+This suggests that the target max thrust of \(19.6~\text{N}\) is theoretically plausible for this motor-propeller configuration on a 4S supply - but only when the real thrust coefficient is closer to mid-range values and the motor can maintain between 80--85\% of its no-load speed under load. This calculation does not experimentally validate the propulsion system as the real thrust would depend on a number of other factors such as ESC behaviour and battery voltage sag. 
 
-However, the target max value is not the same as minimum thrust required for flight. Given the total weight is approximately \(39.2~\text{N}\), the hover thrust required per motor is \(9.8~\text{N}\) for a quadrotor configuration. This means the selected propulsion configuration has a massive theoretical margin above the hover requirement. Even if the real thrust is lower than the assumed \(19.6~\text{N}\), the drone should still perform admirably, though additional margin would be needed for maneuvering, disturbance rejection, and stable control. However, this proves that the 2:1 thrust-to-weight ratio gives a large and safe tolerance.
+However, the target max value is not the same as minimum thrust required for flight. Given the total max weight is approximately \(39.2~\text{N}\), the hover thrust required per motor is \(9.8~\text{N}\) for a quadrotor configuration. This means the selected propulsion configuration has a massive theoretical margin above the hover requirement. Even if the real thrust is lower than the assumed \(19.6~\text{N}\), the drone should still perform admirably, though additional margin would be needed for manoeuvring, disturbance rejection, and stable control. However, this proves that the 2:1 thrust-to-weight ratio gives a large and safe tolerance.
 
 \paragraph{ESC Selection}
 
-The ESC is used to control the speed of each motor and provide fast response to throttle commands from the flight controller. Since the propulsion system uses four motors, the design requires one ESC per motor. The selected ESC was the LittleBee Spring 40A.
+The ESC is used to control the speed of each motor and provide fast response to throttle commands from the flight controller. Since the propulsion system uses four motors, the design requires one ESC per motor. The selected ESC was the LittleBee Spring 40A. As shown in the Table~\ref{tab:esc_specifications}, the available LittleBee Spring 40A specifications list \(2-6~\text{S}\) LiPo input, \(40~\text{A}\) continuous current, with compact dimensions.
 
-As shown in the Table~\ref{tab:esc_specifications}, the available LittleBee Spring 40A specifications list \(2-6~\text{S}\) LiPo input, \(40~\text{A}\) continuous current, with compact dimensions.
-
-This ESC was chosen as it matched the propulsion system requirements while remaining compact enough to fit within the airframe. However, as the ESC has no built-in BEC, the lower voltage electronics must be powered through a separate voltage regulation stage, which is addressed in the power system design.
+This ESC was chosen since it matched the propulsion system requirements. However, as the ESC has no built-in BEC, the lower voltage electronics must be powered through a separate voltage regulation stage, which is addressed in the power system design.
 
 \begin{table}[htbp]
 \centering
@@ -492,9 +488,9 @@ The power system must be designed to supply both the high-current propulsion sys
 
 \paragraph{Battery Selection}
 
-The battery selection was driven by the propulsion system as it was expected the motors and ESCs would consume significantly more power than other onboard electronics. The battery had to provide a suitable voltage and discharge capability for the hardware, while also remaining practical in terms of mass, size and internal packaging. A 3S LiPo option was initially considered as earlier propulsion combinations included 3S-compatible specifications. However, once the final motor-propeller configuration was selected, the 3S option was disregarded for a more suitable 4S 5000 mAH LiPo battery. This provided nominal voltage for \(14.8~\text{V}\), matching the motor and ESC requirements more appropriately, while maintaining a target capacity for approximately 10 minutes of drone operation before recharge.
+The battery selection was driven by the propulsion system as it was expected the motors and ESCs would consume significantly more power than other onboard electronics. The battery had to provide a suitable voltage and discharge capability for the hardware, while also remaining practical in terms of mass, size and internal packaging. A 3S LiPo option was initially considered as earlier propulsion combinations included 3S-compatible specifications. However, once the final motor-propeller configuration was selected, the 3S option was disregarded for a more suitable 4S 5000 mAH LiPo battery. This provided a nominal voltage of \(14.8~\text{V}\), matching the motor and ESC requirements more appropriately while maintaining a target capacity for approximately 10 minutes of drone operation before recharge.
 
-This battery was selected as a representative design choice as it matched the voltage requirements of the final propulsion system. The \(14.8~\text{V}\) is suitable for the selected ESC and motor configuration while the \(5000~\text{mAh}\) also provided the target \(10~\text{minutes}\) of drone operation before recharge. The mass range of \(390-589~\text{g}\) was also acceptable, leaving more than enough mass capacity for other components of the drone. 
+This battery was selected as a representative design choice as it matched the voltage requirements of the final propulsion system. The \(14.8~\text{V}\) is suitable for the selected ESC-motor configuration while the \(5000~\text{mAh}\) also provided the target with \(10~\text{minutes}\) of drone operation before recharge. The mass range of \(390-589~\text{g}\) was also acceptable, leaving more than enough mass capacity for other components of the drone. 
 \begin{table}[htbp]
 \centering
 \caption[4S 5000 mAh LiPo Battery specifications]{4S 5000 mAh LiPo Battery specifications\footnotemark}
@@ -524,7 +520,7 @@ Battery count & 1 pack per drone & Simplifies packaging and recharge \\
 
 \paragraph{Proving Endurance}
 
-To prove the 5000mAH capacity can theoretically last around 10 minutes of flight time before recharge, we may use the representative data.
+To prove the 5000mAh capacity can theoretically last around 10 minutes of flight time before recharge, we may use the representative data.
 
 For a 4S 5000 mAh LiPo battery, the nominal voltage is \(14.8~\text{V}\) and the capacity is \(5~\text{Ah}\). The nominal battery energy is therefore
 
@@ -630,7 +626,7 @@ Output voltage & Fixed 5 V & Suitable for the 5 V electronics \\
 \hline
 Efficiency & 80--95\% & Reduces power loss and heating \\
 \hline
-Size & 40.6 mm $\times$ 20.3 mm $\times$ 7.6 mm & Sizable for integration into drone \\
+Size & 40.6 mm $\times$ 20.3 mm $\times$ 7.6 mm & Sizeable for integration into drone \\
 \hline
 Weight & Approximately 4.8 g & Low mass contribution \\
 \hline
@@ -662,7 +658,7 @@ Several hardware options were considered for the onboard computer. The main choi
 
 A two-board Arduino setup was considered, where one board would handle lower-level hardware control and another would manage communication or higher-level tasks. However this would increase general complexity in wiring and packaging while still not solving the main processing limitation. For this reason, the design moved towards investigating the usage of Raspberry Pi.
 
-Two main Rasperry Pi single-board computers were considered, the Raspberry Pi 4 Model B and the Raspberry Pi 5 - comparison is shown in Table~\ref{tab:raspberrypi_comparison}.
+Two main Raspberry Pi single-board computers were considered, the Raspberry Pi 4 Model B and the Raspberry Pi 5 - comparison is shown in Table~\ref{tab:raspberrypi_comparison}.
 
 Despite the strong performance offered by the Raspberry Pi 5, its additional computing capabilities were not considered important as the project was using pre-trained models rather than training onboard. The \textbf{Raspberry Pi 4 Model B} (shown in Fig.~\ref{fig:Raspberry Pi 4 Model B}) was chosen as the onboard computer as it provided a good balance between processing, cost and integration. In addition, it provided the required Wi-Fi, GPIO, USB, and camera interfaces, while being easier to power and package inside the drone.
 
@@ -730,7 +726,7 @@ The camera selected by the visual perception work-stream was the OAK-D Lite (sho
 
 \paragraph{Flight Control Sensors}
 
-Suitable flight control sensors were needed to give the drone basic state information required for basic motion and awareness. Chosen sensors were intended to provide local state information that could support stabilization, height referencing, and obstacle awareness during indoor operations: the IMU measured body motion, the ToF sensor provided ceiling-distance and side distance information for nearby obstacles.
+Suitable flight control sensors were needed to give the drone basic state information required for basic motion and awareness. Chosen sensors were intended to provide local state information that could support stabilisation, height referencing, and obstacle awareness during indoor operations: the IMU measured body motion, the ToF sensor provided ceiling-distance and side distance information for nearby obstacles.
 
 A barometer was not selected as a height sensor despite being commonly used in drones for altitude estimation. Given the indoor environment and close proximity between walls and ceilings, pressure-based height estimation is less reliable. Instead, an upward-facing ToF sensor was considered more appropriate for indoor environment, where the ceiling height can be known in advance.
 
@@ -774,7 +770,7 @@ For game-specific components, the drone is required to have an \gls{ir} tagging 
 
 \subsection{Mechanical Design Development}
 
-After investigating and selecting the main electronics, the mechanical design aims to transform the selected components into a physical drone layout. Most modeling and assembly designs was carried out in Fusion 360, while standard component models such as motors, batteries, sensors, and other components were either simplified into representative objects based on specified dimensions or downloaded from online libraries to save time. The goal is to define how the components are mounted, protected, and accessed while also ensuring easily manufacturable and cheap parts that are simple to assemble. 
+After investigating and selecting the main electronics, the mechanical design aims to transform the selected components into a physical drone layout. Most modelling and assembly designs was carried out in Fusion 360, while standard component models such as motors, batteries, sensors, and other components were either simplified into representative objects based on specified dimensions or downloaded from online libraries to save time. The goal is to define how the components are mounted, protected, and accessed while also ensuring easily manufacturable and cheap parts that are simple to assemble. 
 
 \subsubsection{Early Design Concepts}
 
@@ -962,9 +958,9 @@ Table~\ref{tab:gimbal_mass_estimate} shows the mass of the solid body from Fusio
 
 \paragraph{Servomotor and Gimbal Motor}
 
-The gimbal turret uses two actuator types as mentioned previously. The MG90S servo is used for the yaw axis, while the Quanum 2208 brush-less gimbal motors are used for the pitch and roll axes. Servo was used for the Yaw stage in order to provide compact rotation at the base, while the pitch and roll may be better with smoother gimbal-style motion. 
+The gimbal turret uses two actuator types as mentioned previously. The MG90S servo is used for the yaw axis, while the Quanum 2208 brushless gimbal motors are used for the pitch and roll axes. Servo was used for the Yaw stage in order to provide compact rotation at the base, while the pitch and roll may be better with smoother gimbal-style motion. 
 
-The MG90S is suitable for the yaw stage as it fits within the turret base region inside the electronic basket. The operating speed is sufficient for controlled left-right aiming at 0.10 s/60$^\circ$ at 4.8 V or 0.08 s/60$^\circ$ at 6 V. The gimbal motors are used for pitch and roll control as they are generally designed for smoother movement. They are specified for payloads in 100-200g range which fits the weight requirements for the OAK-D Lite (61g) along with the IR emitter and gimbal parts. The suggested GBM2208 dimensions are approximately 28 x 22 mm which fits the clearance for the motor mount locations. Actuator specifications are summarized in Table~\ref{tab:gimbal_actuator_specs}.
+The MG90S is suitable for the yaw stage as it fits within the turret base region inside the electronic basket. The operating speed is sufficient for controlled left-right aiming at 0.10 s/60$^\circ$ at 4.8 V or 0.08 s/60$^\circ$ at 6 V. The gimbal motors are used for pitch and roll control as they are generally designed for smoother movement. They are specified for payloads in 100-200g range which fits the weight requirements for the OAK-D Lite (61g) along with the IR emitter and gimbal parts. The suggested GBM2208 dimensions are approximately 28 x 22 mm which fits the clearance for the motor mount locations. Actuator specifications are summarised in Table~\ref{tab:gimbal_actuator_specs}.
 
 \begin{table}[htbp]
 \centering
@@ -1003,7 +999,7 @@ The drone parts are designed with reference to the chosen internal electronics. 
 
 \subsection{Preliminary Engineering Evaluation}
 
-\paragraph{Context} A preliminary design evaluation was conducted to assess how realistic the final hardware design was. Since the drone was developed through CAD modeling and component research, the evaluation focuses on whether the proposed airframe is practical and suitable for manufacture. The main areas considered here are structural behavior and feasibility of modular assembly. Electronic components and power choices were already assessed through calculations in the section ~\ref{sec:electronics_design} - such as the propulsion feasibility check in section ~\ref{sec:propulsion_system}, battery endurance in section ~\ref{sec:power_system} and other certain power-distribution analysis. 
+\paragraph{Context} A preliminary design evaluation was conducted to assess how realistic the final hardware design was. Since the drone was developed through CAD modelling and component research, the evaluation focuses on whether the proposed airframe is practical and suitable for manufacture. The main areas considered here are structural behaviour and feasibility of modular assembly. Electronic components and power choices were already assessed through calculations in the section ~\ref{sec:electronics_design} - such as the propulsion feasibility check in section ~\ref{sec:propulsion_system}, battery endurance in section ~\ref{sec:power_system} and other certain power-distribution analysis. 
 
 \subsubsection{Structural Assessment of Critical Components}
 
@@ -1043,11 +1039,11 @@ The assessment was limited to a static simulation, A dynamic impact simulation w
 
 The final drone design can be considered feasible in the perspective of a CAD/simulation led concept. The selected electronics are consistent with the design requirements. The airframe provides a dedicated area for internal components and wiring while ensuring the body remains modular, detachable and easy to manufacture and assemble.
 
-The final design of the drone hardware is acceptable within the scope of the project. However, the design is not recommended to serve as a final validated prototype as many of the main areas still require proper validation with real-world testing. The main limitations are the lack of physical testing which is vital if we wish to commercialize the product through physical implementation.
+The final design of the drone hardware is acceptable within the scope of the project. However, the design is not recommended to serve as a final validated prototype as many of the main areas still require proper validation with real-world testing. The main limitations are the lack of physical testing which is vital if we wish to commercialise the product through physical implementation.
 
 \subsubsection{Simulation Representation of Drone Hardware}
 
-The final CAD model was simplified for use in Unity. Given the full Fusion 360 assembly contained many unnecessary mechanical detail for real-time simulation, a low-poly version was created in Blender and Imported into Unity as a game asset. The simplified model preserved the main visible features such as the drone body and propellers, while small details such as bolt holes and linkages were removed. These were deemed unnecessary as Unity's built-in collision mechanisms and physics engine mainly uses approximated cuboid or spherical boundaries defined by the developer, and developing a custom solid-boundary model would require additional setup time without adding much value.
+The final CAD model was simplified for use in Unity. Given the full Fusion 360 assembly contained many unnecessary mechanical detail for real-time simulation, a low-poly version was created in Blender and imported into Unity as a game asset. The simplified model preserved the main visible features such as the drone body and propellers, while small details such as bolt holes and linkages were removed. These were deemed unnecessary as Unity's built-in collision mechanisms and physics engine mainly uses approximated cuboid or spherical boundaries defined by the developer, and developing a custom solid-boundary model would require additional setup time without adding much value.
 
 \subsection{Player Hardware Design}
 \label{player_hardware}
@@ -1085,7 +1081,7 @@ Our drones fly autonomously and hence need to know their state, including positi
 \subsection{Chosen Method}
 In order to determine the best method for estimating the state of our drones, we first did a literature review to determine what the common methods were. From this research, we found 3 main methods: offboard optical motion capture \cite{liu2018viconmavlinksoftwaretoolindoor}, cameras with april tags, and onboard sensor fusion with a state estimator. 
 
-\paragraph{Optical Motion Capture} This method is the standard for measuring ground truth robot states and hence has very high accuracy, however, there are a number of issues with us using this method. Firstly, with our maze based map design, we would need many of these cameras to cover the whole map, and, assuming we need one for each grid cell, this would be 187 for our whole map. Optitrack is a company that sells these optical motion capture cameras, and their cheapest standard camera is the Prime x 13 \cite{Prime13Optitrack} which they sell for \$2,499, meaning the total cost just for the cameras would be \$467,313, which is well above our budget. Additionally, these cameras transmit a large amount of IR light at a similar frequency to that used by our laser guns and hence would cause a lot of interference with our shot detection system. These cameras also only have a limited field of view, so if we mounted them on the ceiling, there would be blind spots near the ceiling where the drone is outside the field of view of all cameras and hence its state can not be estimted. For these reasons we decided not to go with this option.
+\paragraph{Optical Motion Capture} This method is the standard for measuring ground truth robot states and hence has very high accuracy, however, there are a number of issues with us using this method. Firstly, with our maze based map design, we would need many of these cameras to cover the whole map, and, assuming we need one for each grid cell, this would be 187 for our whole map. Optitrack is a company that sells these optical motion capture cameras, and their cheapest standard camera is the Prime x 13 \cite{Prime13Optitrack} which they sell for \$2,499, meaning the total cost just for the cameras would be \$467,313, which is well above our budget. Additionally, these cameras transmit a large amount of IR light at a similar frequency to that used by our laser guns and hence would cause a lot of interference with our shot detection system. These cameras also only have a limited field of view, so if we mounted them on the ceiling, there would be blind spots near the ceiling where the drone is outside the field of view of all cameras and hence its state can not be estimited. For these reasons we decided not to go with this option.
 
 \paragraph{Cameras with April Tags} Another method for estimating the state of the drones is to use cameras to detect their position relative to april tags. This can either be done with april tags on the drone and cameras around the map or april tags around the map and cameras on the drone. The first option would produce higher latency due to the cameras and state estimation processing being offboard, so the latter option is preferred. Pandey et al. \cite{aprilTagStateEstimation} conducted a study on the effectiveness of the latter method and found that the system had an accuracy rate of 95\% in bright light conditions, however this dropped to 70\% in low light conditions, so in the dark conditions of our arena the accuracy rate would likely be even lower than this. Additionally, this method would require very accurate placement of many april tags around the arena, increasing the difficulty and time taken to setup the arena. Due to these reasons we decided not to go with this option either.
 
@@ -1978,7 +1974,7 @@ In order for the drones to search the map effectively as a team they need to be 
 
 For the region allocation, we decided to use a multi-agent Breadth First Search (BFS) algorithm that completes BFS simultaneously from all drone start locations and allocates each cell to the drone that reached it first. This assumes all drones have a fixed starting location however, when a drone is in it's home base and is entering the map, there are multiple different entry points. For this case, we decided to run the above algorithm for all possible starting locations of any drones currently in the home base and choose the starting locations that give the smallest maximum region size. Since all drones behave the same in the BFS algorithm, if we have $d$ drones entering from the home base and $e$ possible entry cells, then we only have to complete $eCd$ runs of the region allocation algorithm described above. In our map demo map, we have 7 possible entry cells and 5 drones, giving $7C5 = 21$ runs needed at the start of the game when all drones are in the home base and going into search mode. The maximum number of runs needed occurs when 3 or 4 drones are entering the region and this would need $7C3 = 7C4 = 35$ runs to test all possible cases. Since this algorithm uses a basic BFS with an added check for allocation to the drone, it is a very lightweight algorithm so running it 35 times on the central server will require negligible computation and time so this does not need to be considered in detail. Additionally, due to it being a very lightweight algorithm, we will recompute the regions each time a drone enters or leaves the search mode for all remaining drones in search mode.
 
-For the path planning algorithm, we initially looked at just using a Depth First Search (DFS) tree walk along the allocated region, which is efficient when in tight maze like areas of the map, however in open spaces such as the middle of the map it still walks through it as if it is a maze, backtracking when in open space. To mitigate this behavior and make the search more efficient over the whole map, we decided to use a hybrid DFS and lawnmower search method where we assign any open spaces as a single item in the DFS tree and plan the path through this region using the lawnmower method.
+For the path planning algorithm, we initially looked at just using a Depth First Search (DFS) tree walk along the allocated region, which is efficient when in tight maze like areas of the map, however in open spaces such as the middle of the map it still walks through it as if it is a maze, backtracking when in open space. To mitigate this behaviour and make the search more efficient over the whole map, we decided to use a hybrid DFS and lawnmower search method where we assign any open spaces as a single item in the DFS tree and plan the path through this region using the lawnmower method.
 
 \subsection{Trajectory Following}
 Now that we have planned a trajectory for each drone, the drones need a method of following those trajectories. As we are searching for players, we want this trajectory to be slow and smooth to give the gimbal-camera system time to search the area. Since the behaviour needed is not complex, we opted to use basic PD controllers here to reduce the computational load. Since we would like to control the position of the drone using the propeller thrusts, we are unable to use a single PD controller to directly control position from the motor thrusts. Instead this is split into 3 stages: position PD controller, attitude PD controller, and mixing matrix. The position PD controller uses the position error and velocity as inputs and outputs an acceleration vector. This acceleration vector is then combined with the inverse of the drone weight vector to produce a desired thrust vector, and from this desired thrust vector along with the heading direction we compute a desired orientation to point all propellers along the desired thrust direction. The orientation error between this desired orientation and the current orientation along with the angular velocities are used in the second PD controller to output angular accelerations which can be converted to moments using the drone moment of inertia. These moments as well as the desired thrust vector projected onto the current upward direction are used as the drone body thrust and moments. Finally the mixing matrix (detailed in Section \ref{mixing matrix}) is used to convert these body thrust and moments to individual rotor thrusts.
@@ -2001,7 +1997,7 @@ As mentioned above, the planning stage will need to compute a path through our k
 Now that we have the shortest 2D path through the grid squares, we need to convert this to a trajectory for the drone to follow in the 3D arena. In order to minimise the chance of collisions with the map and provide the drones with as much freedom of movement as possible, we decided to place the trajectory checkpoints in the centre of each grid square, halfway between the net and the ceiling. These checkpoints are then sent to the drone along with the command to change into movement mode.
 
 \subsection{Control Method}
-In the other modes we have described using PD controllers to track the drone trajectories due to it having a low computational cost, however, since we would like this mode to be as quick as possible, we are willing to use more compute in order to reach the target location quicker. This led us to look at more complex control methods such as Reinforcement Learning (RL) and Model Predictive Control (MPC). When researching the methods above we came across a paper that uses MPC to train a RL policy online using supervised learning, \cite{zhang_learning_2016}, and although we did not use the method explained in this paper, their reasoning in the introduction helped decide what method was best for our application. In the introduction they stated that \say{MPC is an effective and reliable method ... However, applications of MPC can be computationally demanding} and \say{model-free RL is difficult to apply to unstable systems such as quadrotors, due to the possibility of catastrophic failure during training.} From this we can see that their justification for using an RL policy trained under supervision from an MPC controller is because they aim to achieve the reliable results from MPC but with the lower computational load of RL, however, they decided not to train direcly with RL becuase in the early stages of training this would lead to catastrophic damage of their hardware. In our situation, we also aim to get reliable results while maintaining the lower computation load of RL, however, instead of using online supervised learning, we opted for offline learning on a physics simulator, which allows us to train the RL policy unsupervised without causing catastrophic damage to hardware during the early stage of training. This also allows us to train and test this policy without needing physical hardware, which speeds up the design phase. Additionally, in the paper, they mention that they passed the raw sensor data as the input to the RL policy to avoid having to estimate the state, however since we already need to estimate the state (detailed in Section \ref{drone state estimation}), for the Search and Collision Avoidance modes (detailed in Sections \ref{search mode} and \ref{collision avoidance mode} respectively), we decided to get the inputs for our RL policy from this estimated state instead to avoid increasing the complexity of the control problem unnecessarily. We opted for the policy to output body thrust and moments, again to avoid unnecessarily increasing the complexity, because we already need the mixing matrix (detailed in Section \ref{mixing matrix}) for the other modes.
+In the other modes we have described using PD controllers to track the drone trajectories due to it having a low computational cost, however, since we would like this mode to be as quick as possible, we are willing to use more compute in order to reach the target location quicker. This led us to look at more complex control methods such as Reinforcement Learning (RL) and Model Predictive Control (MPC). When researching the methods above we came across a paper that uses MPC to train a RL policy online using supervised learning, \cite{zhang_learning_2016}, and although we did not use the method explained in this paper, their reasoning in the introduction helped decide what method was best for our application. In the introduction they stated that \say{MPC is an effective and reliable method ... However, applications of MPC can be computationally demanding} and \say{model-free RL is difficult to apply to unstable systems such as quadrotors, due to the possibility of catastrophic failure during training.} From this we can see that their justification for using an RL policy trained under supervision from an MPC controller is because they aim to achieve the reliable results from MPC but with the lower computational load of RL, however, they decided not to train directly with RL because in the early stages of training this would lead to catastrophic damage of their hardware. In our situation, we also aim to get reliable results while maintaining the lower computation load of RL, however, instead of using online supervised learning, we opted for offline learning on a physics simulator, which allows us to train the RL policy unsupervised without causing catastrophic damage to hardware during the early stage of training. This also allows us to train and test this policy without needing physical hardware, which speeds up the design phase. Additionally, in the paper, they mention that they passed the raw sensor data as the input to the RL policy to avoid having to estimate the state, however since we already need to estimate the state (detailed in Section \ref{drone state estimation}), for the Search and Collision Avoidance modes (detailed in Sections \ref{search mode} and \ref{collision avoidance mode} respectively), we decided to get the inputs for our RL policy from this estimated state instead to avoid increasing the complexity of the control problem unnecessarily. We opted for the policy to output body thrust and moments, again to avoid unnecessarily increasing the complexity, because we already need the mixing matrix (detailed in Section \ref{mixing matrix}) for the other modes.
 
 In conclusion, we opted to use a reinforcement learning policy trained offline on a physics simulator using Isaac Lab \cite{IsaacLab}. The inputs of our policy are be derived from the estimated state and the outputs are the thrust and moments of the drone body.
 
@@ -2280,7 +2276,7 @@ The app was created using Expo, a development environment used to create React N
 \subsubsection{Project Structure}
 When the app is run, it opens a \say{package.json} file which sets the rest of the app in motion. From here, it exectutes index.js which imports App.js, which opens MainContainer.js. MainContainer.js serves as the app's navigation hub. MainContainer.js decides which \say{navigation flow} to show, based on whether the app is in state \say{Auth} or \say{Main} (whether the user is signed in or not). From here, MainContainer.js accesses each of the displayed screens, each of which has a dedicated JavaScript file in the \say{screens} subfolder.
 \subsubsection{State Management}
-The app uses a hybrid state management strategy, meaning that not all states are stored centrally (fully global), and not all states are managed independently by an individual screen (fully local). The React Context including AuthContext (whether or not a user is logged in) and DataContext (cached API data) are stored centrally. However each screen also stores its own data, such as the the data of the user's last game (in profile screen) and friend requests a user may have (in community screen) etc. This hybrid style of state management has several advantages. For example, the fact that low-level data is stored in the JavaScript file corresponding to the screen it is needed in allows for good \say{separation of concerns}, meaning that, if the project were bigger than it is now, several developers could be editing different parts of the software without interfering. Additionally, by having some data stored separately, such as API cached data, each screen can \say{reach in} to this file and get what it needs, rather than the same data having to be stored in many different places.
+The app uses a hybrid state management strategy, meaning that not all states are stored centrally (fully global), and not all states are managed independently by an individual screen (fully local). The React Context including AuthContext (whether or not a user is logged in) and DataContext (cached API data) are stored centrally. However each screen also stores its own data, such as the data of the user's last game (in profile screen) and friend requests a user may have (in community screen) etc. This hybrid style of state management has several advantages. For example, the fact that low-level data is stored in the JavaScript file corresponding to the screen it is needed in allows for good \say{separation of concerns}, meaning that, if the project were bigger than it is now, several developers could be editing different parts of the software without interfering. Additionally, by having some data stored separately, such as API cached data, each screen can \say{reach in} to this file and get what it needs, rather than the same data having to be stored in many different places.
 \subsubsection{API Integration}
 The App uses Supabase as its backend platform, to access a PostgreSQL database. Database access is handled through a single client in \say{db.js} - after the app is loaded, the data is cached in datacache.js to avoid unnecessary loading times, especially when being used with poor internet connections. A screenshot of the database is included in the appendix.
 
@@ -2754,7 +2750,7 @@ The main social impact of the project is its ability to provide entertainment wh
 
 \paragraph{Economic Impact}
 
-The economic impact is considered through the commercial model, which tests whether the system could operate viably after accounting all aspects of the overall system design. The report estimates the drone cost under \pounds500 each, with full hardware replacement assumed over 500 games. At a projected price of \pounds200 per group, the model suggests that annual non-discounted profit could stabilize at around \pounds75000. This supports the economic side, but only if usage is high and replacement costs are strictly controlled.
+The economic impact is considered through the commercial model, which tests whether the system could operate viably after accounting all aspects of the overall system design. The report estimates the drone cost under \pounds500 each, with full hardware replacement assumed over 500 games. At a projected price of \pounds200 per group, the model suggests that annual non-discounted profit could stabilise at around \pounds75000. This supports the economic side, but only if usage is high and replacement costs are strictly controlled.
 
 \paragraph{Limitations}
 
