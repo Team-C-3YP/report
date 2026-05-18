@@ -96,7 +96,7 @@ To inform these high-level decisions, each drone is equipped with an OAK-D Lite 
 These estimated player coordinates update the central server's global state, which in turn dictates the high-level navigational objectives assigned to each drone. Search mode utilises a hybrid Breadth-First Search (BFS) region-allocation and lawnmower trajectory algorithm to systematically scan the arena (Section \ref{search mode}). When rapid transit is required, flight control is handed over to a Reinforcement Learning (RL) policy trained offline in the Isaac Lab physics simulator, outputting body thrust and moment commands (Section \ref{movement mode}). Furthermore, an Artificial Potential Field (APF) controller handles real-time collision avoidance by computing repulsive gradients from walls and other agents, converting them into evasive manoeuvres (Section \ref{collision avoidance mode}).
 
 In addition to the technical deployment, user retention is driven by a companion mobile application that tracks performance metrics, leaderboards, and achievements to foster community engagement (Section \ref{app}). Finally, the technical development is supported by an evaluation of broader engineering considerations. These are validated by a quantitative risk assessment (Section \ref{risk-assessment}) and a financial model (Section \ref{commercialisation}), which confirms the commercial feasibility of the enterprise by projecting a Net Present Value of £68,669 at an optimal price of £200 per game.
-% Technology Strategy, Project Financing, and Health and Safety
+% Technology Strategy, Sustainability
 
 \newpage
 
@@ -1369,7 +1369,7 @@ Both camera systems operate by emitting \gls{ir} light into the environment. For
 
 The decision between Monocular RGB and Passive Stereo requires a trade-off between \gls{swapc} efficiency and depth accuracy. 
 
-A monocular camera (for example, the Raspberry Pi AI Camera) offers the best \gls{swapc} profile since it weights 24g and draws less than 1.5W. This means that it has a negligible impact on the quadcopter's flight dynamics. However, a single lens cannot natively measure depth and to extract 3D coordinates from a 2D feed, the system must rely on a geometric prior. This can be done by assuming a standard geometric height for a human or similarly the area of the bounding box (which can then be fine tuned during implementation). A standard method assumes the physical cross-sectional area of the human target ($A_{prior}$) is constant. The distance $Z$ is then calculated using the focal length ($f$) and the pixel area of the bounding box ($A_{px}$):
+A monocular camera (for example, the Raspberry Pi AI Camera) offers the best \gls{swapc} profile since it weighs 24g and draws less than 1.5W. This means that it has a negligible impact on the quadcopter's flight dynamics. However, a single lens cannot natively measure depth and to extract 3D coordinates from a 2D feed, the system must rely on a geometric prior. This can be done by assuming a standard geometric height for a human or similarly the area of the bounding box (which can then be fine tuned during implementation). A standard method assumes the physical cross-sectional area of the human target ($A_{prior}$) is constant. The distance $Z$ is then calculated using the focal length ($f$) and the pixel area of the bounding box ($A_{px}$):
 \begin{equation}
     Z = f \cdot \sqrt{\frac{A_{prior}}{A_{px}}}
 \end{equation}
@@ -1682,7 +1682,7 @@ To ensure the resulting bounding boxes only encompass visually exposed regions, 
 
 \subsection{Synthetic Model Training and Deployment}
 
-To quantify the performance of the synthetic data pipeline and ensure that the network had successfully learned the target features, training metres were monitored across the 50 epoch run. The resulting loss and performance curves are detailed in Fig. \ref{fig:synthetic_training_results}.
+To quantify the performance of the synthetic data pipeline and ensure that the network had successfully learned the target features, training metrics were monitored across the 50 epoch run. The resulting loss and performance curves are detailed in Fig. \ref{fig:synthetic_training_results}.
 
 \begin{figure}[htbp]
     \centering
@@ -1692,7 +1692,7 @@ To quantify the performance of the synthetic data pipeline and ensure that the n
 \end{figure}
 % maybe a comment on the 40-epoch drop but perhaps best made for the visdrone training and a brief mention here
 
-The simultaneous descent of both training and validation losses suggests stable convergence and indicates no obvious overfitting to the synthetic data. The performance metrics corroborate the successful convergence. The mean Average Precision at an Intersection over Union threshold of 0.50 (mAP50) plateaus at 0.96 and the mAP50-95 metric climbs to above 0.80. These exceptionally high metrics are a direct characteristic of synthetic datasets. Unlike human-annotated real-world data, which inherently suffers from subjective or loose labelling, the Unity pipeline generates mathematically perfect ground-truth coordinates. Furthermore, evaluating the network against validation data drawn from the exact same simulated distribution naturally yields higher accuracy. Ultimately, these theoretical metrics prove the network successfully extracted the features of the simulated human targets,
+The simultaneous descent of both training and validation losses suggests stable convergence and indicates no obvious overfitting to the synthetic data. The performance metrics corroborate the successful convergence. The mean Average Precision at an Intersection over Union threshold of 0.50 (mAP50) plateaus at 0.96 and the mAP50-95 metric climbs to above 0.80. These exceptionally high metrics are a direct characteristic of synthetic datasets. Unlike human-annotated real-world data, which inherently suffers from subjective or loose labelling, the Unity pipeline generates mathematically perfect ground-truth coordinates. Furthermore, evaluating the network against validation data drawn from the exact same simulated distribution naturally yields higher accuracy. Ultimately, these theoretical metrics prove the network successfully extracted the features of the simulated human targets.
 
 Beyond theoretical convergence, we determined the operational threshold for the deployment of the synthetic model. The F1-Confidence curve was evaluated to identify this balance for the simulation environment (Fig. \ref{fig:synthetic_f1_curve}).
 
@@ -1803,8 +1803,8 @@ P_c = \begin{bmatrix} x_c \\ y_c \\ z_c \end{bmatrix} = \begin{bmatrix} \frac{x_
      \label{fig:camera_geometry}
 \end{figure}
 
-In order to interface with Tommy's path following algorithm as well as Ritchie's high level controller, the vector $P_c$ in the camera's local coordinate frame must be converted into the global world frame $P_w$.
-
+\textbf{In order to interface with Tommy's path following algorithm as well as Ritchie's high level controller, the vector $P_c$ in the camera's local coordinate frame must be converted into the global world frame $P_w$.
+}
 This transformation is achieved using a series of rotation matrices which are defined for Pitch ($\theta$), Yaw($\psi$) and Roll ($\phi$):
 \begin{equation}
     \resizebox{0.85\textwidth}{!}{%
@@ -1886,6 +1886,11 @@ In the predict phase, the state estimate ($\hat{X}$) and error covariance ($P$) 
 \begin{equation}
     P_{k+1|k} = F P_{k|k} F^T + Q
 \end{equation}
+
+% \begin{align}
+%     \hat{X}_{k+1|k} &= F \hat{X}_{k|k} \\
+%     P_{k+1|k} &= F P_{k|k} F^T + Q
+% \end{align}
 
 The process noise covariance matrix ($Q$) accounts for unmodelled accelerations, such as the player dodging or sprinting. Here we adopt a Discrete White Noise Acceleration (DWNA) model. Under this piecewise constant assumption, the noise gain vector ($\Gamma$) maps a scalar acceleration jump into both position and velocity changes:
 
