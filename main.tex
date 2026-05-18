@@ -172,15 +172,15 @@ We plan to use industrial safety nets to separate the players from the drones as
         \hline
         \textbf{} & \textbf{Net A} & \textbf{Net B} & \textbf{Net C}\\
         \hline 
-        Material Diameter / mm & 5 & 1.5 & 0.5\\
+        Material Diameter [mm] & 5 & 1.5 & 0.5\\
         \hline
-        Mesh Size / mm & 100x100 & 100x100 & 100x100 \\
+        Mesh Size [mm] & 100x100 & 100x100 & 100x100 \\
         \hline
-        Max Tensile Strength / N & 3200 & 250& 800 \\
+        Max Tensile Strength [N] & 3200 & 250& 800 \\
         \hline
-        Breaking Elongation / \%        & 15                & 15                & 15                \\
+        Breaking Elongation [\%]        & 15                & 15                & 15                \\
         \hline
-        Energy Absorption / J           & 4800              & 375               & 1200              \\
+        Energy Absorption [J]           & 4800              & 375               & 1200              \\
         \hline
         Energy Absorption Safety Factor & 20.4              & 1.6               & 5.1               \\
         \hline
@@ -1108,24 +1108,30 @@ Our drone is equipped with two different types of ToF sensors. As mentioned in S
 
 It is a common approximation for drone attitude estimation systems to assume that the accelerometer measurement is dominated by gravity and hence use the normalised reading as an approximation for the world z axis expressed in the body frame, as is done by Mahony et al. \cite{4608934}. In our system, specifically the movement mode, there may be large accelerations causing this assumption to break down. To avoid errors from this assumption and allow us to extract information about both the orientation and acceleration of the drone from the accelerometer reading, we decided to use a model based approach to predicting the acceleration. 
 
-Our model uses the motor commands and estimated velocity to estimate the acceleration due to thrust, $\mathbf{a}_{T,b}$, and drag, $\mathbf{a}_{D,b}$, in the body frame and transforms these into the world frame using the estimated orientation, $\mathbf{q}$, before combining these with the acceleration due to gravity, $g$, to obtain an estimate for the body acceleration in the world frame, $\mathbf{a}_w$, as detailed in Eq. \ref{equ:EstAccelModel} below, where $\mathbf{R}(\mathbf{q})$ is the rotation matrix corresponding to orientation $\mathbf{q}$.
+Our model uses the motor commands and estimated velocity to estimate the acceleration due to thrust, $\mathbf{a}_{T,k}$, and drag, $\mathbf{a}_{D,k}$, in the body frame and transforms these into the world frame using the estimated orientation, $\mathbf{q}_k$, before combining these with the acceleration due to gravity, $g$, to obtain an estimate for the body acceleration in the world frame, $\mathbf{a}_{m,k}$, as detailed in Eq. \ref{equ:EstAccelModel} below, where $\mathbf{R}(\mathbf{q}_k)$ is the rotation matrix corresponding to orientation $\mathbf{q}_k$, and the subscript $k$ represents the time step.
 \begin{equation} \label{equ:EstAccelModel}
-    \mathbf{a}_w = \mathbf{R}(\mathbf{q})(\mathbf{a}_{T,b} + \mathbf{a}_{D,b}) + \begin{bmatrix}
+    \mathbf{a}_{m,k} = \mathbf{R}(\mathbf{q}_k)(\mathbf{a}_{T,k} + \mathbf{a}_{D,k}) + \begin{bmatrix}
         0 & 0 & -g
     \end{bmatrix}^\top
 \end{equation}
 
 Since we do not have a method for measuring the RPM of the motors directly, we  chose to estimate the thrust per motor using the ESC control commands, $\mathbf{c}$, and assumed that the ESC command is proportional to the propeller RPM and that the thrust of that motor is proportional to the RPM squared, producing the following relationship for each motor: $T_i = k_i \cdot c_i^2 $, where $T_i$ is the thrust produced by that motor, and $k_i$ is the thrust coefficient for that motor-propeller combination. The drone thrust is then the sum of all the motor thrusts and we chose to combine all the thrust coefficients into a single coefficient, $k_T$, producing, $T = k_T \ \mathbf{c} \cdot \mathbf{c}$, since all the motors and propellers are the same, so the individual coefficients should be almost identical. To calculate the acceleration from this thrust we also need to know the mass of the drone, $m$, and both this and the thrust coefficient, $k_T$, will be experimentally determined before the drone is deployed. Finally, we decided to implement a thrust scale factor, $\alpha_T$, which will be estimated online to account for any inaccuracy in the thrust coefficient, $k_T$, and deal with any temporal scaling changes of the propeller dynamics, such as thrust reductions when the battery is low or when the motors are hot. The thrust scale factor will also be initialised to 1 as our prior belief is that the pre-calculated coefficient is correct. Eq.\ref{equ:EstThrustAccel} below combines all of these effects into a single model. 
 \begin{equation} \label{equ:EstThrustAccel}
-    \mathbf{a}_{T\_b} = \frac{\alpha_T}{m} \begin{bmatrix} 0 \\ 0 \\ T \end{bmatrix} = \alpha_T\frac{k_T}{m}\mathbf{c} \cdot \mathbf{c} \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix} 
+    \mathbf{a}_{T,k} = \frac{\alpha_{T,k}}{m} \begin{bmatrix} 0 \\ 0 \\ T_k \end{bmatrix} = \alpha_{T,k}\frac{k_T}{m}\mathbf{c}_k \cdot \mathbf{c}_k \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix} 
 \end{equation}
-To estimate the acceleration due to drag in the body frame, $\mathbf{a}_{D\_b}$, we will calculate the velocity in the base frame, $\mathbf{v}_b$, from the velocity in the world frame, $\mathbf{v}_w$, using the orientation and assume that acceleration due to drag is proportional to velocity in the base frame squared in all directions, producing Eq. \ref{equ:EstDragAccel} below, where the drag coefficients, $\mathbf{k}_D$, are estimated online to avoid the need to pre-calculate them, however, if this causes excessive conversion time, we may decide to pre-compute them and estimate a scale factor online which is initialised to 1, similar to what we did with thrust.
+To estimate the acceleration due to drag in the body frame, $\mathbf{a}_{D,k}$, we first calculate the velocity in the base frame, $\mathbf{v}_{b,k}$, from the velocity in the world frame, $\mathbf{v}_k$, using the orientation, $\mathbf{q}_k$, and assume that acceleration due to drag is proportional to velocity in the base frame squared in all directions and acts in the opposite direction to velocity, producing Eq. \ref{equ:EstDragAccel} below, where the drag coefficients, $\mathbf{k}_D$, are estimated online to avoid the need to pre-calculate them, however, if this causes excessive conversion time, we may decide to pre-compute them and estimate a scale factor online which is initialised to 1, similar to what we did with thrust.
 \begin{equation} \label{equ:EstDragAccel}
-    \mathbf{a}_{D\_b} = \mathbf{k}_d^\top \cdot \mathbf{v}_b^2 = 
-    \begin{bmatrix} 
-    k_{d\_x} & k_{d\_y} & k_{d\_z} \\
-    \end{bmatrix} 
-    \cdot \mathbf{R}^\top(\mathbf{q}) \cdot \mathbf{v}_w^2
+\mathbf{a}_{D,k}
+=
+-\mathbf{k}_{D,k}
+\odot
+|\mathbf{v}_{b,k}|
+\odot
+\mathbf{v}_{b,k},
+\quad
+\text{where}
+\ \ \
+\mathbf{v}_{b,k} = \mathbf{R}^\top(\mathbf{q}_k)\mathbf{v}_k.
 \end{equation}
 
 \subsection{State Parameters}
@@ -1163,62 +1169,72 @@ In order to reduce the computational load and avoid quickly reducing particle di
 If the particles are to be resampled, then the highest weight particle is taken as the Maximum A Posterior (MAP) estimate. To resample the particles, we partition the range $[0,1]$ into segments of length equal to the weight of each particle, for example, the first particle would span the range $[0,w_1]$. Next, a random number from 0 to 1 is generated and the particle whose segment contains that value is copied to make the new particle and this is repeated N times to sample a full set of new particles. All particle weights are then set uniform again, $w_i = 1/N$, because the belief is not represented by the number of particles at each location rather than the weight of individual particles. This means there may now be identical particles, however these will diverge due to the random nature of the EKF allowing exploration from the mode. As mentioned previously, the particle which had the highest weight before resampling was flagged as the MAP estimate and the output of the state estimator will be the mean state of all children of this particle. In the extremely rare case that this particle has no children, we will fall back to the children of the particle which had the second highest weight before resampling and so on.
 
 \subsubsection{Extended Kalman Filter Update}
-The EKF will update whenever new IMU data is received. We will use the model and recursive update in Eq.\ref{equ:EstEKFStateTransition}-\ref{equ:EstEKFUpdateMeasurementCov} below, adapted from the regular KF equations on pg 210 of the Engineering Tables and Data 4th Edition \cite{HLT} with matrices A and B replaced by non-linear function f and matrix C replaced by non-linear function h.
+The EKF will update whenever new IMU data is received. We will use the model and recursive update in Eq.\ref{equ:EstEKFStateTransition}-\ref{equ:EstEKFUpdateMeasurementCov} below, adapted from the regular KF equations on pg 210 of the Engineering Tables and Data 4th Edition \cite{HLT} with matrices $\mathbf{A}$ and $\mathbf{B}$ replaced by non-linear function $f$ and matrix $\mathbf{C}$ replaced by non-linear function $h$.
 \begin{align}
-    x_{k+1} & = f(x_k,u_k) + w_k \label{equ:EstEKFStateTransition} \\
-    y_k & = h(x_k) + v_k  \label{equ:EstEKFMeasurements}
+    \mathbf{x}_{k+1} & = f(\mathbf{x}_k,\mathbf{u}_k) + \mathbf{w}_k \label{equ:EstEKFStateTransition} \\
+    \mathbf{y}_k & = h(\mathbf{x}_k) + \mathbf{v}_k  \label{equ:EstEKFMeasurements}
 \end{align}
 \vspace{-1.5cm}
 \begin{align}
-    \mathrm{Dynamics\ Jacobian: \ } F_k = \frac{\partial f}{\partial x} \label{equ:EstEKFDynamicsJacobian} \\
-    \mathrm{Measurement\ Jacobian: \ } H_k = \frac{\partial h}{\partial x} \label{equ:EstEKFMeasurementJacobian}
+    \mathrm{Dynamics\ Jacobian: \ } \mathbf{F}_{k} & = \left. \frac{\partial f}{\partial \mathbf{x}} \right|_{\hat{\mathbf{x}}_{k|k}, \mathbf{u}_k}\label{equ:EstEKFDynamicsJacobian} \\
+    \mathrm{Measurement\ Jacobian: \ } \mathbf{H}_k & = \left. \frac{\partial h}{\partial \mathbf{x}} \right|_{\hat{\mathbf{x}}_{k|k-1}} \label{equ:EstEKFMeasurementJacobian}
 \end{align}
 \vspace{-1.5cm}
 \begin{align}
-    \mathrm{Process\ Noise\ Covariance: \ } Q_k = \mathrm{E}[w_kw_k^\top] \label{equ:EstEKFProcessNoiseCov} \\
-    \mathrm{Measurement\ Noise\ Covariance: \ } R_k = \mathrm{E}[v_kv_k^\top]  \label{equ:EstEKFMeasurementNoiseCov}
+    \mathrm{Process\ Noise\ Covariance: \ } \mathbf{Q} = \mathrm{E}[\mathbf{w}_k \mathbf{w}_k^\top] \label{equ:EstEKFProcessNoiseCov} \\
+    \mathrm{Measurement\ Noise\ Covariance: \ } \mathbf{R} = \mathrm{E}[\mathbf{v}_k \mathbf{v}_k^\top]  \label{equ:EstEKFMeasurementNoiseCov}
 \end{align}
 \vspace{-1.5cm}
 \begin{align}
-    \hat{x}_{k|k-1} & = f(\hat{x}_{k-1|k-1},u_{k-1}) \label{equ:EstEKFUpdatePredictionState} \\
-    P_{k|k-1} & = F_k P_{k-1|k-1} F_k^\top + Q_k \label{equ:EstEKFUpdatePredictionCov} \\
-    S_k & = H_k P_{k|k-1} H_k^\top + R_k \label{equ:EstEKFUpdateMeasurementS} \\
-    K_k & = P_{k|k-1} H_k^\top S_k^{-1} \label{equ:EstEKFUpdateMeasurementK} \\
-    r_k & = y_k - h(\hat{x}_{k|k-1}, u_k) \label{equ:EstEKFUpdateMeasurementResidual} \\
-    \hat{x}_{k|k} & = \hat{x}_{k|k-1} + K_k r_k \label{equ:EstEKFUpdateMeasurementState} \\
-    P_{k|k} & = (I - K_k H_k) P_{k|k-1} \label{equ:EstEKFUpdateMeasurementCov} 
+    \hat{\mathbf{x}}_{k|k-1} & = f(\hat{\mathbf{x}}_{k-1|k-1},\mathbf{u}_{k-1}) \label{equ:EstEKFUpdatePredictionState} \\
+    \mathbf{P}_{k|k-1} & = \mathbf{F}_{k-1} \mathbf{P}_{k-1|k-1} \mathbf{F}_{k-1}^\top + \mathbf{Q} \label{equ:EstEKFUpdatePredictionCov} \\
+    \mathbf{S}_k & = \mathbf{H}_k \mathbf{P}_{k|k-1} \mathbf{H}_k^\top + \mathbf{R} \label{equ:EstEKFUpdateMeasurementS} \\
+    \mathbf{K}_k & = \mathbf{P}_{k|k-1} \mathbf{H}_k^\top \mathbf{S}_k^{-1} \label{equ:EstEKFUpdateMeasurementK} \\
+    \mathbf{r}_k & = \mathbf{y}_k - h(\hat{\mathbf{x}}_{k|k-1}) \label{equ:EstEKFUpdateMeasurementResidual} \\
+    \hat{\mathbf{x}}_{k|k} & = \hat{\mathbf{x}}_{k|k-1} + \mathbf{K}_k \mathbf{r}_k \label{equ:EstEKFUpdateMeasurementState} \\
+    \mathbf{P}_{k|k} & = (\mathbf{I} - \mathbf{K}_k \mathbf{H}_k) \mathbf{P}_{k|k-1} \label{equ:EstEKFUpdateMeasurementCov} 
 \end{align}
 
-To use these equations, we need to define all parameters in the model, Eq. \ref{equ:EstEKFStateTransition} and \ref{equ:EstEKFMeasurements}. Process noise, $w_k$, and measurement noise, $v_k$, will be estimated experimentally before deployment. The state, $x$, input, $u$, and measurement, $y$, vectors are defined below in Eq. \ref{equ:EstEKFStateVector}, \ref{equ:EstEKFInputVector}, and \ref{equ:EstEKFMeasurementVector} respectively, where . Functions f and h are defined below in Eq. d and e
+To use these equations, we need to define all parameters in the model, Eq. \ref{equ:EstEKFStateTransition} and \ref{equ:EstEKFMeasurements}. Process noise covariance, $Q$, and measurement noise covariance, $R$, will be estimated experimentally before deployment and are assumed constant. The state, $\mathbf{x}_k$, input, $\mathbf{u}_k$, and measurement, $\mathbf{y}_k$, vectors are defined below in Eq.\ref{equ:EstEKFStateVector}, \ref{equ:EstEKFInputVector}, and \ref{equ:EstEKFMeasurementVector} respectively, where $\boldsymbol{\omega}_{r,k}$ is the gyroscope reading, $\mathbf{c}_k$ is the motor ESC commands, and $\mathbf{a}_{r,k}$ is the accelerometer reading. Functions $f$ and $h$ are defined below in Eq.\ref{equ:EstEKFf} and \ref{equ:EstEKFh}. We assume acceleration is constant over the sampling period, $\Delta t$ to update position and velocity. In function f we: assume acceleration is constant over the sampling period, $\Delta t$ to update position and velocity, use the quaternion derivative defined by Sol\'{a} (pg 46)  \cite{quaternionDerivative}, Eq.\ref{equ:EstSolaQuatDerivative}, to update the quaternion orientation, subtract the bias from the gyroscope reading to update the angular velocity, use the model equations, Eq.\ref{equ:EstAccelModel}-\ref{equ:EstDragAccel}, to update the acceleration using the state and inputs, and we keep the remaining parameters unchanged and allow them to evolve through a random walk. In function h, we transform the estimated acceleration into the body frame and combine this with the upwards gravity vector and the accelerometer bias to produce the expected measurement.
 
-\begin{align}
-    \mathbf{x} & = \begin{bmatrix}\mathbf{p}^\top, \mathbf{q}^\top, \mathbf{v}^\top, \boldsymbol{\omega}^\top, \mathbf{a}^\top, \mathbf{b}_g^\top, \mathbf{b}_a^\top, \mathbf{k}_D^\top, \alpha_T^\top\end{bmatrix}^\top \label{equ:EstEKFStateVector}\\
-    \mathbf{u} & = \begin{bmatrix} \boldsymbol{\omega}_{gyro}^\top, \mathbf{c}^\top\end{bmatrix}^\top \label{equ:EstEKFInputVector}\\
-    \mathbf{y} & = \mathbf{a}_{acc} \label{equ:EstEKFMeasurementVector}
+\begin{align} 
+    \mathbf{x}_k & = \begin{bmatrix}\mathbf{p}_k^\top, \mathbf{q}_k^\top, \mathbf{v}_k^\top, \boldsymbol{\omega}_k^\top, \mathbf{a}_k^\top, \mathbf{b}_{g,k}^\top, \mathbf{b}_{a,k}^\top, \mathbf{k}_{D,k}^\top, \alpha_{T,k}^\top\end{bmatrix}^\top \label{equ:EstEKFStateVector} \\
+    \mathbf{u}_k & = \begin{bmatrix} \boldsymbol{\omega}_{r,k}^\top, \mathbf{c}_k^\top\end{bmatrix}^\top \label{equ:EstEKFInputVector} \\
+    \mathbf{y}_k & = \mathbf{a}_{r,k} \label{equ:EstEKFMeasurementVector}
 \end{align}
 
-\begin{align}
-        f(x_k,u_k) =  \begin{bmatrix}
-        p_k + v_k \Delta t + \frac{1}{2} a_k \Delta t ^2 \\
-        q_k + \frac{1}{2}\boldsymbol{\Omega}(\boldsymbol{\omega_k})\mathbf{q}_k \\
-        v_k + a_k \Delta t \\
-        b_{a,k} \\
-        b_{g,k} \\
-        \alpha_{T,k} \\
-        K_{D,k} \\        
+\begin{equation} \label{equ:EstEKFf}
+        f(\mathbf{x}_k,\mathbf{u}_k) =  \begin{bmatrix}
+        \mathbf{p}_k + \mathbf{v}_k \Delta t + \frac{1}{2} \mathbf{a}_k \Delta t ^2 \\
+        \mathbf{q}_k + \frac{1}{2}\boldsymbol{\Omega}(\boldsymbol{\omega_{r,k}})\mathbf{q}_k \\
+        \mathbf{v}_k + \mathbf{a}_k \Delta t \\
+        \boldsymbol{\omega}_{r,k} - \mathbf{b}_{g,k}\\
+        \mathbf{a}_{m,k} \\
+        \mathbf{b}_{g,k} \\
+        \mathbf{b}_{a,k} \\
+        \mathbf{k}_{D,k} \\ 
+        \alpha_{T,k}
     \end{bmatrix} 
-    &&
-    \mathrm{where} && a_k = \begin{bmatrix} 0 \\ 0 \\ -g \end{bmatrix} +
-\end{align}
-\begin{equation}\label{equ:EstEKFEquations}
-\begin{split}
-    h(x_k, u_k) =  a_{T\_b,k} + a_{D_b,k} + b_{a,k} + g_{b,k} = \alpha_{T,k} \frac{k_T}{m}\sum_i u_{i,k}^2 \begin{bmatrix}
-        0 \\ 0 \\ 1 
-    \end{bmatrix} + K_d (R^\top(q_k) v_k)^2 + b_{a,k} + R^\top(q_k) \begin{bmatrix}
-        0 \\ 0 \\ -g
-    \end{bmatrix}
-\end{split}
 \end{equation}
+where $\mathbf{a}_{m,k}$ is the model predicted acceleration calculated using Eq.\ref{equ:EstAccelModel}-\ref{equ:EstDragAccel} and $\boldsymbol{\Omega}(\boldsymbol{\omega})$ is defined in Eq.\ref{equ:EstSolaQuatDerivative}.
+
+\begin{equation}\label{equ:EstEKFh}
+    h(\mathbf{x}_k) =  \mathbf{R}^\top(\mathbf{q}_k)\mathbf{a}_k + [0 \ 0 \ g]^\top + \mathbf{b}_{a,k}
+\end{equation}
+
+\begin{equation}\label{equ:EstSolaQuatDerivative}
+    \dot{\mathbf{q}} = \frac{1}{2} \boldsymbol{\Omega}(\boldsymbol{\omega})\mathbf{q}
+    \quad
+    \text{where}
+    \ \ \
+    \boldsymbol{\Omega}(\boldsymbol{\omega}) = \begin{bmatrix}
+        0 & -\omega_x & -\omega_y & -\omega_z \\
+        \omega_x & 0 & \omega_z & -\omega_y \\ 
+        \omega_y & -\omega_z & 0 & \omega_x \\ 
+        \omega_z & \omega_y & -\omega_x &  0\\ 
+    \end{bmatrix}
+\end{equation}
+
 
 
 
@@ -2034,9 +2050,40 @@ For the collision detection, we chose to monitor the distance and velocity towar
 \subsection{Collision Avoidance}
 For the collision avoidance method, we chose to use an Artificial Potential Field (APF) based method. Since we know the exact map and we can estimate the position of all drones in the environment, we can place repulsive potential fields perpendicular to the walls, net, and ceiling, and around all other drones, each acting as a point source. We can then sum the potential from all of these at the location of the current drone and take the gradient to find the best direction to move in. We will use the gradient of the potential field as a target velocity and use a PD controller to find the acceleration vector needed to track this velocity. This acceleration vector is then converted to a force vector using the mass of the drone and an upwards force with magnitude equal to the drone is added to this as the hover force to get a final force vector. This force vector and the velocity direction vectors are used to create a coordinate frame by taking the cross product of the two to get the third vector. The error between the current drone orientation and this desired orientation is then computed and used with the angular velocities as the input to another PD controller that outputs the desired drone moments. The desired force vector from the first PD controller is then used as the thrust combined with these moments as the output of the collision avoidance controller and is fed into the mixing matrix (detailed in Section \ref{mixing matrix}).
 
-\section{Mixing Matrix} \label{mixing matrix} % Tommy, Rishabh
+\section{Actuator Allocation Matrix} \label{mixing matrix} % Tommy, Rishabh
 \fancyhead[C]{Thomas August}
 
+An actuator allocation matrix (AAM) is used to convert body thrust and moment to actuator thrusts using the geometry of the quad-copter. We use this matrix to convert the thrust and moments from our control algorithms above into the motor commands that can be sent to the actuators. This matrix is simple to design from the geometry if we first consider how the actuator thrusts produce body thrust and moments. The body thrust is merely the sum of all actuator thrusts, the roll and pitch moments are the sum of the moments due to the actuator thrusts about the centre of mass in each direction, and the yaw moment is the sum of the reaction torques of each actuator, due to aerodynamic drag, Eq.\ref{equ:ActuatorAllocationMatrix}. For the yaw moment to be controllable, assuming all actuators produce upwards thrust, the actuators need to be configured such that two diagonally opposite motors rotate in the same direction while the other two rotate in the opposite direction such that if a pure thrust is required, set to the same speed without producing a resultant yaw torque. 
+
+\begin{equation} \label{equ:ActuatorAllocationMatrix}
+\begin{aligned}
+T &= f_1 + f_2 + f_3 + f_4 \\
+\tau_{\text{roll}} &= x_1 f_1 + x_2 f_2 + x_3 f_3 + x_4 f_4 \\
+\tau_{\text{pitch}} &= - y_1 f_1 - y_2 f_2 - y_3 f_3 - y_4 f_4 \\
+\tau_{\text{yaw}} &= c f_1 - c f_2 + c f_3 - c f_4
+\end{aligned}
+\quad
+\Longleftrightarrow
+\quad
+\begin{bmatrix}
+T \\
+\tau_{\text{roll}} \\
+\tau_{\text{pitch}} \\
+\tau_{\text{yaw}}
+\end{bmatrix}
+=
+\begin{bmatrix}
+1 & 1 & 1 & 1 \\
+x_1 & x_2 & x_3 & x_4 \\
+- y_1 & - y_2 & - y_3 & - y_4 \\
+c & -c & c & -c
+\end{bmatrix}
+\begin{bmatrix}
+f_1 \\ f_2 \\ f_3 \\ f_4
+\end{bmatrix}
+\end{equation}
+
+We can then define this matrix above as $\mathbf{A}$, and the AAM is then the inverse of this, $\mathrm{AAM} = \mathbf{A}^{-1}$
 
 \newpage
 
