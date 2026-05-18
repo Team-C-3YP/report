@@ -1962,10 +1962,13 @@ This section presented a three-stage visual perception pipeline designed to prov
 
 
 \newpage
+\section{Flight Planning and Control Systems}
+
+In this section we discuss the flight modes of the drones and their respective planning and control algorithms. Each mode will have a planner that converts the high level commands from the central coordination manager to commands that the onboard flight controllers can follow and a mode specific flight controller which outputs body thrust and moments. The output of all modes are then passed through the actuator allocation matrix (AAM) to produce the motor thrusts.
 
 \section{Search Mode} \label{search mode}% Tommy
 \fancyhead[C]{Thomas August}
-The objective of the multi-agent drone system is to find and eliminate players without getting eliminated themselves and this section focuses on the method of finding the players within the map. At the start of a laser tag game, the drones and players will each start in their home bases which as positioned at opposite edges of the map. At this stage, our system knows that players will be entering the map from their home base, but does not know the exact location of these players within the map, and hence all drones will start in the search mode. This mode will not only be used at the start of the game but also when a drone cannot see a player and has not received a backup call from another drone (detailed in Section \ref{high level control}). In both cases, the server will need to plan a trajectory for each drone and the drone should follow this trajectory while looking for players with the onboard camera.
+The objective of the multi-agent drone system is to find and eliminate players without getting eliminated themselves and this section focuses on the method of finding the players within the map. At the start of a laser tag game, the drones and players will each start in their home bases which are positioned at opposite edges of the map. At this stage, our system knows that players will be entering the map from their home base, but does not know the exact location of these players within the map, and hence all drones will start in the search mode. This mode will not only be used at the start of the game but also when a drone cannot see a player and has not received a backup call from another drone (detailed in Section \ref{high level control}). In both cases, the server will need to plan a trajectory for each drone and the drone should follow this trajectory while looking for players with the onboard camera.
 
 \subsection{Trajectory Planning}
 In order for the drones to search the map effectively as a team they need to be coordinated which is why we run the planning for this mode on the central server. The planning will be split into two parts: region allocation and trajectory planning. The region allocation part will take the location of all drones in search mode as it's input and output a single closed region for each drone to search. Next, the trajectory planning part will take the regions from the first part and plan a closed loop trajectory of grid squares for each drone covering it's whole region. We chose this overall structure because assigning individual regions to each drone mitigates the risk of drone to drone collisions and reduces wasted time searching the same cells more than once, and planning a closed loop trajectory means the drone can search the region repeatedly.
@@ -2037,11 +2040,11 @@ Since a reinforcement learning policy uses rewards as its feedback to learn what
 
 \paragraph{Checkpoint Passed} To give the policy an indication that passing the checkpoints is the desired behaviour, we implemented a single reward whenever the drone achieves a checkpoint, providing large sparse rewards for achieving these milestones that will lead to the final goal location.
 
-\paragraph{Final Checkpoint Distance} The desired behaviour of the policy once it has reached the goal location is to hover at the final checkpoint. To promote this behaviour, we implemented a reward that is zero unless on the final checkpoint where it increases as distance to the checkpoint decreases using equation \ref{equ:RL_tanh_reward} below, where $std$ is a constant for this reward term.
+\paragraph{Final Checkpoint Distance} The desired behaviour of the policy once it has reached the goal location is to hover at the final checkpoint. To promote this behaviour, we implemented a reward that is zero unless on the final checkpoint where it increases as distance to the checkpoint decreases using equation \ref{equ:RL_tanh_reward} below, where $\mathrm{std}$ is a constant for this reward term.
 
 \begin{equation}
     \label{equ:RL_tanh_reward}
-    Reward = 1 - tanh(distance/std)
+    \mathrm{Reward} = 1 - \tanh(\mathrm{distance/std})
 \end{equation}
 
 \paragraph{Termination Penalty} To avoid the drone crashing, we implemented a sparse negative reward that is applied whenever the environment terminates due to the drone flying out of bounds (detailed in Section \ref{RLTerminations}). 
