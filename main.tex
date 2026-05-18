@@ -1823,19 +1823,19 @@ This transformation is achieved using a series of rotation matrices which are de
 
 To ensure compatibility with the Unity simulation environment, we adopt a left-handed coordinate system where the positive direction of rotation is defined as clockwise when looking down the axis of rotation.
 
-Initially we query the gimbal's encoders to obtain the real-time mechanical pitch ($\theta_g$) and roll ($\phi_g$) of the camera relative to the drone's chasis. These can be combined into the rotation matrix ($R_g$) that rotates the camera vector into alignment with the drone's body: 
+Initially we query the gimbal's encoders to obtain the real-time mechanical yaw ($\psi_g$),  pitch ($\theta_g$) and roll ($\phi_g$) of the camera relative to the drone's chassis. These can be combined into the rotation matrix ($R_g$) that rotates the camera vector into alignment with the drone's body: 
 
 \begin{equation}
-    R_g = R_x(\theta_g) \cdot R_z(\phi_g)
+    R_g = R_y(\psi_g) \cdot R_x(\theta_g) \cdot R_z(\phi_g)
 \end{equation}
 
 Although strictly we also need to take into account the translation vector for the physical displacement of the gimbal mount with the drone's centre of mass, this offset has been removed for simplicity. % or because it is negligible
 
-Next we read the drone's onboard \gls{imu} to acquire the drone's yaw ($\psi$), pitch ($\theta$), and roll ($\phi$). 
+Next we read the drone's onboard \gls{imu} to acquire the drone's yaw ($\psi_d$), pitch ($\theta_d$), and roll ($\phi_d$). 
 
 These attitudes dictate the drone's rotation matrix $R_d$:
 \begin{equation}
-    R_d = R_y(\psi) \cdot R_x(\theta) \cdot R_z(\phi)
+    R_d = R_y(\psi_d) \cdot R_x(\theta_d) \cdot R_z(\phi_d)
 \end{equation}
 
 Finally, we can add the drone's own position vector within the maze ($D_w$), which is continuously updated, and this allows us to formulate the target's 3D coordinate in the world frame ($P_w$) as:
@@ -1846,7 +1846,7 @@ Finally, we can add the drone's own position vector within the maze ($D_w$), whi
 which can be expressed in matrix representation as:
 \begin{equation}
     \resizebox{0.65\textwidth}{!}{%
-        $P_w = \big( R_y(\psi) R_x(\theta) R_z(\phi) \big) \cdot \Big( \big( R_x(\theta_g) R_z(\phi_g) \big) \begin{bmatrix} x_c \\ y_c \\ z_c \end{bmatrix} \Big) + \begin{bmatrix} X_{d} \\ Y_{d} \\ Z_{d} \end{bmatrix}$%
+        $P_w = \big( R_y(\psi_d) R_x(\theta_d) R_z(\phi_d) \big) \cdot \left( \big(R_y(\psi_g) R_x(\theta_g) R_z(\phi_g) \big) \begin{bmatrix} x_c \\ y_c \\ z_c \end{bmatrix} \right) + \begin{bmatrix} X_{d} \\ Y_{d} \\ Z_{d} \end{bmatrix}$%
     }
 \end{equation}
 
@@ -1911,7 +1911,26 @@ When the perception pipeline returns a valid \gls{yolo} detection, the update ph
     P_{k+1|k+1} = (I - K_{k+1} H) P_{k+1|k}
 \end{equation}
 
+\subsubsection{Occlusion Handling and Timeout Logic}
+
+In the arena, walls and barricades frequently occlude the target, causing the \gls{yolo} model to drop the measurement vector ($Z_k$). During total occlusion, the filter skips the update phase and relies on the constant velocity predict phase ($\hat{X}_{k+1|k}$). As visualised in Fig. \ref{fig:kalman_prediction}, this projects the target's trajectory behind cover, allowing the drone to anticipate where the player will re-emerge.
+
+However, a purely kinematic prediction becomes invalid if the player stops moving to hide behind cover. To prevent the tracking algorithm from projecting the target indefinitely, a timeout threshold ($t_{timeout}$) is implemented. If the duration of the occlusion exceeds $t_{timeout}$, the filter halts the constant velocity assumption. The velocity states are zeroed, and the position state reverts to the last verified Cartesian coordinate before line-of-sight was lost (Fig. \ref{fig:last_known_position}). This ensures the camera remains directed at the location where the system last had high confidence of the player's exact position.
+
 \newpage
+
+\begin{figure}[t!]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/Player State Estimation.png}
+    \caption{Kalman filter trajectory prediction during target occlusion. The blue trail indicates raw observations, while the yellow line demonstrates the filter's internal state estimate projecting behind cover.}
+    \label{fig:kalman_prediction}
+    
+    \vspace{0.25cm}
+    
+    \includegraphics[width=0.7\linewidth]{figs/Last Known Position.png}
+    \caption{Timeout mechanism execution. After prolonged occlusion, the state estimate halts the kinematic prediction and reverts to the last verified position.}
+    \label{fig:last_known_position}
+\end{figure}
 
 \subsection{Limitations and Conclusion}
 
