@@ -1322,7 +1322,7 @@ This section details the design and implementation of this perception system. To
     \item Maintaining a continuous state estimate of the target's trajectory to handle temporary line-of-sight occlusions caused by walls and obstacles.
 \end{itemize}
 
-\subsection{Sensor Selection} % (Rishabh - can be moved somewhere else, just put it here to make sure it's covered)
+\subsection{Sensor Selection} % Rishabh
 
 % To Do:
 % - check references
@@ -1337,13 +1337,13 @@ This section details the design and implementation of this perception system. To
 
 In order to transition from the objectives to the physical implementation, we require a sensor payload that can provide high-fidelity data without compromising flight performance or game mechanics. 
 
-Quadcopters are inherently underactuated mechanical systems [ref]; to achieve horizontal translation, the drone must pitch ($\theta$) or roll ($\phi$) in the direction of travel. If the visual sensor is rigidly mounted to the chassis, any forward acceleration pitches the sensor towards the floor, which may force the target out of the \gls{fov}. In order to resolve this, the sensor payload must be mounted to a 3-axis active gimbal. The gimbal acts as a kinematic decoupler, executing rotation transformations to maintain the camera frame at a fixed angle relative to the horizon, regardless of the drone's orientation.
+Quadcopters are inherently underactuated mechanical systems \cite{underactuated}; to achieve horizontal translation, the drone must pitch ($\theta$) or roll ($\phi$) in the direction of travel. If the visual sensor is rigidly mounted to the chassis, any forward acceleration pitches the sensor towards the floor, which may force the target out of the \gls{fov}. In order to resolve this, the sensor payload must be mounted to a 3-axis active gimbal. The gimbal acts as a kinematic decoupler, executing rotation transformations to maintain the camera frame at a fixed angle relative to the horizon, regardless of the drone's orientation.
 
 With the camera isolated from the drone's tilt, the next step is to select the specific imaging hardware for 3D spatial localisation of the target. While a standard 2D camera provides the line-of-sight data necessary to keep the drone facing the target, it lacks the absolute depth measurement ($Z$) required to establish a complete relative coordinate frame. Several of the evaluated hardware options are classified as \gls{rgbd} sensors, denoting that they capture standard colour video (RGB) alongside a depth map (D). We evaluated four standard approaches based on \gls{swapc} constraints alongside their compatibility within the laser tag environment. 
 
 \begin{table}[htbp]
     \centering
-    \caption{\gls{swapc} Evaluation of 3D Spatial Localisation Sensor Options [ref]}
+    \caption{\gls{swapc} Evaluation of 3D Spatial Localisation Sensor Options \cite{slamtec_rplidar_a1, orbbec_astra_mini_pro, oakd_lite_specs, raspberrypi_ai_camera}}
     \label{tab:sensor_swapc}
     \small
     \begin{tabularx}{\textwidth}{@{}llcccX@{}}
@@ -1382,6 +1382,8 @@ On the other hand, a passive stereoscopic system, such as the Luxonis OAK-D Lite
 Geometrically, as the target moves closer to the sensors, the viewing angle from each lens becomes more acute. This leads to the feature shifting further apart horizontally across the two image planes and hence $d$ increases. Since this calculation relies entirely on the horizontal parallax of a specific coordinate rather than the total pixel area of the bounding box ($A_{px}$), the depth estimation remains stable even if the player turns sideways. Furthermore, since this disparity mapping relies purely on ambient light, it ensures that there is no \gls{ir} interference with the game mechanics.
 
 To compare the performance of monocular and stereo depth estimation under geometric transformations, we constructed a simulation environment of the proposed hardware in Unity. The cameras were configured with a 1920x1080 resolution, with a $60^\circ$ \gls{fov}, a focal length of 935.31px, and a stereo baseline of 0.075m. We used a cuboid measuring 0.5m wide, 1.8m tall, and 0.2m deep to represent an average player. The objective was to observe how both camera architectures respond to changes in the target across three scenarios.
+
+\newpage
 
 \begin{figure}[htbp]
     \centering
@@ -1423,7 +1425,7 @@ As the target turns, its 2D profile narrows and the monocular algorithm, which i
 
 We also evaluated the systems against a reduction in the target's vertical height, to simulate the motion of crouching. Similar to the changes in the target's orientation, the monocular algorithm misinterprets the shrinking of the target as an increase in depth, leading to the depth overestimation seen in Fig. \ref{fig:crouch_deformation}. 
 
-This scenario highlights the advantage of the stereo system with the stereo estimate accurately tracking the ground truth. This confirms that the geometric baseline approach of the stereo model is \textbf{robust} to physical deformation, whereas the area approach of the monocular model will fail when the target's posture changes. 
+This scenario highlights the advantage of the stereo system with the stereo estimate accurately tracking the ground truth. This confirms that the geometric baseline approach of the stereo model is highly resistant to physical deformation, whereas the area approach of the monocular model will fail when the target's posture changes. 
 
 \begin{figure}[htbp]
     \centering
@@ -1432,9 +1434,8 @@ This scenario highlights the advantage of the stereo system with the stereo esti
     \label{fig:crouch_deformation}
 \end{figure}
 
-\textbf{Consequently, the passive stereoscopic system is selected for the sensor payload attached to the drone's gimbal. While the monocular camera presents a favourable \gls{swapc} profile, the simulations demonstrate that area-based depth estimation is insufficient for reliable depth estimation. The system cannot reliably distinguish between a change in the target posture or orientation from a change in physical depth. 
-}
-The passive stereo system resolves this by estimating depth via horizontal pixel disparity ($d$) and provides a \textbf{robust} depth estimate. Crucially, its reliance on ambient light means that there will be no interference with the \gls{ir} game mechanics.  
+Consequently, the passive stereoscopic system is selected. While the monocular camera presents a favourable \gls{swapc} profile, its area-based depth estimation cannot reliably distinguish between changes in target posture, orientation, or physical depth. The passive stereo system resolves this via horizontal pixel disparity ($d$), providing a stable depth estimate without \gls{ir} interference.
+
 
 \subsection{Computer Vision Architecture}
 The hardware of this system is comprised of a camera array consisting of three cameras. It features a high-resolution central RGB camera with two greyscale sensors either side that are dedicated to computing the stereoscopic disparity depth map. These visual streams are sequentially processed to meet both the tracking objectives described above: reliably distinguishing a human player from the background to lock onto the correct target, and calculating the target's 3D Cartesian coordinates relative to the drone's local frame. Together, these stages form the sensor pipeline (Fig. \ref{fig:pipeline_diagram}). 
@@ -1473,13 +1474,11 @@ The hardware of this system is comprised of a camera array consisting of three c
 
 To satisfy the first objective, the system must transform the raw visual data into spatial data. The central RGB sensor outputs a continuous stream of frames, which are essentially high-dimensional pixel arrays. To interpret these, an object detection model is required to ingest this raw data and output bounding boxes around valid targets. This process effectively maps visual features to 2D semantic coordinates within the image frame, ensuring the system can reliably distinguish the player from the background. 
 
-\textbf{For this task, the YOLOv8-nano (YOLOv8n) framework was selected. It provides an extremely fast multi-object detection algorithm that uses a \gls{cnn} to detect and identify objects. \gls{yolo} evaluates the entire image in a single computational pass to predict bounding box coordinates and this approach ensures low latency of the model. Because the drone's flight controller takes actions based on the visual feed, it must receive the most up-to-date target data to ensure the control loops remain responsive. 
-}
-The nano variant was chosen because it has the lowest parameter count out of the YOLOv8 models and this makes it the lightest and fastest model available. The streamlined nature of this architecture is well-suited to the limited computer resources available on the drone's onboard hardware. Furthermore, the maturity of the \gls{yolo} architecture, combined with its extensive Python support and documentation, facilitates the training process and provides a reliable pipeline for deploying the model within the project.
+For this task, the YOLOv8-nano (YOLOv8n) architecture was selected. As the variant with the lowest parameter count, its streamlined size is explicitly suited for deployment on the drone's limited onboard hardware. \gls{yolo} ensures low-latency detection by evaluating the image in a single computational pass, which is required to keep the flight control loops responsive. Furthermore, the architecture's maturity, combined with its extensive Python support and documentation, provides a reliable and efficient pipeline for training, single-class fine-tuning, and deployment.
 
 To achieve the second objective, the system performs sensor fusion. The predicted 2D bounding box defines a region of interest (Fig. \ref{fig:rgb_data}), which is projected onto the synchronised stereo disparity map (Fig. \ref{fig:depth_data}). This allows the system to extract the absolute depth ($Z$) of the target by sampling depth data across the pixels within this region, effectively bridging 2D visual recognition with 3D spatial tracking. 
 
-Note that the visualisations in Fig. \ref{fig:perception_system_overview} were generated within the Unity simulation environment (detailed in Section \ref{system}), utilising Ground Truth bounding boxes. 
+Note that the visualisations in Fig. \ref{fig:perception_system_overview} were generated within the Unity simulation environment, utilising Ground Truth bounding boxes. 
 
 % \begin{figure}[H]
 %     \centering
@@ -1529,7 +1528,7 @@ Following data preparation, the pre-trained YOLOv8n model was fine-tuned on the 
 
 Once the network had converged, the final weights were exported to the \gls{onnx} format that allowed the model trained in Python to be imported directly into Unity. Within the simulation, the model is executed using Unity Sentis, a tensor engine used to run neural networks natively within the simulated environment.
 
-To quantify the model's convergence during training, loss and precision metrics were tracked across 50 epochs. As visualised in Fig.  \ref{fig:visdrone_training_results}, both the training and validation losses steadily decreased and plateaued towards the end of the run. This indicates that the neural network converged successfully and \textbf{learned the dataset's features without overfitting}. 
+To quantify the model's convergence during training, loss and precision metrics were tracked across 50 epochs. As visualised in Fig.  \ref{fig:visdrone_training_results}, both the training and validation losses steadily decreased and plateaued towards the end of the run. This indicates that the neural network converged successfully and learned the dataset's features with no obvious overfitting. 
 
 \begin{figure}[htbp]
     \centering
@@ -1608,7 +1607,7 @@ The following 2D graphs flatten the 3D hemispherical sweeps shown in Fig. \ref{f
     \label{fig:benchmark_daylight}
 \end{figure}
 
-Under daylight conditions (Fig. \ref{fig:benchmark_daylight}), the model demonstrates \textbf{robust} player detection. The confidence contour map indicates sustained detections across majority of the orbital grid, highlighting peak probability zones at steep pitch angles between $50^\circ$ and $80^\circ$. This spatial bias is expected given that the VisDrone training dataset consists primarily of high-altitude aerial perspectives. The classification plot confirms this trend, displaying a ring of True Positives around the outer edge. Consequently, the model performs well when looking down at the target from above. This also validates the fidelity of the environment itself since a neural network trained exclusively on real-world photographic data can successfully detect a synthetic target within Unity. Hence, we can verify that the \textbf{simulation environment has been configured correctly}.
+Under daylight conditions (Fig. \ref{fig:benchmark_daylight}), the model demonstrates consistent player detection. The confidence contour map indicates sustained detections across majority of the orbital grid, highlighting peak probability zones at steep pitch angles between $50^\circ$ and $80^\circ$. This spatial bias is expected given that the VisDrone training dataset consists primarily of high-altitude aerial perspectives. The classification plot confirms this trend, displaying a ring of True Positives around the outer edge. Consequently, the model performs well when looking down at the target from above. This also suggests that the lighting and geometric properties of the Unity simulation are sufficiently realistic for baseline evaluation, as a network trained on real-world data successfully detected the synthetic target.
 
 
 \begin{figure}[htbp]
@@ -1689,12 +1688,9 @@ To quantify the performance of the synthetic data pipeline and ensure that the n
     \caption{Training and validation loss metrics across 50 epochs for the Synthetic dataset.}
     \label{fig:synthetic_training_results}
 \end{figure}
-
-\textbf{The training and validation curves indicate highly stable convergence. The training and validation losses both descend and this confirms that the model hasn't overfit to the synthetic data. 
-}
 % maybe a comment on the 40-epoch drop but perhaps best made for the visdrone training and a brief mention here
 
-The performance metrics corroborate the successful convergence. The mean Average Precision at an Intersection over Union threshold of 0.50 (mAP50) plateaus at 0.96 and the mAP50-95 metric climbs to above 0.80. These exceptionally high metrics are a direct characteristic of synthetic datasets. Unlike human-annotated real-world data, which inherently suffers from subjective or loose labelling, the Unity pipeline generates mathematically perfect ground-truth coordinates. Furthermore, evaluating the network against validation data drawn from the exact same simulated distribution naturally yields higher accuracy. Ultimately, these theoretical metrics prove the network successfully extracted the features of the simulated human targets,
+The simultaneous descent of both training and validation losses suggests stable convergence and indicates no obvious overfitting to the synthetic data. The performance metrics corroborate the successful convergence. The mean Average Precision at an Intersection over Union threshold of 0.50 (mAP50) plateaus at 0.96 and the mAP50-95 metric climbs to above 0.80. These exceptionally high metrics are a direct characteristic of synthetic datasets. Unlike human-annotated real-world data, which inherently suffers from subjective or loose labelling, the Unity pipeline generates mathematically perfect ground-truth coordinates. Furthermore, evaluating the network against validation data drawn from the exact same simulated distribution naturally yields higher accuracy. Ultimately, these theoretical metrics prove the network successfully extracted the features of the simulated human targets,
 
 Beyond theoretical convergence, we determined the operational threshold for the deployment of the synthetic model. The F1-Confidence curve was evaluated to identify this balance for the simulation environment (Fig. \ref{fig:synthetic_f1_curve}).
 
@@ -1912,6 +1908,10 @@ When the perception pipeline returns a valid \gls{yolo} detection, the update ph
 \begin{equation}
     P_{k+1|k+1} = (I - K_{k+1} H) P_{k+1|k}
 \end{equation}
+
+\newpage
+
+\subsection{Limitations and Conclusion}
 
 \newpage
 
@@ -2676,6 +2676,11 @@ The economic impact is considered through the commercial model, which tests whet
 The system should not be considered fully sustainable. Issues such as waste and replacement of electronic components, general consumptions of arena management, and usage of non-biodegradable ABS material mean that the system cannot be considered impact-free.
 \newpage
 %%%%%%%%%%%%%%%----------End of Sustainability--------------%%%%%%%%%%%%%%%
+\section{Technology Strategy}
+\fancyhead[C]{Rishabh Luthra}
+\newpage
+
+
 
 % Appendix
 % Essential content that interrupts the flow of the document can be placed here, e.g. technical drawings, detailed lists of equations used, etc.
