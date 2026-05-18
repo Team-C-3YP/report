@@ -1763,7 +1763,7 @@ As shown in the detection curve (Fig. \ref{fig:occlusion_test}), the VisDrone mo
 
 In contrast, the synthetic model demonstrates a more stable detection decay curve. It maintains a confidence score above 0.9 up to 35\% occlusion and crosses the 0.5 threshold at approximately 68\% occlusion. This data suggests that the synthetic domain randomisation pipeline trained the neural network to classify partial human geometry. By learning to identify isolated features, such as an exposed shoulder or an extended arm, the synthetic model addresses the occlusion limitations observed in the Visdrone model, offering greater reliability for deployment in environments with physical barricades.
 
-\subsection{  3D Coordinates via Sensor Fusion}
+\subsection{3D Coordinates via Sensor Fusion}
 We use sensor fusion in order to bridge the gap between the 2D \gls{yolo} bounding box and the stereoscopic depth map to resolve the 3D Cartesian coordinates of the player. We begin with the geometric centroid ($x_i, y_i$) of the bounding box in pixel coordinates. Because the central RGB camera and stereo cameras are synchronised, this coordinate corresponds to a point on the depth map. 
 
 If this centroid lies on a gap in the target's posture, a single pixel sample of the depth map may erroneously return the distance to the background wall rather than the player itself. In order to prevent this, the system samples a $N \times N$ kernel of pixels around the centroid and a median filter is applied to ensure that the output reflects the true target distance. 
@@ -1850,7 +1850,7 @@ which can be expressed in matrix representation as:
     }
 \end{equation}
 
-\subsection{  State Estimation and Predictive Tracking}
+\subsection{State Estimation and Predictive Tracking}
 Although we are able to obtain the 3D global coordinates of the player ($P_w$) using the kinematic transformations above, the raw measurements will be inherently noisy due to stereoscopic depth jitter and \gls{yolo} bounding box fluctuations. In addition, the arena contains physical walls and objects that can cause temporary occlusions. As a result, we cannot rely solely on the raw visual data and must maintain a state estimate of the player's position.
 
 In order to achieve this, we implemented a Linear Kalman Filter to maintain a continuous, smoothed estimate of the player's position. The filter operates on a constant velocity model, allowing us to project the player's trajectory during periods of occlusion.
@@ -1932,7 +1932,19 @@ However, a purely kinematic prediction becomes invalid if the player stops movin
     \label{fig:last_known_position}
 \end{figure}
 
-\subsection{Limitations and Conclusion}
+\subsection{Limitations and Future Work}
+An evaluation of the current perception system highlights key design limitations to be addressed in future iterations:
+
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \item \textbf{Sim-to-Real Domain Gap:} The YOLOv8n model relies on idealised simulation graphics. Real-world deployment will introduce unmodelled sensor noise, motion blur, and variable lighting conditions. Future work must address this by integrating high-fidelity ray-traced rendering into the automated synthetic pipeline or transitioning to an empirical dataset collected from a physical arena.
+    \item \textbf{Computational Resource Allocation:} Running real-time object detection, stereoscopic disparity mapping, and kinematic transformations concurrently creates a high processor load. Future development requires profiling processing latency on the target companion computer to ensure it does not bottleneck the flight control loop frequency.
+\end{itemize}
+
+\subsection{Conclusion}
+This section presented a three-stage visual perception pipeline designed to provide relative 3D spatial data within the broader multi-agent drone system. Selecting a passive stereo camera establishes a method for tracking target depth independent of posture while avoiding infrared interference with the laser tag scoring mechanics. Tracking vulnerabilities under low-light or occluded conditions were mitigated by implementing an automated synthetic data generation pipeline to train the object detection model. Fusing 2D bounding boxes with stereoscopic depth via a Linear Kalman filter provides smoothed 3D coordinates and trajectory prediction during temporary occlusions. The simulation results indicate that the pipeline delivers a workable spatial tracking interface suitable for integration with the high-level logic and flight controller.
+
 
 \newpage
 
