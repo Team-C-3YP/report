@@ -705,7 +705,7 @@ Approximate cost & From \$35, depending on RAM option & From \$45, depending on 
 
 \paragraph{Communication Interface}
 
-From a hardware point of view, the main communication requirement was that the drone could connect wirelessly to the external server. The Raspberry Pi 4 Model B included built-in dual band Wi-Fi and Bluetooth. Wi-Fi would be used to connect between the drone and the server, while the Bluetooth could be reserved for short-range setup or debugging if required. Detailed comparison between both methods are covered in the networking section of the report.
+From a hardware point of view, the main communication requirement was that the drone could connect wirelessly to the external server. The Raspberry Pi 4 Model B included built-in dual band Wi-Fi and Bluetooth. Wi-Fi would be used to connect between the drone and the server, while the Bluetooth could be reserved for short-range setup or debugging if required. Detailed comparison between both methods are covered in Section~\ref{network}.
 
 \paragraph{Interface with Sensors and Control Hardware}
 
@@ -715,7 +715,7 @@ Drone electronics will connect to the onboard computer via the GPIO, serial, USB
 
 \paragraph{Camera}
 
-The camera selected by the visual perception work-stream was the OAK-D Lite (shown in Fig.~\ref{fig:Camera}) used for player detection and tracking. In this hardware section, the camera is considered from an integration point of view. The OAK-D Lite connects to the Raspberry Pi through USB hence the drone body must be designed to ensure both the USB connection and cable routing are practical inside the drone body. Its power draw also need to be included in the 5V electronics power budget. Mechanically, the camera must be placed with a clear field of view - placed in line with the IR emitter inside a gimbal/turret where they can move simultaneously. There should be no obstruction by the airframe, turret structure, or wiring. More detailed reasoning behind the camera choice can be found in the visual detection pipeline covered separately under \say{Mid Level Control} % add reference to section?.
+The camera selected by the visual perception work-stream was the OAK-D Lite (shown in Fig.~\ref{fig:Camera}) used for player detection and tracking. In this hardware section, the camera is considered from an integration point of view. The OAK-D Lite connects to the Raspberry Pi through USB hence the drone body must be designed to ensure both the USB connection and cable routing are practical inside the drone body. Its power draw also need to be included in the 5V electronics power budget. Mechanically, the camera must be placed with a clear field of view - placed in line with the IR emitter inside a gimbal/turret where they can move simultaneously. There should be no obstruction by the airframe, turret structure, or wiring. More detailed reasoning behind the camera choice can be found in the visual detection pipeline covered separately under Section~\ref{Sensor Selection}.
 
 \begin{figure}[htbp]
     \centering
@@ -1008,7 +1008,7 @@ The structural assessment focused on two components most exposed to loading and 
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1\textwidth]{Hardware/Rotor Arm Simulation Test Image.png}
+    \includegraphics[width=0.9\textwidth]{Hardware/Rotor Arm Simulation Test Image.png}
     \caption{Rotor Arm Simulation Test}
     \label{fig:Rotor Arm Sim}
 \end{figure}
@@ -1022,7 +1022,7 @@ This result showed that the structure was reasonable. However, this should still
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1\textwidth]{Hardware/Blade Guard Simulation.png}
+    \includegraphics[width=0.9\textwidth]{Hardware/Blade Guard Simulation.png}
     \caption{Blade Guard Simulation test}
     \label{fig:BladeGaurdSim}
 \end{figure}
@@ -1043,7 +1043,15 @@ The final design of the drone hardware is acceptable within the scope of the pro
 
 \subsubsection{Simulation Representation of Drone Hardware}
 
-The final CAD model was simplified for use in Unity. Given the full Fusion 360 assembly contained many unnecessary mechanical detail for real-time simulation, a low-poly version was created in Blender and imported into Unity as a game asset. The simplified model preserved the main visible features such as the drone body and propellers, while small details such as bolt holes and linkages were removed. These were deemed unnecessary as Unity's built-in collision mechanisms and physics engine mainly uses approximated cuboid or spherical boundaries defined by the developer, and developing a custom solid-boundary model would require additional setup time without adding much value.
+The final CAD model was simplified for use in Unity. Given the full Fusion 360 assembly contained many unnecessary mechanical detail for real-time simulation, a low-poly version was created in Blender and imported into Unity as a game asset. The simplified model preserved the main visible features such as the drone body and propellers, while small details such as bolt holes and linkages were removed. These were deemed unnecessary as Unity's built-in collision mechanisms and physics engine mainly uses approximated cuboid or spherical boundaries defined by the developer, and developing a custom solid-boundary model would require additional setup time without adding much value. (A model of the simplified drone is shown in Fig.~\ref{fig:BlenderDrone})
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.50\textwidth]{Blender Drone.png}
+    \caption{Blender Drone}
+    \label{fig:BlenderDrone}
+\end{figure}
+
 
 \subsection{Player Hardware Design}
 \label{player_hardware}
@@ -1335,7 +1343,7 @@ This section details the design and implementation of this perception system. To
 \end{itemize}
 
 \subsection{Sensor Selection} % Rishabh
-
+\label{Sensor Selection}
 % To Do:
 % - check references
 % - include an image on stereo depth and maybe of the test setup [done]
