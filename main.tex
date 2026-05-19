@@ -1615,17 +1615,17 @@ The benchmark was executed on two distinct simulation conditions:
     \begin{subfigure}[b]{0.32\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/env_daylight.png}
-        \caption{Daylight Conditions}
+        \caption{}
         \label{fig:env_daylight}
     \end{subfigure}
     \begin{subfigure}[b]{0.325\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/env_lowlight.png}
-        \caption{Low-light Conditions}
+        \caption{}
         \label{fig:env_lowlight}
     \end{subfigure}
     
-    \caption{A visual comparison of the simulated lighting environments used during the automated orbital benchmark.}
+    \caption{Visual comparison of the simulated lighting environments used during the automated orbital benchmark, illustrating (\subref{fig:env_daylight}) daylight conditions and (\subref{fig:env_lowlight}) low-light conditions.}
     \label{fig:orbital_benchmarks}
 \end{figure}
 
@@ -1636,15 +1636,18 @@ The following 2D graphs flatten the 3D hemispherical sweeps shown in Fig. \ref{f
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/VisDrone_F_Light_Confidence.pdf}
-        \caption{Confidence score distribution}
+        \caption{}
+        \label{fig:daylight_confidence}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/VisDrone_F_Light_Classification.pdf}
-        \caption{TP / FP / FN categorisation}
+        \caption{}
+        \label{fig:daylight_classification}
     \end{subfigure}
-    \caption{Orbital benchmark under Daylight Conditions.}
+    
+    \caption{Orbital benchmark under daylight conditions showing (\subref{fig:daylight_confidence}) the confidence score distribution and (\subref{fig:daylight_classification}) the TP / FP / FN categorisation.}
     \label{fig:benchmark_daylight}
 \end{figure}
 
@@ -1656,17 +1659,18 @@ Under daylight conditions (Fig. \ref{fig:benchmark_daylight}), the model demonst
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/VisDrone_F_Dark_Confidence.pdf}
-        \caption{Confidence score distribution}
+        \caption{}
         \label{fig:benchmark_lowlight_confidence}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/VisDrone_F_Dark_Classification.pdf}
-        \caption{TP / FP / FN categorisation}
+        \caption{}
         \label{fig:benchmark_lowlight_classification}
     \end{subfigure}
-    \caption{Orbital benchmark under Low-light Conditions.}
+    
+    \caption{Orbital benchmark under low-light conditions showing (\subref{fig:benchmark_lowlight_confidence}) the confidence score distribution and (\subref{fig:benchmark_lowlight_classification}) the TP / FP / FN categorisation.}
     \label{fig:benchmark_lowlight}
 \end{figure}
 
@@ -1679,8 +1683,8 @@ To resolve the domain gap identified during baseline evaluation, an automated da
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.9\textwidth]{figs/SyntheticDatasetOverview.pdf}
-    \caption{Sample of the generated synthetic dataset. Note the variation in camera altitude, target pose, environmental lighting intensity, and maze textures.}
+    \includegraphics[width=0.9\textwidth]{figs/SyntheticDatasetOverview.png}
+    \caption{Sample of the generated synthetic dataset. Panels (a)–(f) illustrate variations in camera altitude, target pose, environmental lighting intensity, and maze textures.}
     \label{fig:synthetic_overview}
 \end{figure}
 
@@ -1775,17 +1779,18 @@ This stability is supported by the TP/FP/FN categorisation (Fig. \ref{fig:benchm
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/Synthetic_F_Dark_Confidence.pdf}
-        \caption{Confidence score distribution}
+        \caption{}
         \label{fig:benchmark_synthetic_lowlight_confidence}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/Synthetic_F_Dark_Classification.pdf}
-        \caption{TP / FP / FN categorisation}
+        \caption{}
         \label{fig:benchmark_synthetic_lowlight_classification}
     \end{subfigure}
-    \caption{Orbital benchmark performance for Synthetic model under Low-light Conditions.}
+    
+    \caption{Orbital benchmark performance for the synthetic model under low-light conditions showing (\subref{fig:benchmark_synthetic_lowlight_confidence}) the confidence score distribution and (\subref{fig:benchmark_synthetic_lowlight_classification}) the TP / FP / FN categorisation.}
     \label{fig:benchmark_synthetic_lowlight}
 \end{figure}
 
@@ -1828,17 +1833,18 @@ P_c = \begin{bmatrix} x_c \\ y_c \\ z_c \end{bmatrix} = \begin{bmatrix} \frac{x_
      \begin{subfigure}[b]{0.48\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/CameraProjection_SimilarTriangles.png}
-         \caption{Similar triangles for the y-axis projection.}
+         \caption{}
          \label{fig:projection_side}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{0.48\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/CameraProjection.png}
-         \caption{3D perspective view relating the camera coordinate frame and image plane.}
+         \caption{}
          \label{fig:projection_3d}
      \end{subfigure}
-     \caption{Geometry of the perspective projection model from 3D spatial coordinates to the 2D image plane.}
+     
+     \caption{Geometry of the perspective projection model from 3D spatial coordinates to the 2D image plane, illustrating (\subref{fig:projection_side}) similar triangles for the y-axis projection and (\subref{fig:projection_3d}) a 3D perspective view relating the camera coordinate frame and image plane.}
      \label{fig:camera_geometry}
 \end{figure}
 
