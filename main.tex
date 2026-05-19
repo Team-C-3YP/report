@@ -1849,7 +1849,7 @@ P_c = \begin{bmatrix} x_c \\ y_c \\ z_c \end{bmatrix} = \begin{bmatrix} \frac{x_
      \label{fig:camera_geometry}
 \end{figure}
 
-In order to interface with the high-level logic (Section \ref{high level control}) as well as the navigation and flight control architecture (Section \ref{navigation}), the vector $P_c$ in the camera's local coordinate frame must be converted into the global world frame $P_w$.
+In order to interface with the high-level logic (Section \ref{high level control}) as well as the motion planning and flight control architecture (Section \ref{motionPlanning}), the vector $P_c$ in the camera's local coordinate frame must be converted into the global world frame $P_w$.
 
 This transformation is achieved using a series of rotation matrices which are defined for Pitch ($\theta$), Yaw($\psi$) and Roll ($\phi$):
 \begin{equation}
@@ -1999,13 +1999,12 @@ This section presented a three-stage visual perception pipeline designed to prov
 
 \newpage
 \section{Motion Planning and Flight Control Architecture}
-\section{Navigation and Flight Control Architecture}
-\label{navigation}
+\label{motionPlanning}
+\fancyhead[C]{Thomas August}
 
 In this section we detail the motion planning and flight control algorithms of each operational mode (detailed in Section \ref{high level control}). Each mode utilises a flight control algorithm that outputs body thrust and moments which are converted to motor commands using the actuator allocation matrix detailed at the end of this section.
 
 \subsection{Search Mode} \label{search mode}% Tommy
-\fancyhead[C]{Thomas August}
 
 The search mode architecture involves a centralised off-board flight planner and an onboard flight controller. We decided to use a centralised flight planner which is run on the server in order to efficiently coordinate all drones currently in search mode. This planner has two stages, region allocation and trajectory planning, detailed in the sections below. Whenever the number of drones in search mode changes, the planner will recompute such that the whole map is always being searched. The onboard flight controller uses the cascaded PD controller detailed in Section\ref{cascadedPDController} with the position set point at a fixed distance along the trajectory path from the current position projected onto the path and the heading direction along the vector from the current position to the set point with a zero target velocity. While traversing the planned trajectory, the camera-gimbal system will rotate, looking for players.
 
