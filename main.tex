@@ -48,7 +48,9 @@
 \addcontentsline{toc}{section}{Abstract}
 \fancyhead[C]{Group}
 \section*{Abstract}
+Laser tag remains a popular and commercially successful game within the UK leisure industry, but its core mechanics have seen minimal innovation since its introduction in 1984 despite growing consumer demand for highly interactive leisure experiences. This report details the design and simulation of a novel iteration of the game in which human players compete against a multiagent autonomous drone system. The concept is centred on drones designed from scratch to their required specifications, reinforcement learning ADD GLOSSARY LINK DON'T LEAVE THIS IN THE FINAL REPORT to control the drones' movement, a high-level control policy designed to create an engaging and enjoyable player experience and a companion app to encourage user engagement. Sustainability, ethics and safety concerns are considered, and the technical performance of the project is demonstrated through simulation analysis. The commercial viability is demonstrated through financial modelling, yielding a business with Net Present Value (\gls{npv}) of around £69,000. This proves the potential of the concept to revolutionise the laser tag industry.
 \newpage
+
 
 \fancyhead[C]{}
 \tableofcontents
@@ -83,6 +85,12 @@
 \newacronym{pdb}{PDB}{Power Distribution Board}
 \newacronym{swot}{SWOT}{Strengths, Weaknesses, Opportunities, and Threats}
 \newacronym{ip}{IP}{Intellectual Property}
+\newacronym{cad}{CAD}{Computer-Aided Design}
+\newacronym{bfs}{BFS}{Breadth First Search}
+\newacronym{pd}{PD}{Proportional-Derivative}
+\newacronym{mpc}{MPC}{Model Predictive Control}
+\newacronym{rl}{RL}{Reinforcement Learning}
+\newacronym{aam}{AAM}{Actuator Allocation Matrix}
 \printglossaries
 \newpage
 
@@ -96,17 +104,17 @@
 \fancyhead[C]{Rishabh Luthra}
 The UK leisure market is currently defined by a distinct consumer trend: a frugality in routine choices paired with a willingness to invest in high-value experiences~\cite{arrowsmith2026leisure, deloitte2026leisure_report}. This shift drives a growing demand for immersive environments that offer real-time interactivity and integrate the strategic depth of video games into the physical world. 
 
-Since its introduction in 1984, the core mechanics of laser tag have remained largely unchanged~\cite{LaserTagHistory}. An estimated 76 million games are played every year~\cite{trutneeLaserTag}. This suggests that innovation within the laser tag industry has significant demand and commercial potential.
+Since its introduction in 1984~\cite{LaserTagHistory}, the core mechanics of laser tag have remained largely unchanged. An estimated 76 million games are played every year~\cite{trutneeLaserTag}. This suggests that innovation within the laser tag industry has significant demand and commercial potential.
 
-To meet this demand, we present a novel laser tag game where human players cooperate to compete against a team of autonomous, multi-agent drones. From a user perspective, the system aims to provide an engaging, safe, and highly interactive experience defined by specific gameplay modes and dynamic objectives (Section \ref{gameplay}). To complete these objectives, players navigate through a purpose-built indoor maze constructed from 5-metre high walls (Section \ref{map}). The project is governed by strict physical and safety boundaries to ensure a low-risk environment; the arena features a dividing net that separates the drones flying overhead from the human players below. Designed with a 1200J energy absorption capacity, this industrial netting provides a safety factor of 5.1 against a 4kg drone flying at full thrust downwards. As a result, this mitigates the risk of human-drone collisions without diminishing game immersion.
+To meet this demand, we present a novel laser tag game in which human players cooperate to compete against a team of autonomous drones. From a user perspective, the system aims to provide an engaging, safe, and highly interactive experience defined by specific gameplay modes and dynamic objectives (Section \ref{gameplay}). To complete these objectives, players navigate through a purpose-built indoor maze constructed from 5-metre high walls (Section \ref{map}). The project is governed by strict physical safety boundaries to ensure a low-risk environment; the arena features a dividing net that separates the drones flying overhead from the human players below. Designed with a 1200J energy absorption capacity, this industrial netting provides a safety factor of 5.1 against a 4kg drone flying at full thrust downwards. As a result, this mitigates the risk of human-drone collisions without diminishing game immersion.
 
 From a drone perspective, the primary goal is to achieve autonomy and coordinated teamwork within a confined environment. Since off-the-shelf platforms lack the necessary flexibility, payload integration, and component protection for such close-proximity indoor operations, a custom modular quadrotor airframe was developed (Section \ref{hardware}). The \gls{abs} 3D-printed chassis features integrated blade guards to ensure operational continuity during minor wall collisions. To satisfy a 2:1 thrust-to-weight ratio for a 4kg maximum takeoff mass, the propulsion system utilises BrotherHobby Avenger 2806.5 1300KV brushless motors paired with 8x4x3 polycarbonate propellers, driven by a 4S 5000mAh Lithium Polymer battery to sustain approximately 10 minutes of active flight endurance. Dedicated player hardware, including sensor-equipped helmets and vests, then integrate into this ecosystem (Section \ref{player_hardware}).
 
-For multi-agent coordination, the system relies on an IEEE 802.11ac Wi-Fi communications framework (Section \ref{network}) linking the onboard drone hardware to a central server. The server manages the high-level game logic, evaluating the global state to dynamically transition individual drones through specific operational modes such as Search, Track, Shoot, and Movement (Section \ref{high level control}). 
+For mult-agent coordination, the system relies on an IEEE 802.11ac Wi-Fi communications framework (Section \ref{network}) linking the onboard drone hardware to a central server. The server manages the high-level game logic, evaluating the global state to dynamically transition individual drones through specific operational modes such as Search, Track, Shoot, and Movement (Section \ref{high level control}). 
 
 To inform these high-level decisions, each drone is equipped with an OAK-D Lite passive stereoscopic camera mounted on a custom 3-axis tracking gimbal, which kinematically decouples the camera from the drone’s flight attitude to maintain continuous target lock. Visual data is ingested by a YOLOv8-nano (YOLOv8n) convolutional neural network (Section \ref{visual_perception}). To overcome the domain gap caused by the arena's low-light conditions and frequent target occlusions, this model was trained on a synthetic dataset created within Unity. Because active visual sensors would interfere with the game's \gls{ir} mechanics, and monocular depth estimation fails when a human target alters their posture, target depth is extracted passively via stereoscopic horizontal pixel disparity. This raw spatial data is smoothed using a Linear Kalman Filter, operating on a Discrete White Noise Acceleration (DWNA) model, to provide continuous, predictive 3D state estimations of the players. 
 
-These estimated player coordinates update the central server's global state, which in turn dictates the high-level navigational objectives assigned to each drone. Search mode utilises a hybrid Breadth-First Search (BFS) region-allocation and lawnmower trajectory algorithm to systematically scan the arena (Section \ref{search mode}). When rapid transit is required, flight control is handed over to a Reinforcement Learning (RL) policy trained offline in the Isaac Lab physics simulator, outputting body thrust and moment commands (Section \ref{movement mode}). Furthermore, an Artificial Potential Field (APF) controller handles real-time collision avoidance by computing repulsive gradients from walls and other agents, converting them into evasive manoeuvres (Section \ref{collision avoidance mode}).
+These estimated player coordinates update the central server's global state, which in turn dictates the high-level navigational objectives assigned to each drone. Search mode utilises a hybrid \gls{bfs} region-allocation and lawnmower trajectory algorithm to systematically scan the arena (Section \ref{search mode}). When rapid transit is required, flight control is handed over to a \gls{rl} policy trained offline in the Isaac Lab physics simulator, outputting body thrust and moment commands (Section \ref{movement mode}). Furthermore, an Artificial Potential Field (APF) controller handles real-time collision avoidance by computing repulsive gradients from walls and other agents, converting them into evasive manoeuvres (Section \ref{collision avoidance mode}).
 
 In addition to the technical deployment, user retention is driven by a companion mobile application that tracks performance metrics, leaderboards, and achievements to foster community engagement (Section \ref{app}). Finally, the technical development is supported by an evaluation of broader engineering considerations. These are validated by a quantitative risk assessment (Section \ref{risk-assessment}) and a financial model (Section \ref{commercialisation}), which confirms the commercial feasibility of the enterprise by projecting a Net Present Value of £68,669 at an optimal price of £200 per game.
 % Technology Strategy, Sustainability
@@ -211,7 +219,7 @@ We plan to use industrial safety nets to separate the players from the drones as
 
 \subsection{Context}
 
-The project decision was to develop a custom drone hardware design in preference to using an existing commercial platform. This was motivated by the need to co-design the airframe, electronics, sensing equipment, and game-specific payload around the requirements of an indoor multi-agent laser tag system. Various options may offer good flight performance and easy maintenance, but are generally optimised for less intense activities and outdoor environments, and therefore provide limited flexibility for integrating custom sensing, tag-hardware, and protective structures. 
+The project decision was to develop a custom drone hardware design in preference to using an existing commercial platform. This was motivated by the need to co-design the airframe, electronics, sensing equipment, and game-specific payload around the requirements of an indoor multiagent laser tag system. Various options may offer good flight performance and easy maintenance, but are generally optimised for less intense activities and outdoor environments, and therefore provide limited flexibility for integrating custom sensing, tag-hardware, and protective structures. 
 
 In addition, commercial drones tend to be quite closed off in terms of hardware and software access - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed for more freedom to choose components, organise the internal layout, and include additional features necessary to the game-play.
 
@@ -243,12 +251,12 @@ As the drone is intended to operate indoors in relative proximity to players dur
     \item \textbf{Indoor Movement: } Contrary to the safety requirement, the drone must also be a capable opponent rather than a still target. This means the design must be able to allow for navigation and some form of evasive movement. This poses as a tradeoff between game-play and safety.
     \item \textbf{Visibility and challenge: } The drone had to be large and visible enough for players to clearly recognise the target during game-play, while still being agile enough to move around. A design too small would be difficult to engage while a design too large or too slow would reduce game-play quality.
     \item \textbf{Supporting game systems and battery: } The drone needs to carry additional hardware required for game-play, such as IR transmitters and receivers, cameras, sensors, and onboard computing. These systems add weight and take up internal space. In addition, the design needs to allow for enough operating time for meaningful game-play.
-    \item \textbf{Easy maintenance and replace-ability: } Given the game is a multi-agent system rather than a single platform, the design needs to remain practical to maintain, to repair, and to replace. Minor damage during operation should not require a whole drone to be rebuilt, so replaceable parts and a maintainable layout becomes an important constraint.
+    \item \textbf{Easy maintenance and replace-ability: } Given the game is a multiagent system rather than a single platform, the design needs to remain practical to maintain, to repair, and to replace. Minor damage during operation should not require a whole drone to be rebuilt, so replaceable parts and a maintainable layout becomes an important constraint.
 \end{itemize}
 
 \subsubsection{Simulation Scope and General Design Assumptions}
 
-The project was carried out mainly through simulation; the hardware design was developed as a realistic engineering model rather than as a fully built and tested prototype. This means that the design was based on CAD modelling, component data sheets, and estimated performance values through online data and programme testing. The simulation provided a means of presenting how the drone would be integrated into the wider system consistently. As a result, some real-world effects, such as full electronics integration, dynamic flight behaviour, and measured sensor performance, were simplified or left for future work.
+The project was carried out mainly through simulation; the hardware design was developed as a realistic engineering model rather than as a fully built and tested prototype. This means that the design was based on \gls{cad} modelling, component data sheets, and estimated performance values through online data and programme testing. The simulation provided a means of presenting how the drone would be integrated into the wider system consistently. As a result, some real-world effects, such as full electronics integration, dynamic flight behaviour, and measured sensor performance, were simplified or left for future work.
 
 \subsubsection{Summarised Table for Design Criteria}
 
@@ -745,7 +753,7 @@ A barometer was not selected as a height sensor despite being commonly used in d
 
 The SparkFun ICM-20948 IMU (shown in Fig.~\ref{fig:IMU}) provides local motion and orientation feedback. It is housed inside the drone, near the center of the drone body, where it can measure acceleration, angular-rate, and magnetic-field measurements representative of the airframe while simultaneously protected from impact.
 
-The VL53L1X and VL53L5CX ToF sensors are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained RL control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
+The VL53L1X and VL53L5CX ToF sensors are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained \gls{rl} control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
 
 A Consolidated summarisation of the flight-control sensors are shown in Table~\ref{tab:flight_control_sensors} below.
 
@@ -785,9 +793,9 @@ For game-specific components, the drone is required to have an \gls{ir} tagging 
 
 After investigating and selecting the main electronics, the mechanical design aims to transform the selected components into a physical drone layout. Most modelling and assembly designs was carried out in Fusion 360, while standard component models such as motors, batteries, sensors, and other components were either simplified into representative objects based on specified dimensions or downloaded from online libraries to save time. The goal is to define how the components are mounted, protected, and accessed while also ensuring easily manufacturable and cheap parts that are simple to assemble. 
 
-\subsubsection{Early Design Concepts}
+\subsubsection{Early Design Concepts} \label{drone dimensions}
 
-The early concepts tested out basic airframe layouts. The first concept followed a compact quadrotor arrangement (shown in Fig.~\ref{fig:Model1}), taking inspiration from commercial drones - featuring a central body, four rotor positions, and a space for a centrally mounted turret system. This gave a simple starting point, but as more electronic components were introduced into the CAD assembly, internal packaging became the main issue.
+The early concepts tested out basic airframe layouts. The first concept followed a compact quadrotor arrangement (shown in Fig.~\ref{fig:Model1}), taking inspiration from commercial drones - featuring a central body, four rotor positions, and a space for a centrally mounted turret system. This gave a simple starting point, but as more electronic components were introduced into the \gls{cad} assembly, internal packaging became the main issue.
 
 \begin{figure}[htbp]
     \centering
@@ -812,7 +820,7 @@ This led to a complete change in direction for the final design (shown in Fig.~\
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.6\textwidth]{Hardware/Final Model (un assembled).png}
-    \caption{Final Un-assembled Drone CAD}
+    \caption{Final Un-assembled Drone \gls{cad}}
     \label{fig:ModelFinal}
 \end{figure}
 
@@ -838,6 +846,7 @@ All three body sections are held together using \textbf{bolt fasteners}. This ma
 There also includes a central opening that passes through the bottom hull and electronics basket for the gimbal/turret assembly. The electronics basket includes a dedicated gimbal/turret mounting feature, where the servo connecting the basket and the gimbal/turret may be installed.
 
 The values in Table~\ref{tab:main_body_mass_estimate} were estimated from the Fusion 360 CAD model using assigned \gls{abs} material properties. Given Fusion 360 gives a solid CAD mass, this is not expected to represent the final manufactured mass as parts would be 3D printed with partial infill. The infill assumptions provide a more realistic approximation of the printed body mass - which reduces the main body assembly from 2532.6g to approximately 625.1g. Note that this value does not account for wall thickness, slicing setting and print orientation.
+The values in Table~\ref{tab:main_body_mass_estimate} were estimated from the Fusion 360 \gls{cad} model using assigned ABS material properties. Given Fusion 360 gives a solid \gls{cad} mass, this is not expected to represent the final manufactured mass as parts would be 3D printed with partial infill. The infill assumptions provide a more realistic approximation of the printed body mass - which reduces the main body assembly from 2532.6g to approximately 625.1g. Note that this value does not account for wall thickness, slicing setting and print orientation.
 
 \begin{table}[htbp]
 \centering
@@ -845,7 +854,7 @@ The values in Table~\ref{tab:main_body_mass_estimate} were estimated from the Fu
 \label{tab:main_body_mass_estimate}
 \begin{tabular}{|c|c|c|c|}
 \hline
-\textbf{Component} & \textbf{Solid CAD Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
+\textbf{Component} & \textbf{Solid \gls{cad} Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
 \hline
 Top hull & 764.457 g & 20\% & 152.9 g \\
 Bottom hull + landing gear & 1163.830 g & 25\% & 291.0 g \\
@@ -858,7 +867,7 @@ Electronics basket & 604.322 g & 30\% & 181.3 g \\
 
 \begin{table}[htbp]
 \centering
-\caption{Maximum CAD dimensions of the main body components}
+\caption{Maximum \gls{cad} dimensions of the main body components}
 \label{tab:main_body_dimensions}
 \begin{tabular}{|c|c|c|c|}
 \hline
@@ -871,7 +880,7 @@ Bottom hull + landing gear & 234.00 & 418.65 & 144.90 \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:main_body_dimensions} shows the max CAD dimensions of the main body components, all of which is shown to be within 600mm in size as required.
+Table~\ref{tab:main_body_dimensions} shows the max \gls{cad} dimensions of the main body components, all of which is shown to be within 600mm in size as required.
 
 \subsubsection{Rotor Arm and Motor Mount Design}
 
@@ -891,6 +900,7 @@ The \textbf{blade guards} surround the propeller area and acts as a protective s
 The \textbf{linkage parts} connect the rotor arms to the electronics basket. These small parts allow the arms to be assembled separately from the main body and are secured using bolt fasteners. This type of assembly allows damaged arm or linkage to be replaced without rebuilding the full drone body. As these parts transfer load between arms and body, they are treated as vital structural components and will use higher infill compared to the rest of the body.
 
 The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fusion 360 CAD model using the properties assigned of \gls{abs} material. Just like the main body, the Fusion 360 reports the solid-body CAD mass, therefore we estimate the real manufactured mass using base infill assumptions. Note that this estimate does not account for wall thickness, slicing settings, print orientation, or bolt fastener mass.
+The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fusion 360 \gls{cad} model using the properties assigned of ABS material. Just like the main body, the Fusion 360 reports the solid-body \gls{cad} mass, therefore we estimate the real manufactured mass using base infill assumptions. Note that this estimate does not account for wall thickness, slicing settings, print orientation, or bolt fastener mass.
 
 \begin{table}[htbp]
 \centering
@@ -899,7 +909,7 @@ The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fu
 \renewcommand{\arraystretch}{1.15}
 \begin{tabular}{|c|c|c|c|}
 \toprule
-\textbf{Component} & \textbf{Solid CAD Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
+\textbf{Component} & \textbf{Solid \gls{cad} Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
 \hline
 Rear blade guard & 91.2 g & 35\% & 31.9 g \\
 Front blade guard & 86.3 g & 35\% & 30.2 g \\
@@ -954,7 +964,7 @@ Together, the yaw servo, pitch motor, and roll motor allow the turret to achieve
 \renewcommand{\arraystretch}{1.15}
 \begin{tabular}{|c|c|c|c|}
 \hline
-\textbf{Component} & \textbf{Solid CAD Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
+\textbf{Component} & \textbf{Solid \gls{cad} Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
 \hline
 Gimbal installation plate & 21.58 g & 50\% & 10.8 g \\
 Square axial component & 12.23 g & 70\% & 8.6 g \\
@@ -1012,11 +1022,11 @@ The drone parts are designed with reference to the chosen internal electronics. 
 
 \subsection{Preliminary Engineering Evaluation}
 
-\paragraph{Context} A preliminary design evaluation was conducted to assess how realistic the final hardware design was. Since the drone was developed through CAD modelling and component research, the evaluation focuses on whether the proposed airframe is practical and suitable for manufacture. The main areas considered here are structural behaviour and feasibility of modular assembly. Electronic components and power choices were already assessed through calculations in the section ~\ref{sec:electronics_design} - such as the propulsion feasibility check in section ~\ref{sec:propulsion_system}, battery endurance in section ~\ref{sec:power_system} and other certain power-distribution analysis. 
+\paragraph{Context} A preliminary design evaluation was conducted to assess how realistic the final hardware design was. Since the drone was developed through \gls{cad} modelling and component research, the evaluation focuses on whether the proposed airframe is practical and suitable for manufacture. The main areas considered here are structural behaviour and feasibility of modular assembly. Electronic components and power choices were already assessed through calculations in the section ~\ref{sec:electronics_design} - such as the propulsion feasibility check in section ~\ref{sec:propulsion_system}, battery endurance in section ~\ref{sec:power_system} and other certain power-distribution analysis. 
 
 \subsubsection{Structural Assessment of Critical Components}
 
-The structural assessment focused on two components most exposed to loading and collision impact: the motor-body joints and the blade guards. As the project did not develop a physical prototype, the evaluation was carried out using CAD-based structural simulations rather than physical testing. 
+The structural assessment focused on two components most exposed to loading and collision impact: the motor-body joints and the blade guards. As the project did not develop a physical prototype, the evaluation was carried out using \gls{cad}-based structural simulations rather than physical testing. 
 
 
 \begin{figure}[htbp]
@@ -1031,7 +1041,7 @@ The first simulation assessed the joint between the rotor arm and the electronic
 
 The simulation showed that the highest stress occurred near the handle area of the electronic basket, which was expected because this is where the rotor-arm load is transferred into the central structure. Most of the rotor arm remained in the lower-stress blue/green region - which suggests that the rotor arm geometry was not the limiting factor. The minimum safety factor was approximately 2.23, as shown in Fig. ~\ref{fig:Rotor Arm Sim}, meaning the component remained above the failure threshold for the load case.
 
-This result showed that the structure was reasonable. However, this should still be treated as a preliminary CAD-based result, noting the fact it does not account for vibration, fatigue, manufacturing defects and loose bolts.
+This result showed that the structure was reasonable. However, this should still be treated as a preliminary \gls{cad}-based result, noting the fact it does not account for vibration, fatigue, manufacturing defects and loose bolts.
 
 \begin{figure}[htbp]
     \centering
@@ -1050,13 +1060,13 @@ The assessment was limited to a static simulation, A dynamic impact simulation w
 
 \subsubsection{Feasibility of the Final Design}
 
-The final drone design can be considered feasible in the perspective of a CAD/simulation led concept. The selected electronics are consistent with the design requirements. The airframe provides a dedicated area for internal components and wiring while ensuring the body remains modular, detachable and easy to manufacture and assemble.
+The final drone design can be considered feasible in the perspective of a \gls{cad}/simulation led concept. The selected electronics are consistent with the design requirements. The airframe provides a dedicated area for internal components and wiring while ensuring the body remains modular, detachable and easy to manufacture and assemble.
 
 The final design of the drone hardware is acceptable within the scope of the project. However, the design is not recommended to serve as a final validated prototype as many of the main areas still require proper validation with real-world testing. The main limitations are the lack of physical testing which is vital if we wish to commercialise the product through physical implementation.
 
 \subsubsection{Simulation Representation of Drone Hardware}
 
-The final CAD model was simplified for use in Unity. Given the full Fusion 360 assembly contained many unnecessary mechanical detail for real-time simulation, a low-poly version was created in Blender and imported into Unity as a game asset. The simplified model preserved the main visible features such as the drone body and propellers, while small details such as bolt holes and linkages were removed. These were deemed unnecessary as Unity's built-in collision mechanisms and physics engine mainly uses approximated cuboid or spherical boundaries defined by the developer, and developing a custom solid-boundary model would require additional setup time without adding much value. (A model of the simplified drone is shown in Fig.~\ref{fig:BlenderDrone})
+The final \gls{cad} model was simplified for use in Unity. Given the full Fusion 360 assembly contained many unnecessary mechanical detail for real-time simulation, a low-poly version was created in Blender and imported into Unity as a game asset. The simplified model preserved the main visible features such as the drone body and propellers, while small details such as bolt holes and linkages were removed. These were deemed unnecessary as Unity's built-in collision mechanisms and physics engine mainly uses approximated cuboid or spherical boundaries defined by the developer, and developing a custom solid-boundary model would require additional setup time without adding much value. (A model of the simplified drone is shown in Fig.~\ref{fig:BlenderDrone})
 
 \begin{figure}[htbp]
     \centering
@@ -1069,7 +1079,7 @@ The final CAD model was simplified for use in Unity. Given the full Fusion 360 a
 \subsection{Player Hardware Design}
 \label{player_hardware}
 
-The player hardware shows how human players would interact with the multi-agent laser tag system. These components were not developed in detail compared with the drone hardware, and therefore will only focus on representative and illustrative models, as shown in Fig.~\ref{fig:Player Vest and Helmet}.
+The player hardware shows how human players would interact with the multiagent laser tag system. These components were not developed in detail compared with the drone hardware, and therefore will only focus on representative and illustrative models, as shown in Fig.~\ref{fig:Player Vest and Helmet}.
 
 \begin{figure}[htbp]
     \centering
@@ -2010,10 +2020,10 @@ In this section we detail the motion planning and flight control algorithms of e
 
 \subsection{Search Mode} \label{search mode}% Tommy
 
-The search mode use a centralised off-board flight planner and an onboard flight controller. We opted for a centralised flight planner which is run on the server to efficiently coordinate all drones in search mode. This planner has two stages, region allocation and trajectory planning, detailed in the sections below. The planner recomputes whenever the number of drones in search mode changes to maintain full map coverage. The onboard flight controller uses our cascaded PD controller (detailed in Section~\ref{cascadedPDController}). The desired position is selected as the point located a fixed distance ahead of the drone's current projected position along the trajectory path, while the desired heading direction is defined towards this target position. While traversing the planned trajectory, the camera-gimbal system will rotate, looking for players.
+The search mode use a centralised off-board flight planner and an onboard flight controller. We opted for a centralised flight planner which is run on the server to efficiently coordinate all drones in search mode. This planner has two stages, region allocation and trajectory planning, detailed in the sections below. The planner recomputes whenever the number of drones in search mode changes to maintain full map coverage. The onboard flight controller uses our cascaded \gls{pd} controller (detailed in Section~\ref{cascadedPDController}). The desired position is selected as the point located a fixed distance ahead of the drone's current projected position along the trajectory path, while the desired heading direction is defined towards this target position. While traversing the planned trajectory, the camera-gimbal system will rotate, looking for players.
 
 \subsubsection{Region Allocation}
-The region allocation process uses a simultaneous multi-agent breadth first search (BFS) algorithm that propagates from the current grid cell location of each drone. Each grid cell is assigned to the drone whose BFS reaches it first. This creates a single closed region for each drone, avoiding possible collisions and multiple searches of the same area.
+The region allocation process uses a simultaneous multiagent \gls{bfs} algorithm that propagates from the current grid cell location of each drone. Each grid cell is assigned to the drone whose \gls{bfs} reaches it first. This creates a single closed region for each drone, avoiding possible collisions and multiple searches of the same area.
 
 This algorithm requires the current location of every drone, however, when a drone is in the home base, it does not have a current location in the map, instead there are multiple possible entry cells. Since this algorithm is computationally lightweight, the planner computes every possible combination of entry cells for the drones currently located in the home base, then selects the combination that minimises the maximum region size.
 
@@ -2033,7 +2043,7 @@ To address this limitation and improve performance across the entire map, we ado
 % Now that we have planned a trajectory for each drone, the drones need a method of following those trajectories. As we are searching for players, we want this trajectory to be slow and smooth to give the gimbal-camera system time to search the area. Since the behaviour needed is not complex, we opted to use basic PD controllers here to reduce the computational load. Since we would like to control the position of the drone using the propeller thrusts, we are unable to use a single PD controller to directly control position from the motor thrusts. Instead this is split into 3 stages: position PD controller, attitude PD controller, and mixing matrix. The position PD controller uses the position error and velocity as inputs and outputs an acceleration vector. This acceleration vector is then combined with the inverse of the drone weight vector to produce a desired thrust vector, and from this desired thrust vector along with the heading direction we compute a desired orientation to point all propellers along the desired thrust direction. The orientation error between this desired orientation and the current orientation along with the angular velocities are used in the second PD controller to output angular accelerations which can be converted to moments using the drone moment of inertia. These moments as well as the desired thrust vector projected onto the current upward direction are used as the drone body thrust and moments. Finally the mixing matrix (detailed in Section \ref{mixing matrix}) is used to convert these body thrust and moments to individual rotor thrusts.
 
 \subsection{Track and Shoot Modes}
-The track and shoot modes both utilise the same flight control system to track the detected player. In both modes, the player tracking system (detailed in Section~\ref{visual_perception}) provides an estimate of the player position. The controller then commands the drone to maintain a position directly above the player using the cascaded PD controller described in Section~\ref{cascadedPDController}. 
+The track and shoot modes both utilise the same flight control system to track the detected player. In both modes, the player tracking system (detailed in Section~\ref{visual_perception}) provides an estimate of the player position. The controller then commands the drone to maintain a position directly above the player using the cascaded \gls{pd} controller described in Section~\ref{cascadedPDController}. 
 
 The desired position is defined as the player's estimated $x$-$y$ position with a fixed altitude of $4\,\mathrm{m}$, while the desired heading direction is chosen to face the player within the $x$-$y$ plane. When the horizontal separation between the drone and player falls below a small threshold, the previously defined heading vector is maintained to avoid instability caused by rapid heading changes at small relative distances.
 
@@ -2050,25 +2060,25 @@ The high level controller will provide a target grid cell upon switching the dro
 
 \subsubsection{Trajectory Planning}
 
-The first stage of the motion planner computes a cell-based path from the current grid cell to the target grid cell using our map (detailed in Section~\ref{map}). Since the objective of this mode is to reach the target location as quickly as possible, this must be the shortest path to minimise the distance travelled. This is computed with a breadth first search (BFS) algorithm which explores all accessible cells with increasing distance from the start cell, using our map to determine which adjacent cells are accessible. Once the target cell is visited, the search terminates. The shortest path is then determined by starting at the target cell and iteratively adding the parent cell to the path, before inverting the order. Since the map we have designed is $11\mathrm{x}17$ grid cells, there are $187$ grid cells in total, meaning the number of possible paths is $187 \cdot 187 = 34,969$. In order to reduce computation time, we will run this motion planner on the server. The server will have a large amount of storage, meaning we can further decrease computation time by pre-computing all possible paths. To easily access these pre-computed paths, we will use a lookup table from which the programme can request paths using the start and end coordinates at runtime.
+The first stage of the motion planner computes a cell-based path from the current grid cell to the target grid cell using our map (detailed in Section~\ref{map}). Since the objective of this mode is to reach the target location as quickly as possible, this must be the shortest path to minimise the distance travelled. This is computed with a \gls{bfs} algorithm which explores all accessible cells with increasing distance from the start cell, using our map to determine which adjacent cells are accessible. Once the target cell is visited, the search terminates. The shortest path is then determined by starting at the target cell and iteratively adding the parent cell to the path, before inverting the order. Since the map we have designed is $11\mathrm{x}17$ grid cells, there are $187$ grid cells in total, meaning the number of possible paths is $187 \cdot 187 = 34,969$. In order to reduce computation time, we will run this motion planner on the server. The server will have a large amount of storage, meaning we can further decrease computation time by pre-computing all possible paths. To easily access these pre-computed paths, we will use a lookup table from which the programme can request paths using the start and end coordinates at runtime.
 
 The second stage of the motion planner converts this cell-based path to a 3D trajectory. In order to minimise the chance of collisions with the map and provide the drones with as much freedom of movement as possible, we decided to place the trajectory checkpoints in the centre of each grid square, and at a height halfway between the net and the ceiling. These checkpoints are then sent to the drone along with the command to change into movement mode.
 
 \subsubsection{Control Method}
-In the other modes, the flight controller uses our cascaded PD controller to track the trajectory due its low computational cost. However, in this mode, we prioritise reaching the target location as quickly as possible and therefore are willing to use a more computationally expensive approach. 
+In the other modes, the flight controller uses our cascaded \gls{pd} controller to track the trajectory due its low computational cost. However, in this mode, we prioritise reaching the target location as quickly as possible and therefore are willing to use a more computationally expensive approach. 
 
-This led us to consider more complex control methods such as Reinforcement Learning (RL) and Model Predictive Control (MPC). During our investigation of these methods, we identified a paper that uses MPC to train a RL policy online via supervised learning \cite{zhang_learning_2016}. Although we chose not to adopt the method proposed here, the motivation presented in the introduction provided valuable insight that guided us to choosing RL as our approach for this application. Zhang et al. discuss that MPC \say{is an effective and reliable method}, however, \say{applications of MPC can be computationally demanding}. They also mention that \say{the final neural
+This led us to consider more complex control methods such as \gls{rl} and \gls{mpc}. During our investigation of these methods, we identified a paper that uses \gls{mpc} to train a \gls{rl} policy online via supervised learning \cite{zhang_learning_2016}. Although we chose not to adopt the method proposed here, the motivation presented in the introduction provided valuable insight that guided us to choosing \gls{rl} as our approach for this application. Zhang et al. discuss that \gls{mpc} \say{is an effective and reliable method}, however, \say{applications of \gls{mpc} can be computationally demanding}. They also mention that \say{the final neural
 network policy is computationally much less expensive than
-MPC}, and hence if a RL policy is trained well, it can obtain similar results to that of MPC at a lower computational cost. In this paper they also mention another benefit of their method being that \say{Reinforcement learning can in
+\gls{mpc}}, and hence if a \gls{rl} policy is trained well, it can obtain similar results to that of \gls{mpc} at a lower computational cost. In this paper they also mention another benefit of their method being that \say{Reinforcement learning can in
 principle forego the need for explicit state estimation and
-acquire a policy that directly maps sensor readings to actions}, however, since we already have a state estimator for our other flight controllers, we opted to use this state as our input, removing unnecessary complexity from this policy. Finally, their reasoning for using supervised learning is that \say{model-free RL is difficult to apply to unstable systems such as quadrotors, due to the possibility of catastrophic failure during training.} However, we opted to train our RL policy offline using a physics simulator, removing the risk of damaging hardware during training.
+acquire a policy that directly maps sensor readings to actions}, however, since we already have a state estimator for our other flight controllers, we opted to use this state as our input, removing unnecessary complexity from this policy. Finally, their reasoning for using supervised learning is that \say{model-free \gls{rl} is difficult to apply to unstable systems such as quadrotors, due to the possibility of catastrophic failure during training.} However, we opted to train our \gls{rl} policy offline using a physics simulator, removing the risk of damaging hardware during training.
 
 % researching the methods above we came across a paper that uses MPC to train a RL policy online using supervised learning, \cite{zhang_learning_2016}, and although we did not use the method explained in this paper, their reasoning in the introduction helped decide what method was best for our application. In the introduction they stated that \say{MPC is an effective and reliable method ... However, applications of MPC can be computationally demanding} and \say{model-free RL is difficult to apply to unstable systems such as quadrotors, due to the possibility of catastrophic failure during training.} From this we can see that their justification for using an RL policy trained under supervision from an MPC controller is because they aim to achieve the reliable results from MPC but with the lower computational load of RL, however, they decided not to train directly with RL because in the early stages of training this would lead to catastrophic damage of their hardware. In our situation, we also aim to get reliable results while maintaining the lower computation load of RL, however, instead of using online supervised learning, we opted for offline learning on a physics simulator, which allows us to train the RL policy unsupervised without causing catastrophic damage to hardware during the early stage of training. This also allows us to train and test this policy without needing physical hardware, which speeds up the design phase. Additionally, in the paper, they mention that they passed the raw sensor data as the input to the RL policy to avoid having to estimate the state, however since we already need to estimate the state (detailed in Section \ref{drone state estimation}), for the Search and Collision Avoidance modes (detailed in Sections \ref{search mode} and \ref{collision avoidance mode} respectively), we decided to get the inputs for our RL policy from this estimated state instead to avoid increasing the complexity of the control problem unnecessarily. We opted for the policy to output body thrust and moments, again to avoid unnecessarily increasing the complexity, because we already need the mixing matrix (detailed in Section \ref{mixing matrix}) for the other modes.
 
 In conclusion, we opted to use a reinforcement learning policy trained offline on a physics simulator using Isaac Lab \cite{IsaacLab}. The inputs of our policy are be derived from the estimated state and the outputs are the thrust and moments of the drone body.
 
 \subsubsection{Environment Development} \label{RLEnvDevelopment}
-Throughout the development process, we changed the environment setup multiple times in order to increase the complexity iteratively and ensure each prototype was working before moving to the next stage. Isaac Lab comes with a quadcopter demonstration environment \cite{IsaacLabQuadcopter}, in which the drone attempts to reach and hover at a goal position using body thrust and moment actions. We first read through this document to understand how they set the environment up. This demonstration environment is created using the direct workflow, however it is our preference to use the manager based workflow as it breaks down the code into manager terms, meaning it is more manageable and readable for larger projects. Due to this, we first converted the demonstration environment to a manager based environment. Next, we adapted this environment to reach consecutive position goals by resampling the position goal once within a threshold distance of the current position goal. Following this, we heavily adapted this environment to sample random trajectories as the command by choosing an initial starting checkpoint and random horizontal direction and then creating the second checkpoint at one grid spacing along this direction. The next checkpoints were generated by choosing a random direction from left, straight, and right each with random probabilities. This environment allowed us to test and develop the RL policy without implementing the trajectory planning stage. Finally, we adapted this environment to use a known map and spawn the drone at a random location within the map, then choose a random target grid square. Next, we implemented the trajectory planner, described above, which uses the BFS algorithm to plan the shortest path through the map and then converting this path into a 3D trajectory. Once we had this final environment, we further tuned the environment parameters, detailed in the sections below, to produce the optimal results.
+Throughout the development process, we changed the environment setup multiple times in order to increase the complexity iteratively and ensure each prototype was working before moving to the next stage. Isaac Lab comes with a quadcopter demonstration environment \cite{IsaacLabQuadcopter}, in which the drone attempts to reach and hover at a goal position using body thrust and moment actions. We first read through this document to understand how they set the environment up. This demonstration environment is created using the direct workflow, however it is our preference to use the manager based workflow as it breaks down the code into manager terms, meaning it is more manageable and readable for larger projects. Due to this, we first converted the demonstration environment to a manager based environment. Next, we adapted this environment to reach consecutive position goals by resampling the position goal once within a threshold distance of the current position goal. Following this, we heavily adapted this environment to sample random trajectories as the command by choosing an initial starting checkpoint and random horizontal direction and then creating the second checkpoint at one grid spacing along this direction. The next checkpoints were generated by choosing a random direction from left, straight, and right each with random probabilities. This environment allowed us to test and develop the \gls{rl} policy without implementing the trajectory planning stage. Finally, we adapted this environment to use a known map and spawn the drone at a random location within the map, then choose a random target grid square. Next, we implemented the trajectory planner, described above, which uses the \gls{bfs} algorithm to plan the shortest path through the map and then converting this path into a 3D trajectory. Once we had this final environment, we further tuned the environment parameters, detailed in the sections below, to produce the optimal results.
 
 \subsubsection{Scene}
 The general scene was just setup with a flat ground plane, however, we created custom code that uses our map wall matrix (detailed in Section \ref{map}) to determine the location of the walls and loads them and the floor into the environment as collision cuboids, as shown in Fig. \ref{fig:IsaacLabMap}. These collision cuboids are not used for collisions as our termination conditions, detailed below, will reset the environment before the drones hit the wall, so these are turned off during training to reduce computation time and used only for visualisation when playing the environment for demonstration purposes.
@@ -2083,7 +2093,7 @@ The general scene was just setup with a flat ground plane, however, we created c
 \end{figure}
 
 \subsubsection{Command} \label{RLCommand}
-As mentioned before in Section \ref{RLEnvDevelopment}, the trajectories are generated by sampling a random grid square and planning the shortest path from the current grid square to that grid square using the BFS algorithm and then converting the grid path to a 3D trajectory by placing the checkpoints in the middle of the grid squares and halfway between the net and the ceiling. We also implemented a maximum trajectory length parameter that limits the trajectories to a maximum length, by truncating the remaining checkpoints. This means the final checkpoint is now different so this is not used during deployment but it is useful during training (detailed in Section \ref{RLCurriculum}). The command then outputs the current checkpoint position (the position that the drone is currently trying to reach) and the direction from the current to the next checkpoint, both in the body frame of the drone, to the observations. This means the policy only has information about the current and next checkpoint at any time. Every time step the command checks if the current checkpoint has been achieved, and if it has, the command observations are updated so that current and next checkpoint are shifted along the trajectory by one. Initially, we attempted to determine checkpoint completion by checking if the drone was closer than a threshold distance to the current checkpoint, however, this forces the drone to pass through all checkpoints, whereas the shortest path would cut the corners of the trajectory. To allow the policy to learn this faster behaviour, we opted to determine checkpoint completion by checking if the drone has crossed the plane which passes through the current checkpoint and is perpendicular to the line connecting the previous and next checkpoints.
+As mentioned before in Section \ref{RLEnvDevelopment}, the trajectories are generated by sampling a random grid square and planning the shortest path from the current grid square to that grid square using the \gls{bfs} algorithm and then converting the grid path to a 3D trajectory by placing the checkpoints in the middle of the grid squares and halfway between the net and the ceiling. We also implemented a maximum trajectory length parameter that limits the trajectories to a maximum length, by truncating the remaining checkpoints. This means the final checkpoint is now different so this is not used during deployment but it is useful during training (detailed in Section \ref{RLCurriculum}). The command then outputs the current checkpoint position (the position that the drone is currently trying to reach) and the direction from the current to the next checkpoint, both in the body frame of the drone, to the observations. This means the policy only has information about the current and next checkpoint at any time. Every time step the command checks if the current checkpoint has been achieved, and if it has, the command observations are updated so that current and next checkpoint are shifted along the trajectory by one. Initially, we attempted to determine checkpoint completion by checking if the drone was closer than a threshold distance to the current checkpoint, however, this forces the drone to pass through all checkpoints, whereas the shortest path would cut the corners of the trajectory. To allow the policy to learn this faster behaviour, we opted to determine checkpoint completion by checking if the drone has crossed the plane which passes through the current checkpoint and is perpendicular to the line connecting the previous and next checkpoints.
 
 \subsubsection{Actions}
 The output of the policy is the actions and we chose to use the same actions as in the Isaac Lab quadcopter demonstration environment, where the output is a thrust in the drones upwards direction and moments about all axes of the drone. To ensure the actions are achievable in reality, we clamped the raw actions, the output from the neural network, to the range $[-1, 1]$ and then mapped this range to $[0,T_{\mathrm{max}}]$ for the thrust and $[-M_{\mathrm{max}},M_{\mathrm{max}}]$ for the moments, where $T_{\mathrm{max}}$ and $M_{\mathrm{max}}$ are the maximum achievable thrust and moment respectively. In the simulator we applied these thrust and moments directly to the drone body, however, during deployment they will be passed to the actuator allocation matrix (detailed in Section \ref{mixing matrix}) to calculate the motor commands.
@@ -2132,9 +2142,11 @@ The longest path between two grid cells on our map spans 35 cells, making it dif
 We implemented a curriculum that progressively increases the maximum trajectory length. After an initial training period, the maximum allowable path length is increased by one at fixed intervals until a predefined limit is reached. This enables the policy to successfully complete short trajectories, where the final checkpoint reward is easier to obtain, and learn both the trajectory traversal and final hovering early on. Since the policy can only observe the next two checkpoints, further increasing the trajectory length does not increase the difficulty much, and the policy can quickly learn longer trajectories with this prior knowledge.
 
 \subsubsection{Environment Parameters}
-For deployment on our drone, the policy would ideally be trained using our drone model. However, due to technical issues that prevented our drone model from being loaded into Isaac Lab, we instead used the Crazyflie drone model used in the Isaac Lab quadcopter demonstration environment \cite{IsaacLabQuadcopter}. This serves as a proof of concept to demonstrate that the RL policy is capable of producing the fast responses required for this mode.
+For deployment on our drone, the policy would ideally be trained using our drone model. However, due to technical issues that prevented our drone model from being loaded into Isaac Lab, we instead used the Crazyflie drone model used in the Isaac Lab quadcopter demonstration environment \cite{IsaacLabQuadcopter}. This serves as a proof of concept to demonstrate that the \gls{rl} policy is capable of producing the fast responses required for this mode.
 
-As training and evaluation were not performed using our exact drone model, we introduced several control measures to ensure the training environment was as representative as possible.
+As training and evaluation were not performed using our exact drone model, we introduced several control measures to ensure the training environment was as representative as possible. The Isaac Lab demonstration environment uses a 1.9 thrust-to-weight ratio which is comparable to that of our drone which is 2, and hence this is already representative. The width of the Crazyflie drone \cite{CrazyflieDatasheet} is 80mm, whereas that of our drone is 420mm, (detailed in Section~\ref{drone dimensions}), as such, our drone is approximately 5 times larger than the Crazyflie drone. To compensate for this, we reduced the grid cell dimensions by in the Isaac lab policy by 5 times such that the grid cells are 0.4m square rather than 2m square. The diagonal length of the Crazyflie drone is 92mm, so the out of bounds buffer must be at least 46mm, however we set this to 80mm to ensure there is a minimum separation between the drone and wall of 34mm. Since the Isaac Lab environment is scaled down, this corresponds to 170mm in our full scale environment.
+
+Having compensated for the size disparity, we set the remaining parameters accordingly. For the curriculum, we set the starting number of checkpoints to 3 and the initial training period to 400 steps and the interval steps to 30. The predefined limit for the maximum trajectory length was set to 50, however the longest path between two cells in our map spans 36 cells, and hence this was the limiting factor. The remaining parameters we set were the timeout termination interval of 20s, and the policy frequency of 50Hz. 
 
 % For the policy that is deployed on our drone, we would have to train the policy using our drone model. Unfortunately, we were not able to load our drone model into Isaac Lab, due to technical issues, so instead we used the Crazyflie drone model, used in the Isaac Lab quadcopter demonstration environment, to train this policy as a proof of concept, to show that this RL policy can provide the fast results required for this mode. As we are not using the same drone to train the policy, we put the following control measures in place to make the environment as close as possible to training our drone in our map. 
 
@@ -2157,14 +2169,14 @@ Our collision avoidance system uses an artificial potential field to apply an ar
 \begin{equation}
     \mathbf{F}_{\mathrm{art}} = - \nabla U(\mathbf{p})
 \end{equation}
-The acceleration due to this artificial force, $\mathbf{a}_{\mathrm{art}}$ is tracked using a similar cascaded PD controller to that detailed in Section\ref{cascadedPDController}, but with the first PD controller adjusted to follow this artificial acceleration rather than track a position
+The acceleration due to this artificial force, $\mathbf{a}_{\mathrm{art}}$ is tracked using a similar cascaded \gls{pd} controller to that detailed in Section\ref{cascadedPDController}, but with the first \gls{pd} controller adjusted to follow this artificial acceleration rather than track a position
 \begin{equation}
     \mathbf{a}_{des} = \mathbf{K}_a \mathbf{a}_{\mathrm{art}} - \mathbf{K}_d v = - \mathbf{K}_U \nabla U(\mathbf{p}) - \mathbf{K}_d v
 \end{equation}
 This desired acceleration is then used in the same way as in Section \ref{cascadedPDController}, with the heading direction in the same direction as the artificial force, unless this force is below a threshold value, at which point the last defined heading direction is maintained.
 
-\subsection{Cascaded PD Controller} \label{cascadedPDController}
-This controller is used by multiple states as it is a computationally lightweight method for following position and heading direction commands. The controller is comprised of two PD controllers. The first produces a desired acceleration, $\mathbf{a}_{\mathrm{des}}$, for tracking a desired position, $\mathbf{p}_{\mathrm{des}}$, using the position, $\mathbf{p}$, and velocity, $\mathbf{v}$:
+\subsection{Cascaded \gls{pd} Controller} \label{cascadedPDController}
+This controller is used by multiple states as it is a computationally lightweight method for following position and heading direction commands. The controller is comprised of two \gls{pd} controllers. The first produces a desired acceleration, $\mathbf{a}_{\mathrm{des}}$, for tracking a desired position, $\mathbf{p}_{\mathrm{des}}$, using the position, $\mathbf{p}$, and velocity, $\mathbf{v}$:
 \begin{equation}
     \mathbf{a}_{\mathrm{des}} = \mathbf{K}_p (\mathbf{p}_{\mathrm{des}} - \mathbf{p}) - \mathbf{K}_v \mathbf{v}
 \end{equation}
@@ -2174,7 +2186,7 @@ This desired acceleration is then combined with the upwards acceleration due to 
         0 &0&g
     \end{bmatrix}^\top \right)
 \end{equation}
-This desired force and the desired heading direction, $\mathbf{h}_{\mathrm{des}}$, are used to define the desired Euler orientation, $\boldsymbol{\theta}_{des}$. The second PD controller then produces the desired moments, $\mathbf{M}_{\mathrm{des}}$, for tracking this desired orientation, using the Euler orientation, $\boldsymbol{\theta}$, and angular velocity, $\boldsymbol{\omega}$:
+This desired force and the desired heading direction, $\mathbf{h}_{\mathrm{des}}$, are used to define the desired Euler orientation, $\boldsymbol{\theta}_{des}$. The second \gls{pd} controller then produces the desired moments, $\mathbf{M}_{\mathrm{des}}$, for tracking this desired orientation, using the Euler orientation, $\boldsymbol{\theta}$, and angular velocity, $\boldsymbol{\omega}$:
 \begin{equation}
     \mathbf{M}_{\mathrm{des}} = \mathbf{K}_{\theta}(\boldsymbol{\theta}_{des} - \boldsymbol{\theta}) - \mathbf{K}_{\omega} \boldsymbol{\omega}
 \end{equation}
@@ -2184,7 +2196,7 @@ Finally, the desired thrust is the magnitude of the desired force:
 \end{equation}
 
 \newpage
-\subsection{Actuator Allocation Matrix} \label{mixing matrix} % Tommy, Rishabh
+\subsection{Actuator Allocation Matrix} \label{mixing matrix} % Tommy
 \fancyhead[C]{Thomas August}
 
 An actuator allocation matrix (AAM) is used to convert body thrust and moments to actuator commands using the geometry of the quadcopter and dynamics of the actuators. Suppose we have four actuators, $i$, at horizontal positions $(x_i,y_i)$ relative to the centre of mass, producing thrust, $T_i$. We can derive the body thrust and moments using the quadcopter geometry as
@@ -2683,7 +2695,7 @@ Tax is modelled under UK corporation tax laws. For a given year, the taxable inc
 
 \noindent UK corporation tax law also allows losses in one year to be carried over to the next. For example, if a business makes a loss of £20000 in Year \(n\), and makes a profit of £60000 in Year \(n+1\), its taxable income in Year \(n+1\) is £40000. Losses can be carried over indefinitely.
 
-\subsubsection{Net Present Value}
+\subsection{Net Present Value}
 A running total cash flow is tabulated. This is discounted according to the year in which the money is made. The \gls{npv} at a given year is given by the discounted cumulative cash flow up to that year added to the discounted terminal value. In future years, once cash flow (including tax) stabilises, \gls{npv} remains constant. In the following sections, \say{\gls{npv}} refers to this stabilised value.
 
 \paragraph{Assumptions} \(\) \newline
@@ -2918,7 +2930,7 @@ We conducted a \gls{swot} analysis in order to evaluate the internal capabilitie
 \setlength{\parskip}{0pt}
 \item Modular 3D-printed airframe
 \item Synthetic data vision training
-\item RL movement policy
+\item \gls{rl} movement policy
 \end{enumerate}
 \end{tcolorbox}
 \begin{tcolorbox}[equal height group=A, size=fbox, colback=swotW!60, colframe=swotW!80!black, title=\textsc{weaknesses}]
@@ -2954,7 +2966,7 @@ We conducted a \gls{swot} analysis in order to evaluate the internal capabilitie
 \begin{enumerate}
 \setlength{\itemsep}{3pt}
 \setlength{\parskip}{0pt}
-\item RL policy refinement
+\item \gls{rl} policy refinement
 \item Battery upgrades
 \item Computer vision learning
 \end{enumerate}
