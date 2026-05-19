@@ -20,10 +20,12 @@
 \usepackage[table]{xcolor}
 \usepackage[colorlinks=true, linkcolor=black, citecolor=black, hidelinks]{hyperref}
 
-\usepackage{tikz}
-\usepackage{multirow}
-\usepackage{graphicx}
-\usepackage{array}
+\usepackage[table]{xcolor}
+\definecolor{swotS}{RGB}{226,237,143}
+\definecolor{swotW}{RGB}{247,193,139}
+\definecolor{swotO}{RGB}{173,208,187}
+\definecolor{swotT}{RGB}{192,165,184}
+\usepackage[raster]{tcolorbox}
 
 
 \title{Laser Tag using a Multiagent Drone System}
@@ -76,6 +78,8 @@
 \newacronym{irr}{IRR}{Internal Rate of Return}
 \newacronym{esc}{ESC}{Electronic Speed Controller}
 \newacronym{pdb}{PDB}{Power Distribution Board}
+\newacronym{swot}{SWOT}{Strengths, Weaknesses, Opportunities, and Threats}
+\newacronym{ip}{IP}{Intellectual Property}
 \printglossaries
 \newpage
 
@@ -2785,6 +2789,97 @@ The system should not be considered fully sustainable. Issues such as waste and 
 To translate customer requirements into measurable engineering specifications, a House of Quality matrix was developed. This methodology maps core user desires directly onto system capabilities to prioritise technical development. To ground these targets in reality, the matrix benchmarks the proposed design against two distinct alternatives. Traditional indoor laser tag serves as the commercial competing product, establishing baseline expectations for user experience and affordability. Conversely, the DJI Mini 5 Pro\cite{dji2026mini5pro, dji2026transmission, parkcameras2026mini5pro} acts as the technical competing product, defining the state-of-the-art standards required for drone mass, flight endurance, and processing capabilities.
 
 \newpage
+\fancyhead[C]{Thomas August}
+\subsection{SWOT Analysis}
+We conducted a \gls{swot} analysis in order to evaluate the internal capabilities of the project against its external commercial environment. Internal factors assess our product design, deployment processes, and \gls{ip}, while external factors isolate market conditions, regulatory frameworks, and competitive pressures. This strategic planning framework establishes a baseline to exploit our distinctive competencies and address structural weaknesses.
+
+\begin{center}
+\begin{minipage}{\textwidth}
+\begin{tcbraster}[raster columns=2, boxrule=0mm, arc=0mm]
+\begin{tcolorbox}[equal height group=A, size=fbox, colback=swotS!60, colframe=swotS!80!black, title=\textsc{strengths}]
+\textbf{Business} \vspace{-1em}
+\begin{enumerate}
+\setlength{\itemsep}{1pt}
+\setlength{\parskip}{0pt}
+\item High-value interactive experience
+\item Financially viable business model
+\item Strict safety risk mitigation
+\end{enumerate}
+\tcblower
+\textbf{Product} \vspace{-1em}
+\begin{enumerate}
+\setlength{\itemsep}{1pt}
+\setlength{\parskip}{0pt}
+\item Modular 3D-printed airframe
+\item Synthetic data vision training
+\item RL movement policy
+\end{enumerate}
+\end{tcolorbox}
+\begin{tcolorbox}[equal height group=A, size=fbox, colback=swotW!60, colframe=swotW!80!black, title=\textsc{weaknesses}]
+\textbf{Business} \vspace{-1em}
+\begin{enumerate}
+\setlength{\itemsep}{1pt}
+\setlength{\parskip}{0pt}
+\item High initial capital requirement
+\item Unverified user adoption rates
+\item Single venue limits scaling
+\end{enumerate}
+\tcblower
+\textbf{Product} \vspace{-1em}
+\begin{enumerate}
+\setlength{\itemsep}{1pt}
+\setlength{\parskip}{0pt}
+\item Sim-to-real domain gap
+\item Unvalidated physical hardware durability
+\item Ten-minute flight endurance limit
+\end{enumerate}
+\end{tcolorbox}
+\begin{tcolorbox}[equal height group=B, size=fbox, colback=swotO!60, colframe=swotO!80!black, title=\textsc{opportunities}]
+\textbf{Business} \vspace{-1em}
+\begin{enumerate}
+\setlength{\itemsep}{1pt}
+\setlength{\parskip}{0pt}
+\item Expansion into competitive esports
+\item Hardware and arena franchising
+\item Licensing tracking software IP
+\end{enumerate}
+\tcblower
+\textbf{Product} \vspace{-1em}
+\begin{enumerate}
+\setlength{\itemsep}{1pt}
+\setlength{\parskip}{0pt}
+\item RL policy refinement
+\item Battery upgrades
+\item Computer vision learning
+\end{enumerate}
+\end{tcolorbox}
+\begin{tcolorbox}[equal height group=B, size=fbox, colback=swotT!60, colframe=swotT!80!black, title=\textsc{threats}]
+\textbf{Business} \vspace{-1em}
+\begin{enumerate}
+\setlength{\itemsep}{1pt}
+\setlength{\parskip}{0pt}
+\item Fluctuating commercial costs
+\item Established leisure market competitors
+\item Evolving autonomous drone regulations
+\end{enumerate}
+\tcblower
+\textbf{Product} \vspace{-1em}
+\begin{enumerate}
+\setlength{\itemsep}{1pt}
+\setlength{\parskip}{0pt}
+\item High physical maintenance costs
+\item Network interference in arenas
+\item VR laser tag substitution
+\end{enumerate}
+\end{tcolorbox}
+\end{tcbraster}
+\end{minipage}
+\end{center}
+
+The analysis shows that our core technical strengths, specifically the modular airframe and simulation-trained software, constitute distinctive competencies that deliver high value. While the simulation-to-real domain gap remains a structural weakness, it can be mitigated through empirical refinement. Externally, the high initial capital requirement is a typical financial symptom that can be offset by long-term franchising and licensing opportunities. However, commercial viability remains sensitive to external threats, particularly evolving autonomous drone regulations and technological substitutions such as virtual reality (VR) laser tag.
+
+\newpage
+
 
 
 % Appendix
