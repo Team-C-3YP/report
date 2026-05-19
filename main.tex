@@ -1346,7 +1346,7 @@ This is the mode the drone is in when it has identified a player within its shoo
 \subsubsection{Movement Mode}
 This is the mode the drone is in when it has been \say{called for help} - something that happens when a drone detects that more than one player is within shooting range of itself. This mode can only be reached from Search Mode.
 \subsubsection{Collision Avoidance Mode}
-This mode is triggered either when the drone detects it is about to collide into a wall, or when the server detects it is about to collide into another drone. This mode can be accessed from any mode (except Dormant Mode).
+This mode is triggered either when the drone detects it is about to collide into a wall, the ceiling or the safety net, or when the server detects it is about to collide into another drone. This mode can be accessed from any mode (except Dormant Mode).
 
 \subsection{Logic}
 The flow charts shown in Fig. \ref{fig:FlowSearch}, \ref{fig:FlowTrack} and \ref{fig:FlowShoot} are sections of a larger flowchart describing the state change logic of the drones, included in the appendix. The red boxes denote information shared between drones (managed by the server via Wi-Fi). It is worth noting that Dormant Mode and Collision Avoidance Mode have been omitted for the sake of readability. Since these two states are considered higher priority than the others, each decision chain implicitly contains the decision boxes: \say{Am I about to crash?} and \say{Has the wave ended?}.
