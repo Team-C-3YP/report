@@ -81,6 +81,7 @@ Laser tag remains a popular and commercially successful game within the UK leisu
 \newacronym{tv}{TV}{Terminal Value}
 \newacronym{irr}{IRR}{Internal Rate of Return}
 \newacronym{esc}{ESC}{Electronic Speed Controller}
+\newacronym{abs}{ABS}{Acrylonitrile Butadiene Styrene}
 \newacronym{pdb}{PDB}{Power Distribution Board}
 \newacronym{swot}{SWOT}{Strengths, Weaknesses, Opportunities, and Threats}
 \newacronym{ip}{IP}{Intellectual Property}
@@ -466,25 +467,25 @@ As there was no given exact thrust coefficients, therefore we tested using 0.100
 
 From Tables~\ref{tab:loaded_rpm_factors} and~\ref{tab:motor_prop_validity_check}, the target thrust of approximately \(19.6~\text{N}\) per motor is not achieved under the most conservative assumptions(where \(C_T = 0.100\)). However, it becomes achievable for higher thrust coefficient values. For \(C_T = 0.125\), the combination reaches approximately \(19.4~\text{N}\) at 85\% of the no-load speed. For \(C_T = 0.150\), the target exceeded at around 80\% no load speed.
 
-This suggests that the target max thrust of \(19.6~\text{N}\) is theoretically plausible for this motor-propeller configuration on a 4S supply - but only when the real thrust coefficient is closer to mid-range values and the motor can maintain between 80--85\% of its no-load speed under load. This calculation does not experimentally validate the propulsion system as the real thrust would depend on a number of other factors such as ESC behaviour and battery voltage sag. 
+This suggests that the target max thrust of \(19.6~\text{N}\) is theoretically plausible for this motor-propeller configuration on a 4S supply - but only when the real thrust coefficient is closer to mid-range values and the motor can maintain between 80--85\% of its no-load speed under load. This calculation does not experimentally validate the propulsion system as the real thrust would depend on a number of other factors such as \gls{esc} behaviour and battery voltage sag. 
 
 However, the target max value is not the same as minimum thrust required for flight. Given the total max weight is approximately \(39.2~\text{N}\), the hover thrust required per motor is \(9.8~\text{N}\) for a quadrotor configuration. This means the selected propulsion configuration has a massive theoretical margin above the hover requirement. Even if the real thrust is lower than the assumed \(19.6~\text{N}\), the drone should still perform admirably, though additional margin would be needed for manoeuvring, disturbance rejection, and stable control. However, this proves that the 2:1 thrust-to-weight ratio gives a large and safe tolerance.
 
 \paragraph{ESC (Electronic Speed Controller) Selection}
 
-The ESC is used to control the speed of each motor and provide fast response to throttle commands from the flight controller. Since the propulsion system uses four motors, the design requires one ESC per motor. The selected ESC was the LittleBee Spring 40A. As shown in the Table~\ref{tab:esc_specifications}, the available LittleBee Spring 40A specifications list \(2-6~\text{S}\) LiPo input, \(40~\text{A}\) continuous current, with compact dimensions.
+The \gls{esc} is used to control the speed of each motor and provide fast response to throttle commands from the flight controller. Since the propulsion system uses four motors, the design requires one \gls{esc} per motor. The selected \gls{esc} was the LittleBee Spring 40A. As shown in the Table~\ref{tab:esc_specifications}, the available LittleBee Spring 40A specifications list \(2-6~\text{S}\) LiPo input, \(40~\text{A}\) continuous current, with compact dimensions.
 
-This ESC was chosen since it matched the propulsion system requirements. However, as the ESC has no built-in BEC, the lower voltage electronics must be powered through a separate voltage regulation stage, which is addressed in the power system design.
+This \gls{esc} was chosen since it matched the propulsion system requirements. However, as the \gls{esc} has no built-in BEC, the lower voltage electronics must be powered through a separate voltage regulation stage, which is addressed in the power system design.
 
 \begin{table}[htbp]
 \centering
-\caption[ESC specifications]{ESC specifications\footnotemark}
+\caption[\gls{esc} specifications]{\gls{esc} specifications\footnotemark}
 \label{tab:esc_specifications}
 \begin{tabular}{|c|c|c|}
 \hline
 \textbf{Parameter} & \textbf{Manufacturer / Supplier Specification} & \textbf{Design Relevance} \\
 \hline
-Selected ESC & LittleBee Spring 40A & Speed controller for motor \\
+Selected \gls{esc} & LittleBee Spring 40A & Speed controller for motor \\
 \hline
 Input voltage & 2--6S LiPo & Compatible with power range \\
 \hline
@@ -504,13 +505,13 @@ Supported protocols & OneShot, MultiShot, DShot & Suitable for throttle control 
 \subsubsection{Power System}
 \label{sec:power_system}
 
-The power system must be designed to supply both the high-current propulsion system and the lower-voltage onboard electronics. The propulsion system requires direct battery power for the four ESCs and brushless motors. Meanwhile, the onboard computer, sensors, and game-specific electronics must receive regulated lower-voltage supplies. As a result, the power system will be split into two main parts: a high power battery path and a regulated path using voltage conversion.
+The power system must be designed to supply both the high-current propulsion system and the lower-voltage onboard electronics. The propulsion system requires direct battery power for the four \gls{esc}s and brushless motors. Meanwhile, the onboard computer, sensors, and game-specific electronics must receive regulated lower-voltage supplies. As a result, the power system will be split into two main parts: a high power battery path and a regulated path using voltage conversion.
 
 \paragraph{Battery Selection}
 
-The battery selection was driven by the propulsion system as it was expected the motors and ESCs would consume significantly more power than other onboard electronics. The battery had to provide a suitable voltage and discharge capability for the hardware, while also remaining practical in terms of mass, size and internal packaging. A 3S LiPo option was initially considered as earlier propulsion combinations included 3S-compatible specifications. However, once the final motor-propeller configuration was selected, the 3S option was disregarded for a more suitable 4S 5000 mAH LiPo battery. This provided a nominal voltage of \(14.8~\text{V}\), matching the motor and ESC requirements more appropriately while maintaining a target capacity for approximately 10 minutes of drone operation before recharge.
+The battery selection was driven by the propulsion system as it was expected the motors and \gls{esc}s would consume significantly more power than other onboard electronics. The battery had to provide a suitable voltage and discharge capability for the hardware, while also remaining practical in terms of mass, size and internal packaging. A 3S LiPo option was initially considered as earlier propulsion combinations included 3S-compatible specifications. However, once the final motor-propeller configuration was selected, the 3S option was disregarded for a more suitable 4S 5000 mAH LiPo battery. This provided a nominal voltage of \(14.8~\text{V}\), matching the motor and \gls{esc} requirements more appropriately while maintaining a target capacity for approximately 10 minutes of drone operation before recharge.
 
-This battery was selected as a representative design choice as it matched the voltage requirements of the final propulsion system. The \(14.8~\text{V}\) is suitable for the selected ESC-motor configuration while the \(5000~\text{mAh}\) also provided the target with \(10~\text{minutes}\) of drone operation before recharge. The mass range of \(390-589~\text{g}\) was also acceptable, leaving more than enough mass capacity for other components of the drone. 
+This battery was selected as a representative design choice as it matched the voltage requirements of the final propulsion system. The \(14.8~\text{V}\) is suitable for the selected \gls{esc}-motor configuration while the \(5000~\text{mAh}\) also provided the target with \(10~\text{minutes}\) of drone operation before recharge. The mass range of \(390-589~\text{g}\) was also acceptable, leaving more than enough mass capacity for other components of the drone. 
 \begin{table}[htbp]
 \centering
 \caption[4S 5000 mAh LiPo Battery specifications]{4S 5000 mAh LiPo Battery specifications\footnotemark}
@@ -585,19 +586,19 @@ This suggests that the battery is theoretically capable of supplying the require
 
 \paragraph{Power distribution}
 
-We require a component for power distribution used to route the main battery output to the four ESCs safely and with enough current margin. Since each motor is driven by a separate ESC, a PDB must be able to supply the combined current demand of all propulsion channels.
+We require a component for power distribution used to route the main battery output to the four \gls{esc}s safely and with enough current margin. Since each motor is driven by a separate \gls{esc}, a \gls{pdb} be able to supply the combined current demand of all propulsion channels.
 
-Given the ESCs are rated \(40~\text{A}\) each, the combined theoretical maximum ESC demand is:
+Given the \gls{esc}s are rated \(40~\text{A}\) each, the combined theoretical maximum \gls{esc} demand is:
 
 \[
 4\times40=160\text{A}
 \]
 
-We require a high-current PDB, which was chosen to be the Holybro Power Distribution Board 300A. Shown in Table~\ref{tab:pdb_specifications}, it is specified with a \(300~\text{A}\) continuous current rating, \(1000~\text{A}\) burst rating, \(10~\text{oz}\) copper PCB design, and XT90/XT30 connector options. The \(300~\text{A}\) continuous rating gives a clear margin above the theoretical maximum ESC demand.
+We require a high-current \gls{pdb}, which was chosen to be the Holybro Power Distribution Board 300A. Shown in Table~\ref{tab:pdb_specifications}, it is specified with a \(300~\text{A}\) continuous current rating, \(1000~\text{A}\) burst rating, \(10~\text{oz}\) copper PCB design, and XT90/XT30 connector options. The \(300~\text{A}\) continuous rating gives a clear margin above the theoretical maximum \gls{esc} demand.
 
 \begin{table}[htbp]
 \centering
-\caption[PDB specifications]{PDB specifications\footnotemark}
+\caption[\gls{pdb} specifications]{\gls{pdb} specifications\footnotemark}
 \label{tab:pdb_specifications}
 \begin{tabular}{|c|c|c|}
 \hline
@@ -620,7 +621,7 @@ Mounting holes & M3 mounting holes & Main attachment to drone hull \\
 
 \footnotetext{Data from the Holybro PDB 300A specification \cite{holybro_pdb_300a}}
 
-It should be noted that the PDB is responsible for distributing the main battery power. Other components such as the onboard computer, sensors and other electronics may require regulated lower-voltage supplies. Direct connection may cause damage to these components.
+It should be noted that the \gls{pdb} is responsible for distributing the main battery power. Other components such as the onboard computer, sensors and other electronics may require regulated lower-voltage supplies. Direct connection may cause damage to these components.
 
 \paragraph{Voltage Regulation}
 
@@ -657,7 +658,7 @@ Weight & Approximately 4.8 g & Low mass contribution \\
 
 \paragraph{Power-system Summary}
 
-The final power system is as shown in Fig.~\ref{fig:Power_Systems}, it is divided into two main sections: A high-current propulsion path and a low-voltage electronics path. The propulsion path directly draws power from the battery into the ESCs and motors, while the electronics path step-down the \(14.8~\text{V}\) Battery voltage to \(5~\text{V}\) for onboard computer and other voltage sensitive electronics. 
+The final power system is as shown in Fig.~\ref{fig:Power_Systems}, it is divided into two main sections: A high-current propulsion path and a low-voltage electronics path. The propulsion path directly draws power from the battery into the \gls{esc}s and motors, while the electronics path step-down the \(14.8~\text{V}\) Battery voltage to \(5~\text{V}\) for onboard computer and other voltage sensitive electronics. 
 
 \begin{figure}[htbp]
     \centering
@@ -708,7 +709,7 @@ Camera interface & 2-lane MIPI CSI camera port & 2 $\times$ 4-lane MIPI camera/d
 \hline
 USB & 2 $\times$ USB 3.0, 2 $\times$ USB 2.0 & 2 $\times$ USB 3.0, 2 $\times$ USB 2.0 \\
 \hline
-Approximate cost & From \$35, depending on RAM option & From \$45, depending on RAM option \\
+Approximate cost & From \pounds35, depending on RAM option & From \pounds45, depending on RAM option \\
 
 \hline
 \end{tabularx}
@@ -729,7 +730,7 @@ From a hardware point of view, the main communication requirement was that the d
 
 \paragraph{Interface with Sensors and Control Hardware}
 
-Drone electronics will connect to the onboard computer via the GPIO, serial, USB, and camera-related interfaces. The camera would connect to the Raspberry Pi through USB, allowing the Raspberry Pi to receive camera, depth, and other processed visual data from the camera module. Sensors such as the IMU and ToF would connect through standard buses which allows the Raspberry Pi to read data during flight operations. The IR receivers would connect to GPIO pins while the IR emitter would be controlled through a GPIO output signal. The gimbal/turret servos would be driven using PWM control signals, allowing onboard system to aim the camera and IR emitter simultaneously. ESCs would receive power directly from the battery via the PDB, while the Raspberry Pi would command motor speeds. The Raspberry Pi, as mentioned previously, will be powered from via the regulated 5V voltage.
+Drone electronics will connect to the onboard computer via the GPIO, serial, USB, and camera-related interfaces. The camera would connect to the Raspberry Pi through USB, allowing the Raspberry Pi to receive camera, depth, and other processed visual data from the camera module. Sensors such as the IMU and ToF would connect through standard buses which allows the Raspberry Pi to read data during flight operations. The IR receivers would connect to GPIO pins while the IR emitter would be controlled through a GPIO output signal. The gimbal/turret servos would be driven using PWM control signals, allowing onboard system to aim the camera and IR emitter simultaneously. \gls{esc}s would receive power directly from the battery via the \gls{pdb}, while the Raspberry Pi would command motor speeds. The Raspberry Pi, as mentioned previously, will be powered from via the regulated 5V voltage.
 
 \subsubsection{Sensors and Game-Specific Electronics} \label{sensorArray}
 
@@ -844,6 +845,7 @@ All three body sections are held together using \textbf{bolt fasteners}. This ma
 
 There also includes a central opening that passes through the bottom hull and electronics basket for the gimbal/turret assembly. The electronics basket includes a dedicated gimbal/turret mounting feature, where the servo connecting the basket and the gimbal/turret may be installed.
 
+The values in Table~\ref{tab:main_body_mass_estimate} were estimated from the Fusion 360 CAD model using assigned \gls{abs} material properties. Given Fusion 360 gives a solid CAD mass, this is not expected to represent the final manufactured mass as parts would be 3D printed with partial infill. The infill assumptions provide a more realistic approximation of the printed body mass - which reduces the main body assembly from 2532.6g to approximately 625.1g. Note that this value does not account for wall thickness, slicing setting and print orientation.
 The values in Table~\ref{tab:main_body_mass_estimate} were estimated from the Fusion 360 \gls{cad} model using assigned ABS material properties. Given Fusion 360 gives a solid \gls{cad} mass, this is not expected to represent the final manufactured mass as parts would be 3D printed with partial infill. The infill assumptions provide a more realistic approximation of the printed body mass - which reduces the main body assembly from 2532.6g to approximately 625.1g. Note that this value does not account for wall thickness, slicing setting and print orientation.
 
 \begin{table}[htbp]
@@ -897,6 +899,7 @@ The \textbf{blade guards} surround the propeller area and acts as a protective s
 
 The \textbf{linkage parts} connect the rotor arms to the electronics basket. These small parts allow the arms to be assembled separately from the main body and are secured using bolt fasteners. This type of assembly allows damaged arm or linkage to be replaced without rebuilding the full drone body. As these parts transfer load between arms and body, they are treated as vital structural components and will use higher infill compared to the rest of the body.
 
+The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fusion 360 CAD model using the properties assigned of \gls{abs} material. Just like the main body, the Fusion 360 reports the solid-body CAD mass, therefore we estimate the real manufactured mass using base infill assumptions. Note that this estimate does not account for wall thickness, slicing settings, print orientation, or bolt fastener mass.
 The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fusion 360 \gls{cad} model using the properties assigned of ABS material. Just like the main body, the Fusion 360 reports the solid-body \gls{cad} mass, therefore we estimate the real manufactured mass using base infill assumptions. Note that this estimate does not account for wall thickness, slicing settings, print orientation, or bolt fastener mass.
 
 \begin{table}[htbp]
@@ -924,9 +927,9 @@ Front lower linkage & 3.7 g & 80\% & 3.0 g \\
 
 \subsubsection{Turret/Gimbal Design}
 \label{Turret}
-The design of the gimbal turret (shown in Fig.~\ref{fig:Gimbal}) included requirements of the visual learning process, where the camera was required to roll, pitch and yaw. The design took inspiration from traditional industrial two-axis gimbals, but with an additional yaw axis that provided 3-axis movement. The camera and IR emitter needed to remain aligned to ensure aiming and tagging were performed in the same direction. The OAK D Lite camera was used as a reference in designing the dimensions of the gimbal. (The complete gimbal assembly is shown in Fig.~\ref{fig:Gimbal2})
+The design of the gimbal turret (shown in Fig.~\ref{fig:Gimbal}) included requirements of the visual learning process, where the camera was required to roll, pitch and yaw - its range of motion is demonstrated via this \href{https://drive.google.com/file/d/16lPV_-VS57LZUX7-dhvgIS6Q2sYhDQis/view?usp=sharing}{video}. The design took inspiration from traditional industrial two-axis gimbals, but with an additional yaw axis that provided 3-axis movement. The camera and IR emitter needed to remain aligned to ensure aiming and tagging were performed in the same direction. The OAK D Lite camera was used as a reference in designing the dimensions of the gimbal. (The complete gimbal assembly is shown in Fig.~\ref{fig:Gimbal2})
 
-Mechanically, the gimbal is mounted through the central opening in the bottom hull and electronics basket. 
+Mechanically, the gimbal has full $360^{\circ}$ range for both yaw and pitch - but would be advised not to go beyond $360^{\circ}$ during operation in order to prevent wire entanglement. The roll motion only allows $\pm50^{\circ}$ range of motion. The gimbal is mounted through the central opening in the bottom hull. 
 
 \begin{figure}[htbp]
     \centering
@@ -974,7 +977,7 @@ Coupler & 20.89 g & 80\% & 16.7 g \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:gimbal_mass_estimate} shows the mass of the solid body from Fusion 360 using assigned ABS material properties. Estimations were made, shown in Table~\ref{tab:gimbal_mass_estimate}, using infill assumptions for each component which reduced the final mass from 66.55g to 44.4g - excluding the camera, IR emitter, gimbal motors and servo. 
+Table~\ref{tab:gimbal_mass_estimate} shows the mass of the solid body from Fusion 360 using assigned \gls{abs} material properties. Estimations were made, shown in Table~\ref{tab:gimbal_mass_estimate}, using infill assumptions for each component which reduced the final mass from 66.55g to 44.4g - excluding the camera, IR emitter, gimbal motors and servo. 
 
 \paragraph{Servomotor and Gimbal Motor}
 
@@ -1015,7 +1018,7 @@ The final airframe configuration (shown in Fig.~\ref{fig:Complete Assembly}) bri
 
 \paragraph{Component Layout}
 
-The drone parts are designed with reference to the chosen internal electronics. Most of the components will be housed in the electronics basket - including the Raspberry Pi, ESCs, voltage regulator, IMU sensor, battery, and wiring. The OAK-D Lite camera and IR emitter will be mounted externally on the gimbal turret, with their wiring routed back into the central body opening. The motor and propellers will be mounted in the motor arms.
+The drone parts are designed with reference to the chosen internal electronics. Most of the components will be housed in the electronics basket - including the Raspberry Pi, \gls{esc}s, voltage regulator, IMU sensor, battery, and wiring. The OAK-D Lite camera and IR emitter will be mounted externally on the gimbal turret, with their wiring routed back into the central body opening. The motor and propellers will be mounted in the motor arms.
 
 \subsection{Preliminary Engineering Evaluation}
 
@@ -1141,7 +1144,7 @@ Our model uses the motor commands and estimated velocity to compute the thrust a
 \end{equation}
 where $\mathbf{R}(\mathbf{q}_k)$ is the rotation matrix associated with quaternion $\mathbf{q}_k$, and $k$ denotes the discrete time step.
 
-Since the motor angular velocity, $\omega_{\mathrm{motor},k,i}$, cannot be measured directly, the thrust generated by each motor, $T_{k,i}$, is estimated using the ESC control command, $c_{k,i}$. Assuming that the motor angular velocity is proportional to the ESC command, $\omega_{motor,k,i} \propto c_{k,i}$, and that the thrust is proportional to the square of the motor angular velocity, $T_{k,i} \propto \omega_{motor,k,i}^2$, the thrust produced by each motor can be modelled as
+Since the motor angular velocity, $\omega_{\mathrm{motor},k,i}$, cannot be measured directly, the thrust generated by each motor, $T_{k,i}$, is estimated using the \gls{esc} control command, $c_{k,i}$. Assuming that the motor angular velocity is proportional to the \gls{esc} command, $\omega_{motor,k,i} \propto c_{k,i}$, and that the thrust is proportional to the square of the motor angular velocity, $T_{k,i} \propto \omega_{motor,k,i}^2$, the thrust produced by each motor can be modelled as
 \begin{equation} \label{equ:ActuatorThrustModel}
     T_{k,i} = k_{T,k,i} \, c_{k,i}^{2}
 \end{equation}
@@ -1228,7 +1231,7 @@ The EKF will update whenever new IMU data is received. We will use the model and
     \mathbf{P}_{k|k} & = (\mathbf{I} - \mathbf{K}_k \mathbf{H}_k) \mathbf{P}_{k|k-1} \label{equ:EstEKFUpdateMeasurementCov} 
 \end{align}
 
-To use these equations, we need to define all parameters in the model, Eq. \ref{equ:EstEKFStateTransition} and \ref{equ:EstEKFMeasurements}. Process noise covariance, $\mathbf{Q}$, and measurement noise covariance, $\mathbf{R}$, will be estimated experimentally before deployment and are assumed constant. The state, $\mathbf{x}_k$, input, $\mathbf{u}_k$, and measurement, $\mathbf{y}_k$, vectors are defined below in Eq.\ref{equ:EstEKFStateVector}, \ref{equ:EstEKFInputVector}, and \ref{equ:EstEKFMeasurementVector} respectively, where $\boldsymbol{\omega}_{r,k}$ is the gyroscope reading, $\mathbf{c}_k$ is the motor ESC commands, and $\mathbf{a}_{r,k}$ is the accelerometer reading. Functions $f$ and $h$ are defined below in Eq.\ref{equ:EstEKFf} and \ref{equ:EstEKFh}. In function f we: assume acceleration is constant over the sampling period, $\Delta t$, to update position and velocity, use the quaternion derivative defined by Sol\'{a} (pg 46)  \cite{quaternionDerivative}, Eq.\ref{equ:EstSolaQuatDerivative}, to update the quaternion orientation, subtract the bias from the gyroscope reading to update the angular velocity, use the model equations, Eq.\ref{equ:EstAccelModel}-\ref{equ:EstDragAccel}, to update the acceleration using the state and inputs, and keep the remaining parameters unchanged and allow them to evolve through a random walk. In function h, we transform the estimated acceleration into the body frame and combine this with the upwards gravity vector and the accelerometer bias to produce the expected measurement.
+To use these equations, we need to define all parameters in the model, Eq. \ref{equ:EstEKFStateTransition} and \ref{equ:EstEKFMeasurements}. Process noise covariance, $\mathbf{Q}$, and measurement noise covariance, $\mathbf{R}$, will be estimated experimentally before deployment and are assumed constant. The state, $\mathbf{x}_k$, input, $\mathbf{u}_k$, and measurement, $\mathbf{y}_k$, vectors are defined below in Eq.\ref{equ:EstEKFStateVector}, \ref{equ:EstEKFInputVector}, and \ref{equ:EstEKFMeasurementVector} respectively, where $\boldsymbol{\omega}_{r,k}$ is the gyroscope reading, $\mathbf{c}_k$ is the motor \gls{esc} commands, and $\mathbf{a}_{r,k}$ is the accelerometer reading. Functions $f$ and $h$ are defined below in Eq.\ref{equ:EstEKFf} and \ref{equ:EstEKFh}. In function f we: assume acceleration is constant over the sampling period, $\Delta t$, to update position and velocity, use the quaternion derivative defined by Sol\'{a} (pg 46)  \cite{quaternionDerivative}, Eq.\ref{equ:EstSolaQuatDerivative}, to update the quaternion orientation, subtract the bias from the gyroscope reading to update the angular velocity, use the model equations, Eq.\ref{equ:EstAccelModel}-\ref{equ:EstDragAccel}, to update the acceleration using the state and inputs, and keep the remaining parameters unchanged and allow them to evolve through a random walk. In function h, we transform the estimated acceleration into the body frame and combine this with the upwards gravity vector and the accelerometer bias to produce the expected measurement.
 
 \begin{align} 
     \mathbf{x}_k & = \begin{bmatrix}\mathbf{p}_k^\top, \mathbf{q}_k^\top, \mathbf{v}_k^\top, \boldsymbol{\omega}_k^\top, \mathbf{a}_k^\top, \mathbf{b}_{g,k}^\top, \mathbf{b}_{a,k}^\top, \mathbf{k}_{D,k}^\top, k_{T,k}^\top\end{bmatrix}^\top \label{equ:EstEKFStateVector} \\
@@ -2874,7 +2877,7 @@ As the system is intended for repeated commercial use, sustainability is conside
 
 \paragraph{Environmental Impact}
 
-The drones are electrically powered, so they produce no direct emissions during flight inside the arena. However, the main environmental impact comes from manufacturing, charging, and eventually disposing of the drone itself, and all components within. The batteries likely have the shortest service life as they degrade with repeated charge cycles and would need replacement periodically. Other components may last longer if protected from impact and overheating. To reduce unnecessary waste, the drone uses a modular airframe with detachable parts, allowing damaged or worn parts to be replaced individually. However, the material choice still has limitations, as ABS is not biodegradable.
+The drones are electrically powered, so they produce no direct emissions during flight inside the arena. However, the main environmental impact comes from manufacturing, charging, and eventually disposing of the drone itself, and all components within. The batteries likely have the shortest service life as they degrade with repeated charge cycles and would need replacement periodically. Other components may last longer if protected from impact and overheating. To reduce unnecessary waste, the drone uses a modular airframe with detachable parts, allowing damaged or worn parts to be replaced individually. However, the material choice still has limitations, as \gls{abs} is not biodegradable.
 
 \paragraph{Social Impact}
 
@@ -2886,7 +2889,7 @@ The economic impact is considered through the commercial model, which tests whet
 
 \paragraph{Limitations}
 
-The system should not be considered fully sustainable. Issues such as waste and replacement of electronic components, general consumptions of arena management, and usage of non-biodegradable ABS material mean that the system cannot be considered impact-free.
+The system should not be considered fully sustainable. Issues such as waste and replacement of electronic components, general consumptions of arena management, and usage of non-biodegradable \gls{abs} material mean that the system cannot be considered impact-free.
 \newpage
 %%%%%%%%%%%%%%%----------End of Sustainability--------------%%%%%%%%%%%%%%%
 \section{Technology Strategy}
