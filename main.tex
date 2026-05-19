@@ -19,11 +19,14 @@
 \Urlmuskip=0mu plus 1mu
 \usepackage[table]{xcolor}
 \usepackage[colorlinks=true, linkcolor=black, citecolor=black, hidelinks]{hyperref}
+\usepackage{pdfpages}
 
-\usepackage{tikz}
-\usepackage{multirow}
-\usepackage{graphicx}
-\usepackage{array}
+\usepackage[table]{xcolor}
+\definecolor{swotS}{RGB}{226,237,143}
+\definecolor{swotW}{RGB}{247,193,139}
+\definecolor{swotO}{RGB}{173,208,187}
+\definecolor{swotT}{RGB}{192,165,184}
+\usepackage[raster]{tcolorbox}
 
 
 \title{Laser Tag using a Multiagent Drone System}
@@ -76,6 +79,8 @@
 \newacronym{irr}{IRR}{Internal Rate of Return}
 \newacronym{esc}{ESC}{Electronic Speed Controller}
 \newacronym{pdb}{PDB}{Power Distribution Board}
+\newacronym{swot}{SWOT}{Strengths, Weaknesses, Opportunities, and Threats}
+\newacronym{ip}{IP}{Intellectual Property}
 \printglossaries
 \newpage
 
@@ -87,7 +92,7 @@
 % - Give a short overview of report structure
 \section{Introduction}
 \fancyhead[C]{Rishabh Luthra}
-The UK leisure market is currently defined by a distinct consumer trend: a frugality in routine choices paired with a willingness to invest in high-value experiences \cite{arrowsmith2026leisure, deloitte2026leisure_report}. This shift drives a growing demand for immersive environments that offer real-time interactivity and integrate the strategic depth of video games into the physical world. 
+The UK leisure market is currently defined by a distinct consumer trend: a frugality in routine choices paired with a willingness to invest in high-value experiences~\cite{arrowsmith2026leisure, deloitte2026leisure_report}. This shift drives a growing demand for immersive environments that offer real-time interactivity and integrate the strategic depth of video games into the physical world. 
 
 Since its introduction in 1984, the core mechanics of laser tag have remained largely unchanged~\cite{LaserTagHistory}. An estimated 76 million games are played every year~\cite{trutneeLaserTag}. This suggests that innovation within the laser tag industry has significant demand and commercial potential.
 
@@ -711,7 +716,7 @@ Approximate cost & From \$35, depending on RAM option & From \$45, depending on 
 
 \paragraph{Communication Interface}
 
-From a hardware point of view, the main communication requirement was that the drone could connect wirelessly to the external server. The Raspberry Pi 4 Model B included built-in dual band Wi-Fi and Bluetooth. Wi-Fi would be used to connect between the drone and the server, while the Bluetooth could be reserved for short-range setup or debugging if required. Detailed comparison between both methods are covered in the networking section of the report.
+From a hardware point of view, the main communication requirement was that the drone could connect wirelessly to the external server. The Raspberry Pi 4 Model B included built-in dual band Wi-Fi and Bluetooth. Wi-Fi would be used to connect between the drone and the server, while the Bluetooth could be reserved for short-range setup or debugging if required. Detailed comparison between both methods are covered in Section~\ref{network}.
 
 \paragraph{Interface with Sensors and Control Hardware}
 
@@ -721,7 +726,7 @@ Drone electronics will connect to the onboard computer via the GPIO, serial, USB
 
 \paragraph{Camera}
 
-The camera selected by the visual perception work-stream was the OAK-D Lite (shown in Fig.~\ref{fig:Camera}) used for player detection and tracking. In this hardware section, the camera is considered from an integration point of view. The OAK-D Lite connects to the Raspberry Pi through USB hence the drone body must be designed to ensure both the USB connection and cable routing are practical inside the drone body. Its power draw also need to be included in the 5V electronics power budget. Mechanically, the camera must be placed with a clear field of view - placed in line with the IR emitter inside a gimbal/turret where they can move simultaneously. There should be no obstruction by the airframe, turret structure, or wiring. More detailed reasoning behind the camera choice can be found in the visual detection pipeline covered separately under \say{Mid Level Control} % add reference to section?.
+The camera selected by the visual perception work-stream was the OAK-D Lite (shown in Fig.~\ref{fig:Camera}) used for player detection and tracking. In this hardware section, the camera is considered from an integration point of view. The OAK-D Lite connects to the Raspberry Pi through USB hence the drone body must be designed to ensure both the USB connection and cable routing are practical inside the drone body. Its power draw also need to be included in the 5V electronics power budget. Mechanically, the camera must be placed with a clear field of view - placed in line with the IR emitter inside a gimbal/turret where they can move simultaneously. There should be no obstruction by the airframe, turret structure, or wiring. More detailed reasoning behind the camera choice can be found in the visual detection pipeline covered separately under Section~\ref{Sensor Selection}.
 
 \begin{figure}[htbp]
     \centering
@@ -1014,7 +1019,7 @@ The structural assessment focused on two components most exposed to loading and 
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1\textwidth]{Hardware/Rotor Arm Simulation Test Image.png}
+    \includegraphics[width=0.9\textwidth]{Hardware/Rotor Arm Simulation Test Image.png}
     \caption{Rotor Arm Simulation Test}
     \label{fig:Rotor Arm Sim}
 \end{figure}
@@ -1028,7 +1033,7 @@ This result showed that the structure was reasonable. However, this should still
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1\textwidth]{Hardware/Blade Guard Simulation.png}
+    \includegraphics[width=0.9\textwidth]{Hardware/Blade Guard Simulation.png}
     \caption{Blade Guard Simulation test}
     \label{fig:BladeGaurdSim}
 \end{figure}
@@ -1049,7 +1054,15 @@ The final design of the drone hardware is acceptable within the scope of the pro
 
 \subsubsection{Simulation Representation of Drone Hardware}
 
-The final CAD model was simplified for use in Unity. Given the full Fusion 360 assembly contained many unnecessary mechanical detail for real-time simulation, a low-poly version was created in Blender and imported into Unity as a game asset. The simplified model preserved the main visible features such as the drone body and propellers, while small details such as bolt holes and linkages were removed. These were deemed unnecessary as Unity's built-in collision mechanisms and physics engine mainly uses approximated cuboid or spherical boundaries defined by the developer, and developing a custom solid-boundary model would require additional setup time without adding much value.
+The final CAD model was simplified for use in Unity. Given the full Fusion 360 assembly contained many unnecessary mechanical detail for real-time simulation, a low-poly version was created in Blender and imported into Unity as a game asset. The simplified model preserved the main visible features such as the drone body and propellers, while small details such as bolt holes and linkages were removed. These were deemed unnecessary as Unity's built-in collision mechanisms and physics engine mainly uses approximated cuboid or spherical boundaries defined by the developer, and developing a custom solid-boundary model would require additional setup time without adding much value. (A model of the simplified drone is shown in Fig.~\ref{fig:BlenderDrone})
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.50\textwidth]{Blender Drone.png}
+    \caption{Blender Drone}
+    \label{fig:BlenderDrone}
+\end{figure}
+
 
 \subsection{Player Hardware Design}
 \label{player_hardware}
@@ -1352,7 +1365,7 @@ This section details the design and implementation of this perception system. To
 \end{itemize}
 
 \subsection{Sensor Selection} % Rishabh
-
+\label{Sensor Selection}
 % To Do:
 % - check references
 % - include an image on stereo depth and maybe of the test setup [done]
@@ -1372,7 +1385,7 @@ With the camera isolated from the drone's tilt, the next step is to select the s
 
 \begin{table}[htbp]
     \centering
-    \caption{\gls{swapc} Evaluation of 3D Spatial Localisation Sensor Options \cite{slamtec_rplidar_a1, orbbec_astra_mini_pro, oakd_lite_specs, raspberrypi_ai_camera}}
+    \caption{\gls{swapc} Evaluation of 3D Spatial Localisation Sensor Options~\cite{slamtec_rplidar_a1, orbbec_astra_mini_pro, oakd_lite_specs, raspberrypi_ai_camera}}
     \label{tab:sensor_swapc}
     \small
     \begin{tabularx}{\textwidth}{@{}llcccX@{}}
@@ -1416,26 +1429,26 @@ To compare the performance of monocular and stereo depth estimation under geomet
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\linewidth]{figs/DepthEstimationTests.pdf}
+    \includegraphics[width=0.5\linewidth]{figs/DepthEstimationTests.png}
     \caption{Overview of the experimental setup comparing monocular and stereo depth estimation under geometric transformations.}
     \label{fig:depth_estimation_test}
 \end{figure}
 
 
-\textbf{(1) Linear Movement}
+\textbf{(i) Linear Movement}
 
 We began with a baseline calibration and translated the target linearly from 5m to 15m along the Z-axis. Within this scenario, the target's physical dimensions and orientation remained fixed. As demonstrated in Fig. \ref{fig:linear_translation}, both the monocular camera system and stereo camera system accurately map the physical ground truth. This establishes that both approaches are viable for tracking rigid bodies under ideal conditions.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\linewidth]{figs/LinearTranslation_Plot.pdf}
+    \includegraphics[width=0.4\linewidth]{figs/LinearTranslation_Plot.pdf}
     \caption{Comparison of monocular and stereo depth estimation against physical ground truth during linear translation from 5m to 15m}
     \label{fig:linear_translation}
 \end{figure}
 
 \newpage
 
-\textbf{(2) Changes in Target Orientation}
+\textbf{(ii) Changes in Target Orientation}
 
 In a practical laser tag environment, players are unlikely to follow linear trajectories. To evaluate how the depth tracking systems handle changes in orientation, we simulate a player turning sideways by rotating the target from $0^\circ$ to $90^\circ$ on its yaw axis. As the target rotates around its 5.1m centroid, the physical ground truth, which is represented by the closest physical surface, shifts from 5.0m down to 4.85m. 
 
@@ -1445,12 +1458,12 @@ As the target turns, its 2D profile narrows and the monocular algorithm, which i
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\linewidth]{figs/YawRotation_Plot.pdf}
+    \includegraphics[width=0.7\linewidth]{figs/YawRotation_Plot.png}
     \caption{Comparison of depth estimation models during target yaw rotation from $0^\circ$ to $90^\circ$ at a nominal 5.0 m depth.}
     \label{fig:yaw_rotation}
 \end{figure}
 
-\textbf{(3) Changes in Target Posture}
+\textbf{(iii) Changes in Target Posture}
 
 We also evaluated the systems against a reduction in the target's vertical height, to simulate the motion of crouching. Similar to the changes in the target's orientation, the monocular algorithm misinterprets the shrinking of the target as an increase in depth, leading to the depth overestimation seen in Fig. \ref{fig:crouch_deformation}. 
 
@@ -1458,7 +1471,7 @@ This scenario highlights the advantage of the stereo system with the stereo esti
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\linewidth]{figs/CrouchDeformation_Plot.pdf}
+    \includegraphics[width=0.7\linewidth]{figs/CrouchDeformation_Plot.png}
     \caption{Comparison of depth estimation models during crouching at a constant physical depth}
     \label{fig:crouch_deformation}
 \end{figure}
@@ -1475,7 +1488,7 @@ The hardware of this system is comprised of a camera array consisting of three c
     \begin{subfigure}[b]{\textwidth}
         \centering
         \includegraphics[width=0.6\textwidth]{figs/sensor_pipeline.pdf}
-        \caption{Sensor fusion architecture}
+        \caption{}
         \label{fig:pipeline_diagram}
     \end{subfigure}
 
@@ -1484,18 +1497,18 @@ The hardware of this system is comprised of a camera array consisting of three c
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=0.7\textwidth]{figs/1_RGB.png}
-        \caption{Monocular RGB stream with ground truth bounding box}
+        \caption{}
         \label{fig:rgb_data}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=0.7\textwidth]{figs/2_DepthMap.png}
-        \caption{Synchronised depth map with projected bounding box}
+        \caption{}
         \label{fig:depth_data}
     \end{subfigure}
     
-    \caption{The data flow in (\subref{fig:pipeline_diagram}) alongside the corresponding RGB bounding box (\subref{fig:rgb_data}) and spatial depth mapping (\subref{fig:depth_data}).}
+    \caption{Perception system overview showing: (\subref{fig:pipeline_diagram}) the sensor fusion architecture data flow, (\subref{fig:rgb_data}) the monocular RGB stream with a ground truth bounding box, and (\subref{fig:depth_data}) the synchronised depth map with a projected bounding box.}
     \label{fig:perception_system_overview}
 \end{figure}
 
@@ -1503,7 +1516,7 @@ The hardware of this system is comprised of a camera array consisting of three c
 
 To satisfy the first objective, the system must transform the raw visual data into spatial data. The central RGB sensor outputs a continuous stream of frames, which are essentially high-dimensional pixel arrays. To interpret these, an object detection model is required to ingest this raw data and output bounding boxes around valid targets. This process effectively maps visual features to 2D semantic coordinates within the image frame, ensuring the system can reliably distinguish the player from the background. 
 
-For this task, the YOLOv8-nano (YOLOv8n) architecture was selected. As the variant with the lowest parameter count, its streamlined size is explicitly suited for deployment on the drone's limited onboard hardware. \gls{yolo} ensures low-latency detection by evaluating the image in a single computational pass, which is required to keep the flight control loops responsive. Furthermore, the architecture's maturity, combined with its extensive Python support and documentation, provides a reliable and efficient pipeline for training, single-class fine-tuning, and deployment.
+For this task, the YOLOv8-nano (YOLOv8n) architecture~\cite{ultralytics_yolov8} was selected. As the variant with the lowest parameter count, its streamlined size is explicitly suited for deployment on the drone's limited onboard hardware. \gls{yolo} ensures low-latency detection by evaluating the image in a single computational pass, which is required to keep the flight control loops responsive. Furthermore, the architecture's maturity, combined with its extensive Python support and documentation, provides a reliable and efficient pipeline for training, single-class fine-tuning, and deployment.
 
 To achieve the second objective, the system performs sensor fusion. The predicted 2D bounding box defines a region of interest (Fig. \ref{fig:rgb_data}), which is projected onto the synchronised stereo disparity map (Fig. \ref{fig:depth_data}). This allows the system to extract the absolute depth ($Z$) of the target by sampling depth data across the pixels within this region, effectively bridging 2D visual recognition with 3D spatial tracking. 
 
@@ -1537,7 +1550,7 @@ Note that the visualisations in Fig. \ref{fig:perception_system_overview} were g
 
 
 \subsection{Data Preprocessing}
-To accelerate the training process, we utilised a pre-trained \gls{yolo} model initialised using baseline weights on the \gls{coco} dataset. Leveraging a pre-trained model provides the neural network with a foundational understanding on geometric features such as edges and spatial gradients. This drastically reduces the time required for the network to converge. However, these standard weights are insufficient for our case because the \gls{coco} dataset consists primarily of eye-level photography whereas the drone requires aerial imagery. To achieve reliable target locking from the drone's pitch angles, the model required fine-tuning on specific drone imagery. As a result, the VisDrone2019-DET dataset was selected to provide this top-down perspective.
+To accelerate the training process, we utilised a pre-trained \gls{yolo} model initialised using baseline weights on the \gls{coco} dataset~\cite{Lin2014MicrosoftCC}. Leveraging a pre-trained model provides the neural network with a foundational understanding on geometric features such as edges and spatial gradients. This drastically reduces the time required for the network to converge. However, these standard weights are insufficient for our case because the \gls{coco} dataset consists primarily of eye-level photography whereas the drone requires aerial imagery. To achieve reliable target locking from the drone's pitch angles, the model required fine-tuning on specific drone imagery. As a result, the VisDrone2019-DET~\cite{Zhu2020DetectionAT} dataset was selected to provide this top-down perspective.
 
 The VisDrone dataset contains numerous additional classes such as vehicles and bicycles. Training the network to recognise these would waste computational resources and risk introducing false positives during operation. To optimise the dataset for the laser tag environment, a preprocessing script was developed to filter the dataset. The script parsed every annotation file and discarded all bounding box data that did not correspond to Class 0 (pedestrian) or Class 1 (people). As a result, the network can allocate its full capacity to identifying human targets only. Subsequently, these two remaining classes were merged into a single class. Distinguishing between a pedestrian and a person provides no operational advantage for our system. 
 
@@ -1555,7 +1568,7 @@ The VisDrone dataset contains numerous additional classes such as vehicles and b
 \subsection{Model Training and Deployment}
 Following data preparation, the pre-trained YOLOv8n model was fine-tuned on the filtered VisDrone dataset. Training was conducted via Google Colab, utilising an NVIDIA T4 Tensor Core GPU. The training phase was configured using a $640 \times 640$ pixel input resolution to ensure a balance between the detail necessary for target detection and maintaining low-latency inference on the drone's onboard hardware.
 
-Once the network had converged, the final weights were exported to the \gls{onnx} format that allowed the model trained in Python to be imported directly into Unity. Within the simulation, the model is executed using Unity Sentis, a tensor engine used to run neural networks natively within the simulated environment.
+Once the network had converged, the final weights were exported to the \gls{onnx} format that allowed the model trained in Python to be imported directly into Unity. Within the simulation, the model is executed using Unity Sentis~\cite{unity_sentis}, a tensor engine used to run neural networks natively within the simulated environment.
 
 To quantify the model's convergence during training, loss and precision metrics were tracked across 50 epochs. As visualised in Fig.  \ref{fig:visdrone_training_results}, both the training and validation losses steadily decreased and plateaued towards the end of the run. This indicates that the neural network converged successfully and learned the dataset's features with no obvious overfitting. 
 
@@ -1603,17 +1616,17 @@ The benchmark was executed on two distinct simulation conditions:
     \begin{subfigure}[b]{0.32\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/env_daylight.png}
-        \caption{Daylight Conditions}
+        \caption{}
         \label{fig:env_daylight}
     \end{subfigure}
     \begin{subfigure}[b]{0.325\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/env_lowlight.png}
-        \caption{Low-light Conditions}
+        \caption{}
         \label{fig:env_lowlight}
     \end{subfigure}
     
-    \caption{A visual comparison of the simulated lighting environments used during the automated orbital benchmark.}
+    \caption{Visual comparison of the simulated lighting environments used during the automated orbital benchmark, illustrating (\subref{fig:env_daylight}) daylight conditions and (\subref{fig:env_lowlight}) low-light conditions.}
     \label{fig:orbital_benchmarks}
 \end{figure}
 
@@ -1624,15 +1637,18 @@ The following 2D graphs flatten the 3D hemispherical sweeps shown in Fig. \ref{f
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/VisDrone_F_Light_Confidence.pdf}
-        \caption{Confidence score distribution}
+        \caption{}
+        \label{fig:daylight_confidence}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/VisDrone_F_Light_Classification.pdf}
-        \caption{TP / FP / FN categorisation}
+        \caption{}
+        \label{fig:daylight_classification}
     \end{subfigure}
-    \caption{Orbital benchmark under Daylight Conditions.}
+    
+    \caption{Orbital benchmark under daylight conditions showing (\subref{fig:daylight_confidence}) the confidence score distribution and (\subref{fig:daylight_classification}) the TP / FP / FN categorisation.}
     \label{fig:benchmark_daylight}
 \end{figure}
 
@@ -1644,17 +1660,18 @@ Under daylight conditions (Fig. \ref{fig:benchmark_daylight}), the model demonst
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/VisDrone_F_Dark_Confidence.pdf}
-        \caption{Confidence score distribution}
+        \caption{}
         \label{fig:benchmark_lowlight_confidence}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/VisDrone_F_Dark_Classification.pdf}
-        \caption{TP / FP / FN categorisation}
+        \caption{}
         \label{fig:benchmark_lowlight_classification}
     \end{subfigure}
-    \caption{Orbital benchmark under Low-light Conditions.}
+    
+    \caption{Orbital benchmark under low-light conditions showing (\subref{fig:benchmark_lowlight_confidence}) the confidence score distribution and (\subref{fig:benchmark_lowlight_classification}) the TP / FP / FN categorisation.}
     \label{fig:benchmark_lowlight}
 \end{figure}
 
@@ -1667,8 +1684,8 @@ To resolve the domain gap identified during baseline evaluation, an automated da
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.9\textwidth]{figs/SyntheticDatasetOverview.pdf}
-    \caption{Sample of the generated synthetic dataset. Note the variation in camera altitude, target pose, environmental lighting intensity, and maze textures.}
+    \includegraphics[width=0.9\textwidth]{figs/SyntheticDatasetOverview.png}
+    \caption{Sample of the generated synthetic dataset. Panels (a)–(f) illustrate variations in camera altitude, target pose, environmental lighting intensity, and maze textures.}
     \label{fig:synthetic_overview}
 \end{figure}
 
@@ -1691,14 +1708,14 @@ To ensure the resulting bounding boxes only encompass visually exposed regions, 
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/RaycastSceneView.png}
-        \caption{3D Scene Environment}
+        \caption{}
         \label{fig:raycast_scene}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/RaycastGameView.png}
-        \caption{2D Simulated Camera Output}
+        \caption{}
         \label{fig:raycast_game}
     \end{subfigure}
     \caption{Visualisation of the automated annotation and occlusion logic. Left (a): The 3D spatial environment demonstrating the raycasts, where red lines indicate vertices blocked by physical cover. Right (b): The corresponding 2D rendered frame, demonstrating bounding boxes that encapsulate only the unoccluded geometry.}
@@ -1763,17 +1780,18 @@ This stability is supported by the TP/FP/FN categorisation (Fig. \ref{fig:benchm
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/Synthetic_F_Dark_Confidence.pdf}
-        \caption{Confidence score distribution}
+        \caption{}
         \label{fig:benchmark_synthetic_lowlight_confidence}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/Synthetic_F_Dark_Classification.pdf}
-        \caption{TP / FP / FN categorisation}
+        \caption{}
         \label{fig:benchmark_synthetic_lowlight_classification}
     \end{subfigure}
-    \caption{Orbital benchmark performance for Synthetic model under Low-light Conditions.}
+    
+    \caption{Orbital benchmark performance for the synthetic model under low-light conditions showing (\subref{fig:benchmark_synthetic_lowlight_confidence}) the confidence score distribution and (\subref{fig:benchmark_synthetic_lowlight_classification}) the TP / FP / FN categorisation.}
     \label{fig:benchmark_synthetic_lowlight}
 \end{figure}
 
@@ -1816,22 +1834,23 @@ P_c = \begin{bmatrix} x_c \\ y_c \\ z_c \end{bmatrix} = \begin{bmatrix} \frac{x_
      \begin{subfigure}[b]{0.48\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/CameraProjection_SimilarTriangles.png}
-         \caption{Similar triangles for the y-axis projection.}
+         \caption{}
          \label{fig:projection_side}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{0.48\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figs/CameraProjection.png}
-         \caption{3D perspective view relating the camera coordinate frame and image plane.}
+         \caption{}
          \label{fig:projection_3d}
      \end{subfigure}
-     \caption{Geometry of the perspective projection model from 3D spatial coordinates to the 2D image plane.}
+     
+     \caption{Geometry of the perspective projection model from 3D spatial coordinates to the 2D image plane, illustrating (\subref{fig:projection_side}) similar triangles for the y-axis projection and (\subref{fig:projection_3d}) a 3D perspective view relating the camera coordinate frame and image plane.}
      \label{fig:camera_geometry}
 \end{figure}
 
-\textbf{In order to interface with Tommy's path following algorithm as well as Ritchie's high level controller, the vector $P_c$ in the camera's local coordinate frame must be converted into the global world frame $P_w$.
-}
+In order to interface with the high-level logic (Section \ref{high level control}) as well as the navigation and flight control architecture (Section \ref{navigation}), the vector $P_c$ in the camera's local coordinate frame must be converted into the global world frame $P_w$.
+
 This transformation is achieved using a series of rotation matrices which are defined for Pitch ($\theta$), Yaw($\psi$) and Roll ($\phi$):
 \begin{equation}
     \resizebox{0.85\textwidth}{!}{%
@@ -1856,7 +1875,7 @@ Initially we query the gimbal's encoders to obtain the real-time mechanical yaw 
     R_g = R_y(\psi_g) \cdot R_x(\theta_g) \cdot R_z(\phi_g)
 \end{equation}
 
-Although strictly we also need to take into account the translation vector for the physical displacement of the gimbal mount with the drone's centre of mass, this offset has been removed for simplicity. % or because it is negligible
+The physical displacement vector between the gimbal mount and the drone's centre of mass is assumed to be negligible and is zeroed in this model.
 
 Next we read the drone's onboard \gls{imu} to acquire the drone's yaw ($\psi_d$), pitch ($\theta_d$), and roll ($\phi_d$). 
 
@@ -1880,7 +1899,7 @@ which can be expressed in matrix representation as:
 \subsection{Player State Estimation and Predictive Tracking}
 Although we are able to obtain the 3D global coordinates of the player ($P_w$) using the kinematic transformations above, the raw measurements will be inherently noisy due to stereoscopic depth jitter and \gls{yolo} bounding box fluctuations. In addition, the arena contains physical walls and objects that can cause temporary occlusions. As a result, we cannot rely solely on the raw visual data and must maintain a state estimate of the player's position.
 
-In order to achieve this, we implemented a Linear Kalman Filter to maintain a continuous, smoothed estimate of the player's position. The filter operates on a constant velocity model, allowing us to project the player's trajectory during periods of occlusion.
+In order to achieve this, we implemented a Linear Kalman Filter~\cite{reid_kalman} to maintain a continuous, smoothed estimate of the player's position. The filter operates on a constant velocity model, allowing us to project the player's trajectory during periods of occlusion.
 
 \newpage
 
@@ -1919,7 +1938,7 @@ In the predict phase, the state estimate ($\hat{X}$) and error covariance ($P$) 
 %     P_{k+1|k} &= F P_{k|k} F^T + Q
 % \end{align}
 
-The process noise covariance matrix ($Q$) accounts for unmodelled accelerations, such as the player dodging or sprinting. Here we adopt a Discrete White Noise Acceleration (DWNA) model. Under this piecewise constant assumption, the noise gain vector ($\Gamma$) maps a scalar acceleration jump into both position and velocity changes:
+The process noise covariance matrix ($Q$) accounts for unmodelled accelerations, such as the player dodging or sprinting. Here we adopt a Discrete White Noise Acceleration (DWNA) model~\cite{barshalom2001kinematic}. Under this piecewise constant assumption, the noise gain vector ($\Gamma$) maps a scalar acceleration jump into both position and velocity changes:
 
 \begin{equation}
     \Gamma = \begin{bmatrix} \frac{1}{2}\Delta t^2 \\ \Delta t \end{bmatrix}
@@ -1980,6 +1999,8 @@ This section presented a three-stage visual perception pipeline designed to prov
 
 \newpage
 \section{Motion Planning and Flight Control Architecture}
+\section{Navigation and Flight Control Architecture}
+\label{navigation}
 
 In this section we detail the motion planning and flight control algorithms of each operational mode (detailed in Section \ref{high level control}). Each mode utilises a flight control algorithm that outputs body thrust and moments which are converted to motor commands using the actuator allocation matrix detailed at the end of this section.
 
@@ -2562,10 +2583,6 @@ Using an Equity-Only Discount Rate, the discount rate \(r_e\) applied to future 
     \label{equ:amortisation}
 \end{equation}
 
-
-
-
-
 % The annual repayment \(A\) on a loan of initial size \(P\) over a term \(N\) years that gathers interest at annual rate \(r_d\) is given by the amortisation formula:
 % \begin{equation}
 %     A=\frac{Pr_d}{1-(1+r_d)^{-N}}
@@ -2825,14 +2842,110 @@ The system should not be considered fully sustainable. Issues such as waste and 
 \newpage
 %%%%%%%%%%%%%%%----------End of Sustainability--------------%%%%%%%%%%%%%%%
 \section{Technology Strategy}
-
 \fancyhead[C]{Rishabh Luthra}
 
 \subsection{House of Quality}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figs/House of Quality.png}
+    \caption{House of Quality}
+    \label{fig:hoq}
+\end{figure}
 
+To translate customer requirements into measurable engineering specifications, a House of Quality matrix was developed. This methodology maps core user desires directly onto system capabilities to prioritise technical development. To ground these targets in reality, the matrix benchmarks the proposed design against two distinct alternatives. Traditional indoor laser tag serves as the commercial competing product, establishing baseline expectations for user experience and affordability. Conversely, the DJI Mini 5 Pro~\cite{dji2026mini5pro, dji2026transmission, parkcameras2026mini5pro} acts as the technical competing product, defining the state-of-the-art standards required for drone mass, flight endurance, and processing capabilities.
 
+\newpage
+\fancyhead[C]{Thomas August}
 \subsection{SWOT Analysis}
+We conducted a \gls{swot} analysis in order to evaluate the internal capabilities of the project against its external commercial environment. Internal factors assess our product design, deployment processes, and \gls{ip}, while external factors isolate market conditions, regulatory frameworks, and competitive pressures. This strategic planning framework establishes a baseline to exploit our distinctive competencies and address structural weaknesses.
 
+\begin{figure}[htbp]
+\centering
+\begin{minipage}{\textwidth}
+\begin{tcbraster}[raster columns=2, raster row skip=1mm, boxrule=0mm, arc=0mm]
+\begin{tcolorbox}[equal height group=A, size=fbox, colback=swotS!60, colframe=swotS!80!black, title=\textsc{strengths}]
+\textbf{Business} \vspace{-1em}
+\begin{enumerate}
+\setlength{\itemsep}{3pt}
+\setlength{\parskip}{0pt}
+\item High-value interactive experience
+\item Financially viable business model
+\item Strict safety risk mitigation
+\end{enumerate}
+\tcblower
+\textbf{Product} \vspace{-1em}
+\begin{enumerate}
+\setlength{\itemsep}{3pt}
+\setlength{\parskip}{0pt}
+\item Modular 3D-printed airframe
+\item Synthetic data vision training
+\item RL movement policy
+\end{enumerate}
+\end{tcolorbox}
+\begin{tcolorbox}[equal height group=A, size=fbox, colback=swotW!60, colframe=swotW!80!black, title=\textsc{weaknesses}]
+\textbf{Business} \vspace{-1em}
+\begin{enumerate}
+\setlength{\itemsep}{3pt}
+\setlength{\parskip}{0pt}
+\item High initial capital requirement
+\item Unverified user adoption rates
+\item Single venue limits scaling
+\end{enumerate}
+\tcblower
+\textbf{Product} \vspace{-1em}
+\begin{enumerate}
+\setlength{\itemsep}{3pt}
+\setlength{\parskip}{0pt}
+\item Sim-to-real domain gap
+\item Unvalidated physical hardware durability
+\item Ten-minute flight endurance limit
+\end{enumerate}
+\end{tcolorbox}
+\begin{tcolorbox}[equal height group=B, size=fbox, colback=swotO!60, colframe=swotO!80!black, title=\textsc{opportunities}]
+\textbf{Business} \vspace{-1em}
+\begin{enumerate}
+\setlength{\itemsep}{3pt}
+\setlength{\parskip}{0pt}
+\item Expansion into competitive esports
+\item Hardware and arena franchising
+\item Licensing tracking software IP
+\end{enumerate}
+\tcblower
+\textbf{Product} \vspace{-1em}
+\begin{enumerate}
+\setlength{\itemsep}{3pt}
+\setlength{\parskip}{0pt}
+\item RL policy refinement
+\item Battery upgrades
+\item Computer vision learning
+\end{enumerate}
+\end{tcolorbox}
+\begin{tcolorbox}[equal height group=B, size=fbox, colback=swotT!60, colframe=swotT!80!black, title=\textsc{threats}]
+\textbf{Business} \vspace{-1em}
+\begin{enumerate}
+\setlength{\itemsep}{3pt}
+\setlength{\parskip}{0pt}
+\item Fluctuating commercial costs
+\item Established leisure market competitors
+\item Evolving autonomous drone regulations
+\end{enumerate}
+\tcblower
+\textbf{Product} \vspace{-1em}
+\begin{enumerate}
+\setlength{\itemsep}{3pt}
+\setlength{\parskip}{0pt}
+\item High physical maintenance costs
+\item Network interference in arenas
+\item VR laser tag substitution
+\end{enumerate}
+\end{tcolorbox}
+\end{tcbraster}
+\end{minipage}
+\caption{SWOT analysis}
+\label{fig:swot_analysis}
+\end{figure}
+
+The analysis shows that our core technical strengths, specifically the modular airframe and simulation-trained software, constitute distinctive competencies that deliver high value. While the simulation-to-real domain gap remains a structural weakness, it can be mitigated through empirical refinement. Externally, the high initial capital requirement is a typical financial symptom that can be offset by long-term franchising and licensing opportunities. However, commercial viability remains sensitive to external threats, particularly evolving autonomous drone regulations and technological substitutions such as virtual reality (VR) laser tag.
 
 \newpage
 
@@ -2897,4 +3010,5 @@ The system should not be considered fully sustainable. Issues such as waste and 
 \fancyhead[C]{Group}
 \printbibliography{biblio}
 
+\includepdf[pages=-]{GroupC-Supporting-Statement.pdf}
 \end{document}
