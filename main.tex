@@ -2808,13 +2808,14 @@ To translate customer requirements into measurable engineering specifications, a
 \subsection{SWOT Analysis}
 We conducted a \gls{swot} analysis in order to evaluate the internal capabilities of the project against its external commercial environment. Internal factors assess our product design, deployment processes, and \gls{ip}, while external factors isolate market conditions, regulatory frameworks, and competitive pressures. This strategic planning framework establishes a baseline to exploit our distinctive competencies and address structural weaknesses.
 
-\begin{center}
+\begin{figure}[htbp]
+\centering
 \begin{minipage}{\textwidth}
-\begin{tcbraster}[raster columns=2, boxrule=0mm, arc=0mm]
+\begin{tcbraster}[raster columns=2, raster row skip=1mm, boxrule=0mm, arc=0mm]
 \begin{tcolorbox}[equal height group=A, size=fbox, colback=swotS!60, colframe=swotS!80!black, title=\textsc{strengths}]
 \textbf{Business} \vspace{-1em}
 \begin{enumerate}
-\setlength{\itemsep}{1pt}
+\setlength{\itemsep}{3pt}
 \setlength{\parskip}{0pt}
 \item High-value interactive experience
 \item Financially viable business model
@@ -2823,7 +2824,7 @@ We conducted a \gls{swot} analysis in order to evaluate the internal capabilitie
 \tcblower
 \textbf{Product} \vspace{-1em}
 \begin{enumerate}
-\setlength{\itemsep}{1pt}
+\setlength{\itemsep}{3pt}
 \setlength{\parskip}{0pt}
 \item Modular 3D-printed airframe
 \item Synthetic data vision training
@@ -2833,7 +2834,7 @@ We conducted a \gls{swot} analysis in order to evaluate the internal capabilitie
 \begin{tcolorbox}[equal height group=A, size=fbox, colback=swotW!60, colframe=swotW!80!black, title=\textsc{weaknesses}]
 \textbf{Business} \vspace{-1em}
 \begin{enumerate}
-\setlength{\itemsep}{1pt}
+\setlength{\itemsep}{3pt}
 \setlength{\parskip}{0pt}
 \item High initial capital requirement
 \item Unverified user adoption rates
@@ -2842,7 +2843,7 @@ We conducted a \gls{swot} analysis in order to evaluate the internal capabilitie
 \tcblower
 \textbf{Product} \vspace{-1em}
 \begin{enumerate}
-\setlength{\itemsep}{1pt}
+\setlength{\itemsep}{3pt}
 \setlength{\parskip}{0pt}
 \item Sim-to-real domain gap
 \item Unvalidated physical hardware durability
@@ -2852,7 +2853,7 @@ We conducted a \gls{swot} analysis in order to evaluate the internal capabilitie
 \begin{tcolorbox}[equal height group=B, size=fbox, colback=swotO!60, colframe=swotO!80!black, title=\textsc{opportunities}]
 \textbf{Business} \vspace{-1em}
 \begin{enumerate}
-\setlength{\itemsep}{1pt}
+\setlength{\itemsep}{3pt}
 \setlength{\parskip}{0pt}
 \item Expansion into competitive esports
 \item Hardware and arena franchising
@@ -2861,7 +2862,7 @@ We conducted a \gls{swot} analysis in order to evaluate the internal capabilitie
 \tcblower
 \textbf{Product} \vspace{-1em}
 \begin{enumerate}
-\setlength{\itemsep}{1pt}
+\setlength{\itemsep}{3pt}
 \setlength{\parskip}{0pt}
 \item RL policy refinement
 \item Battery upgrades
@@ -2871,7 +2872,7 @@ We conducted a \gls{swot} analysis in order to evaluate the internal capabilitie
 \begin{tcolorbox}[equal height group=B, size=fbox, colback=swotT!60, colframe=swotT!80!black, title=\textsc{threats}]
 \textbf{Business} \vspace{-1em}
 \begin{enumerate}
-\setlength{\itemsep}{1pt}
+\setlength{\itemsep}{3pt}
 \setlength{\parskip}{0pt}
 \item Fluctuating commercial costs
 \item Established leisure market competitors
@@ -2880,7 +2881,7 @@ We conducted a \gls{swot} analysis in order to evaluate the internal capabilitie
 \tcblower
 \textbf{Product} \vspace{-1em}
 \begin{enumerate}
-\setlength{\itemsep}{1pt}
+\setlength{\itemsep}{3pt}
 \setlength{\parskip}{0pt}
 \item High physical maintenance costs
 \item Network interference in arenas
@@ -2889,7 +2890,9 @@ We conducted a \gls{swot} analysis in order to evaluate the internal capabilitie
 \end{tcolorbox}
 \end{tcbraster}
 \end{minipage}
-\end{center}
+\caption{SWOT analysis}
+\label{fig:swot_analysis}
+\end{figure}
 
 The analysis shows that our core technical strengths, specifically the modular airframe and simulation-trained software, constitute distinctive competencies that deliver high value. While the simulation-to-real domain gap remains a structural weakness, it can be mitigated through empirical refinement. Externally, the high initial capital requirement is a typical financial symptom that can be offset by long-term franchising and licensing opportunities. However, commercial viability remains sensitive to external threats, particularly evolving autonomous drone regulations and technological substitutions such as virtual reality (VR) laser tag.
 
