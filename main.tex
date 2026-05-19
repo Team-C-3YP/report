@@ -9,6 +9,7 @@
 \usepackage{fontspec}
 \usepackage{amsmath}
 \usepackage{dirtytalk}
+\usepackage{multicol}
 \usepackage{caption}
 \captionsetup[table]{labelfont=bf, textfont=it}
 \captionsetup[figure]{labelfont=bf, textfont=it}
@@ -131,7 +132,7 @@ In \say{Wave Mode}, the players \say{fight} a number of drones, released in an o
 In \say{Objective Mode}, the players must navigate the maze to complete objectives, such as \say{Hold this button for 5 seconds}, or \say{Shoot this target on the wall}, which are communicated via speakers. They must complete all objectives within a time limit to \say{pass} the level. The other mechanics of the game are the same as in \say{Wave Mode}, other than that the drones return after a short timeout when hit. If they complete all objectives, they win. If they win, they will progress to a harder level. Just as in \say{Wave Mode}, the levels will be designed and play-tested to be both challenging and engaging; a catalogue of levels marked with a numerical difficulty can be selected in-app.\newline
 
 \subsection{Difficulty Scaling}
-Since the levels increase in difficulty, there is little need to scale difficulty according to a players' skill: if the players are inexperienced, they will only play easy levels, and there will be levels to suit players of all skill levels. However, the difficulty of the level needs to change according to the number of players in a team. This can be achieved in a number of ways. For example, the number of drones could be adjusted, the top speed of the drones could be capped, or artificial inaccuracy could be added to their shooting.\newline
+Since the levels increase in difficulty, there is little need to scale difficulty according to a players' skill: if the players are inexperienced, they will only play easy levels, and there will be levels to suit players of all skill levels. However, the difficulty of the level needs to change according to the number of players in a team. This can be achieved in a number of ways. For example, the number of drones could be adjusted, their top speed could be capped, or artificial inaccuracy could be added to their shooting.\newline
 
 \noindent It is very difficult to know which methods of adjusting difficulty will result in a game that is both enjoyable and balanced for a range of numbers of people. Hence, deciding exactly how to perform this adjustment will require play-testing, once the arena has been built.
 \newpage
@@ -1304,6 +1305,7 @@ The objective of the High Level Control Protocol is to define algorithms that ta
 
 \subsection{Drone Modes}
 A set of drone \say{modes} or \say{states}, describing the drone's high-level behaviour, has been defined. They are:
+\begin{multicols}{2}
 \begin{itemize}
     \item Dormant Mode
     \item Search Mode
@@ -1312,7 +1314,8 @@ A set of drone \say{modes} or \say{states}, describing the drone's high-level be
     \item Shoot Mode
     \item Collision Avoidance Mode
 \end{itemize}
-An overview of the purpose of each state is given below.
+\end{multicols}
+\noindent An overview of the purpose of each state is given below.
 
 \subsubsection{Dormant Mode}
 This is the default mode of the drones, designed for waiting between rounds or games on standby, when not actively involved in the game. This mode is triggered by the end of a round, or by the powering on of the drone.
@@ -1320,7 +1323,7 @@ This is the default mode of the drones, designed for waiting between rounds or g
 This is the initial mode of a drone upon entering a game. In this mode, the drone is exploring an area of the map decided by the central server, looking for a target. The flow diagram describing the conditions under which the drone will change out of Search Mode is shown below, in Fig.~\ref{fig:FlowSearch}.
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\linewidth]{figs/High-Level/SearchMode.png}
+    \includegraphics[width=0.5\linewidth]{figs/High-Level/SearchMode19.png}
     \caption{Flow Chart Describing Mode Changes, centred on Search Mode}
     \label{fig:FlowSearch}
 \end{figure}
@@ -1328,7 +1331,7 @@ This is the initial mode of a drone upon entering a game. In this mode, the dron
 The drone enters this mode when it has seen a human player who is not within shooting range. The drone's objective is to get close enough to the player to shoot them. The flow diagram describing the conditions under which the drone will change out of Track Mode is shown below, in Fig. \ref{fig:FlowTrack}.
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\linewidth]{figs/High-Level/TrackMode.png}
+    \includegraphics[width=0.5\linewidth]{figs/High-Level/TrackMode19.png}
     \caption{Flow Chart Describing Mode Changes, centred on Track Mode}
     \label{fig:FlowTrack}
 \end{figure}
@@ -1336,7 +1339,7 @@ The drone enters this mode when it has seen a human player who is not within sho
 This is the mode the drone is in when it has identified a player within its shooting range. In this mode, the drone will try to shoot the player. The flow diagram describing the conditions under which the drone will change out of Shoot Mode is shown below, in Fig. \ref{fig:FlowShoot}.
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\linewidth]{figs/High-Level/ShootMode.png}
+    \includegraphics[width=0.5\linewidth]{figs/High-Level/ShootMode19.png}
     \caption{Flow Chart Describing Mode Changes, centred on Shoot Mode}
     \label{fig:FlowShoot}
 \end{figure}
@@ -3019,7 +3022,7 @@ The analysis shows that our core technical strengths, specifically the modular a
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1\linewidth]{figs/High-Level/FlowChart0.png}
+    \includegraphics[width=1\linewidth]{figs/High-Level/StateFlow2.png}
     \caption{Flow Chart Describing High-Level Mode Changes}
     \label{fig:FlowBig}
 \end{figure}
