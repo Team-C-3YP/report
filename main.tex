@@ -82,6 +82,7 @@
 \newacronym{pdb}{PDB}{Power Distribution Board}
 \newacronym{swot}{SWOT}{Strengths, Weaknesses, Opportunities, and Threats}
 \newacronym{ip}{IP}{Intellectual Property}
+\newacronym{cad}{CAD}{Computer-Aided Design}
 \printglossaries
 \newpage
 
@@ -247,7 +248,7 @@ As the drone is intended to operate indoors in relative proximity to players dur
 
 \subsubsection{Simulation Scope and General Design Assumptions}
 
-The project was carried out mainly through simulation; the hardware design was developed as a realistic engineering model rather than as a fully built and tested prototype. This means that the design was based on CAD modelling, component data sheets, and estimated performance values through online data and programme testing. The simulation provided a means of presenting how the drone would be integrated into the wider system consistently. As a result, some real-world effects, such as full electronics integration, dynamic flight behaviour, and measured sensor performance, were simplified or left for future work.
+The project was carried out mainly through simulation; the hardware design was developed as a realistic engineering model rather than as a fully built and tested prototype. This means that the design was based on \gls{cad} modelling, component data sheets, and estimated performance values through online data and programme testing. The simulation provided a means of presenting how the drone would be integrated into the wider system consistently. As a result, some real-world effects, such as full electronics integration, dynamic flight behaviour, and measured sensor performance, were simplified or left for future work.
 
 \subsubsection{Summarised Table for Design Criteria}
 
@@ -786,7 +787,7 @@ After investigating and selecting the main electronics, the mechanical design ai
 
 \subsubsection{Early Design Concepts}
 
-The early concepts tested out basic airframe layouts. The first concept followed a compact quadrotor arrangement (shown in Fig.~\ref{fig:Model1}), taking inspiration from commercial drones - featuring a central body, four rotor positions, and a space for a centrally mounted turret system. This gave a simple starting point, but as more electronic components were introduced into the CAD assembly, internal packaging became the main issue.
+The early concepts tested out basic airframe layouts. The first concept followed a compact quadrotor arrangement (shown in Fig.~\ref{fig:Model1}), taking inspiration from commercial drones - featuring a central body, four rotor positions, and a space for a centrally mounted turret system. This gave a simple starting point, but as more electronic components were introduced into the \gls{cad} assembly, internal packaging became the main issue.
 
 \begin{figure}[htbp]
     \centering
@@ -811,7 +812,7 @@ This led to a complete change in direction for the final design (shown in Fig.~\
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.6\textwidth]{Hardware/Final Model (un assembled).png}
-    \caption{Final Un-assembled Drone CAD}
+    \caption{Final Un-assembled Drone \gls{cad}}
     \label{fig:ModelFinal}
 \end{figure}
 
@@ -836,7 +837,7 @@ All three body sections are held together using \textbf{bolt fasteners}. This ma
 
 There also includes a central opening that passes through the bottom hull and electronics basket for the gimbal/turret assembly. The electronics basket includes a dedicated gimbal/turret mounting feature, where the servo connecting the basket and the gimbal/turret may be installed.
 
-The values in Table~\ref{tab:main_body_mass_estimate} were estimated from the Fusion 360 CAD model using assigned ABS material properties. Given Fusion 360 gives a solid CAD mass, this is not expected to represent the final manufactured mass as parts would be 3D printed with partial infill. The infill assumptions provide a more realistic approximation of the printed body mass - which reduces the main body assembly from 2532.6g to approximately 625.1g. Note that this value does not account for wall thickness, slicing setting and print orientation.
+The values in Table~\ref{tab:main_body_mass_estimate} were estimated from the Fusion 360 \gls{cad} model using assigned ABS material properties. Given Fusion 360 gives a solid \gls{cad} mass, this is not expected to represent the final manufactured mass as parts would be 3D printed with partial infill. The infill assumptions provide a more realistic approximation of the printed body mass - which reduces the main body assembly from 2532.6g to approximately 625.1g. Note that this value does not account for wall thickness, slicing setting and print orientation.
 
 \begin{table}[htbp]
 \centering
@@ -844,7 +845,7 @@ The values in Table~\ref{tab:main_body_mass_estimate} were estimated from the Fu
 \label{tab:main_body_mass_estimate}
 \begin{tabular}{|c|c|c|c|}
 \hline
-\textbf{Component} & \textbf{Solid CAD Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
+\textbf{Component} & \textbf{Solid \gls{cad} Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
 \hline
 Top hull & 764.457 g & 20\% & 152.9 g \\
 Bottom hull + landing gear & 1163.830 g & 25\% & 291.0 g \\
@@ -857,7 +858,7 @@ Electronics basket & 604.322 g & 30\% & 181.3 g \\
 
 \begin{table}[htbp]
 \centering
-\caption{Maximum CAD dimensions of the main body components}
+\caption{Maximum \gls{cad} dimensions of the main body components}
 \label{tab:main_body_dimensions}
 \begin{tabular}{|c|c|c|c|}
 \hline
@@ -870,7 +871,7 @@ Bottom hull + landing gear & 234.00 & 418.65 & 144.90 \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:main_body_dimensions} shows the max CAD dimensions of the main body components, all of which is shown to be within 600mm in size as required.
+Table~\ref{tab:main_body_dimensions} shows the max \gls{cad} dimensions of the main body components, all of which is shown to be within 600mm in size as required.
 
 \subsubsection{Rotor Arm and Motor Mount Design}
 
@@ -889,7 +890,7 @@ The \textbf{blade guards} surround the propeller area and acts as a protective s
 
 The \textbf{linkage parts} connect the rotor arms to the electronics basket. These small parts allow the arms to be assembled separately from the main body and are secured using bolt fasteners. This type of assembly allows damaged arm or linkage to be replaced without rebuilding the full drone body. As these parts transfer load between arms and body, they are treated as vital structural components and will use higher infill compared to the rest of the body.
 
-The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fusion 360 CAD model using the properties assigned of ABS material. Just like the main body, the Fusion 360 reports the solid-body CAD mass, therefore we estimate the real manufactured mass using base infill assumptions. Note that this estimate does not account for wall thickness, slicing settings, print orientation, or bolt fastener mass.
+The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fusion 360 \gls{cad} model using the properties assigned of ABS material. Just like the main body, the Fusion 360 reports the solid-body \gls{cad} mass, therefore we estimate the real manufactured mass using base infill assumptions. Note that this estimate does not account for wall thickness, slicing settings, print orientation, or bolt fastener mass.
 
 \begin{table}[htbp]
 \centering
@@ -898,7 +899,7 @@ The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fu
 \renewcommand{\arraystretch}{1.15}
 \begin{tabular}{|c|c|c|c|}
 \toprule
-\textbf{Component} & \textbf{Solid CAD Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
+\textbf{Component} & \textbf{Solid \gls{cad} Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
 \hline
 Rear blade guard & 91.2 g & 35\% & 31.9 g \\
 Front blade guard & 86.3 g & 35\% & 30.2 g \\
@@ -953,7 +954,7 @@ Together, the yaw servo, pitch motor, and roll motor allow the turret to achieve
 \renewcommand{\arraystretch}{1.15}
 \begin{tabular}{|c|c|c|c|}
 \hline
-\textbf{Component} & \textbf{Solid CAD Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
+\textbf{Component} & \textbf{Solid \gls{cad} Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
 \hline
 Gimbal installation plate & 21.58 g & 50\% & 10.8 g \\
 Square axial component & 12.23 g & 70\% & 8.6 g \\
@@ -1011,11 +1012,11 @@ The drone parts are designed with reference to the chosen internal electronics. 
 
 \subsection{Preliminary Engineering Evaluation}
 
-\paragraph{Context} A preliminary design evaluation was conducted to assess how realistic the final hardware design was. Since the drone was developed through CAD modelling and component research, the evaluation focuses on whether the proposed airframe is practical and suitable for manufacture. The main areas considered here are structural behaviour and feasibility of modular assembly. Electronic components and power choices were already assessed through calculations in the section ~\ref{sec:electronics_design} - such as the propulsion feasibility check in section ~\ref{sec:propulsion_system}, battery endurance in section ~\ref{sec:power_system} and other certain power-distribution analysis. 
+\paragraph{Context} A preliminary design evaluation was conducted to assess how realistic the final hardware design was. Since the drone was developed through \gls{cad} modelling and component research, the evaluation focuses on whether the proposed airframe is practical and suitable for manufacture. The main areas considered here are structural behaviour and feasibility of modular assembly. Electronic components and power choices were already assessed through calculations in the section ~\ref{sec:electronics_design} - such as the propulsion feasibility check in section ~\ref{sec:propulsion_system}, battery endurance in section ~\ref{sec:power_system} and other certain power-distribution analysis. 
 
 \subsubsection{Structural Assessment of Critical Components}
 
-The structural assessment focused on two components most exposed to loading and collision impact: the motor-body joints and the blade guards. As the project did not develop a physical prototype, the evaluation was carried out using CAD-based structural simulations rather than physical testing. 
+The structural assessment focused on two components most exposed to loading and collision impact: the motor-body joints and the blade guards. As the project did not develop a physical prototype, the evaluation was carried out using \gls{cad}-based structural simulations rather than physical testing. 
 
 
 \begin{figure}[htbp]
@@ -1030,7 +1031,7 @@ The first simulation assessed the joint between the rotor arm and the electronic
 
 The simulation showed that the highest stress occurred near the handle area of the electronic basket, which was expected because this is where the rotor-arm load is transferred into the central structure. Most of the rotor arm remained in the lower-stress blue/green region - which suggests that the rotor arm geometry was not the limiting factor. The minimum safety factor was approximately 2.23, as shown in Fig. ~\ref{fig:Rotor Arm Sim}, meaning the component remained above the failure threshold for the load case.
 
-This result showed that the structure was reasonable. However, this should still be treated as a preliminary CAD-based result, noting the fact it does not account for vibration, fatigue, manufacturing defects and loose bolts.
+This result showed that the structure was reasonable. However, this should still be treated as a preliminary \gls{cad}-based result, noting the fact it does not account for vibration, fatigue, manufacturing defects and loose bolts.
 
 \begin{figure}[htbp]
     \centering
@@ -1049,13 +1050,13 @@ The assessment was limited to a static simulation, A dynamic impact simulation w
 
 \subsubsection{Feasibility of the Final Design}
 
-The final drone design can be considered feasible in the perspective of a CAD/simulation led concept. The selected electronics are consistent with the design requirements. The airframe provides a dedicated area for internal components and wiring while ensuring the body remains modular, detachable and easy to manufacture and assemble.
+The final drone design can be considered feasible in the perspective of a \gls{cad}/simulation led concept. The selected electronics are consistent with the design requirements. The airframe provides a dedicated area for internal components and wiring while ensuring the body remains modular, detachable and easy to manufacture and assemble.
 
 The final design of the drone hardware is acceptable within the scope of the project. However, the design is not recommended to serve as a final validated prototype as many of the main areas still require proper validation with real-world testing. The main limitations are the lack of physical testing which is vital if we wish to commercialise the product through physical implementation.
 
 \subsubsection{Simulation Representation of Drone Hardware}
 
-The final CAD model was simplified for use in Unity. Given the full Fusion 360 assembly contained many unnecessary mechanical detail for real-time simulation, a low-poly version was created in Blender and imported into Unity as a game asset. The simplified model preserved the main visible features such as the drone body and propellers, while small details such as bolt holes and linkages were removed. These were deemed unnecessary as Unity's built-in collision mechanisms and physics engine mainly uses approximated cuboid or spherical boundaries defined by the developer, and developing a custom solid-boundary model would require additional setup time without adding much value. (A model of the simplified drone is shown in Fig.~\ref{fig:BlenderDrone})
+The final \gls{cad} model was simplified for use in Unity. Given the full Fusion 360 assembly contained many unnecessary mechanical detail for real-time simulation, a low-poly version was created in Blender and imported into Unity as a game asset. The simplified model preserved the main visible features such as the drone body and propellers, while small details such as bolt holes and linkages were removed. These were deemed unnecessary as Unity's built-in collision mechanisms and physics engine mainly uses approximated cuboid or spherical boundaries defined by the developer, and developing a custom solid-boundary model would require additional setup time without adding much value. (A model of the simplified drone is shown in Fig.~\ref{fig:BlenderDrone})
 
 \begin{figure}[htbp]
     \centering
