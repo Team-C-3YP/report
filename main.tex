@@ -1432,7 +1432,7 @@ We began with a baseline calibration and translated the target linearly from 5m 
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\linewidth]{figs/LinearTranslation_Plot.pdf}
+    \includegraphics[width=0.4\linewidth]{figs/LinearTranslation_Plot.pdf}
     \caption{Comparison of monocular and stereo depth estimation against physical ground truth during linear translation from 5m to 15m}
     \label{fig:linear_translation}
 \end{figure}
@@ -1449,7 +1449,7 @@ As the target turns, its 2D profile narrows and the monocular algorithm, which i
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\linewidth]{figs/YawRotation_Plot.pdf}
+    \includegraphics[width=0.7\linewidth]{figs/YawRotation_Plot.png}
     \caption{Comparison of depth estimation models during target yaw rotation from $0^\circ$ to $90^\circ$ at a nominal 5.0 m depth.}
     \label{fig:yaw_rotation}
 \end{figure}
@@ -1462,7 +1462,7 @@ This scenario highlights the advantage of the stereo system with the stereo esti
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\linewidth]{figs/CrouchDeformation_Plot.pdf}
+    \includegraphics[width=0.7\linewidth]{figs/CrouchDeformation_Plot.png}
     \caption{Comparison of depth estimation models during crouching at a constant physical depth}
     \label{fig:crouch_deformation}
 \end{figure}
@@ -1479,7 +1479,7 @@ The hardware of this system is comprised of a camera array consisting of three c
     \begin{subfigure}[b]{\textwidth}
         \centering
         \includegraphics[width=0.6\textwidth]{figs/sensor_pipeline.pdf}
-        \caption{Sensor fusion architecture}
+        \caption{}
         \label{fig:pipeline_diagram}
     \end{subfigure}
 
@@ -1488,18 +1488,18 @@ The hardware of this system is comprised of a camera array consisting of three c
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=0.7\textwidth]{figs/1_RGB.png}
-        \caption{Monocular RGB stream with ground truth bounding box}
+        \caption{}
         \label{fig:rgb_data}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=0.7\textwidth]{figs/2_DepthMap.png}
-        \caption{Synchronised depth map with projected bounding box}
+        \caption{}
         \label{fig:depth_data}
     \end{subfigure}
     
-    \caption{The data flow in (\subref{fig:pipeline_diagram}) alongside the corresponding RGB bounding box (\subref{fig:rgb_data}) and spatial depth mapping (\subref{fig:depth_data}).}
+    \caption{Perception system overview showing: (\subref{fig:pipeline_diagram}) the sensor fusion architecture data flow, (\subref{fig:rgb_data}) the monocular RGB stream with a ground truth bounding box, and (\subref{fig:depth_data}) the synchronised depth map with a projected bounding box.}
     \label{fig:perception_system_overview}
 \end{figure}
 
@@ -1834,8 +1834,8 @@ P_c = \begin{bmatrix} x_c \\ y_c \\ z_c \end{bmatrix} = \begin{bmatrix} \frac{x_
      \label{fig:camera_geometry}
 \end{figure}
 
-\textbf{In order to interface with Tommy's path following algorithm as well as Ritchie's high level controller, the vector $P_c$ in the camera's local coordinate frame must be converted into the global world frame $P_w$.
-}
+In order to interface with the high-level logic (Section \ref{high level control}) as well as the navigation and flight control architecture (Section \ref{navigation}), the vector $P_c$ in the camera's local coordinate frame must be converted into the global world frame $P_w$.
+
 This transformation is achieved using a series of rotation matrices which are defined for Pitch ($\theta$), Yaw($\psi$) and Roll ($\phi$):
 \begin{equation}
     \resizebox{0.85\textwidth}{!}{%
@@ -1984,6 +1984,7 @@ This section presented a three-stage visual perception pipeline designed to prov
 
 \newpage
 \section{Navigation and Flight Control Architecture}
+\label{navigation}
 
 In this section we detail the navigation and flight control algorithms of each operational mode (detailed in Section \ref{high level control}). Each mode utilises a flight control algorithm that outputs body thrust and moments which are converted to motor commands using the actuator allocation matrix detailed at the end of this section.
 
