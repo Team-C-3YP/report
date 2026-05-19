@@ -1416,13 +1416,13 @@ To compare the performance of monocular and stereo depth estimation under geomet
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\linewidth]{figs/DepthEstimationTests.pdf}
+    \includegraphics[width=0.5\linewidth]{figs/DepthEstimationTests.png}
     \caption{Overview of the experimental setup comparing monocular and stereo depth estimation under geometric transformations.}
     \label{fig:depth_estimation_test}
 \end{figure}
 
 
-\textbf{(1) Linear Movement}
+\textbf{(i) Linear Movement}
 
 We began with a baseline calibration and translated the target linearly from 5m to 15m along the Z-axis. Within this scenario, the target's physical dimensions and orientation remained fixed. As demonstrated in Fig. \ref{fig:linear_translation}, both the monocular camera system and stereo camera system accurately map the physical ground truth. This establishes that both approaches are viable for tracking rigid bodies under ideal conditions.
 
@@ -1435,7 +1435,7 @@ We began with a baseline calibration and translated the target linearly from 5m 
 
 \newpage
 
-\textbf{(2) Changes in Target Orientation}
+\textbf{(ii) Changes in Target Orientation}
 
 In a practical laser tag environment, players are unlikely to follow linear trajectories. To evaluate how the depth tracking systems handle changes in orientation, we simulate a player turning sideways by rotating the target from $0^\circ$ to $90^\circ$ on its yaw axis. As the target rotates around its 5.1m centroid, the physical ground truth, which is represented by the closest physical surface, shifts from 5.0m down to 4.85m. 
 
@@ -1450,7 +1450,7 @@ As the target turns, its 2D profile narrows and the monocular algorithm, which i
     \label{fig:yaw_rotation}
 \end{figure}
 
-\textbf{(3) Changes in Target Posture}
+\textbf{(iii) Changes in Target Posture}
 
 We also evaluated the systems against a reduction in the target's vertical height, to simulate the motion of crouching. Similar to the changes in the target's orientation, the monocular algorithm misinterprets the shrinking of the target as an increase in depth, leading to the depth overestimation seen in Fig. \ref{fig:crouch_deformation}. 
 
@@ -1691,14 +1691,14 @@ To ensure the resulting bounding boxes only encompass visually exposed regions, 
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/RaycastSceneView.png}
-        \caption{3D Scene Environment}
+        \caption{}
         \label{fig:raycast_scene}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figs/RaycastGameView.png}
-        \caption{2D Simulated Camera Output}
+        \caption{}
         \label{fig:raycast_game}
     \end{subfigure}
     \caption{Visualisation of the automated annotation and occlusion logic. Left (a): The 3D spatial environment demonstrating the raycasts, where red lines indicate vertices blocked by physical cover. Right (b): The corresponding 2D rendered frame, demonstrating bounding boxes that encapsulate only the unoccluded geometry.}
@@ -2776,17 +2776,19 @@ The system should not be considered fully sustainable. Issues such as waste and 
 \newpage
 %%%%%%%%%%%%%%%----------End of Sustainability--------------%%%%%%%%%%%%%%%
 \section{Technology Strategy}
-
 \fancyhead[C]{Rishabh Luthra}
 
 \subsection{House of Quality}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figs/House of Quality.png}
+    \caption{House of Quality}
+    \label{fig:hoq}
+\end{figure}
 
-
-\subsection{SWOT Analysis}
-
+To translate customer requirements into measurable engineering specifications, a House of Quality matrix was developed. This methodology maps core user desires directly onto system capabilities to prioritise technical development. To ground these targets in reality, the matrix benchmarks the proposed design against two distinct alternatives. Traditional indoor laser tag serves as the commercial competing product, establishing baseline expectations for user experience and affordability. Conversely, the DJI Mini 5 Pro\cite{dji2026mini5pro, dji2026transmission, parkcameras2026mini5pro} acts as the technical competing product, defining the state-of-the-art standards required for drone mass, flight endurance, and processing capabilities.
 
 \newpage
-
 
 
 % Appendix
