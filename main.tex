@@ -221,7 +221,7 @@ We plan to use industrial safety nets to separate the players from the drones as
 
 The project decision was to develop a custom drone hardware design in preference to using an existing commercial platform. This was motivated by the need to co-design the airframe, electronics, sensing equipment, and game-specific payload around the requirements of an indoor multiagent laser tag system. Various options may offer good flight performance and easy maintenance, but are generally optimised for less intense activities and outdoor environments, and therefore provide limited flexibility for integrating custom sensing, laser tag hardware, and protective structures. 
 
-In addition, commercial drones tend to be quite closed off in terms of hardware and software access - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed for more freedom to choose components, organise the internal layout, and include additional features necessary to the game-play.
+In addition, commercial drones tend to be quite closed off in terms of hardware and software access - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed for more freedom to choose components, organise the internal layout, and include additional features necessary to the gameplay.
 
 \subsection{Design Objectives and Constraints}
 \subsubsection{Operational Requirements}
@@ -1369,7 +1369,7 @@ The flow charts shown in Fig. \ref{fig:FlowSearch}, \ref{fig:FlowTrack} and \ref
 \label{visual_perception}
 \subsection{Context}
 
-The fundamental objective of the autonomous multiagent system is to actively compete against human players in a dynamic laser environment. To play the game effectively, the drones require a reliable way to identify and track opponents whilst navigating through the maze environment. While pathfinding algorithms can navigate the fixed geometry of a maze, human players represent highly dynamic variables. Therefore, a real-time perception system is required to continuously locate the targets, maintain visual lock, and output kinematic commands to the drone's flight controller and gimbal.
+The fundamental objective of the autonomous multiagent system is to compete actively against human players in a dynamic environment. To play the game effectively, the drones require a reliable way to identify and track opponents whilst navigating through the maze. While pathfinding algorithms can navigate the fixed geometry of a maze, human players represent highly dynamic variables. Therefore, a real-time perception system is required to locate the targets continuously, maintain visual lock, and output kinematic commands to the drone's flight controller and gimbal.
 
 This section details the design and implementation of this perception system. To achieve these operational requirements, the subsystem is engineered around three core objectives:
 \begin{itemize}
