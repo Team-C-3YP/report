@@ -48,7 +48,7 @@
 \addcontentsline{toc}{section}{Abstract}
 \fancyhead[C]{Group}
 \section*{Abstract}
-Laser tag is a popular and commercially successful game, played across the UK, but has not been significantly developed since its introduction in 1984, despite growing consumer demand for highly interactive leisure experiences. This report details the design and simulation of a novel laser tag game/system in which human players compete against a multi-agent autonomous drone system. The concept is centred on drones designed from scratch to their required specifications, reinforcement learning ADD GLOSSARY LINK DON'T LEAVE THIS IN THE FINAL REPORT to control the drones' movement, a high-level control policy designed to create an engaging and enjoyable player experience and a companion app to encourage user engagement. Sustainability, ethics and safety concerns are considered, and the technical performance of the project is demonstrated through simulation analysis. The commercial viability is demonstrated through financial modelling, yielding a business with \gls{npv} of around £69,000. This proves the potential of the concept to revolutionise the laser tag industry.
+Laser tag is a popular and commercially successful game, played across the UK, but has not been significantly developed since its introduction in 1984, despite growing consumer demand for highly interactive leisure experiences. This report details the design and simulation of a novel laser tag game/system in which human players compete against a multi-agent autonomous drone system. The concept is centred on drones designed from scratch to their required specifications, reinforcement learning ADD GLOSSARY LINK DON'T LEAVE THIS IN THE FINAL REPORT to control the drones' movement, a high-level control policy designed to create an engaging and enjoyable player experience and a companion app to encourage user engagement. Sustainability, ethics and safety concerns are considered, and the technical performance of the project is demonstrated through simulation analysis. The commercial viability is demonstrated through financial modelling, yielding a business with Net Present Value (\gls{npv}) of around £69,000. This proves the potential of the concept to revolutionise the laser tag industry.
 \newpage
 
 \fancyhead[C]{}
@@ -85,6 +85,7 @@ Laser tag is a popular and commercially successful game, played across the UK, b
 \newacronym{ip}{IP}{Intellectual Property}
 \newacronym{cad}{CAD}{Computer-Aided Design}
 \newacronym{bfs}{BFS}{Breadth First Search}
+\newacronym{pd}{PD}{Proportional-Derivative}
 \printglossaries
 \newpage
 
@@ -2012,7 +2013,7 @@ In this section we detail the motion planning and flight control algorithms of e
 
 \subsection{Search Mode} \label{search mode}% Tommy
 
-The search mode use a centralised off-board flight planner and an onboard flight controller. We opted for a centralised flight planner which is run on the server to efficiently coordinate all drones in search mode. This planner has two stages, region allocation and trajectory planning, detailed in the sections below. The planner recomputes whenever the number of drones in search mode changes to maintain full map coverage. The onboard flight controller uses our cascaded PD controller (detailed in Section~\ref{cascadedPDController}). The desired position is selected as the point located a fixed distance ahead of the drone's current projected position along the trajectory path, while the desired heading direction is defined towards this target position. While traversing the planned trajectory, the camera-gimbal system will rotate, looking for players.
+The search mode use a centralised off-board flight planner and an onboard flight controller. We opted for a centralised flight planner which is run on the server to efficiently coordinate all drones in search mode. This planner has two stages, region allocation and trajectory planning, detailed in the sections below. The planner recomputes whenever the number of drones in search mode changes to maintain full map coverage. The onboard flight controller uses our cascaded \gls{pd} controller (detailed in Section~\ref{cascadedPDController}). The desired position is selected as the point located a fixed distance ahead of the drone's current projected position along the trajectory path, while the desired heading direction is defined towards this target position. While traversing the planned trajectory, the camera-gimbal system will rotate, looking for players.
 
 \subsubsection{Region Allocation}
 The region allocation process uses a simultaneous multi-agent \gls{bfs} algorithm that propagates from the current grid cell location of each drone. Each grid cell is assigned to the drone whose \gls{bfs} reaches it first. This creates a single closed region for each drone, avoiding possible collisions and multiple searches of the same area.
@@ -2035,7 +2036,7 @@ To address this limitation and improve performance across the entire map, we ado
 % Now that we have planned a trajectory for each drone, the drones need a method of following those trajectories. As we are searching for players, we want this trajectory to be slow and smooth to give the gimbal-camera system time to search the area. Since the behaviour needed is not complex, we opted to use basic PD controllers here to reduce the computational load. Since we would like to control the position of the drone using the propeller thrusts, we are unable to use a single PD controller to directly control position from the motor thrusts. Instead this is split into 3 stages: position PD controller, attitude PD controller, and mixing matrix. The position PD controller uses the position error and velocity as inputs and outputs an acceleration vector. This acceleration vector is then combined with the inverse of the drone weight vector to produce a desired thrust vector, and from this desired thrust vector along with the heading direction we compute a desired orientation to point all propellers along the desired thrust direction. The orientation error between this desired orientation and the current orientation along with the angular velocities are used in the second PD controller to output angular accelerations which can be converted to moments using the drone moment of inertia. These moments as well as the desired thrust vector projected onto the current upward direction are used as the drone body thrust and moments. Finally the mixing matrix (detailed in Section \ref{mixing matrix}) is used to convert these body thrust and moments to individual rotor thrusts.
 
 \subsection{Track and Shoot Modes}
-The track and shoot modes both utilise the same flight control system to track the detected player. In both modes, the player tracking system (detailed in Section~\ref{visual_perception}) provides an estimate of the player position. The controller then commands the drone to maintain a position directly above the player using the cascaded PD controller described in Section~\ref{cascadedPDController}. 
+The track and shoot modes both utilise the same flight control system to track the detected player. In both modes, the player tracking system (detailed in Section~\ref{visual_perception}) provides an estimate of the player position. The controller then commands the drone to maintain a position directly above the player using the cascaded \gls{pd} controller described in Section~\ref{cascadedPDController}. 
 
 The desired position is defined as the player's estimated $x$-$y$ position with a fixed altitude of $4\,\mathrm{m}$, while the desired heading direction is chosen to face the player within the $x$-$y$ plane. When the horizontal separation between the drone and player falls below a small threshold, the previously defined heading vector is maintained to avoid instability caused by rapid heading changes at small relative distances.
 
@@ -2057,7 +2058,7 @@ The first stage of the motion planner computes a cell-based path from the curren
 The second stage of the motion planner converts this cell-based path to a 3D trajectory. In order to minimise the chance of collisions with the map and provide the drones with as much freedom of movement as possible, we decided to place the trajectory checkpoints in the centre of each grid square, and at a height halfway between the net and the ceiling. These checkpoints are then sent to the drone along with the command to change into movement mode.
 
 \subsubsection{Control Method}
-In the other modes, the flight controller uses our cascaded PD controller to track the trajectory due its low computational cost. However, in this mode, we prioritise reaching the target location as quickly as possible and therefore are willing to use a more computationally expensive approach. 
+In the other modes, the flight controller uses our cascaded \gls{pd} controller to track the trajectory due its low computational cost. However, in this mode, we prioritise reaching the target location as quickly as possible and therefore are willing to use a more computationally expensive approach. 
 
 This led us to consider more complex control methods such as Reinforcement Learning (RL) and Model Predictive Control (MPC). During our investigation of these methods, we identified a paper that uses MPC to train a RL policy online via supervised learning \cite{zhang_learning_2016}. Although we chose not to adopt the method proposed here, the motivation presented in the introduction provided valuable insight that guided us to choosing RL as our approach for this application. Zhang et al. discuss that MPC \say{is an effective and reliable method}, however, \say{applications of MPC can be computationally demanding}. They also mention that \say{the final neural
 network policy is computationally much less expensive than
@@ -2159,14 +2160,14 @@ Our collision avoidance system uses an artificial potential field to apply an ar
 \begin{equation}
     \mathbf{F}_{\mathrm{art}} = - \nabla U(\mathbf{p})
 \end{equation}
-The acceleration due to this artificial force, $\mathbf{a}_{\mathrm{art}}$ is tracked using a similar cascaded PD controller to that detailed in Section\ref{cascadedPDController}, but with the first PD controller adjusted to follow this artificial acceleration rather than track a position
+The acceleration due to this artificial force, $\mathbf{a}_{\mathrm{art}}$ is tracked using a similar cascaded \gls{pd} controller to that detailed in Section\ref{cascadedPDController}, but with the first \gls{pd} controller adjusted to follow this artificial acceleration rather than track a position
 \begin{equation}
     \mathbf{a}_{des} = \mathbf{K}_a \mathbf{a}_{\mathrm{art}} - \mathbf{K}_d v = - \mathbf{K}_U \nabla U(\mathbf{p}) - \mathbf{K}_d v
 \end{equation}
 This desired acceleration is then used in the same way as in Section \ref{cascadedPDController}, with the heading direction in the same direction as the artificial force, unless this force is below a threshold value, at which point the last defined heading direction is maintained.
 
-\subsection{Cascaded PD Controller} \label{cascadedPDController}
-This controller is used by multiple states as it is a computationally lightweight method for following position and heading direction commands. The controller is comprised of two PD controllers. The first produces a desired acceleration, $\mathbf{a}_{\mathrm{des}}$, for tracking a desired position, $\mathbf{p}_{\mathrm{des}}$, using the position, $\mathbf{p}$, and velocity, $\mathbf{v}$:
+\subsection{Cascaded \gls{pd} Controller} \label{cascadedPDController}
+This controller is used by multiple states as it is a computationally lightweight method for following position and heading direction commands. The controller is comprised of two \gls{pd} controllers. The first produces a desired acceleration, $\mathbf{a}_{\mathrm{des}}$, for tracking a desired position, $\mathbf{p}_{\mathrm{des}}$, using the position, $\mathbf{p}$, and velocity, $\mathbf{v}$:
 \begin{equation}
     \mathbf{a}_{\mathrm{des}} = \mathbf{K}_p (\mathbf{p}_{\mathrm{des}} - \mathbf{p}) - \mathbf{K}_v \mathbf{v}
 \end{equation}
@@ -2176,7 +2177,7 @@ This desired acceleration is then combined with the upwards acceleration due to 
         0 &0&g
     \end{bmatrix}^\top \right)
 \end{equation}
-This desired force and the desired heading direction, $\mathbf{h}_{\mathrm{des}}$, are used to define the desired Euler orientation, $\boldsymbol{\theta}_{des}$. The second PD controller then produces the desired moments, $\mathbf{M}_{\mathrm{des}}$, for tracking this desired orientation, using the Euler orientation, $\boldsymbol{\theta}$, and angular velocity, $\boldsymbol{\omega}$:
+This desired force and the desired heading direction, $\mathbf{h}_{\mathrm{des}}$, are used to define the desired Euler orientation, $\boldsymbol{\theta}_{des}$. The second \gls{pd} controller then produces the desired moments, $\mathbf{M}_{\mathrm{des}}$, for tracking this desired orientation, using the Euler orientation, $\boldsymbol{\theta}$, and angular velocity, $\boldsymbol{\omega}$:
 \begin{equation}
     \mathbf{M}_{\mathrm{des}} = \mathbf{K}_{\theta}(\boldsymbol{\theta}_{des} - \boldsymbol{\theta}) - \mathbf{K}_{\omega} \boldsymbol{\omega}
 \end{equation}
