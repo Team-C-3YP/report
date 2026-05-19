@@ -794,7 +794,7 @@ The early concepts tested out basic airframe layouts. The first concept followed
     \label{fig:Model1}
 \end{figure}
 
-The further concepts continued to investigate into symmetrical quadrotor layouts with increased body volume. One version (shown in Fig.~\ref{fig:Model 2}) even featured blade-guards, but made the drone noticeably larger, bulkier and less refined than the original concept. Scaling up the size solved some layout issues, but caused the platform to be less suitable for indoor game environment where the drone was required to be compact. In addition, earlier versions treated the airframe as one large connected body, which was not practical for assembly, manufacturing or repair. 
+Further concepts continued to investigate symmetrical quadrotor layouts with increased body volume. One version (shown in Fig.~\ref{fig:Model 2}) even featured blade-guards, but made the drone noticeably larger, bulkier and less refined than the original concept. Scaling up the size solved some layout issues, but caused the platform to be less suitable for indoor game environment where the drone was required to be compact. In addition, earlier versions treated the airframe as one large connected body, which was not practical for assembly, manufacturing or repair. 
 
 This led to a complete change in direction for the final design (shown in Fig.~\ref{fig:ModelFinal}): a modular mirrored layout, where the rotor arms are separate from the main body and secured using linkage parts and bolts. With a size of 580x420x260mm, the body, arms, linkages, and mounts are to be manufactured separately to ensure easy assembly. The key design areas are the central main body, rotor arms and motor mounts, and turret/gimbal assembly - at which we will go into detail in the following sections.
 
@@ -886,7 +886,7 @@ The \textbf{rotor arms} support the motor and positions them away from the centr
 
 The \textbf{blade guards} surround the propeller area and acts as a protective structure against minor collisions. The main purpose is to reduce the chance of propeller collisions and prevent immediately disabling the drone. They can be directly attached to the rotor arms. Further detail on the structural analysis of the blade guards will be within the section on \say{Preliminary Engineering Evaluation} % add reference to section?.
 
-The \textbf{linkage parts} connect the rotor arms to the electronics basket. These small parts allow the arms to be assembled separately from the main body and are secured using bolt fasteners. This type of assembly allows damaged arm or linkage to be replaced without rebuilding the full drone body. As these parts transfer load between arms and body, they are treated as vital structural components and will use higher infill then the rest of the body.
+The \textbf{linkage parts} connect the rotor arms to the electronics basket. These small parts allow the arms to be assembled separately from the main body and are secured using bolt fasteners. This type of assembly allows damaged arm or linkage to be replaced without rebuilding the full drone body. As these parts transfer load between arms and body, they are treated as vital structural components and will use higher infill compared to the rest of the body.
 
 The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fusion 360 CAD model using the properties assigned of ABS material. Just like the main body, the Fusion 360 reports the solid-body CAD mass, therefore we estimate the real manufactured mass using base infill assumptions. Note that this estimate does not account for wall thickness, slicing settings, print orientation, or bolt fastener mass.
 
@@ -915,7 +915,7 @@ Front lower linkage & 3.7 g & 80\% & 3.0 g \\
 
 \subsubsection{Turret/Gimbal Design}
 \label{Turret}
-The gimbal turret design (shown in Fig.~\ref{fig:Gimbal}) included requirements from the visual learning process, where the camera was required to roll, pitch, and yaw. The design took inspiration from traditional industrial two-axis gimbals, but an with an additional yaw axis which provided a 3-axis movement. The camera and IR emitter needed to remain aligned to ensure aiming and tagging were done in the same direction. The OAK D Lite camera was used as a reference to designing the dimensions of the gimbal. (Full gimbal assembly is shown in Fig.~\ref{fig:Gimbal2})
+The design of the gimbal turret (shown in Fig.~\ref{fig:Gimbal}) included requirements of the visual learning process, where the camera was required to roll, pitch and yaw. The design took inspiration from traditional industrial two-axis gimbals, but with an additional yaw axis that provided 3-axis movement. The camera and IR emitter needed to remain aligned to ensure aiming and tagging were performed in the same direction. The OAK D Lite camera was used as a reference in designing the dimensions of the gimbal. (The complete gimbal assembly is shown in Fig.~\ref{fig:Gimbal2})
 
 Mechanically, the gimbal is mounted through the central opening in the bottom hull and electronics basket. 
 
