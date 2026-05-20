@@ -244,36 +244,36 @@ We plan to use industrial safety nets to separate the players from the drones as
 
 The project decision was to develop a custom drone hardware design in preference to using an existing commercial platform. This was motivated by the need to co-design the airframe, electronics, sensing equipment, and game-specific payload around the requirements of an indoor multiagent laser tag system. Various options may offer good flight performance and easy maintenance, but are generally optimised for less intense activities and outdoor environments, and therefore provide limited flexibility for integrating custom sensing, laser tag hardware, and protective structures. 
 
-In addition, commercial drones tend to be quite closed off in terms of hardware and software access - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed for more freedom to choose components, organise the internal layout, and include additional features necessary to the gameplay.
+In addition, commercial drones often have restricted or limited software access and limited scope for hardware modification - modifications would require a complete investigation into the drone design before implementations, which would pose a challenge given the time-frame of the project. Designing our own platform allowed for more freedom to choose components, organise the internal layout, and include additional features necessary for gameplay.
 
 \subsection{Design Objectives and Constraints}
 \subsubsection{Operational Requirements}
 
-At core level, the drone design must be able to achieve basic drone operations for game-play - being able to function as a usable aerial game platform within an indoor environment:
+At core level, the drone design must be able to achieve basic drone operations for gameplay - being able to function as a drone within an indoor environment. Basic requirements include: 
 \begin{itemize}
     \item Sufficient thrust for stable flight
     \item Reliable movement for indoor environment
-    \item Have required electronics and payload onboard platform
-    \item Enough battery-life for meaningful game-play
+    \item Required electronics and payload onboard platform
+    \item Enough battery-life for meaningful gameplay
 \end{itemize}
 
 \subsubsection{Safety Constraints}
 
-As the drone is intended to operate indoors in relative proximity to players during game-play, safety became a top priority. It was vital to reduce risks associated with collisions, exposed components, poor landings, and potential failure during operation. This led to a number of safety related constraints that influenced the overall drone design and the way the game is played:
+As the drone is intended to operate indoors in relative proximity to players during gameplay, safety becomes a top priority. It is vital to reduce risks associated with collisions, exposed components, poor landings, and potential failure during operation. This led to a number of safety related constraints that influenced the overall drone design and the way the game is played:
 \begin{itemize}
     \item \textbf{Operation around players: } The drone is intended to operate in an indoor environment rather than large spacious areas. This drastically increases the proximity between players and drones which poses as an immediate safety concern.
-    \item \textbf{Close proximity to obstacles: } The environment itself introduces additional safety concerns. The drone would need to move around walls, corners, and other potential obstacles - which increases the risk of potential collisions during game-play.
+    \item \textbf{Close proximity to obstacles: } The environment itself introduces additional safety concerns. The drone would need to move around walls, corners, and other potential obstacles - which increases the risk of potential collisions during gameplay.
     \item \textbf{Protection for components: } One major safety constraint was reducing the risk of exposed components such as propellers and wires. The blade guards became an important part of the design, reducing both the chance of injury and risk of disabling the drone during minor collisions.
     \item \textbf{Stable recovery and landing: } It was vital for the drone to be able to return to its post (or battery recharging station) reliably, and land safely after being disabled or encounter an error. The landing structure had to be considered from a safety point of view - hence a stable geometry would help reduce the chance of drone damage.
 \end{itemize}
 
-\subsubsection{Game-play Requirements}
+\subsubsection{Gameplay Requirements}
 
  The drone needs to be a capable opponent - able to dodge, attack and wander throughout the arena - and able to support the systems needed for the overall project itself (which includes being cost-effective). This led to several requirements that influences the size, layout, performance, and maintainability of the final design.
 \begin{itemize}
-    \item \textbf{Indoor Movement: } Contrary to the safety requirement, the drone must also be a capable opponent rather than a still target. This means the design must be able to allow for navigation and some form of evasive movement. This poses as a tradeoff between game-play and safety.
-    \item \textbf{Visibility and challenge: } The drone had to be large and visible enough for players to clearly recognise the target during game-play, while still being agile enough to move around. A design too small would be difficult to engage while a design too large or too slow would reduce game-play quality.
-    \item \textbf{Supporting game systems and battery: } The drone needs to carry additional hardware required for game-play, such as \gls{ir} transmitters and receivers, cameras, sensors, and onboard computing. These systems add weight and take up internal space. In addition, the design needs to allow for enough operating time for meaningful game-play.
+    \item \textbf{Indoor Movement: } Contrary to the safety requirement, the drone must also be a capable opponent rather than a still target. This means the design must be able to allow for navigation and some form of evasive movement. This poses as a tradeoff between gameplay and safety.
+    \item \textbf{Visibility and challenge: } The drone had to be large and visible enough for players to clearly recognise the target during gameplay, while still being agile enough to move around. A design too small would be difficult to engage while a design too large or too slow would reduce gameplay quality.
+    \item \textbf{Supporting game systems and battery: } The drone needs to carry additional hardware required for gameplay, such as \gls{ir} transmitters and receivers, cameras, sensors, and onboard computing. These systems add weight and take up internal space. In addition, the design needs to allow for enough operating time for meaningful gameplay.
     \item \textbf{Easy maintenance and replace-ability: } Given the game is a multiagent system rather than a single platform, the design needs to remain practical to maintain, to repair, and to replace. Minor damage during operation should not require a whole drone to be rebuilt, so replaceable parts and a maintainable layout becomes an important constraint.
 \end{itemize}
 
@@ -295,7 +295,7 @@ In summary, the key design criteria are consolidated in Table~\ref{tab:starter_d
 \hline
 Operating environment & Indoor arena with close proximity to players, walls, and obstacles \\
 \hline
-Operational role & Stable and manoeuvrable aerial platform for indoor game-play \\
+Operational role & Stable and manoeuvrable aerial platform for indoor gameplay \\
 \hline
 Configuration & Compact quadrotor platform \\
 \hline
@@ -309,7 +309,7 @@ Target game duration & 45 min \\
 \hline
 Target drone endurance & 8-10 min before recharge \\
 \hline
-Visibility requirement & Large enough to be clearly visible for indoor game-play \\
+Visibility requirement & Large enough to be clearly visible for indoor gameplay \\
 \hline
 Internal space requirement & Sufficient internal volume for onboard electronics \\
 \hline
@@ -319,7 +319,7 @@ Maintainability requirement & Easy maintenance with cheap replaceable damaged pa
 \hline
 Structural requirement & Airframe must support normal flight loads and minor impact conditions \\
 \hline
-Game-play requirement & Agile enough to act as a believable and challenging in-game opponent \\
+Gameplay requirement & Agile enough to act as a believable and challenging in-game opponent \\
 \hline
 \end{tabular}
 \end{table}
@@ -330,7 +330,7 @@ Game-play requirement & Agile enough to act as a believable and challenging in-g
 \subsubsection{Propulsion System}
 \label{sec:propulsion_system}
 
-Since the drone was intended to operate in relatively confined spaces and act as an active game-play opponent, the propulsion system needed enough thrust for stable flight while allowing rapid responsive movement. A four-rotor configuration was selected as the most practical solution in avoiding the additional mechanical and control complexity that would come with more unusual multi-rotor arrangements.
+Since the drone was intended to operate in relatively confined spaces and act as an active gameplay opponent, the propulsion system needed enough thrust for stable flight while allowing rapid responsive movement. A four-rotor configuration was selected as the most practical solution in avoiding the additional mechanical and control complexity that would come with more unusual multi-rotor arrangements.
 
 \paragraph{Motor Selection}
 
@@ -688,13 +688,13 @@ The final power system is as shown in Fig.~\ref{fig:Power_Systems}, it is divide
 \label{sec:Onboard Computing and Communication}
 
 Before investigating deeper into the topic of onboard computing and communication, it is vital to define its role within the overall drone system.
-Each drone is required to have a local processing unit that handles their respective onboard tasks, such as sensor processing, low-to mid-level control, and execution of pre-trained control or perception models during game-play. This includes responding to sensor inputs, player tracking, and carrying out motion commands in real time.
+Each drone is required to have a local processing unit that handles their respective onboard tasks, such as sensor processing, low-to mid-level control, and execution of pre-trained control or perception models during gameplay. This includes responding to sensor inputs, player tracking, and carrying out motion commands in real time.
 
 However, as explained in other sections, the drone is not intended to make all decisions independently onboard. High-level control (i.e. game logic and drone coordination) will be handled via a central server housed outside the arena. The onboard computer would therefore be required to communicate drone states, sensor data, and status updates to the server while simultaneously receiving instructions. This meant that the onboard companion computer needed to provide more capability than a simple micro-controller, while still remaining light, compact and inexpensive.
 
 \paragraph{Onboard Computer}
 
-Several hardware options were considered for the onboard computer. The main choice was between an Arduino-based micro-controller and Raspberry Pi single-board computer. Arduino boards are attractive as they are generally low-cost, easily programmable, lightweight and generally suitable for direct hardware control. However, they lacked the necessary processing power and memory to run pre-trained models, and often require additional modules for Wi-Fi communication. They also lacked camera and high-level software support.
+Several hardware options were considered for the onboard computer. The main choice was between an Arduino-based micro-controller and Raspberry Pi single-board computer. Arduino boards are attractive as they are generally low-cost, easily programmable, lightweight and generally suitable for direct hardware control. However, they lacks the necessary processing power and memory to run pre-trained models, and often require additional modules for Wi-Fi communication. They also lacked camera and high-level software support.
 
 A two-board Arduino setup was considered, where one board would handle lower-level hardware control and another would manage communication or higher-level tasks. However this would increase general complexity in wiring and packaging while still not solving the main processing limitation. For this reason, the design moved towards investigating the usage of Raspberry Pi.
 
@@ -749,7 +749,7 @@ From a hardware point of view, the main communication requirement was that the d
 
 \paragraph{Interface with Sensors and Control Hardware}
 
-Drone electronics will connect to the onboard computer via the \gls{gpio}, serial, \gls{usb}, and camera-related interfaces. The camera would connect to the Raspberry Pi through \gls{usb}, allowing the Raspberry Pi to receive camera, depth, and other processed visual data from the camera module. Sensors such as the \gls{imu} and \gls{tof} would connect through standard buses which allows the Raspberry Pi to read data during flight operations. The \gls{ir} receivers would connect to \gls{gpio} pins while the \gls{ir} emitter would be controlled through a \gls{gpio} output signal. The gimbal/turret servos would be driven using \gls{pwm} control signals, allowing onboard system to aim the camera and \gls{ir} emitter simultaneously. \gls{esc}s would receive power directly from the battery via the \gls{pdb}, while the Raspberry Pi would command motor speeds. The Raspberry Pi, as mentioned previously, will be powered from via the regulated 5V voltage.
+Drone electronics will connect to the onboard computer via the \gls{gpio}, serial, \gls{usb}, and camera-related interfaces. The camera would connect to the Raspberry Pi through \gls{usb}, allowing the Raspberry Pi to receive camera, depth, and other processed visual data from the camera module. Sensors such as the \gls{imu} and \gls{tof} would connect through standard buses which allows the Raspberry Pi to read data during flight operations. The \gls{ir} receivers would connect to \gls{gpio} pins while the \gls{ir} emitter would be controlled through a \gls{gpio} output signal. The gimbal/turret servos would be driven using \gls{pwm} control signals, allowing onboard system to aim the camera and \gls{ir} emitter simultaneously. \gls{esc}s would receive power directly from the battery via the \gls{pdb}, while the Raspberry Pi would command motor speeds. The Raspberry Pi, as mentioned previously, will be powered via the regulated 5V voltage.
 
 \subsubsection{Sensors and Game-Specific Electronics} \label{sensorArray}
 
@@ -802,11 +802,11 @@ VL53L5CX \gls{tof} sensors & Provides side obstacle awareness and short-range di
 
 \paragraph{\gls{ir} Tagging System}
 
-For game-specific components, the drone is required to have an \gls{ir} tagging system capable of tagging players and detecting when it has been tagged. Universally, the physical hardware for general laser-tag gameplay uses \gls{ir} rather than visible lasers. This is due to safety and regulatory reasons: laser products usage is subject to classification and safety requirements under UK regulations - such as the BS EN/IEC 60825-1 \cite{bsi_laser_safety_60825}, and guidance notes that laser radiation risks harm to eyes and skin \cite{ukhsa_laser_safety}. Using \gls{ir} based system is therefore more appropriate for indoor game-play, where players and drones operate near each other. In terms of hardware, we focus on how the \gls{ir} components are physically installed into the overall drone design.
+For game-specific components, the drone is required to have an \gls{ir} tagging system capable of tagging players and detecting when it has been tagged. Universally, the physical hardware for general laser-tag gameplay uses \gls{ir} rather than visible lasers. This is due to safety and regulatory reasons: laser products usage is subject to classification and safety requirements under UK regulations - such as the BS EN/IEC 60825-1 \cite{bsi_laser_safety_60825}, and guidance notes that laser radiation risks harm to eyes and skin \cite{ukhsa_laser_safety}. Using \gls{ir} based system is therefore more appropriate for indoor gameplay, where players and drones operate near each other. In terms of hardware, we focus on how the \gls{ir} components are physically installed into the overall drone design.
 
 \textbf{\gls{ir} emitter} - Mounted on the gimbal/turret alongside the camera so tagging direction is aligned with the aiming direction. The emitter is housed in a compact cylindrical mount - around 10mm in diameter. 
 
-\textbf{\gls{ir} receiver} - These \gls{ir} sensors should be distributed around the drone hull where they should be exposed enough to detect incoming \gls{ir} signals. The receiver spacing should also be dense enough to ensure reliable hit registration during game-play, so players can have an easier time shooting at the drones.
+\textbf{\gls{ir} receiver} - These \gls{ir} sensors should be distributed around the drone hull where they should be exposed enough to detect incoming \gls{ir} signals. The receiver spacing should also be dense enough to ensure reliable hit registration during gameplay, so players can have an easier time shooting at the drones.
 
 \subsection{Mechanical Design Development}
 
@@ -1108,7 +1108,7 @@ The player hardware shows how human players would interact with the multiagent l
 
 \paragraph{Vest}
 
-The vest is used as the main hit-detection surface for the player. The intended design is to have \gls{ir} receiver modules positioned throughout the vest in high density so the drone can target. The receivers would be distributed across the front, back, and sides of the vest so that hits can be detected from multiple directions during game-play. The vest should be lightweight but also ideally provide some protection against potential physical impacts such as player collisions. A compartment acting as an electronics box may house all required electronics including micro-controller, wiring, and wireless modules. A small display or \gls{led} indicator area can be included to show simple feedback such as team status and player status.
+The vest is used as the main hit-detection surface for the player. The intended design is to have \gls{ir} receiver modules positioned throughout the vest in high density so the drone can target. The receivers would be distributed across the front, back, and sides of the vest so that hits can be detected from multiple directions during gameplay. The vest should be lightweight but also ideally provide some protection against potential physical impacts such as player collisions. A compartment acting as an electronics box may house all required electronics including micro-controller, wiring, and wireless modules. A small display or \gls{led} indicator area can be included to show simple feedback such as team status and player status.
 
 \paragraph{Helmet}
 
@@ -2998,7 +2998,7 @@ The drones are electrically powered, so they produce no direct emissions during 
 
 \paragraph{Social Impact}
 
-The main social impact of the project is its ability to provide entertainment while maintaining safety. The game design uses \gls{ir} tagging rather than physical projectiles or laser systems. The drones are separated from players by overhead net, while blade guards, collision avoidance, helmets and vest provide an additional layer of protection. This ensures the system is acceptable for use in a commercial arena, where players of many different backgrounds and ages come to enjoy the game. The cooperative modes and companion app encourages teamwork and repeat engagement, although this may depend on careful supervision during game-play.
+The main social impact of the project is its ability to provide entertainment while maintaining safety. The game design uses \gls{ir} tagging rather than physical projectiles or laser systems. The drones are separated from players by overhead net, while blade guards, collision avoidance, helmets and vest provide an additional layer of protection. This ensures the system is acceptable for use in a commercial arena, where players of many different backgrounds and ages come to enjoy the game. The cooperative modes and companion app encourages teamwork and repeat engagement, although this may depend on careful supervision during gameplay.
 
 \paragraph{Economic Impact}
 
