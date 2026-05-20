@@ -267,7 +267,7 @@ As the drone is intended to operate indoors in relative proximity to players dur
     \item \textbf{Operation around players: } The drone is intended to operate in an indoor environment rather than large spacious areas. This drastically increases the proximity between players and drones which poses as an immediate safety concern.
     \item \textbf{Close proximity to obstacles: } The environment itself introduces additional safety concerns. The drone would need to move around walls, corners, and other potential obstacles - which increases the risk of potential collisions during gameplay.
     \item \textbf{Protection for components: } One major safety constraint was reducing the risk of exposed components such as propellers and wires. The blade guards became an important part of the design, reducing both the chance of injury and risk of disabling the drone during minor collisions.
-    \item \textbf{Stable recovery and landing: } It was vital for the drone to be able to return to its post (or battery recharging station) reliably, and land safely after being disabled or encounter an error. The landing structure had to be considered from a safety point of view - hence a stable geometry would help reduce the chance of drone damage.
+    \item \textbf{Stable recovery and landing: } It was vital for the drone to be able to return to its post (or battery recharging station) reliably, and land safely after being disabled or encountering an error. The landing structure had to be considered from a safety point of view - hence a stable geometry would help reduce the chance of drone damage.
 \end{itemize}
 
 \subsubsection{Gameplay Requirements}
@@ -277,7 +277,7 @@ As the drone is intended to operate indoors in relative proximity to players dur
     \item \textbf{Indoor Movement: } The drone must be a capable opponent rather than a still target. This means the design must be able to allow for navigation and some form of attacking movement.
     \item \textbf{Visibility and challenge: } The drone had to be large and visible enough for players to recognise the target clearly during gameplay, while still being agile enough to move around. A design too small would be difficult to engage while a design too large or too slow would reduce gameplay quality.
     \item \textbf{Supporting game systems and battery: } The drone needs to carry additional hardware required for gameplay, such as \gls{ir} transmitters and receivers, cameras, sensors, and onboard computing. These systems add weight and take up internal space. In addition, the design needs to allow for enough operating time for meaningful gameplay.
-    \item \textbf{Easy maintenance and replace-ability: } Given the game is a multiagent system rather than a single platform, the design needs to remain practical to maintain, to repair, and to replace. Minor damage during operation should not require a whole drone to be rebuilt, so replaceable parts and a maintainable layout becomes an important constraint.
+    \item \textbf{Easy maintenance and replaceability: } Given the game is a multiagent system rather than a single platform, the design needs to remain practical to maintain, to repair, and to replace. Minor damage during operation should not require a whole drone to be rebuilt, so replaceable parts and a maintainable layout becomes an important constraint.
 \end{itemize}
 
 \subsubsection{Simulation Scope and General Design Assumptions}
@@ -343,7 +343,7 @@ W = mg = 4.0 \times 9.81 = 39.2~\text{N}.
 \]
 For a quadrotor configuration with a target thrust-to-weight ratio of approximately 2:1, the total thrust was therefore around 78.5 N, or around 19.6 N per motor.
 
-The Avenger 2806.5 was selected because it provided a strong thrust margin without requiring an excessively large motor. As shown in Table~\ref{tab:motor_specifications}), each motor has 41g mass, keeping the four-motor set reasonably light at 164g before propellers and mounting hardware. Its 19mm x 19mm mounting pattern also gave clear interface for motor mount design.
+The Avenger 2806.5 was selected because it provided a strong thrust margin without requiring an excessively large motor. As shown in Table~\ref{tab:motor_specifications}, each motor has 41g mass, keeping the four-motor set reasonably light at 164g before propellers and mounting hardware. Its 19mm x 19mm mounting pattern also gave clear interface for motor mount design.
 
 \begin{table}[h]
 \centering
@@ -365,7 +365,7 @@ Cell compatibility & 4--6S LiPo & required battery range\\
 \hline
 Bolt & M3, 19 mm $\times$ 19 mm & Defines mounting interface \\
 \hline
-Wire specification & 18 AWG, 20 cm &  \gls{esc} and wiring  \\
+Wire specification & 18 AWG, 20 cm &  ESC and wiring  \\
 \hline
 Target thrust per motor & $\approx 19.6$ N & 4 motors provides 78.5 N \\
 \hline
@@ -682,8 +682,8 @@ The final power system is as shown in Fig.~\ref{fig:Power_Systems}, it is divide
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.75\textwidth]{Power System Map.png}
-    \caption{General Power Systems Layout}
+    \includegraphics[width=0.9\textwidth]{Power System.png}
+    \caption{General Power Systems Layout(Red arrow - Signals; Black arrow - power)}
     \label{fig:Power_Systems}
 \end{figure}
 
@@ -828,16 +828,14 @@ The early concepts tested out basic airframe layouts. The first concept followed
 
 Further concepts continued to investigate symmetrical quadrotor layouts with increased body volume. One version (shown in Fig.~\ref{fig:Model 2}) even featured blade-guards, but made the drone noticeably larger, bulkier and less refined than the original concept. Scaling up the size solved some layout issues, but caused the platform to be less suitable for indoor game environment where the drone was required to be compact. In addition, earlier versions treated the airframe as one large connected body, which was not practical for assembly, manufacturing or repair. 
 
-This led to a complete change in direction for the final design (shown in Fig.~\ref{fig:ModelFinal}): a modular mirrored layout, where the rotor arms are separate from the main body and secured using linkage parts and bolts. With a size of 580x420x260mm, the body, arms, linkages, and mounts are to be manufactured separately to ensure easy assembly. The key design areas are the central main body, rotor arms and motor mounts, and turret/gimbal assembly - at which we will go into detail in the following sections.
-
-\newpage
-
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.6\textwidth]{Hardware/Model 2.png}
     \caption{Model 2}
     \label{fig:Model 2}
 \end{figure}
+
+This led to a complete change in direction for the final design (shown in Fig.~\ref{fig:ModelFinal}): a modular mirrored layout, where the rotor arms are separate from the main body and secured using linkage parts and bolts. With a size of 580x420x260mm, the body, arms, linkages, and mounts are to be manufactured separately to ensure easy assembly. The key design areas are the central main body, rotor arms and motor mounts, and turret/gimbal assembly - at which we will go into detail in the following sections.
 
 \begin{figure}[htbp]
     \centering
@@ -867,7 +865,7 @@ All three body sections are held together using \textbf{bolt fasteners}. This ma
 
 There also includes a central opening that passes through the bottom hull and electronics basket for the gimbal/turret assembly. The electronics basket includes a dedicated gimbal/turret mounting feature, where the servo connecting the basket and the gimbal/turret may be installed.
 
-The values in Table~\ref{tab:main_body_mass_estimate} were estimated from the Fusion 360 CAD model using assigned \gls{abs} material properties. Given Fusion 360 gives a solid \gls{cad} mass, this is not expected to represent the final manufactured mass as parts would be 3D printed with partial infill. The infill assumptions provide a more realistic approximation of the printed body mass - which reduces the main body assembly from 2532.6g to approximately 625.1g. Note that this value does not account for wall thickness, slicing setting and print orientation.
+The values in Table~\ref{tab:main_body_mass_estimate} were estimated from the Fusion 360 \gls{cad} model using assigned \gls{abs} material properties. Given Fusion 360 gives a solid \gls{cad} mass, this is not expected to represent the final manufactured mass as parts would be 3D printed with partial infill. The infill assumptions provide a more realistic approximation of the printed body mass - which reduces the main body assembly from 2532.6g to approximately 625.1g. Note that this value does not account for wall thickness, slicing setting and print orientation.
 
 \begin{table}[htbp]
 \centering
