@@ -1441,7 +1441,7 @@ The decision between Monocular RGB and Passive Stereo requires a trade-off betwe
 
 A monocular camera (for example, the Raspberry Pi AI Camera) offers the best \gls{swapc} profile since it weighs 24g and draws less than 1.5W. This means that it has a negligible impact on the quadcopter's flight dynamics. However, a single lens cannot natively measure depth and to extract 3D coordinates from a 2D feed, the system must rely on a geometric prior. This can be done by assuming a standard geometric height for a human or similarly the area of the bounding box (which can then be fine tuned during implementation). A standard method assumes the physical cross-sectional area of the human target ($A_{prior}$) is constant. The distance $Z$ is then calculated using the focal length ($f$) and the pixel area of the bounding box ($A_{px}$):
 \begin{equation}
-    Z = f \cdot \sqrt{\frac{A_{prior}}{A_{px}}}
+    Z = f \cdot \sqrt{\frac{A_{prior}}{A_{px}}}.
 \end{equation}
 Whilst this is computationally inexpensive, this method is fragile in dynamic environments. Since we have assumed a geometric prior, if the player crouches or turns sideways, their bounding box area ($A_{px}$) shrinks while their physical distance from the camera remains identical. This means that this will be misinterpreted as the player moving further away and cause the drone to accelerate forwards.
 
@@ -1449,7 +1449,7 @@ It is worth noting that machine learning (ML) architectures can estimate depth f
 
 On the other hand, a passive stereoscopic system, such as the Luxonis OAK-D Lite, resolves this posture vulnerability by extracting depth natively through pixel disparity. The camera uses two lenses separated by a known baseline distance $B$. When the system detects a player, it registers a specific visual feature (such as the centroid of the bounding box) on both the left and right image sensors. As the lenses are physically offset, this feature appears at slightly different horizontal pixel coordinates on each sensor. This horizontal shift is the disparity ($d$). The system then calculates the absolute depth ($Z$) using the camera's focal length ($f$) with the equation:
 \begin{equation}
-    Z = \frac{f \cdot B}{d}
+    Z = \frac{f \cdot B}{d}.
 \end{equation}
 Geometrically, as the target moves closer to the sensors, the viewing angle from each lens becomes more acute. This leads to the feature shifting further apart horizontally across the two image planes and hence $d$ increases. Since this calculation relies entirely on the horizontal parallax of a specific coordinate rather than the total pixel area of the bounding box ($A_{px}$), the depth estimation remains stable even if the player turns sideways. Furthermore, since this disparity mapping relies purely on ambient light, it ensures that there is no \gls{ir} interference with the game mechanics.
 
@@ -1882,7 +1882,7 @@ The image plane coordinates are related to the 3D spatial coordinates via the fo
 and by rearranging these equations, the 3D position vector in the camera's frame ($P_c$) is obtained:
 
 \begin{equation}
-P_c = \begin{bmatrix} x_c \\ y_c \\ z_c \end{bmatrix} = \begin{bmatrix} \frac{x_i \cdot z_c}{f} \\ \frac{y_i \cdot z_c}{f} \\ z_c \end{bmatrix}
+P_c = \begin{bmatrix} x_c \\ y_c \\ z_c \end{bmatrix} = \begin{bmatrix} \frac{x_i \cdot z_c}{f} \\ \frac{y_i \cdot z_c}{f} \\ z_c \end{bmatrix}.
 \end{equation}
 
 \begin{figure}[htbp]
@@ -1912,7 +1912,7 @@ This transformation is achieved using a series of rotation matrices which are de
     \resizebox{0.85\textwidth}{!}{%
         $R_x(\theta) = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos(\theta) & -\sin(\theta) \\ 0 & \sin(\theta) & \cos(\theta) \end{bmatrix}, \quad
         R_y(\psi) = \begin{bmatrix} \cos(\psi) & 0 & \sin(\psi) \\ 0 & 1 & 0 \\ -\sin(\psi) & 0 & \cos(\psi) \end{bmatrix}, \quad
-        R_z(\phi) = \begin{bmatrix} \cos(\phi) & -\sin(\phi) & 0 \\ \sin(\phi) & \cos(\phi) & 0 \\ 0 & 0 & 1 \end{bmatrix}$%
+        R_z(\phi) = \begin{bmatrix} \cos(\phi) & -\sin(\phi) & 0 \\ \sin(\phi) & \cos(\phi) & 0 \\ 0 & 0 & 1 \end{bmatrix}.$%
     }
 \end{equation}
 
@@ -1930,16 +1930,16 @@ To ensure compatibility with the Unity simulation environment, we adopt a left-h
 Initially we query the gimbal's encoders to obtain the real-time mechanical yaw ($\psi_g$),  pitch ($\theta_g$) and roll ($\phi_g$) of the camera relative to the drone's chassis. These can be combined into the rotation matrix ($R_g$) that rotates the camera vector into alignment with the drone's body: 
 
 \begin{equation}
-    R_g = R_y(\psi_g) \cdot R_x(\theta_g) \cdot R_z(\phi_g)
+    R_g = R_y(\psi_g) \cdot R_x(\theta_g) \cdot R_z(\phi_g).
 \end{equation}
 
-For the scope of this simulation, the translation vector between the gimbal mount and the drone's centre of mass is assumed negligible and set to zero..
+For the scope of this simulation, the translation vector between the gimbal mount and the drone's centre of mass is assumed negligible and set to zero.
 
 Next we read the drone's onboard \gls{imu} to acquire the drone's yaw ($\psi_d$), pitch ($\theta_d$), and roll ($\phi_d$). 
 
 These attitudes dictate the drone's rotation matrix $R_d$:
 \begin{equation}
-    R_d = R_y(\psi_d) \cdot R_x(\theta_d) \cdot R_z(\phi_d)
+    R_d = R_y(\psi_d) \cdot R_x(\theta_d) \cdot R_z(\phi_d).
 \end{equation}
 
 Finally, we can add the drone's own position vector within the maze ($D_w$), which is continuously updated, and this allows us to formulate the target's 3D coordinate in the world frame ($P_w$) as:
@@ -1950,7 +1950,7 @@ Finally, we can add the drone's own position vector within the maze ($D_w$), whi
 which can be expressed in matrix representation as:
 \begin{equation}
     \resizebox{0.65\textwidth}{!}{%
-        $P_w = \big( R_y(\psi_d) R_x(\theta_d) R_z(\phi_d) \big) \cdot \left( \big(R_y(\psi_g) R_x(\theta_g) R_z(\phi_g) \big) \begin{bmatrix} x_c \\ y_c \\ z_c \end{bmatrix} \right) + \begin{bmatrix} X_{d} \\ Y_{d} \\ Z_{d} \end{bmatrix}$%
+        $P_w = \big( R_y(\psi_d) R_x(\theta_d) R_z(\phi_d) \big) \cdot \left( \big(R_y(\psi_g) R_x(\theta_g) R_z(\phi_g) \big) \begin{bmatrix} x_c \\ y_c \\ z_c \end{bmatrix} \right) + \begin{bmatrix} X_{d} \\ Y_{d} \\ Z_{d} \end{bmatrix}.$%
     }
 \end{equation}
 
@@ -1962,13 +1962,13 @@ In order to achieve this, we implemented a Linear Kalman Filter~\cite{reid_kalma
 The filter maintains an internal state vector ($X_k$) representing the target's 3D position and velocity:
 
 \begin{equation}
-    X_k = \begin{bmatrix} x & y & z & \dot{x} & \dot{y} & \dot{z} \end{bmatrix}^T
+    X_k = \begin{bmatrix} x & y & z & \dot{x} & \dot{y} & \dot{z} \end{bmatrix}^T.
 \end{equation}
 
 The measurement vector ($Z_k$) consists of the raw 3D position coordinates provided by the perception pipeline, as instantaneous velocity is unobservable from a single frame:
 
 \begin{equation}
-    Z_k = \begin{bmatrix} x_{m} & y_{m} & z_{m} \end{bmatrix}^T
+    Z_k = \begin{bmatrix} x_{m} & y_{m} & z_{m} \end{bmatrix}^T.
 \end{equation}
 
 The system dynamics are governed by the state transition matrix ($F$), which applies standard Newtonian kinematics over the sampling interval ($\Delta t$), and the observation matrix ($H$), which maps the 6-dimensional state space to the 3-dimensional measurement space:
@@ -1976,7 +1976,7 @@ The system dynamics are governed by the state transition matrix ($F$), which app
 \begin{equation}
     \resizebox{0.75\textwidth}{!}{%
         $F = \begin{bmatrix} 1 & 0 & 0 & \Delta t & 0 & 0 \\ 0 & 1 & 0 & 0 & \Delta t & 0 \\ 0 & 0 & 1 & 0 & 0 & \Delta t \\ 0 & 0 & 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 0 & 0 & 1 \end{bmatrix}, \quad
-        H = \begin{bmatrix} 1 & 0 & 0 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0 & 0 & 0 \end{bmatrix}$%
+        H = \begin{bmatrix} 1 & 0 & 0 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0 & 0 & 0 \end{bmatrix}.$%
     }
 \end{equation}
 
@@ -1986,7 +1986,7 @@ In the predict phase, the state estimate ($\hat{X}$) and error covariance ($P$) 
     \hat{X}_{k+1|k} = F \hat{X}_{k|k}
 \end{equation}
 \begin{equation}
-    P_{k+1|k} = F P_{k|k} F^T + Q
+    P_{k+1|k} = F P_{k|k} F^T + Q.
 \end{equation}
 
 % \begin{align}
@@ -1997,13 +1997,13 @@ In the predict phase, the state estimate ($\hat{X}$) and error covariance ($P$) 
 The process noise covariance matrix ($Q$) accounts for unmodelled accelerations, such as the player dodging or sprinting. Here we adopt a Discrete White Noise Acceleration (DWNA) model~\cite{barshalom2001kinematic}. Under this piecewise constant assumption, the noise gain vector ($\Gamma$) maps a scalar acceleration jump into both position and velocity changes:
 
 \begin{equation}
-    \Gamma = \begin{bmatrix} \frac{1}{2}\Delta t^2 \\ \Delta t \end{bmatrix}
+    \Gamma = \begin{bmatrix} \frac{1}{2}\Delta t^2 \\ \Delta t \end{bmatrix}.
 \end{equation}
 
 The covariance matrix for a single 1D axis is then calculated as the expectation of this vector scaled by the variance of the human's maximum expected physical acceleration ($\sigma_v^2$):
 
 \begin{equation}
-    Q = \Gamma \sigma_v^2 \Gamma^T = \sigma_v^2 \begin{bmatrix} \frac{\Delta t^4}{4} & \frac{\Delta t^3}{2} \\ \frac{\Delta t^3}{2} & \Delta t^2 \end{bmatrix}
+    Q = \Gamma \sigma_v^2 \Gamma^T = \sigma_v^2 \begin{bmatrix} \frac{\Delta t^4}{4} & \frac{\Delta t^3}{2} \\ \frac{\Delta t^3}{2} & \Delta t^2 \end{bmatrix}.
 \end{equation}
 
 When the perception pipeline returns a valid \gls{yolo} detection, the update phase executes. The Kalman Gain ($K_{k+1}$) is calculated using the measurement noise covariance ($R$), which is a diagonal matrix containing the empirical variances of the depth sensor and bounding box. The state is then corrected based on the residual between the actual and predicted measurement at step $k+1$:
@@ -2015,7 +2015,7 @@ When the perception pipeline returns a valid \gls{yolo} detection, the update ph
     \hat{X}_{k+1|k+1} = \hat{X}_{k+1|k} + K_{k+1} (Z_{k+1} - H \hat{X}_{k+1|k})
 \end{equation}
 \begin{equation}
-    P_{k+1|k+1} = (I - K_{k+1} H) P_{k+1|k}
+    P_{k+1|k+1} = (I - K_{k+1} H) P_{k+1|k}.
 \end{equation}
 
 \subsubsection{Occlusion Handling and Timeout Logic}
