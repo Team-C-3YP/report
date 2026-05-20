@@ -1423,7 +1423,7 @@ With the camera isolated from the drone's tilt, the next step is to select the s
         \toprule
         \textbf{Sensor Type} & \textbf{Typical Hardware} & \textbf{Mass (g)} & \textbf{Power (W)} & \textbf{Cost (£)} & \textbf{Depth Mechanism} \\
         \midrule
-        Micro LiDAR & RPLidar A1 & 170 & 0.5 & $\sim 100$ & Active ToF \\
+        Micro LiDAR & RPLidar A1 & 170 & 0.5 & $\sim 100$ & Active \gls{tof} \\
         \midrule
         Active RGB-D & Orbbec Astra Mini Pro & 35 & 2.5 & $\sim 110$ & Structured Light \\
         \midrule
@@ -1870,7 +1870,7 @@ In contrast, the synthetic model demonstrates a more stable detection decay curv
 \subsection{3D Coordinates via Sensor Fusion}
 We use sensor fusion in order to bridge the gap between the 2D \gls{yolo} bounding box and the stereoscopic depth map to resolve the 3D Cartesian coordinates of the player. We begin with the geometric centroid ($x_i, y_i$) of the bounding box in pixel coordinates. Because the central RGB camera and stereo cameras are synchronised, this coordinate corresponds to a point on the depth map. 
 
-If this centroid lies on a gap in the target's posture, a single pixel sample of the depth map may erroneously return the distance to the background wall rather than the player itself. In order to prevent this, the system samples a $N \times N$ kernel of pixels around the centroid and a median filter is applied to ensure that the output reflects the true target distance. 
+If this centroid aligns with negative space within the target's posture, a single pixel sample of the depth map may erroneously return the distance to the background wall rather than the player itself. In order to prevent this, the system samples a $N \times N$ kernel of pixels around the centroid and a median filter is applied to ensure that the output reflects the true target distance. 
 
 Using the depth $z_c$, the system performs an inverse pinhole camera projection to obtain the physical horizontal ($x_c$) and vertical ($y_c$) distances in the camera frame. The geometry of this projection is illustrated in Fig. \ref{fig:projection_side} and Fig. \ref{fig:projection_3d}.
 
@@ -1919,10 +1919,12 @@ This transformation is achieved using a series of rotation matrices which are de
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\linewidth]{figs/CameraLocalToWorld.png}
+    \includegraphics[width=0.65\linewidth]{figs/CameraLocalToWorld.png}
     \caption{The local coordinate frame of the drone's camera.}
     \label{fig:camera_to_world}
 \end{figure}
+
+\newpage
 
 To ensure compatibility with the Unity simulation environment, we adopt a left-handed coordinate system where the positive direction of rotation is defined as clockwise when looking down the axis of rotation.
 
@@ -1932,7 +1934,7 @@ Initially we query the gimbal's encoders to obtain the real-time mechanical yaw 
     R_g = R_y(\psi_g) \cdot R_x(\theta_g) \cdot R_z(\phi_g)
 \end{equation}
 
-The physical displacement vector between the gimbal mount and the drone's centre of mass is assumed to be negligible and is zeroed in this model.
+For the scope of this simulation, the translation vector between the gimbal mount and the drone's centre of mass is assumed negligible and set to zero..
 
 Next we read the drone's onboard \gls{imu} to acquire the drone's yaw ($\psi_d$), pitch ($\theta_d$), and roll ($\phi_d$). 
 
