@@ -688,7 +688,7 @@ The final power system is as shown in Fig.~\ref{fig:Power_Systems}, it is divide
 \end{figure}
 
 \subsubsection{Onboard Computing and Communication}
-\label{sec:Onboard Computing and Communication}
+\label{sec:OnboardComputingandCommunication}
 
 Before investigating deeper into the topic of onboard computing and communication, it is vital to define its role within the overall drone system.
 Each drone is required to have a local processing unit that handles their respective onboard tasks, such as sensor processing, low-to mid-level control, and execution of pre-trained control or perception models during gameplay. This includes responding to sensor inputs, player tracking, and carrying out motion commands in real time.
@@ -1319,14 +1319,14 @@ Considering the pros and cons listed above, it was decided that a central server
 \subsection{Bluetooth}
 Bluetooth is a short-range wireless communication system, designed for low-power device-to-device communication. It uses 79 channels, 1MHz apart, from 2.402 to 2.480 GHz. Data is encoded by changes in frequency. Classic Bluetooth uses Frequency Hopping Spread Spectrum (FHSS), switching between frequency channels to reduce interference, with Gaussian Frequency Shift Keying (GFSK) modulation. In a connection, one device acts as a \say{main}, and up to seven devices act as \say{followers}. Time-Division-Duplexing is used to avoid collisions. Time is divided into 625 \(\mu\)s divisions. The main communicates in even slots, and the followers communicate in odd slots.
 
-\(\)\newline A Bluetooth connection uses very little power. However, it has a lower bitrate than a Wi-Fi connection (1-3 Mbps). It also has a shorter intended range than a Wi-Fi connection. Furthermore, the maximum number of seven followers connected to a single main would pose a problem since it will be necessary for up to 10 drones to be connected to the server at a time, requiring an additional main, to manage communication for some drones. This would be possible, but inconvenient and less robust.
+\(\)\newline A Bluetooth connection uses very little power. However, it has a lower bitrate than a Wi-Fi connection (1-3 Mbps). It also has a shorter intended range than a Wi-Fi connection. Furthermore, the maximum number of seven followers connected to a single main would pose a problem since it will be necessary for up to 10 drones to be connected to the server at a time, requiring an additional main, to manage communication for some drones. This would be possible, but inconvenient and unreliable.
 
 \subsection{Wi-Fi}
 Wi-Fi is a medium-range wireless communication system, designed for fast and reliable server-to-device communication. It typically operates at \(\textasciitilde\)2.4 GHz, \(\textasciitilde\)5 GHz or \(\textasciitilde\)6 GHz, transferring data over multiple (up to 60) non-overlapping channels of bandwidth 20 MHz, modulated using Orthogonal Frequency Division Multiplexing (OFDM).
 
 \(\) \newline A Wi-Fi connection typically has a lower latency than a Bluetooth connection. It also has a much higher maximum bitrate, however the required data rate is small enough that this will not be important. Wi-Fi is generally more reliable than Bluetooth, especially at distances above ten meters; Bluetooth was designed for low bitrate, low power, short-range communication between a small number of devices, whereas Wi-Fi was designed for higher bandwidth connections between many devices.
 
-\(\)\newline For these reasons, Wi-Fi was selected as the networking medium between the drones and the server. The server will be a desktop computer (with Wi-Fi capability), and the drones, helmets and vests all contain a Raspberry Pi 4, which has Wi-Fi capability (discussed in section~\ref{comms}).
+\(\)\newline For these reasons, Wi-Fi was selected as the networking medium between the drones and the server. The server will be a desktop computer (with Wi-Fi capability), and the drones, helmets and vests all contain a Raspberry Pi 4, which has Wi-Fi capability (discussed in section~\ref{sec:OnboardComputingandCommunication}).
 
 \newpage
 \section{High Level Control} \label{high level control} % Ritchie
