@@ -1455,7 +1455,7 @@ On the other hand, a passive stereoscopic system, such as the Luxonis OAK-D Lite
 \end{equation}
 Geometrically, as the target moves closer to the sensors, the viewing angle from each lens becomes more acute. This leads to the feature shifting further apart horizontally across the two image planes and hence $d$ increases. Since this calculation relies entirely on the horizontal parallax of a specific coordinate rather than the total pixel area of the bounding box ($A_\text{px}$), the depth estimation remains stable even if the player turns sideways. Furthermore, since this disparity mapping relies purely on ambient light, it ensures that there is no \gls{ir} interference with the game mechanics.
 
-To compare the performance of monocular and stereo depth estimation under geometric transformations, we constructed a simulation environment of the proposed hardware in Unity. The cameras were configured with a 1920x1080 resolution, with a 60$^\circ$ \gls{fov}, a focal length of 935.31~px, and a stereo baseline of 0.075~m. We used a cuboid measuring 0.5~m wide, 1.8~m tall, and 0.2~m deep to represent an average player. The objective was to observe how both camera architectures respond to changes in the target across three scenarios.
+To compare the performance of monocular and stereo depth estimation under geometric transformations, we constructed a simulation environment of the proposed hardware in Unity. The cameras were configured with a 1920$\times$1080 resolution, with a 60$^\circ$ \gls{fov}, a focal length of 935.31~px, and a stereo baseline of 0.075~m. We used a cuboid measuring 0.5~m wide, 1.8~m tall, and 0.2~m deep to represent an average player. The objective was to observe how both camera architectures respond to changes in the target across three scenarios.
 
 \newpage
 
@@ -1474,7 +1474,7 @@ We began with a baseline calibration and translated the target linearly from 5~m
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.4\linewidth]{figs/LinearTranslation_Plot.png}
-    \caption{Comparison of monocular and stereo depth estimation against physical ground truth during linear translation from 5~m to 15~m}
+    \caption{Comparison of monocular and stereo depth estimation against physical ground truth during linear translation from 5~m to 15~m.}
     \label{fig:linear_translation}
 \end{figure}
 
@@ -1502,7 +1502,7 @@ This scenario highlights the advantage of the stereo system with the stereo esti
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.85\linewidth]{figs/CrouchDeformation_Plot.png}
-    \caption{Comparison of depth estimation models during crouching at a constant physical depth}
+    \caption{Comparison of depth estimation models during crouching at a constant physical depth.}
     \label{fig:crouch_deformation}
 \end{figure}
 
@@ -1589,7 +1589,7 @@ The VisDrone dataset contains numerous additional classes such as vehicles and b
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.7\linewidth]{figs/visdrone-dataset-cover.jpg}
-    \caption{Sample labelled image from the VisDrone dataset demonstrating the aerial perspective}
+    \caption{Sample labelled image from the VisDrone dataset demonstrating the aerial perspective.}
     \label{fig:visdrone}
 \end{figure}
 
@@ -1860,7 +1860,7 @@ Alongside low-light performance, the physical geometry of a laser tag maze intro
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.65\linewidth]{figs/Occlusion_Test.png}
-    \caption{Comparing the VisDrone and Synthetic Models under occlusion}
+    \caption{Comparing the VisDrone and Synthetic Models under occlusion.}
     \label{fig:occlusion_test}
 \end{figure}
 
