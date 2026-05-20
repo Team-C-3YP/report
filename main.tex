@@ -159,7 +159,7 @@ In addition to the technical deployment, user retention is driven by a companion
     \label{fig:gameplay}
 \end{figure}
 \subsection{Overview}
-Players are equipped with laser guns (\gls{ir} emitters that transmit encoded data), and helmets and vests, both containing \gls{ir} sensors. The drones are equipped with \gls{ir} sensors as well as turrets which emit \gls{ir} radiation (see Section \ref{Turret}). When not flying, they are dormant in a standby location in which employees can replace their batteries. If a player is hit, they must navigate to a designated \say{timeout area} of the maze, where they are safe from drones, and wait for 10 seconds. The drones, guns, helmets and vests connect via Wi-Fi to a central server, so, when hit, the player's gun is disabled until their timeout ends (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at 3 m height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
+Players are equipped with laser guns (\gls{ir} emitters that transmit encoded data), and helmets and vests, both containing \gls{ir} sensors. The drones are equipped with \gls{ir} sensors as well as turrets which emit \gls{ir} radiation, carrying encoded data (see Section \ref{Turret}). When not flying, they are dormant in a standby location in which employees can replace their batteries. If a player is hit, they must navigate to a designated \say{timeout area} of the maze, where they are safe from drones, and wait for 10 seconds. The drones, guns, helmets and vests connect via Wi-Fi to a central server, so, when hit, the player's gun is disabled until their timeout ends (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at 3 m height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
 
 \noindent Two game modes have been designed: \say{Wave Mode} and \say{Objective Mode}. These are summarised in the following sections.
 \subsection{Wave Mode}
@@ -2596,7 +2596,7 @@ A quantitative risk assessment has been completed, and is shown in Table \ref{ta
 A discounted cash flow model was created. The model was used to track cash flow, apply a discount rate to future revenue, and calculate the \gls{npv} of a company providing the game as a commercial enterprise.
 \subsection{Numerical Estimations} \label{num-est}
 \subsubsection{Utility}
-It is assumed that the first year (Year 0) will be spent producing hardware, advertising the business, and decorating the playing area (a warehouse). Year 0 is therefore assumed to generate no revenue from gameplay. As the business becomes more established, its utility (games per year) is modelled to increase up to a plateau in Year 3. The modelled increase in utility is shown in Table \ref{tab:utilityandemployees}. The maximum number of games per year was assumed to be 2000, corresponding to 10 hour-long games on Saturday and Sunday, and four hour-long games on weekdays, for 50 weeks per year. Note that this \say{maximum utility} refers to the value at which utility plateaus, not a fundamental limit, which is referred to as a \say{utility capacity} (discussed in section \ref{PriceAnal}). The effect of a variation in utility is analysed in Section \ref{PriceAnal}.
+It is assumed that the first year (Year 0) will be spent producing hardware, advertising the business, and decorating the playing area (a warehouse). Year 0 is therefore assumed to generate no revenue from gameplay. As the business becomes more established, its utility (games per year) is modelled to increase up to a plateau in Year 3. The modelled increase in utility is shown in Table \ref{tab:utilityandemployees}. The games are modelled to take one hour, allowing for 45 minutes of game play and 15 minutes for employees to prepare the arena for the next group. The maximum number of games per year was assumed to be 2000, corresponding to 10 games on Saturday and Sunday, and four games on weekdays, for 50 weeks per year. Note that this \say{maximum utility} refers to the value at which utility plateaus, not a fundamental limit, which is referred to as a \say{utility capacity} (discussed in section \ref{PriceAnal}). The effect of a variation in utility is analysed in Section \ref{PriceAnal}.
 
 
 
@@ -2654,7 +2654,7 @@ Floor & 0.18 & 0.54 \\
 \end{tabular}
 \label{tab:U-Values}
 \end{table} \newline
-\noindent Assuming the air changes completely every two hour-long games (ACH=0.5), the height of the warehouse is 6 m, and the footprint is square:
+\noindent Assuming the air changes completely every two games (ACH=0.5), the height of the warehouse is 6 m, and the footprint is square:
     \begin{align}
         &\text{Total Wall Area}=4 \times \sqrt{632}\text{ m} \times 6\text{ m}=603\text{ m}^2 \\
         &\text{Floor Area}=\text{Roof Area}=6800 \text{ ft}^2=632\text{ m}^2 \\
@@ -2676,7 +2676,7 @@ Batteries in drones and laptops used by employees both must be charged. Both are
 Under the assumptions outlined above, the total power draw of the operational warehouse is approximated to \(17.6\text{ kW}+1.3\text{ kW}+1.3\text{ kW}=20.2\text{ kW}\).
 
 \paragraph{Full Electricity Cost} \(\) \newline
-According to the Department for Energy Security and Net Zero's Q2 2025 Energy Prices report \cite{EnergyPrices}, the average electricity cost to non-domestic users (including Climate Change Levy) over the last three years is around 25p/kWh. This will be used to calculate an annual electricity cost. It is also assumed that the warehouse will need to be open 3000 hours per year (for 2000 hour-long games per year), to include unbooked game slots, maintenance and opening preparation time. The final electricity cost is therefore given in Eq. \ref{equ:eleccost}.
+According to the Department for Energy Security and Net Zero's Q2 2025 Energy Prices report \cite{EnergyPrices}, the average electricity cost to non-domestic users (including Climate Change Levy) over the last three years is around 25p/kWh. This will be used to calculate an annual electricity cost. It is also assumed that the warehouse will need to be open 3000 hours per year (for 2000 games per year), to include unbooked game slots, maintenance and opening preparation time. The final electricity cost is therefore given in Eq. \ref{equ:eleccost}.
 \begin{equation}
     \label{equ:eleccost}
     \text{Electricity Cost [£/Year]}=20.2\text{kW}\times3000\text{ hours/year} \times 0.25 \text{ £/kWh}=£15150/\text{year}
@@ -2691,7 +2691,7 @@ Year 0 will be used to prepare the warehouse for laser tag. From Year 1 onward, 
 The drones themselves cost a little under £500 to produce, of which 10 are required. Including other hardware (laser guns, helmets and battery chargers), the model assumes the total cost is £10000. This is conservative estimate. The hardware will get slightly damaged during operation. Some components (such as blades) are likely to need replacing often, whereas some (such as laser guns) are likely not to require frequent replacement. For simplicity, the model assumes that a full hardware replacement is required every 500 games, after a full set is fabricated in Year 0.
 
 \subsubsection{Revenue}
-The cost of hiring exclusive usage of a laser tag facility is commonly around £15-£20 per person per hour. For example, LASERGAMING OXFORD charges £29.50 per person for two hours of exclusive use \cite{outdoorlaserLasergamingEXCLUSIVE}. A drone-based experience could afford to charge two to three times this fee, due to its novelty value. The game is designed to be played by three to eight people at once. The cost per game is therefore projected to be £200 per hour game per group, as a first estimate. The effect of a variation in game price is analysed in Section \ref{PriceAnal}.
+The cost of hiring exclusive usage of a laser tag facility is commonly around £15-£20 per person per hour. For example, LASERGAMING OXFORD charges £29.50 per person for two hours of exclusive use \cite{outdoorlaserLasergamingEXCLUSIVE}. A drone-based experience could afford to charge two to three times this fee, due to its novelty value. The game is designed to be played by three to eight people at once. The cost per game is therefore projected to be £200 per 45 minute game per group, as a first estimate. The effect of a variation in game price is analysed in Section \ref{PriceAnal}.
 
 \subsubsection{Aggregate}
 Hence, the total Income \& Expenditure Table, not including tax or external financing (such as bank loans, equity etc.) is shown in Table \ref{tab:IE}.
@@ -2925,7 +2925,7 @@ As above, it was assumed that, a price of £200 per game corresponds to a maximu
 \begin{equation}
     Q_d=2000-10\varepsilon'(200-P)
 \end{equation}
-However, this model implies no limit on utility, or \say{utility capacity}. In reality, only one game can be played at a time. The capacity is modelled as 3000 games/year (corresponding to around 59 hour-long games per week, excluding public holidays), given a final demand-price curve of:
+However, this model implies no limit on utility, or \say{utility capacity}. In reality, only one game can be played at a time. The capacity is modelled as 3000 games/year (corresponding to around 59 games per week, excluding public holidays), given a final demand-price curve of:
 
 \begin{equation}
     Q_d=\min\{2000-10\varepsilon'(200-P), 3000\}
