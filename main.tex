@@ -272,8 +272,8 @@ As the drone is intended to operate indoors in relative proximity to players dur
 
  The drone needs to be a capable opponent - able to dodge, attack and wander throughout the arena - and able to support the systems needed for the overall project itself (which includes being cost-effective). This led to several requirements that influences the size, layout, performance, and maintainability of the final design.
 \begin{itemize}
-    \item \textbf{Indoor Movement: } Contrary to the safety requirement, the drone must also be a capable opponent rather than a still target. This means the design must be able to allow for navigation and some form of evasive movement. This poses as a tradeoff between gameplay and safety.
-    \item \textbf{Visibility and challenge: } The drone had to be large and visible enough for players to clearly recognise the target during gameplay, while still being agile enough to move around. A design too small would be difficult to engage while a design too large or too slow would reduce gameplay quality.
+    \item \textbf{Indoor Movement: } The drone must be a capable opponent rather than a still target. This means the design must be able to allow for navigation and some form of evasive movement.
+    \item \textbf{Visibility and challenge: } The drone had to be large and visible enough for players to recognise the target clearly during gameplay, while still being agile enough to move around. A design too small would be difficult to engage while a design too large or too slow would reduce gameplay quality.
     \item \textbf{Supporting game systems and battery: } The drone needs to carry additional hardware required for gameplay, such as \gls{ir} transmitters and receivers, cameras, sensors, and onboard computing. These systems add weight and take up internal space. In addition, the design needs to allow for enough operating time for meaningful gameplay.
     \item \textbf{Easy maintenance and replace-ability: } Given the game is a multiagent system rather than a single platform, the design needs to remain practical to maintain, to repair, and to replace. Minor damage during operation should not require a whole drone to be rebuilt, so replaceable parts and a maintainable layout becomes an important constraint.
 \end{itemize}
@@ -471,7 +471,7 @@ where \(\eta_{\text{rpm}}\) represents the fraction of no-load speed achieved un
 \end{tabular}
 \end{table}
 
-As there was no given exact thrust coefficients, we tested using a range of realistic values.
+As there were no given exact thrust coefficients, we tested using a range of realistic values.
 
 \begin{table}[htbp]
 \centering
@@ -645,7 +645,7 @@ It should be noted that the \gls{pdb} is responsible for distributing the main b
 
 Voltage regulation is vital for ensuring the integrity of more sensitive electronics. The 4S LiPo battery supplies \(14.8~\text{V}\) which is suitable for the propulsion system but is too high for onboard electronics which require \(5~\text{V}\). For this reason, we require a dedicated step-down regulator to separate the low-voltage electronics from the high-voltage system. A good regulator considered is the Pololu D24V90F5 \(5~\text{V}\) regulator which could be used in a real prototype, as its input voltage range is compatible with the 4S battery system.
 
-Pololu D24V90F5 serves as a suitable regulator as it can step the \(14.8~\text{V}\) 4S battery Voltage down to a stable \(5~\text{V}\) voltage. As shown in Table~\ref{tab:voltage_regulator_specifications}, it has an input range of \(5-38~\text{V}\) which is compatible with the main battery while the current output is suitable for the Raspberry Pi, sensors, and other electronics.
+The Pololu D24V90F5 serves as a suitable regulator as it can step the \(14.8~\text{V}\) 4S battery Voltage down to a stable \(5~\text{V}\) voltage. As shown in Table~\ref{tab:voltage_regulator_specifications}, it has an input range of \(5-38~\text{V}\) which is compatible with the main battery while the current output is suitable for the Raspberry Pi, sensors, and other electronics.
 
 \begin{table}[htbp]
 \centering
