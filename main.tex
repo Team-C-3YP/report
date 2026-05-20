@@ -113,6 +113,10 @@ Sustainability, ethics, and safety concerns are considered, and the technical pe
 \newacronym{elu}{ELU}{Exponential Linear Unit}
 \newacronym{apf}{APF}{Artificial Potential Field}
 \newacronym{ml}{ML}{Machine Learning}
+\newacronym{pwm}{PWM}{Pulse-Width Modulation}
+\newacronym{gpio}{GPIO}{General Purpose Input/Output}
+\newacronym{usb}{USB}{Universal Serial Bus}
+\newacronym{led}{LED}{Light-Emitting Diode}
 \printglossaries
 \newpage
 
@@ -269,7 +273,7 @@ As the drone is intended to operate indoors in relative proximity to players dur
 \begin{itemize}
     \item \textbf{Indoor Movement: } Contrary to the safety requirement, the drone must also be a capable opponent rather than a still target. This means the design must be able to allow for navigation and some form of evasive movement. This poses as a tradeoff between game-play and safety.
     \item \textbf{Visibility and challenge: } The drone had to be large and visible enough for players to clearly recognise the target during game-play, while still being agile enough to move around. A design too small would be difficult to engage while a design too large or too slow would reduce game-play quality.
-    \item \textbf{Supporting game systems and battery: } The drone needs to carry additional hardware required for game-play, such as IR transmitters and receivers, cameras, sensors, and onboard computing. These systems add weight and take up internal space. In addition, the design needs to allow for enough operating time for meaningful game-play.
+    \item \textbf{Supporting game systems and battery: } The drone needs to carry additional hardware required for game-play, such as \gls{ir} transmitters and receivers, cameras, sensors, and onboard computing. These systems add weight and take up internal space. In addition, the design needs to allow for enough operating time for meaningful game-play.
     \item \textbf{Easy maintenance and replace-ability: } Given the game is a multiagent system rather than a single platform, the design needs to remain practical to maintain, to repair, and to replace. Minor damage during operation should not require a whole drone to be rebuilt, so replaceable parts and a maintainable layout becomes an important constraint.
 \end{itemize}
 
@@ -358,7 +362,7 @@ Cell compatibility & 4--6S LiPo & required battery range\\
 \hline
 Bolt & M3, 19 mm $\times$ 19 mm & Defines mounting interface \\
 \hline
-Wire specification & 18 AWG, 20 cm &  ESC and wiring  \\
+Wire specification & 18 AWG, 20 cm &  \gls{esc} and wiring  \\
 \hline
 Target thrust per motor & $\approx 19.6$ N & 4 motors provides 78.5 N \\
 \hline
@@ -490,7 +494,7 @@ This suggests that the target max thrust of \(19.6~\text{N}\) is theoretically p
 
 However, the target max value is not the same as minimum thrust required for flight. Given the total max weight is approximately \(39.2~\text{N}\), the hover thrust required per motor is \(9.8~\text{N}\) for a quadrotor configuration. This means the selected propulsion configuration has a massive theoretical margin above the hover requirement. Even if the real thrust is lower than the assumed \(19.6~\text{N}\), the drone should still perform admirably, though additional margin would be needed for manoeuvring, disturbance rejection, and stable control. However, this proves that the 2:1 thrust-to-weight ratio gives a large and safe tolerance.
 
-\paragraph{ESC (Electronic Speed Controller) Selection}
+\paragraph{\gls{esc} Selection}
 
 The \gls{esc} is used to control the speed of each motor and provide fast response to throttle commands from the flight controller. Since the propulsion system uses four motors, the design requires one \gls{esc} per motor. The selected \gls{esc} was the LittleBee Spring 40A. As shown in the Table~\ref{tab:esc_specifications}, the available LittleBee Spring 40A specifications list \(2-6~\text{S}\) LiPo input, \(40~\text{A}\) continuous current, with compact dimensions.
 
@@ -696,7 +700,7 @@ A two-board Arduino setup was considered, where one board would handle lower-lev
 
 Two main Raspberry Pi single-board computers were considered, the Raspberry Pi 4 Model B and the Raspberry Pi 5 - comparison is shown in Table~\ref{tab:raspberrypi_comparison}.
 
-Despite the strong performance offered by the Raspberry Pi 5, its additional computing capabilities were not considered important as the project was using pre-trained models rather than training onboard. The \textbf{Raspberry Pi 4 Model B} (shown in Fig.~\ref{fig:Raspberry Pi 4 Model B}) was chosen as the onboard computer as it provided a good balance between processing, cost and integration. In addition, it provided the required Wi-Fi, GPIO, USB, and camera interfaces, while being easier to power and package inside the drone.
+Despite the strong performance offered by the Raspberry Pi 5, its additional computing capabilities were not considered important as the project was using pre-trained models rather than training onboard. The \textbf{Raspberry Pi 4 Model B} (shown in Fig.~\ref{fig:Raspberry Pi 4 Model B}) was chosen as the onboard computer as it provided a good balance between processing, cost and integration. In addition, it provided the required Wi-Fi, \gls{gpio}, \gls{usb}, and camera interfaces, while being easier to power and package inside the drone.
 
 \begin{table}[htbp]
 \centering
@@ -718,11 +722,11 @@ Wireless LAN & 2.4 GHz and 5.0 GHz IEEE 802.11ac Wi-Fi & Dual-band 802.11ac Wi-F
 \hline
 Bluetooth & Bluetooth 5.0, BLE & Bluetooth 5.0, BLE \\
 \hline
-GPIO & Raspberry Pi standard 40-pin GPIO header & Raspberry Pi standard 40-pin GPIO header \\
+\gls{gpio} & Raspberry Pi standard 40-pin GPIO header & Raspberry Pi standard 40-pin \gls{gpio} header \\
 \hline
 Camera interface & 2-lane MIPI CSI camera port & 2 $\times$ 4-lane MIPI camera/display transceivers \\
 \hline
-USB & 2 $\times$ USB 3.0, 2 $\times$ USB 2.0 & 2 $\times$ USB 3.0, 2 $\times$ USB 2.0 \\
+\gls{usb} & 2 $\times$ USB 3.0, 2 $\times$ USB 2.0 & 2 $\times$ USB 3.0, 2 $\times$ \gls{usb} 2.0 \\
 \hline
 Approximate cost & From \pounds35, depending on RAM option & From \pounds45, depending on RAM option \\
 
@@ -745,13 +749,13 @@ From a hardware point of view, the main communication requirement was that the d
 
 \paragraph{Interface with Sensors and Control Hardware}
 
-Drone electronics will connect to the onboard computer via the GPIO, serial, USB, and camera-related interfaces. The camera would connect to the Raspberry Pi through USB, allowing the Raspberry Pi to receive camera, depth, and other processed visual data from the camera module. Sensors such as the IMU and ToF would connect through standard buses which allows the Raspberry Pi to read data during flight operations. The IR receivers would connect to GPIO pins while the IR emitter would be controlled through a GPIO output signal. The gimbal/turret servos would be driven using PWM control signals, allowing onboard system to aim the camera and IR emitter simultaneously. \gls{esc}s would receive power directly from the battery via the \gls{pdb}, while the Raspberry Pi would command motor speeds. The Raspberry Pi, as mentioned previously, will be powered from via the regulated 5V voltage.
+Drone electronics will connect to the onboard computer via the \gls{gpio}, serial, \gls{usb}, and camera-related interfaces. The camera would connect to the Raspberry Pi through \gls{usb}, allowing the Raspberry Pi to receive camera, depth, and other processed visual data from the camera module. Sensors such as the \gls{imu} and \gls{tof} would connect through standard buses which allows the Raspberry Pi to read data during flight operations. The \gls{ir} receivers would connect to \gls{gpio} pins while the \gls{ir} emitter would be controlled through a \gls{gpio} output signal. The gimbal/turret servos would be driven using \gls{pwm} control signals, allowing onboard system to aim the camera and \gls{ir} emitter simultaneously. \gls{esc}s would receive power directly from the battery via the \gls{pdb}, while the Raspberry Pi would command motor speeds. The Raspberry Pi, as mentioned previously, will be powered from via the regulated 5V voltage.
 
 \subsubsection{Sensors and Game-Specific Electronics} \label{sensorArray}
 
 \paragraph{Camera}
 
-The camera selected by the visual perception work-stream was the OAK-D Lite (shown in Fig.~\ref{fig:Camera}) used for player detection and tracking. In this hardware section, the camera is considered from an integration point of view. The OAK-D Lite connects to the Raspberry Pi through USB hence the drone body must be designed to ensure both the USB connection and cable routing are practical inside the drone body. Its power draw also need to be included in the 5V electronics power budget. Mechanically, the camera must be placed with a clear field of view - placed in line with the IR emitter inside a gimbal/turret where they can move simultaneously. There should be no obstruction by the airframe, turret structure, or wiring. More detailed reasoning behind the camera choice can be found in the visual detection pipeline covered separately under Section~\ref{Sensor Selection}.
+The camera selected by the visual perception work-stream was the OAK-D Lite (shown in Fig.~\ref{fig:Camera}) used for player detection and tracking. In this hardware section, the camera is considered from an integration point of view. The OAK-D Lite connects to the Raspberry Pi through \gls{usb} hence the drone body must be designed to ensure both the \gls{usb} connection and cable routing are practical inside the drone body. Its power draw also need to be included in the 5V electronics power budget. Mechanically, the camera must be placed with a clear field of view - placed in line with the \gls{ir} emitter inside a gimbal/turret where they can move simultaneously. There should be no obstruction by the airframe, turret structure, or wiring. More detailed reasoning behind the camera choice can be found in the visual detection pipeline covered separately under Section~\ref{Sensor Selection}.
 
 \begin{figure}[htbp]
     \centering
@@ -762,13 +766,13 @@ The camera selected by the visual perception work-stream was the OAK-D Lite (sho
 
 \paragraph{Flight Control Sensors}
 
-Suitable flight control sensors were needed to give the drone basic state information required for basic motion and awareness. Chosen sensors were intended to provide local state information that could support stabilisation, height referencing, and obstacle awareness during indoor operations: the IMU measured body motion, the ToF sensor provided ceiling-distance and side distance information for nearby obstacles.
+Suitable flight control sensors were needed to give the drone basic state information required for basic motion and awareness. Chosen sensors were intended to provide local state information that could support stabilisation, height referencing, and obstacle awareness during indoor operations: the \gls{imu} measured body motion, the \gls{tof} sensor provided ceiling-distance and side distance information for nearby obstacles.
 
-A barometer was not selected as a height sensor despite being commonly used in drones for altitude estimation. Given the indoor environment and close proximity between walls and ceilings, pressure-based height estimation is less reliable. Instead, an upward-facing ToF sensor was considered more appropriate for indoor environment, where the ceiling height can be known in advance.
+A barometer was not selected as a height sensor despite being commonly used in drones for altitude estimation. Given the indoor environment and close proximity between walls and ceilings, pressure-based height estimation is less reliable. Instead, an upward-facing \gls{tof} sensor was considered more appropriate for indoor environment, where the ceiling height can be known in advance.
 
-The SparkFun ICM-20948 IMU (shown in Fig.~\ref{fig:IMU}) provides local motion and orientation feedback. It is housed inside the drone, near the center of the drone body, where it can measure acceleration, angular-rate, and magnetic-field measurements representative of the airframe while simultaneously protected from impact.
+The SparkFun ICM-20948 \gls{imu} (shown in Fig.~\ref{fig:IMU}) provides local motion and orientation feedback. It is housed inside the drone, near the center of the drone body, where it can measure acceleration, angular-rate, and magnetic-field measurements representative of the airframe while simultaneously protected from impact.
 
-The VL53L1X and VL53L5CX ToF sensors are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained \gls{rl} control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
+The VL53L1X and VL53L5CX \gls{tof} sensors are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained \gls{rl} control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
 
 A Consolidated summarisation of the flight-control sensors are shown in Table~\ref{tab:flight_control_sensors} below.
 
@@ -780,11 +784,11 @@ A Consolidated summarisation of the flight-control sensors are shown in Table~\r
 \hline
 \textbf{Sensor} & \textbf{Role} & \textbf{Placement / Orientation} & \textbf{Key Specification} \\
 \hline
-SparkFun ICM-20948 IMU & Measures drone motion and orientation/state & Housed inside hull, near the centre & 9-axis IMU: 3-axis accelerometer, 3-axis gyroscope, 3-axis magnetometer; I\textsuperscript{2}C/SPI support \\
+SparkFun ICM-20948 \gls{imu} & Measures drone motion and orientation/state & Housed inside hull, near the centre & 9-axis \gls{imu}: 3-axis accelerometer, 3-axis gyroscope, 3-axis magnetometer; I\textsuperscript{2}C/SPI support \\
 \hline
-VL53L1X ToF sensor & Provides vertical distance reference & Mounted pointing upwards & ToF ranging up to approximately 4 m; up to 50 Hz ranging frequency \\
+VL53L1X \gls{tof} sensor & Provides vertical distance reference & Mounted pointing upwards & \gls{tof} ranging up to approximately 4 m; up to 50 Hz ranging frequency \\
 \hline
-VL53L5CX ToF sensors & Provides side obstacle awareness and short-range distance sensing & Mounted facing outwards on multiple sides of the drone & 8$\times$8 multizone ToF sensing; up to 4 m range; \\
+VL53L5CX \gls{tof} sensors & Provides side obstacle awareness and short-range distance sensing & Mounted facing outwards on multiple sides of the drone & 8$\times$8 multizone \gls{tof} sensing; up to 4 m range; \\
 \hline
 \end{tabularx}
 \end{table}
@@ -792,17 +796,17 @@ VL53L5CX ToF sensors & Provides side obstacle awareness and short-range distance
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.3\textwidth]{Hardware/Sparkfun IMU.png}
-    \caption{SparkFun IMU}
+    \caption{SparkFun \gls{imu}}
     \label{fig:IMU}
 \end{figure}
 
-\paragraph{IR Tagging System}
+\paragraph{\gls{ir} Tagging System}
 
-For game-specific components, the drone is required to have an \gls{ir} tagging system capable of tagging players and detecting when it has been tagged. Universally, the physical hardware for general laser-tag gameplay uses \gls{ir} rather than visible lasers. This is due to safety and regulatory reasons: laser products usage is subject to classification and safety requirements under UK regulations - such as the BS EN/IEC 60825-1 \cite{bsi_laser_safety_60825}, and guidance notes that laser radiation risks harm to eyes and skin \cite{ukhsa_laser_safety}. Using \gls{ir} based system is therefore more appropriate for indoor game-play, where players and drones operate near each other. In terms of hardware, we focus on how the IR components are physically installed into the overall drone design.
+For game-specific components, the drone is required to have an \gls{ir} tagging system capable of tagging players and detecting when it has been tagged. Universally, the physical hardware for general laser-tag gameplay uses \gls{ir} rather than visible lasers. This is due to safety and regulatory reasons: laser products usage is subject to classification and safety requirements under UK regulations - such as the BS EN/IEC 60825-1 \cite{bsi_laser_safety_60825}, and guidance notes that laser radiation risks harm to eyes and skin \cite{ukhsa_laser_safety}. Using \gls{ir} based system is therefore more appropriate for indoor game-play, where players and drones operate near each other. In terms of hardware, we focus on how the \gls{ir} components are physically installed into the overall drone design.
 
-\textbf{IR emitter} - Mounted on the gimbal/turret alongside the camera so tagging direction is aligned with the aiming direction. The emitter is housed in a compact cylindrical mount - around 10mm in diameter. 
+\textbf{\gls{ir} emitter} - Mounted on the gimbal/turret alongside the camera so tagging direction is aligned with the aiming direction. The emitter is housed in a compact cylindrical mount - around 10mm in diameter. 
 
-\textbf{IR receiver} - These IR sensors should be distributed around the drone hull where they should be exposed enough to detect incoming IR signals. The receiver spacing should also be dense enough to ensure reliable hit registration during game-play, so players can have an easier time shooting at the drones.
+\textbf{\gls{ir} receiver} - These \gls{ir} sensors should be distributed around the drone hull where they should be exposed enough to detect incoming \gls{ir} signals. The receiver spacing should also be dense enough to ensure reliable hit registration during game-play, so players can have an easier time shooting at the drones.
 
 \subsection{Mechanical Design Development}
 
@@ -940,7 +944,7 @@ Front lower linkage & 3.7 & 80\% & 3.0 \\
 
 \subsubsection{Turret/Gimbal Design}
 \label{Turret}
-The design of the gimbal turret (shown in Fig.~\ref{fig:Gimbal}) included requirements of the visual learning process, where the camera was required to roll, pitch and yaw - its range of motion is demonstrated via this \href{https://drive.google.com/file/d/16lPV_-VS57LZUX7-dhvgIS6Q2sYhDQis/view?usp=sharing}{video}. The design took inspiration from traditional industrial two-axis gimbals, but with an additional yaw axis that provided 3-axis movement. The camera and IR emitter needed to remain aligned to ensure aiming and tagging were performed in the same direction. The OAK D Lite camera was used as a reference in designing the dimensions of the gimbal. (The complete gimbal assembly is shown in Fig.~\ref{fig:Gimbal2})
+The design of the gimbal turret (shown in Fig.~\ref{fig:Gimbal}) included requirements of the visual learning process, where the camera was required to roll, pitch and yaw - its range of motion is demonstrated via this \href{https://drive.google.com/file/d/16lPV_-VS57LZUX7-dhvgIS6Q2sYhDQis/view?usp=sharing}{video}. The design took inspiration from traditional industrial two-axis gimbals, but with an additional yaw axis that provided 3-axis movement. The camera and \gls{ir} emitter needed to remain aligned to ensure aiming and tagging were performed in the same direction. The OAK D Lite camera was used as a reference in designing the dimensions of the gimbal. (The complete gimbal assembly is shown in Fig.~\ref{fig:Gimbal2})
 
 Mechanically, the gimbal has full $360^{\circ}$ range for both yaw and pitch - but would be advised not to go beyond $360^{\circ}$ during operation in order to prevent wire entanglement. The roll motion only allows $\pm50^{\circ}$ range of motion. The gimbal is mounted through the central opening in the bottom hull. 
 
@@ -955,11 +959,11 @@ The \textbf{coupler} forms the main connection between the yaw actuator and the 
 
 The \textbf{gimbal installation plate} is positioned below the coupler and is used to close up the interface between the gimbal and the drone body. It also secures the lower part of the installation interface which keeps the yaw mechanism aligned and provide tighter space for wires to help reduce entanglement issues. 
 
-The \textbf{square axial component} supports the pitch-axis motor and provides the structural frame for the upper gimbal mechanisms. It is directly installed to the yaw mechanism allowing the overall gimbal to move in yaw motion - it is only in contact with the servomotor output. The pitch motion is produced by mounting a gimbal motor onto the square axial component, with the motor output connected to the gimbal pitch axis component. This allows camera and IR emitter to tilt upward and downward.
+The \textbf{square axial component} supports the pitch-axis motor and provides the structural frame for the upper gimbal mechanisms. It is directly installed to the yaw mechanism allowing the overall gimbal to move in yaw motion - it is only in contact with the servomotor output. The pitch motion is produced by mounting a gimbal motor onto the square axial component, with the motor output connected to the gimbal pitch axis component. This allows camera and \gls{ir} emitter to tilt upward and downward.
 
 The \textbf{gimbal pitch axis component} acts as the moving structure for pitch stage and provides roll-axis motor mount. The roll motion is produced by mounting the roll gimbal motor onto the pitch axis component, with the motor output connected to the gimbal roll axis component. This creates a second controlled axis above the yaw and pitch stages.
 
-The \textbf{gimbal roll axis component} provides the mounting location for the OAK-D Lite camera and IR emitter. As the camera and IR emitter are mounted on the same final axis, the visual tracking direction and IR tagging direction remain aligned.
+The \textbf{gimbal roll axis component} provides the mounting location for the OAK-D Lite camera and \gls{ir} emitter. As the camera and \gls{ir} emitter are mounted on the same final axis, the visual tracking direction and \gls{ir} tagging direction remain aligned.
 
 Together, the yaw servo, pitch motor, and roll motor allow the turret to achieve 3-axis movement.
 
@@ -990,13 +994,13 @@ Coupler & 20.89  & 80\% & 16.7  \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:gimbal_mass_estimate} shows the mass of the solid body from Fusion 360 using assigned \gls{abs} material properties. Estimations were made, shown in Table~\ref{tab:gimbal_mass_estimate}, using infill assumptions for each component which reduced the final mass from 66.55g to 44.4g - excluding the camera, IR emitter, gimbal motors and servo. 
+Table~\ref{tab:gimbal_mass_estimate} shows the mass of the solid body from Fusion 360 using assigned \gls{abs} material properties. Estimations were made, shown in Table~\ref{tab:gimbal_mass_estimate}, using infill assumptions for each component which reduced the final mass from 66.55g to 44.4g - excluding the camera, \gls{ir} emitter, gimbal motors and servo. 
 
 \paragraph{Servomotor and Gimbal Motor}
 
 The gimbal turret uses two actuator types as mentioned previously. The MG90S servo is used for the yaw axis, while the Quanum 2208 brushless gimbal motors are used for the pitch and roll axes. Servo was used for the Yaw stage in order to provide compact rotation at the base, while the pitch and roll may be better with smoother gimbal-style motion. 
 
-The MG90S is suitable for the yaw stage as it fits within the turret base region inside the electronic basket. The operating speed is sufficient for controlled left-right aiming at 0.10 s/60$^\circ$ at 4.8 V or 0.08 s/60$^\circ$ at 6 V. The gimbal motors are used for pitch and roll control as they are generally designed for smoother movement. They are specified for payloads in 100-200g range which fits the weight requirements for the OAK-D Lite (61g) along with the IR emitter and gimbal parts. The suggested GBM2208 dimensions are approximately 28 x 22 mm which fits the clearance for the motor mount locations. Actuator specifications are summarised in Table~\ref{tab:gimbal_actuator_specs}.
+The MG90S is suitable for the yaw stage as it fits within the turret base region inside the electronic basket. The operating speed is sufficient for controlled left-right aiming at 0.10 s/60$^\circ$ at 4.8 V or 0.08 s/60$^\circ$ at 6 V. The gimbal motors are used for pitch and roll control as they are generally designed for smoother movement. They are specified for payloads in 100-200g range which fits the weight requirements for the OAK-D Lite (61g) along with the \gls{ir} emitter and gimbal parts. The suggested GBM2208 dimensions are approximately 28 x 22 mm which fits the clearance for the motor mount locations. Actuator specifications are summarised in Table~\ref{tab:gimbal_actuator_specs}.
 
 \begin{table}[htbp]
 \centering
@@ -1027,11 +1031,11 @@ Roll & Quanum/GBM2208 brushless gimbal motor & 28  $\times$ 22 /  43 \\
     \label{fig:Complete Assembly}
 \end{figure}
 
-The final airframe configuration (shown in Fig.~\ref{fig:Complete Assembly}) brings the separate subsystem assemblies together into a single integrated drone assembly, shown in Fig.~\ref{fig:Complete Assembly}. The design uses a modular central body with detachable rotor-arm, integrated with propeller protection and helicopter-based landing gears, along with a centrally mounted 3-axis gimbal turret. This layout suits the electronics, propulsion, sensors, camera, and IR-tagging system while keeping key parts accessible for maintenance. Rather than one-piece shell, all parts are designed to be separate yet connected, replaceable, and cheap making it practical for manufacture and repair.
+The final airframe configuration (shown in Fig.~\ref{fig:Complete Assembly}) brings the separate subsystem assemblies together into a single integrated drone assembly, shown in Fig.~\ref{fig:Complete Assembly}. The design uses a modular central body with detachable rotor-arm, integrated with propeller protection and helicopter-based landing gears, along with a centrally mounted 3-axis gimbal turret. This layout suits the electronics, propulsion, sensors, camera, and \gls{ir}-tagging system while keeping key parts accessible for maintenance. Rather than one-piece shell, all parts are designed to be separate yet connected, replaceable, and cheap making it practical for manufacture and repair.
 
 \paragraph{Component Layout}
 
-The drone parts are designed with reference to the chosen internal electronics. Most of the components will be housed in the electronics basket - including the Raspberry Pi, \gls{esc}s, voltage regulator, IMU sensor, battery, and wiring. The OAK-D Lite camera and IR emitter will be mounted externally on the gimbal turret, with their wiring routed back into the central body opening. The motor and propellers will be mounted in the motor arms.
+The drone parts are designed with reference to the chosen internal electronics. Most of the components will be housed in the electronics basket - including the Raspberry Pi, \gls{esc}s, voltage regulator, \gls{imu} sensor, battery, and wiring. The OAK-D Lite camera and \gls{ir} emitter will be mounted externally on the gimbal turret, with their wiring routed back into the central body opening. The motor and propellers will be mounted in the motor arms.
 
 \subsection{Preliminary Engineering Evaluation}
 \label{sec:Engineering Evaluation}
@@ -1104,15 +1108,15 @@ The player hardware shows how human players would interact with the multiagent l
 
 \paragraph{Vest}
 
-The vest is used as the main hit-detection surface for the player. The intended design is to have IR receiver modules positioned throughout the vest in high density so the drone can target. The receivers would be distributed across the front, back, and sides of the vest so that hits can be detected from multiple directions during game-play. The vest should be lightweight but also ideally provide some protection against potential physical impacts such as player collisions. A compartment acting as an electronics box may house all required electronics including micro-controller, wiring, and wireless modules. A small display or LED indicator area can be included to show simple feedback such as team status and player status.
+The vest is used as the main hit-detection surface for the player. The intended design is to have \gls{ir} receiver modules positioned throughout the vest in high density so the drone can target. The receivers would be distributed across the front, back, and sides of the vest so that hits can be detected from multiple directions during game-play. The vest should be lightweight but also ideally provide some protection against potential physical impacts such as player collisions. A compartment acting as an electronics box may house all required electronics including micro-controller, wiring, and wireless modules. A small display or \gls{led} indicator area can be included to show simple feedback such as team status and player status.
 
 \paragraph{Helmet}
 
-The helmet provides an upper-body hit detection area and improved IR coverage around the player. Similar to the vest, IR receivers will be positioned around the helmet surface so the signals can be detected. Again, a compartment will house all the required electronics and circuitry for the hit-detection and status updates. The helmet also acts as an additional protective element, alongside the overhead net, against falling drones and other collisions.
+The helmet provides an upper-body hit detection area and improved \gls{ir} coverage around the player. Similar to the vest, \gls{ir} receivers will be positioned around the helmet surface so the signals can be detected. Again, a compartment will house all the required electronics and circuitry for the hit-detection and status updates. The helmet also acts as an additional protective element, alongside the overhead net, against falling drones and other collisions.
 
 \paragraph{Laser Tagging Device}
 
-The equipment for tagging used by players is proposed to be a handheld IR tagging device. Its purpose would be to allow players to tag drones with a trigger. The device would likely contain a compartment with all required electronics just as the other player hardware. As stated before, all tagging systems will be using \gls{ir} rather than actual lasers for safety and regulatory reasons.
+The equipment for tagging used by players is proposed to be a handheld \gls{ir} tagging device. Its purpose would be to allow players to tag drones with a trigger. The device would likely contain a compartment with all required electronics just as the other player hardware. As stated before, all tagging systems will be using \gls{ir} rather than actual lasers for safety and regulatory reasons.
 
 %%%%%%%%%----------------end of Hardware---------------%%%%%%%%%
 
@@ -1137,7 +1141,7 @@ In order to determine the best method for estimating the state of our drones, we
 For the sensors, we chose to use an \gls{imu} with \gls{tof} sensors. We chose these because the \gls{imu} provides accurate angular velocity and acceleration data which can be used to infer the motion of the drone and the \gls{tof} sensors provide map geometry data to correct for drift in the \gls{imu} estimations. In this situation, it is common to use an \gls{imu}, however, there are many different sensors that can provide the map geometry data. We also considered using cameras and \gls{lidar} instead of the \gls{tof} sensors, however, as mentioned in the previous paragraph, the cameras will likely have poor performance in our dark lighting conditions, and \gls{lidar} sensors would be heavy and bulky, so we chose \gls{tof} sensors as a compromise between weight and accuracy. 
 
 \subsection{Sensor Measurements}
-\paragraph{\gls{imu}} Our chosen \gls{imu}, the SparkFun ICM-20948 IMU \cite{sparkfun_icm20948}, includes a 3-axis accelerometer, a 3-axis gyroscope, and a 3-axis magnetometer. Due to our arena being in a warehouse, there will likely be significant distortion of the earths magnetic field, and hence we will use the \gls{imu} in mode 6, Accel + Gyro Mode, which saves power by turning the magnetometer off. This means that our \gls{imu} will output 3-axis angular velocity from the gyroscope, and 3-axis acceleration from the accelerometer. Additionally, the gyroscope and accelerometer each have their own operational modes, and we have chosen to run them both in low noise mode with the digital low pass filter activated (GYRO\_FCHOICE=1 and ACCEL\_FCHOICE=1). We will tune configuration of the digital low pass filter cut-off frequencies (GYRO\_DLPFCFG and ACCEL\_DLPFCFG) experimentally to achieve the optimal noise and response trade-off. These modes both have a base \gls{dor} of 1.125kHz, however, to reduce computational load, we set the sample rate division parameters to 1 (GYRO\_SMPLRT\_DIV=1 and ACCEL\_SMPLRT\_DIV=1) in order to reduce the \gls{dor} to 562.5Hz using Eq.\ref{equ:EstSMPLRT_DIV} below. This allows us to reduce the computational load while still keeping the \gls{dor} much higher than our state estimation \gls{dor} of 50Hz. 
+\paragraph{\gls{imu}} Our chosen \gls{imu}, the SparkFun ICM-20948 \gls{imu} \cite{sparkfun_icm20948}, includes a 3-axis accelerometer, a 3-axis gyroscope, and a 3-axis magnetometer. Due to our arena being in a warehouse, there will likely be significant distortion of the earths magnetic field, and hence we will use the \gls{imu} in mode 6, Accel + Gyro Mode, which saves power by turning the magnetometer off. This means that our \gls{imu} will output 3-axis angular velocity from the gyroscope, and 3-axis acceleration from the accelerometer. Additionally, the gyroscope and accelerometer each have their own operational modes, and we have chosen to run them both in low noise mode with the digital low pass filter activated (GYRO\_FCHOICE=1 and ACCEL\_FCHOICE=1). We will tune configuration of the digital low pass filter cut-off frequencies (GYRO\_DLPFCFG and ACCEL\_DLPFCFG) experimentally to achieve the optimal noise and response trade-off. These modes both have a base \gls{dor} of 1.125kHz, however, to reduce computational load, we set the sample rate division parameters to 1 (GYRO\_SMPLRT\_DIV=1 and ACCEL\_SMPLRT\_DIV=1) in order to reduce the \gls{dor} to 562.5Hz using Eq.\ref{equ:EstSMPLRT_DIV} below. This allows us to reduce the computational load while still keeping the \gls{dor} much higher than our state estimation \gls{dor} of 50Hz. 
 
 \begin{equation} \label{equ:EstSMPLRT_DIV}
     \mathrm{DOR} = \frac{1125}{1 + \mathrm{SMPLRT\_DIV}}
@@ -1433,7 +1437,7 @@ With the camera isolated from the drone's tilt, the next step is to select the s
 
 While \gls{lidar} and active \gls{rgbd} cameras provide accurate native depth data, they were rejected due to their interference with the laser tag scoring system. 
 
-Both camera systems operate by emitting \gls{ir} light into the environment. For example, the Orbbec Astra Mini Pro is a structured light system and relies on an onboard \gls{ir} projector to cast a dense grid pattern across the room to calculate depth. The laser tag scoring system relies on detecting specific IR pulses between the drones and players. In a confined maze environment, any \gls{ir} projection from the cameras will likely reflect off walls (multipath interference) and also flood the players' hit receivers with noise and cause false registrations. Therefore, we deemed that any active payload would be incompatible with the game mechanics. 
+Both camera systems operate by emitting \gls{ir} light into the environment. For example, the Orbbec Astra Mini Pro is a structured light system and relies on an onboard \gls{ir} projector to cast a dense grid pattern across the room to calculate depth. The laser tag scoring system relies on detecting specific \gls{ir} pulses between the drones and players. In a confined maze environment, any \gls{ir} projection from the cameras will likely reflect off walls (multipath interference) and also flood the players' hit receivers with noise and cause false registrations. Therefore, we deemed that any active payload would be incompatible with the game mechanics. 
 
 The decision between Monocular RGB and Passive Stereo requires a trade-off between \gls{swapc} efficiency and depth accuracy. 
 
