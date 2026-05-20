@@ -137,9 +137,7 @@ To inform these high-level decisions, each drone is equipped with an OAK-D Lite 
 
 These estimated player coordinates update the central server's global state, which in turn dictates the high-level navigational objectives assigned to each drone. Search mode utilises a hybrid \gls{bfs} region-allocation and lawnmower trajectory algorithm to systematically scan the arena (Section \ref{search mode}). When rapid transit is required, flight control is handed over to a \gls{rl} policy trained offline in the Isaac Lab physics simulator, outputting body thrust and moment commands (Section \ref{movement mode}). Furthermore, an Artificial Potential Field (APF) controller handles real-time collision avoidance by computing repulsive gradients from walls and other agents, converting them into evasive manoeuvres (Section \ref{collision avoidance mode}).
 
-In addition to the technical deployment, user retention is driven by a companion mobile application that tracks performance metrics, leaderboards, and achievements to foster community engagement (Section \ref{app}). Finally, the technical development is supported by an evaluation of broader engineering considerations. These are validated by a quantitative risk assessment (Section \ref{risk-assessment}) and a financial model (Section \ref{commercialisation}), which confirms the commercial feasibility of the enterprise by projecting a Net Present Value of £68,669 at an optimal price of £200 per game.
-% Technology Strategy, Sustainability
-
+In addition to the technical deployment, user retention is driven by a companion mobile application that tracks performance metrics, leaderboards, and achievements to foster community engagement (Section \ref{app}). The technical development is supported by an evaluation of broader engineering considerations. These are validated by a quantitative risk assessment (Section \ref{risk-assessment}) and a financial model (Section \ref{commercialisation}), which confirms the commercial feasibility of the enterprise by projecting a Net Present Value of £68,669 at an optimal price of £200 per game. Finally, the report assesses triple-bottom-line sustainability (Section \ref{sustainability}) and outlines a technology strategy using a House of Quality and SWOT analysis (Section \ref{technology_strategy}).
 \newpage
 
 \section{Proposed Gameplay for Drone-Based Laser Tag} % Ritchie
@@ -2987,6 +2985,7 @@ Under the conservative assumptions laid out above, the value of a theoretical bu
 %%%%%%%%%%%%%%%%-----------End of Commercialisation----%%%%%%%%%%%%%%%
 
 \section{Sustainability} %Rickie
+\label{sustainability}
 \fancyhead[C]{Shing Hei Rickie Chan}
 
 As the system is intended for repeated commercial use, sustainability is considered, as impacts come not only from initial jump-start stages but also from operation and maintenance. This section assesses these trade-offs through the triple bottom line: environmental, social and economic impact.
@@ -3009,6 +3008,7 @@ The system should not be considered fully sustainable. Issues such as waste and 
 \newpage
 %%%%%%%%%%%%%%%----------End of Sustainability--------------%%%%%%%%%%%%%%%
 \section{Technology Strategy}
+\label{technology_strategy}
 \fancyhead[C]{Rishabh Luthra}
 
 \subsection{House of Quality}
