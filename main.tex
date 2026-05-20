@@ -1453,7 +1453,7 @@ To compare the performance of monocular and stereo depth estimation under geomet
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\linewidth]{figs/DepthEstimationTests.png}
+    \includegraphics[width=0.65\linewidth]{figs/DepthEstimationTests.png}
     \caption{Overview of the experimental setup comparing monocular and stereo depth estimation under geometric transformations.}
     \label{fig:depth_estimation_test}
 \end{figure}
@@ -1465,12 +1465,10 @@ We began with a baseline calibration and translated the target linearly from 5m 
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.4\linewidth]{figs/LinearTranslation_Plot.pdf}
+    \includegraphics[width=0.4\linewidth]{figs/LinearTranslation_Plot.png}
     \caption{Comparison of monocular and stereo depth estimation against physical ground truth during linear translation from 5m to 15m}
     \label{fig:linear_translation}
 \end{figure}
-
-\newpage
 
 \textbf{(ii) Changes in Target Orientation}
 
@@ -1482,7 +1480,7 @@ As the target turns, its 2D profile narrows and the monocular algorithm, which i
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\linewidth]{figs/YawRotation_Plot.png}
+    \includegraphics[width=0.85\linewidth]{figs/YawRotation_Plot.png}
     \caption{Comparison of depth estimation models during target yaw rotation from $0^\circ$ to $90^\circ$ at a nominal 5.0 m depth.}
     \label{fig:yaw_rotation}
 \end{figure}
@@ -1495,7 +1493,7 @@ This scenario highlights the advantage of the stereo system with the stereo esti
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\linewidth]{figs/CrouchDeformation_Plot.png}
+    \includegraphics[width=0.85\linewidth]{figs/CrouchDeformation_Plot.png}
     \caption{Comparison of depth estimation models during crouching at a constant physical depth}
     \label{fig:crouch_deformation}
 \end{figure}
@@ -1511,7 +1509,7 @@ The hardware of this system is comprised of a camera array consisting of three c
     
     \begin{subfigure}[b]{\textwidth}
         \centering
-        \includegraphics[width=0.6\textwidth]{figs/sensor_pipeline.pdf}
+        \includegraphics[width=0.65\textwidth]{figs/sensor_pipeline.pdf}
         \caption{}
         \label{fig:pipeline_diagram}
     \end{subfigure}
@@ -1520,14 +1518,14 @@ The hardware of this system is comprised of a camera array consisting of three c
 
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        \includegraphics[width=0.7\textwidth]{figs/1_RGB.png}
+        \includegraphics[width=0.8\textwidth]{figs/1_RGB.png}
         \caption{}
         \label{fig:rgb_data}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        \includegraphics[width=0.7\textwidth]{figs/2_DepthMap.png}
+        \includegraphics[width=0.8\textwidth]{figs/2_DepthMap.png}
         \caption{}
         \label{fig:depth_data}
     \end{subfigure}
@@ -1603,7 +1601,7 @@ To quantify the model's convergence during training, loss and precision metrics 
     \label{fig:visdrone_training_results}
 \end{figure}
 
-To determine the most effective confidence threshold for deployment, the F1-Confidence curve was evaluated (Fig. \ref{fig:visdrone_f1_curve}). The F1 score represents the harmonic mean of precision and recall. The figure shows that the model reaches its peak F1 score of 0.53 at a confidence threshold of 0.272. Hence, we set the system to this specific threshold in order to achieve the best operational balance between minimising false positives (incorrectly classifying background noise as a player) and preventing false negatives (failing to detect a valid target).         
+To determine the most effective confidence threshold for deployment, the F1-Confidence curve was evaluated (Fig. \ref{fig:visdrone_f1_curve}). The F1 score represents the harmonic mean of precision and recall. The figure shows that the model reaches its peak F1 score of 0.53 at a confidence threshold of 0.249. Hence, we set the system to this specific threshold in order to achieve the best operational balance between minimising false positives (incorrectly classifying background noise as a player) and preventing false negatives (failing to detect a valid target).         
 
 \begin{figure}[htbp]
     \centering
@@ -1742,7 +1740,7 @@ To ensure the resulting bounding boxes only encompass visually exposed regions, 
         \caption{}
         \label{fig:raycast_game}
     \end{subfigure}
-    \caption{Visualisation of the automated annotation and occlusion logic. Left (a): The 3D spatial environment demonstrating the raycasts, where red lines indicate vertices blocked by physical cover. Right (b): The corresponding 2D rendered frame, demonstrating bounding boxes that encapsulate only the unoccluded geometry.}
+    \caption{Visualisation of the automated annotation and occlusion logic. (a) The 3D spatial environment demonstrating the raycasts, where red lines indicate vertices blocked by physical cover. (b) The corresponding 2D rendered frame, demonstrating bounding boxes that encapsulate only the unoccluded geometry.}
     \label{fig:raycast_validation}
 \end{figure}
 
@@ -1773,7 +1771,7 @@ Beyond theoretical convergence, we determined the operational threshold for the 
     \label{fig:synthetic_f1_curve}
 \end{figure}
 
-The curve demonstrates that the synthetic model reaches a peak F1 score of 0.94 at a confidence threshold of 0.524. Because the synthetic pipeline generates mathematically consistent features and ground-truth coordinates, the network achieves a high peak confidence within its own domain. Consequently, the deployment inference threshold within the Unity Sentis tensor engine was configured to this 0.524 value. Setting the threshold at this peak ensures the system effectively balances the detection of valid targets against the rejection of simulated background noise.
+The curve demonstrates that the synthetic model reaches a peak F1 score of 0.95 at a confidence threshold of 0.508. Because the synthetic pipeline generates mathematically consistent features and ground-truth coordinates, the network achieves a high peak confidence within its own domain. Consequently, the deployment inference threshold within the Unity Sentis tensor engine was configured to this 0.508 value. Setting the threshold at this peak ensures the system effectively balances the detection of valid targets against the rejection of simulated background noise.
 
 Finally, a visual inspection of the validation holdout set was conducted. As demonstrated in the sample validation predictions (Fig. \ref{fig:synthetic_val_preds}), the model successfully adapts to the severe algorithmic occlusions and varied lighting conditions generated by the Unity pipeline.
 
