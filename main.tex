@@ -1607,14 +1607,44 @@ To determine the most effective confidence threshold for deployment, the F1-Conf
     \label{fig:visdrone_f1_curve}
 \end{figure}
 
-While an F1 score of 0.53 and an mAP50 of 0.49 are lower than typical detection models, these lower results are likely as a result of the environment. As seen in the validation sample predictions (Fig. \ref{fig:visdrone_val_preds}), the human targets occupy a few pixels in area due to the high-altitude aerial perspective. Visual inspection of the sample predictions confirms that the model has successfully adapted to consistently draw bounding boxes around these low-resolution targets and the suppressed mAP score reflects the inherent difficulty of drawing precise bounding boxes around them. 
+While an F1 score of 0.53 and an mAP50 of 0.49 are lower than typical detection models, these lower results are likely as a result of the environment. As seen in the sample labelled image (Fig. \ref{fig:visdrone}), the human targets occupy only a few pixels in area due to the high-altitude aerial perspective. However, visual inspection of the sample predictions confirms that the model has successfully adapted to consistently draw bounding boxes around these low-resolution targets and the suppressed mAP score reflects the inherent difficulty of this task. Table \ref{tab:visdrone_baseline} summarises the training results for the VisDrone baseline model.
 
-\begin{figure}[htbp]
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.7\linewidth]{figs/visdrone_val_batch0_pred.jpg}
+%     \caption{Sample bounding box predictions from the VisDrone validation set.}
+%     \label{fig:visdrone_val_preds}
+% \end{figure}
+
+\begin{table}[htbp]
     \centering
-    \includegraphics[width=0.7\linewidth]{figs/visdrone_val_batch0_pred.jpg}
-    \caption{Sample bounding box predictions from the VisDrone validation set.}
-    \label{fig:visdrone_val_preds}
-\end{figure}
+    \caption{Baseline YOLOv8n Training and Evaluation Metrics}
+    \label{tab:visdrone_baseline}
+    \begin{tabular}{@{}llc@{}}
+        \toprule
+        \textbf{Category} & \textbf{Parameter / Metric} & \textbf{Value} \\
+        \midrule
+        \textbf{Dataset Parameters} & Dataset Source & VisDrone2019-DET~\cite{Zhu2020DetectionAT} \\
+        & Target Classes Filtered & Person, Pedestrian \\
+        & Training Set Size & 6,471 images \\
+        & Validation Set Size & 548 images \\
+        & Input Image Resolution & 640 $\times$ 640 pixels \\
+        \midrule
+        \textbf{Training Conditions} & Base Model & YOLOv8-nano \\
+        & Total Epochs & 50 (Early Stopping Patience: 10) \\
+        & Batch Size & 32 \\
+        & Optimiser & AdamW \\
+        & Initial Learning Rate & 0.000714 \\
+        & Hardware / GPU & NVIDIA Tesla T4 (15GB VRAM) \\
+        \midrule
+        \textbf{Validation Results} & Precision (P) & 0.636 \\
+        & Recall (R) & 0.450 \\
+        & Mean Average Precision (mAP@50) & 0.492 \\
+        & Mean Average Precision (mAP@50-95) & 0.190 \\
+        & Average Inference Time & 2.9 ms \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 \subsection{Baseline Evaluation}
 
@@ -1655,14 +1685,14 @@ The following 2D graphs flatten the 3D hemispherical sweeps shown in Fig. \ref{f
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figs/VisDrone_F_Light_Confidence.pdf}
+        \includegraphics[width=\textwidth]{figs/VisDrone_F_Light_Confidence.png}
         \caption{}
         \label{fig:daylight_confidence}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figs/VisDrone_F_Light_Classification.pdf}
+        \includegraphics[width=\textwidth]{figs/VisDrone_F_Light_Classification.png}
         \caption{}
         \label{fig:daylight_classification}
     \end{subfigure}
@@ -1678,14 +1708,14 @@ Under daylight conditions (Fig. \ref{fig:benchmark_daylight}), the model demonst
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figs/VisDrone_F_Dark_Confidence.pdf}
+        \includegraphics[width=\textwidth]{figs/VisDrone_F_Dark_Confidence.png}
         \caption{}
         \label{fig:benchmark_lowlight_confidence}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figs/VisDrone_F_Dark_Classification.pdf}
+        \includegraphics[width=\textwidth]{figs/VisDrone_F_Dark_Classification.png}
         \caption{}
         \label{fig:benchmark_lowlight_classification}
     \end{subfigure}
@@ -1798,14 +1828,14 @@ This stability is supported by the TP/FP/FN categorisation (Fig. \ref{fig:benchm
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figs/Synthetic_F_Dark_Confidence.pdf}
+        \includegraphics[width=\textwidth]{figs/Synthetic_F_Dark_Confidence.png}
         \caption{}
         \label{fig:benchmark_synthetic_lowlight_confidence}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figs/Synthetic_F_Dark_Classification.pdf}
+        \includegraphics[width=\textwidth]{figs/Synthetic_F_Dark_Classification.png}
         \caption{}
         \label{fig:benchmark_synthetic_lowlight_classification}
     \end{subfigure}
@@ -1818,7 +1848,7 @@ Alongside low-light performance, the physical geometry of a laser tag maze intro
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\linewidth]{figs/Occlusion_Test.pdf}
+    \includegraphics[width=0.65\linewidth]{figs/Occlusion_Test.png}
     \caption{Comparing the VisDrone and Synthetic Models under occlusion}
     \label{fig:occlusion_test}
 \end{figure}
@@ -1845,8 +1875,6 @@ and by rearranging these equations, the 3D position vector in the camera's frame
 \begin{equation}
 P_c = \begin{bmatrix} x_c \\ y_c \\ z_c \end{bmatrix} = \begin{bmatrix} \frac{x_i \cdot z_c}{f} \\ \frac{y_i \cdot z_c}{f} \\ z_c \end{bmatrix}
 \end{equation}
-
-\newpage
 
 \begin{figure}[htbp]
      \centering
@@ -1919,8 +1947,6 @@ which can be expressed in matrix representation as:
 Although we are able to obtain the 3D global coordinates of the player ($P_w$) using the kinematic transformations above, the raw measurements will be inherently noisy due to stereoscopic depth jitter and \gls{yolo} bounding box fluctuations. In addition, the arena contains physical walls and objects that can cause temporary occlusions. As a result, we cannot rely solely on the raw visual data and must maintain a state estimate of the player's position.
 
 In order to achieve this, we implemented a Linear Kalman Filter~\cite{reid_kalman} to maintain a continuous, smoothed estimate of the player's position. The filter operates on a constant velocity model, allowing us to project the player's trajectory during periods of occlusion.
-
-\newpage
 
 The filter maintains an internal state vector ($X_k$) representing the target's 3D position and velocity:
 
