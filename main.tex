@@ -131,7 +131,7 @@ To meet this demand, we present a novel laser tag game in which human players co
 
 From a drone perspective, the primary goal is to achieve autonomy and coordinated teamwork within a confined environment. Since off-the-shelf platforms lack the necessary flexibility, payload integration, and component protection for such close-proximity indoor operations, a custom modular quadrotor airframe was developed (Section \ref{hardware}). The \gls{abs} 3D-printed chassis features integrated blade guards to ensure operational continuity during minor wall collisions. To satisfy a 2:1 thrust-to-weight ratio for a 4kg maximum takeoff mass, the propulsion system utilises BrotherHobby Avenger 2806.5 1300KV brushless motors paired with 8x4x3 polycarbonate propellers, driven by a 4S 5000mAh Lithium Polymer battery to sustain approximately 10 minutes of active flight endurance. Dedicated player hardware, including sensor-equipped helmets and vests, then integrate into this ecosystem (Section \ref{player_hardware}).
 
-For mult-agent coordination, the system relies on an IEEE 802.11ac Wi-Fi communications framework (Section \ref{network}) linking the onboard drone hardware to a central server. The server manages the high-level game logic, evaluating the global state to dynamically transition individual drones through specific operational modes such as Search, Track, Shoot, and Movement (Section \ref{high level control}). 
+For multi-agent coordination, the system relies on an IEEE 802.11ac Wi-Fi communications framework (Section \ref{network}) linking the onboard drone hardware to a central server. The server manages the high-level game logic, evaluating the global state to dynamically transition individual drones through specific operational modes such as Search, Track, Shoot, and Movement (Section \ref{high level control}). 
 
 To inform these high-level decisions, each drone is equipped with an OAK-D Lite passive stereoscopic camera mounted on a custom 3-axis tracking gimbal, which kinematically decouples the camera from the drone’s flight attitude to maintain continuous target lock. Visual data is ingested by a YOLOv8-nano (YOLOv8n) convolutional neural network (Section \ref{visual_perception}). To overcome the domain gap caused by the arena's low-light conditions and frequent target occlusions, this model was trained on a synthetic dataset created within Unity. Because active visual sensors would interfere with the game's \gls{ir} mechanics, and monocular depth estimation fails when a human target alters their posture, target depth is extracted passively via stereoscopic horizontal pixel disparity. This raw spatial data is smoothed using a Linear Kalman Filter, operating on a Discrete White Noise Acceleration (DWNA) model, to provide continuous, predictive 3D state estimations of the players. 
 
@@ -147,8 +147,9 @@ In addition to the technical deployment, user retention is driven by a companion
 \fancyhead[C]{Richard Usherwood}
 \begin{figure}[htbp]
     \centering
+    \captionsetup{justification=centering}
     \includegraphics[width=0.7\textwidth]{figs/Safety Net Editted.png}
-    \caption{A simulation of a player and a drone in the play arena (Video demonstration: \url{https://youtu.be/nP8p0LBId1U})}
+    \caption{A simulation of a player and a drone in the play arena \\ (Video demonstration: \url{https://youtu.be/nP8p0LBId1U})}
     \label{fig:gameplay}
 \end{figure}
 \subsection{Overview}
@@ -1401,10 +1402,10 @@ This section details the design and implementation of this perception system. To
 % - check references
 % - include an image on stereo depth and maybe of the test setup [done]
 % - a few sentences on why to focus on the depth mechanism
-% - interesting to note that relative depth estimation is possible using ml methods but it would fail due to the compute cost as well as its unreliability to retrieve exact depth metrics
-% - add distance measurements into inline equations
+% - interesting to note that relative depth estimation is possible using ml methods but it would fail due to the compute cost as well as its unreliability to retrieve exact depth metrics [done]
+% - add distance measurements into inline equations [not needed]
 % - check acronyms like rgb
-% - section on Unity simulation environment (map generation, why Unity is beneficial, reference synthetic data generation)
+% - section on Unity simulation environment (map generation, why Unity is beneficial, reference synthetic data generation) [not needed]
 % - maybe move the rgb and stereo images to be horizontal on the page above and then sensor architecture standalone on the page after [done]
 % - reference Figure 6, 13, 14 (check all figures are referenced)
 
@@ -1481,7 +1482,7 @@ We began with a baseline calibration and translated the target linearly from 5m 
 
 In a practical laser tag environment, players are unlikely to follow linear trajectories. To evaluate how the depth tracking systems handle changes in orientation, we simulate a player turning sideways by rotating the target from $0^\circ$ to $90^\circ$ on its yaw axis. As the target rotates around its 5.1m centroid, the physical ground truth, which is represented by the closest physical surface, shifts from 5.0m down to 4.85m. 
 
-As illustrated in Fig. \ref{fig:yaw_rotation}, there is a slight discrepancy between the physical ground truth and the stereo estimation during the turn. While the ground truth tracks the foremost surface, the stereo algorithm calculates the depth based on the centroid of the 2D bounding box. This means that during the rotation, the stereo estimate settles at the $5.1 \text{ m}$ centre of mass and as the rotation reaches $90^\circ$, the camera's view is restricted to the 0.2m side profile and this causes the stereo centroid calculation to fall to the 4.85m ground truth. 
+As illustrated in Fig. \ref{fig:yaw_rotation}, there is a slight discrepancy between the physical ground truth and the stereo estimation during the turn. While the ground truth tracks the foremost surface, the stereo algorithm calculates the depth based on the centroid of the 2D bounding box. This means that during the rotation, the stereo estimate settles at the 5.1m centre of mass and as the rotation reaches $90^\circ$, the camera's view is restricted to the 0.2m side profile and this causes the stereo centroid calculation to fall to the 4.85m ground truth. 
 
 As the target turns, its 2D profile narrows and the monocular algorithm, which is reliant on the pixel area, misinterprets this narrowing as the target moving further away.  This means that the depth estimate from the monocular camera diverges from the ground truth. This specific scenario highlights a limitation of the monocular approach, as the system cannot distinguish between a change in the target's orientation and its actual distance. 
 
@@ -2036,7 +2037,7 @@ However, a purely kinematic prediction becomes invalid if the player stops movin
     \vspace{0.25cm}
     
     \includegraphics[width=0.7\linewidth]{figs/Last Known Position.png}
-    \caption{Timeout mechanism execution (Video demonstration: \url{https://youtu.be/zGCds-d2954}). After prolonged occlusion, the state estimate halts the kinematic prediction and reverts to the last verified position.}
+    \caption{Timeout mechanism execution (Video demonstration: \url{https://youtu.be/zGCds-d2954}). After prolonged occlusion, the state estimate halts the kinematic prediction and reverts to the last verified position (shown in orange).}
     \label{fig:last_known_position}
 \end{figure}
 
