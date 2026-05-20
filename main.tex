@@ -2530,7 +2530,7 @@ Lee et al describe the use of consistency in \gls{ui} design as \say{Uniformity 
 
 \subsection{Technical Details}
 \subsubsection{Overview}
-The app was created using Expo, a development environment used to create React Native apps. React Native is a framework that allows mobile apps to be built using React, which is a JavaScript library designed for user interface design.
+The app was created using Expo, a development environment used to create React Native apps. React Native is a framework that allows mobile apps to be built using React, which is a JavaScript library designed for \gls{ui} design.
 \subsubsection{Project Structure}
 When the app is run, it opens a \say{package.json} file which sets the rest of the app in motion. From here, it exectutes index.js, importing App.js, which opens MainContainer.js. MainContainer.js serves as the app's navigation hub. MainContainer.js decides which \say{navigation flow} to show, based on whether the app is in state \say{Auth} or \say{Main} (whether or not the user is signed in). From here, MainContainer.js accesses the displayed screens, each of which has a dedicated JavaScript file in the \say{screens} subfolder.
 \subsubsection{State Management}
