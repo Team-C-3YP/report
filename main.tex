@@ -1441,7 +1441,7 @@ Both camera systems operate by emitting \gls{ir} light into the environment. For
 
 The decision between Monocular RGB and Passive Stereo requires a trade-off between \gls{swapc} efficiency and depth accuracy. 
 
-A monocular camera (for example, the Raspberry Pi AI Camera) offers the best \gls{swapc} profile since it weighs 24 g and draws less than 1.5 W. This means that it has a negligible impact on the quadcopter's flight dynamics. However, a single lens cannot natively measure depth and to extract 3D coordinates from a 2D feed, the system must rely on a geometric prior. This can be done by assuming a standard geometric height for a human or similarly the area of the bounding box (which can then be fine tuned during implementation). A standard method assumes the physical cross-sectional area of the human target ($A_\text{prior}$) is constant. The distance $Z$ is then calculated using the focal length ($f$) and the pixel area of the bounding box ($A_\text{px}$):
+A monocular camera (for example, the Raspberry Pi AI Camera) offers the best \gls{swapc} profile since it weighs 24~g and draws less than 1.5~W. This means that it has a negligible impact on the quadcopter's flight dynamics. However, a single lens cannot natively measure depth and to extract 3D coordinates from a 2D feed, the system must rely on a geometric prior. This can be done by assuming a standard geometric height for a human or similarly the area of the bounding box (which can then be fine tuned during implementation). A standard method assumes the physical cross-sectional area of the human target ($A_\text{prior}$) is constant. The distance $Z$ is then calculated using the focal length ($f$) and the pixel area of the bounding box ($A_\text{px}$):
 \begin{equation}
     Z = f \cdot \sqrt{\frac{A_\text{prior}}{A_\text{px}}}.
 \end{equation}
@@ -1646,13 +1646,13 @@ While an F1 score of 0.53 and an mAP50 of 0.49 are lower than typical detection 
         & Batch Size & 32 \\
         & Optimiser & AdamW \\
         & Initial Learning Rate & 0.000714 \\
-        & Hardware / GPU & NVIDIA Tesla T4 (15GB VRAM) \\
+        & Hardware / GPU & NVIDIA Tesla T4 (15~GB VRAM) \\
         \midrule
         \textbf{Validation Results} & Precision (P) & 0.636 \\
         & Recall (R) & 0.450 \\
         & Mean Average Precision (mAP@50) & 0.492 \\
         & Mean Average Precision (mAP@50-95) & 0.190 \\
-        & Average Inference Time & 2.9 ms \\
+        & Average Inference Time & 2.9~ms \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -1752,7 +1752,7 @@ To resolve the domain gap identified during baseline evaluation, an automated da
 To prevent the model from overfitting to specific synthetic visual patterns, domain randomisation was applied to every frame. The data generation script dynamically alters spatial, kinematic, and environmental variables prior to each capture:
 
 \begin{itemize}
-    \item \textbf{Camera Positioning:} The virtual camera was spawned at a random coordinate within a 3.0 to 8.0-metre radius of the target, with an altitude between 1.0 and 5.0 metres.
+    \item \textbf{Camera Positioning:} The virtual camera was spawned at a random coordinate within a 3.0 to 8.0-metre radius of the target, with an altitude between 1.0 and 5.0~metres.
     \item \textbf{Target Kinematics:} The player model was randomly rotated and given a spatial offset. To ensure a diverse dataset of physical poses, the model was also placed in a discrete animation state (e.g., aiming, sprinting, or transitioning to prone).
     \item \textbf{Environmental Conditions:} To replicate the target arena, ambient lighting was minimised. The primary directional light was scaled to a relative intensity between 20\% and 60\% of standard simulated daylight. Furthermore, different materials and textures were dynamically applied to the surrounding walls and props.
 \end{itemize}
@@ -2052,7 +2052,7 @@ An evaluation of the current perception system highlights key design limitations
 \end{itemize}
 
 \subsection{Conclusion}
-This section presented a three-stage visual perception pipeline designed to provide relative 3D spatial data within the broader multiagent drone system. Selecting a passive stereo camera establishes a method for tracking target depth independent of posture while avoiding infrared interference with the laser tag scoring mechanics. Tracking vulnerabilities under low-light or occluded conditions were mitigated by implementing an automated synthetic data generation pipeline to train the object detection model. Fusing 2D bounding boxes with stereoscopic depth via a Linear Kalman filter provides smoothed 3D coordinates and trajectory prediction during temporary occlusions. The simulation results indicate that the pipeline delivers a workable spatial tracking interface suitable for integration with the high-level logic and flight controller.
+This section presented a three-stage visual perception pipeline designed to provide relative 3D spatial data within the broader multiagent drone system. Selecting a passive stereo camera establishes a method for tracking target depth independent of posture while avoiding infrared interference with the laser tag scoring mechanics. Tracking vulnerabilities under low-light or occluded conditions were mitigated by implementing an automated synthetic data generation pipeline to train the object detection model. Fusing 2D bounding boxes with stereoscopic depth via a Linear Kalman Filter provides smoothed 3D coordinates and trajectory prediction during temporary occlusions. The simulation results indicate that the pipeline delivers a workable spatial tracking interface suitable for integration with the high-level logic and flight controller.
 
 
 \newpage
