@@ -57,7 +57,7 @@
 Laser tag remains a popular and commercially successful game within the UK leisure industry, but its core mechanics have seen minimal innovation since its introduction in 1984 despite growing consumer demand for highly interactive leisure experiences. This report details the design and simulation of a novel iteration of the game in which human players compete against a multiagent autonomous drone system.
 To ensure safe operation within a confined arena, the system utilises a custom modular quadrotor airframe physically segregated from players by industrial netting. Player detection and predictive 3D tracking rely on passive stereoscopic vision, a YOLOv8 nano model trained on synthetic Unity data, and a Linear Kalman Filter. A central server governs coordination over wireless networking, dynamically transitioning drones through distinct operational modes.
 Subsystem navigation integrates \acrfull{bfs} for area scanning, \acrfull{rl} policies trained in Isaac Lab for flight control, and Artificial Potential Fields for collision avoidance.
-Sustainability, ethics, and safety concerns are considered, and the technical performance of the project is demonstrated through simulation analysis. Commercial viability is supported by a companion app designed to encourage user engagement and validated through financial modelling yielding a business with a \acrfull{npv} of approximately £69,000. This establishes the concept as a viable and innovative evolution of the laser tag industry.
+Sustainability, ethics, and safety concerns are considered, and the technical performance of the project is demonstrated through simulation analysis. Commercial viability is supported by a companion app designed to encourage user engagement and validated through financial modelling yielding a business with a \acrfull{npv} of approximately £69,000. This establishes the concept as a viable and innovative evolution to the laser tag industry.
 
 
 \newpage
@@ -112,6 +112,7 @@ Sustainability, ethics, and safety concerns are considered, and the technical pe
 \newacronym{dfs}{DFS}{Depth First Search}
 \newacronym{elu}{ELU}{Exponential Linear Unit}
 \newacronym{apf}{APF}{Artificial Potential Field}
+\newacronym{ml}{ML}{Machine Learning}
 \printglossaries
 \newpage
 
@@ -131,13 +132,13 @@ To meet this demand, we present a novel laser tag game in which human players co
 
 From a drone perspective, the primary goal is to achieve autonomy and coordinated teamwork within a confined environment. Since off-the-shelf platforms lack the necessary flexibility, payload integration, and component protection for such close-proximity indoor operations, a custom modular quadrotor airframe was developed (Section \ref{hardware}). The \gls{abs} 3D-printed chassis features integrated blade guards to ensure operational continuity during minor wall collisions. To satisfy a 2:1 thrust-to-weight ratio for a 4kg maximum takeoff mass, the propulsion system utilises BrotherHobby Avenger 2806.5 1300KV brushless motors paired with 8x4x3 polycarbonate propellers, driven by a 4S 5000mAh Lithium Polymer battery to sustain approximately 10 minutes of active flight endurance. Dedicated player hardware, including sensor-equipped helmets and vests, then integrate into this ecosystem (Section \ref{player_hardware}).
 
-For multi-agent coordination, the system relies on an IEEE 802.11ac Wi-Fi communications framework (Section \ref{network}) linking the onboard drone hardware to a central server. The server manages the high-level game logic, evaluating the global state to dynamically transition individual drones through specific operational modes such as Search, Track, Shoot, and Movement (Section \ref{high level control}). 
+For multi-agent coordination, the system relies on an IEEE 802.11ac Wi-Fi communications framework (Section \ref{network}) linking the onboard drone hardware to a central server. The server manages the high-level game logic, evaluating the global state to transition individual drones dynamically through specific operational modes such as Search, Track, Shoot, and Movement (Section \ref{high level control}). 
 
 To inform these high-level decisions, each drone is equipped with an OAK-D Lite passive stereoscopic camera mounted on a custom 3-axis tracking gimbal, which kinematically decouples the camera from the drone’s flight attitude to maintain continuous target lock. Visual data is ingested by a YOLOv8-nano (YOLOv8n) convolutional neural network (Section \ref{visual_perception}). To overcome the domain gap caused by the arena's low-light conditions and frequent target occlusions, this model was trained on a synthetic dataset created within Unity. Because active visual sensors would interfere with the game's \gls{ir} mechanics, and monocular depth estimation fails when a human target alters their posture, target depth is extracted passively via stereoscopic horizontal pixel disparity. This raw spatial data is smoothed using a Linear Kalman Filter, operating on a Discrete White Noise Acceleration (DWNA) model, to provide continuous, predictive 3D state estimations of the players. 
 
 These estimated player coordinates update the central server's global state, which in turn dictates the high-level navigational objectives assigned to each drone. Search mode utilises a hybrid \gls{bfs} region-allocation and lawnmower trajectory algorithm to systematically scan the arena (Section \ref{search mode}). When rapid transit is required, flight control is handed over to a \gls{rl} policy trained offline in the Isaac Lab physics simulator, outputting body thrust and moment commands (Section \ref{movement mode}). Furthermore, an Artificial Potential Field (APF) controller handles real-time collision avoidance by computing repulsive gradients from walls and other agents, converting them into evasive manoeuvres (Section \ref{collision avoidance mode}).
 
-In addition to the technical deployment, user retention is driven by a companion mobile application that tracks performance metrics, leaderboards, and achievements to foster community engagement (Section \ref{app}). The technical development is supported by an evaluation of broader engineering considerations. These are validated by a quantitative risk assessment (Section \ref{risk-assessment}) and a financial model (Section \ref{commercialisation}), which confirms the commercial feasibility of the enterprise by projecting a Net Present Value of £68,669 at an optimal price of £200 per game. Finally, the report assesses triple-bottom-line sustainability (Section \ref{sustainability}) and outlines a technology strategy using a House of Quality and SWOT analysis (Section \ref{technology_strategy}).
+In addition to the technical deployment, user retention is driven by a companion mobile application that tracks performance metrics, leaderboards, and achievements to foster community engagement (Section \ref{app}). The technical development is supported by an evaluation of broader engineering considerations. These are validated by a quantitative risk assessment (Section \ref{risk-assessment}) and a financial model (Section \ref{commercialisation}), which confirms the commercial feasibility of the enterprise by projecting a \acrfull{npv} of £68,669 at an optimal price of £200 per game. Finally, the report assesses triple-bottom-line sustainability (Section \ref{sustainability}) and outlines a technology strategy using a House of Quality and \acrfull{swot} analysis (Section \ref{technology_strategy}).
 \newpage
 
 \section{Proposed Gameplay for Drone-Based Laser Tag} % Ritchie
@@ -1385,9 +1386,9 @@ The fundamental objective of the autonomous multiagent system is to compete acti
 
 This section details the design and implementation of this perception system. To achieve these operational requirements, the subsystem is engineered around three core objectives:
 \begin{itemize}
-    \item Reliably distinguishing a human player from background obstacles and other drones to ensure that the system locks onto the correct target.
-    \item Calculating the target's 3D Cartesian coordinates relative to the drone's local frame.
-    \item Maintaining a continuous state estimate of the target's trajectory to handle temporary line-of-sight occlusions caused by walls and obstacles.
+    \item Reliably distinguishing a human player from background obstacles and other drones to ensure that the system locks onto the correct target
+    \item Calculating the target's 3D Cartesian coordinates relative to the drone's local frame
+    \item Maintaining a continuous state estimate of the target's trajectory to handle temporary line-of-sight occlusions caused by walls and obstacles
 \end{itemize}
 
 \subsection{Sensor Selection} % Rishabh
@@ -1435,21 +1436,21 @@ Both camera systems operate by emitting \gls{ir} light into the environment. For
 
 The decision between Monocular RGB and Passive Stereo requires a trade-off between \gls{swapc} efficiency and depth accuracy. 
 
-A monocular camera (for example, the Raspberry Pi AI Camera) offers the best \gls{swapc} profile since it weighs 24g and draws less than 1.5W. This means that it has a negligible impact on the quadcopter's flight dynamics. However, a single lens cannot natively measure depth and to extract 3D coordinates from a 2D feed, the system must rely on a geometric prior. This can be done by assuming a standard geometric height for a human or similarly the area of the bounding box (which can then be fine tuned during implementation). A standard method assumes the physical cross-sectional area of the human target ($A_{prior}$) is constant. The distance $Z$ is then calculated using the focal length ($f$) and the pixel area of the bounding box ($A_{px}$):
+A monocular camera (for example, the Raspberry Pi AI Camera) offers the best \gls{swapc} profile since it weighs 24 g and draws less than 1.5 W. This means that it has a negligible impact on the quadcopter's flight dynamics. However, a single lens cannot natively measure depth and to extract 3D coordinates from a 2D feed, the system must rely on a geometric prior. This can be done by assuming a standard geometric height for a human or similarly the area of the bounding box (which can then be fine tuned during implementation). A standard method assumes the physical cross-sectional area of the human target ($A_\text{prior}$) is constant. The distance $Z$ is then calculated using the focal length ($f$) and the pixel area of the bounding box ($A_\text{px}$):
 \begin{equation}
-    Z = f \cdot \sqrt{\frac{A_{prior}}{A_{px}}}.
+    Z = f \cdot \sqrt{\frac{A_\text{prior}}{A_\text{px}}}.
 \end{equation}
-Whilst this is computationally inexpensive, this method is fragile in dynamic environments. Since we have assumed a geometric prior, if the player crouches or turns sideways, their bounding box area ($A_{px}$) shrinks while their physical distance from the camera remains identical. This means that this will be misinterpreted as the player moving further away and cause the drone to accelerate forwards.
+Whilst this is computationally inexpensive, this method is fragile in dynamic environments. Since we have assumed a geometric prior, if the player crouches or turns sideways, their bounding box area ($A_\text{px}$) shrinks while their physical distance from the camera remains identical. This means that this will be misinterpreted as the player moving further away and cause the drone to accelerate forwards.
 
-It is worth noting that machine learning (ML) architectures can estimate depth from a monocular feed without relying on geometric priors. However these methods are rejected due to \gls{swapc} limitations as running real-time inference whilst achieving a high frame rate incurs a high computational cost. Moreover, these models typically output relative depth rather than the absolute depth that is required.
+It is worth noting that \gls{ml} architectures can estimate depth from a monocular feed without relying on geometric priors. However these methods are rejected due to \gls{swapc} limitations as running real-time inference whilst achieving a high frame rate incurs a high computational cost. Moreover, these models typically output relative depth rather than the absolute depth that is required.
 
 On the other hand, a passive stereoscopic system, such as the Luxonis OAK-D Lite, resolves this posture vulnerability by extracting depth natively through pixel disparity. The camera uses two lenses separated by a known baseline distance $B$. When the system detects a player, it registers a specific visual feature (such as the centroid of the bounding box) on both the left and right image sensors. As the lenses are physically offset, this feature appears at slightly different horizontal pixel coordinates on each sensor. This horizontal shift is the disparity ($d$). The system then calculates the absolute depth ($Z$) using the camera's focal length ($f$) with the equation:
 \begin{equation}
     Z = \frac{f \cdot B}{d}.
 \end{equation}
-Geometrically, as the target moves closer to the sensors, the viewing angle from each lens becomes more acute. This leads to the feature shifting further apart horizontally across the two image planes and hence $d$ increases. Since this calculation relies entirely on the horizontal parallax of a specific coordinate rather than the total pixel area of the bounding box ($A_{px}$), the depth estimation remains stable even if the player turns sideways. Furthermore, since this disparity mapping relies purely on ambient light, it ensures that there is no \gls{ir} interference with the game mechanics.
+Geometrically, as the target moves closer to the sensors, the viewing angle from each lens becomes more acute. This leads to the feature shifting further apart horizontally across the two image planes and hence $d$ increases. Since this calculation relies entirely on the horizontal parallax of a specific coordinate rather than the total pixel area of the bounding box ($A_\text{px}$), the depth estimation remains stable even if the player turns sideways. Furthermore, since this disparity mapping relies purely on ambient light, it ensures that there is no \gls{ir} interference with the game mechanics.
 
-To compare the performance of monocular and stereo depth estimation under geometric transformations, we constructed a simulation environment of the proposed hardware in Unity. The cameras were configured with a 1920x1080 resolution, with a $60^\circ$ \gls{fov}, a focal length of 935.31px, and a stereo baseline of 0.075m. We used a cuboid measuring 0.5m wide, 1.8m tall, and 0.2m deep to represent an average player. The objective was to observe how both camera architectures respond to changes in the target across three scenarios.
+To compare the performance of monocular and stereo depth estimation under geometric transformations, we constructed a simulation environment of the proposed hardware in Unity. The cameras were configured with a 1920x1080 resolution, with a 60$^\circ$ \gls{fov}, a focal length of 935.31~px, and a stereo baseline of 0.075~m. We used a cuboid measuring 0.5~m wide, 1.8~m tall, and 0.2~m deep to represent an average player. The objective was to observe how both camera architectures respond to changes in the target across three scenarios.
 
 \newpage
 
@@ -1463,27 +1464,27 @@ To compare the performance of monocular and stereo depth estimation under geomet
 
 \textbf{(i) Linear Movement}
 
-We began with a baseline calibration and translated the target linearly from 5m to 15m along the Z-axis. Within this scenario, the target's physical dimensions and orientation remained fixed. As demonstrated in Fig. \ref{fig:linear_translation}, both the monocular camera system and stereo camera system accurately map the physical ground truth. This establishes that both approaches are viable for tracking rigid bodies under ideal conditions.
+We began with a baseline calibration and translated the target linearly from 5~m to 15~m along the Z-axis. Within this scenario, the target's physical dimensions and orientation remained fixed. As demonstrated in Fig. \ref{fig:linear_translation}, both the monocular camera system and stereo camera system accurately map the physical ground truth. This establishes that both approaches are viable for tracking rigid bodies under ideal conditions.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.4\linewidth]{figs/LinearTranslation_Plot.png}
-    \caption{Comparison of monocular and stereo depth estimation against physical ground truth during linear translation from 5m to 15m}
+    \caption{Comparison of monocular and stereo depth estimation against physical ground truth during linear translation from 5~m to 15~m}
     \label{fig:linear_translation}
 \end{figure}
 
 \textbf{(ii) Changes in Target Orientation}
 
-In a practical laser tag environment, players are unlikely to follow linear trajectories. To evaluate how the depth tracking systems handle changes in orientation, we simulate a player turning sideways by rotating the target from $0^\circ$ to $90^\circ$ on its yaw axis. As the target rotates around its 5.1m centroid, the physical ground truth, which is represented by the closest physical surface, shifts from 5.0m down to 4.85m. 
+In a practical laser tag environment, players are unlikely to follow linear trajectories. To evaluate how the depth tracking systems handle changes in orientation, we simulated a player turning sideways by rotating the target from 0$^\circ$ to 90$^\circ$ on its yaw axis. As the target rotates around its 5.1~m centroid, the physical ground truth, which is represented by the closest physical surface, shifts from 5.0~m down to 4.85~m. 
 
-As illustrated in Fig. \ref{fig:yaw_rotation}, there is a slight discrepancy between the physical ground truth and the stereo estimation during the turn. While the ground truth tracks the foremost surface, the stereo algorithm calculates the depth based on the centroid of the 2D bounding box. This means that during the rotation, the stereo estimate settles at the 5.1m centre of mass and as the rotation reaches $90^\circ$, the camera's view is restricted to the 0.2m side profile and this causes the stereo centroid calculation to fall to the 4.85m ground truth. 
+As illustrated in Fig. \ref{fig:yaw_rotation}, there is a slight discrepancy between the physical ground truth and the stereo estimation during the turn. While the ground truth tracks the foremost surface, the stereo algorithm calculates the depth based on the centroid of the 2D bounding box. This means that during the rotation, the stereo estimate settles at the 5.1~m centre of mass and as the rotation reaches 90$^\circ$, the camera's view is restricted to the 0.2~m side profile and this causes the stereo centroid calculation to fall to the 4.85~m ground truth. 
 
 As the target turns, its 2D profile narrows and the monocular algorithm, which is reliant on the pixel area, misinterprets this narrowing as the target moving further away.  This means that the depth estimate from the monocular camera diverges from the ground truth. This specific scenario highlights a limitation of the monocular approach, as the system cannot distinguish between a change in the target's orientation and its actual distance. 
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.85\linewidth]{figs/YawRotation_Plot.png}
-    \caption{Comparison of depth estimation models during target yaw rotation from $0^\circ$ to $90^\circ$ at a nominal 5.0 m depth.}
+    \caption{Comparison of depth estimation models during target yaw rotation from 0$^\circ$ to 90$^\circ$ at a nominal 5~m depth.}
     \label{fig:yaw_rotation}
 \end{figure}
 
@@ -1590,7 +1591,7 @@ The VisDrone dataset contains numerous additional classes such as vehicles and b
 % For future physical development, this pipeline can be transitioned from synthetic data to empirical data. Rather than relying on Unity generation, the physical drone could be flown manually through the laser tag area to record video footage. Frames extracted from this footage would be labelled to capture the ambient lighting, wall geometry and physical equipment worn by the players. Performing this final fine-tuning pass essentially brings the simulation closer to the real world and guarantees that the network is calibrated to the operational environment.
 
 \subsection{Model Training and Deployment}
-Following data preparation, the pre-trained YOLOv8n model was fine-tuned on the filtered VisDrone dataset. Training was conducted via Google Colab, utilising an NVIDIA T4 Tensor Core GPU. The training phase was configured using a $640 \times 640$ pixel input resolution to ensure a balance between the detail necessary for target detection and maintaining low-latency inference on the drone's onboard hardware.
+Following data preparation, the pre-trained YOLOv8n model was fine-tuned on the filtered VisDrone dataset. Training was conducted via Google Colab, utilising an NVIDIA T4 Tensor Core GPU. The training phase was configured using a 640 $\times$ 640 pixel input resolution to ensure a balance between the detail necessary for target detection and maintaining low-latency inference on the drone's onboard hardware.
 
 Once the network had converged, the final weights were exported to the \gls{onnx} format that allowed the model trained in Python to be imported directly into Unity. Within the simulation, the model is executed using Unity Sentis~\cite{unity_sentis}, a tensor engine used to run neural networks natively within the simulated environment.
 
@@ -1653,7 +1654,7 @@ While an F1 score of 0.53 and an mAP50 of 0.49 are lower than typical detection 
 
 \subsection{Baseline Evaluation}
 
-To evaluate the operational viability of the VisDrone trained model against the system's design requirements, an automated orbital benchmark script was developed for the Unity simulation. The script positioned a virtual camera in a spherical coordinate system around a human target, sweeping through a series of yaw angles ($0^\circ$ to $360^\circ$) and pitch angles ($0^\circ$ to $80^\circ$). At each coordinate, the network's prediction was compared to the Ground Truth bounding box (derived from the target's vertex projections) to classify the result as a True Positive (TP), False Positive (FP), or False Negative (FN) based on standard Intersection over Union (IoU) and confidence thresholds.
+To evaluate the operational viability of the VisDrone trained model against the system's design requirements, an automated orbital benchmark script was developed for the Unity simulation. The script positioned a virtual camera in a spherical coordinate system around a human target, sweeping through a series of yaw angles (0$^\circ$ to 360$^\circ$) and pitch angles (0$^\circ$ to 80$^\circ$). At each coordinate, the network's prediction was compared to the Ground Truth bounding box (derived from the target's vertex projections) to classify the result as a True Positive (TP), False Positive (FP), or False Negative (FN) based on standard Intersection over Union (IoU) and confidence thresholds.
 
 The benchmark was executed on two distinct simulation conditions:
 \begin{enumerate}
@@ -1684,7 +1685,7 @@ The benchmark was executed on two distinct simulation conditions:
     \label{fig:orbital_benchmarks}
 \end{figure}
 
-The following 2D graphs flatten the 3D hemispherical sweeps shown in Fig. \ref{fig:orbital_benchmarks}. The polar axis represents the drone's yaw and the radial axis represents the camera's pitch. The centre point ($0^\circ$) denotes a horizontal, eye-level view while the outer edge ($80^\circ$) represents a top-down perspective. 
+The following 2D graphs flatten the 3D hemispherical sweeps shown in Fig. \ref{fig:orbital_benchmarks}. The polar axis represents the drone's yaw and the radial axis represents the camera's pitch. The centre point (0$^\circ$) denotes a horizontal, eye-level view while the outer edge (80$^\circ$) represents a top-down perspective. 
 
 \begin{figure}[htbp]
     \centering
@@ -1706,7 +1707,7 @@ The following 2D graphs flatten the 3D hemispherical sweeps shown in Fig. \ref{f
     \label{fig:benchmark_daylight}
 \end{figure}
 
-Under daylight conditions (Fig. \ref{fig:benchmark_daylight}), the model demonstrates consistent player detection. The confidence contour map indicates sustained detections across majority of the orbital grid, highlighting peak probability zones at steep pitch angles between $50^\circ$ and $80^\circ$. This spatial bias is expected given that the VisDrone training dataset consists primarily of high-altitude aerial perspectives. The classification plot confirms this trend, displaying a ring of True Positives around the outer edge. Consequently, the model performs well when looking down at the target from above. This also suggests that the lighting and geometric properties of the Unity simulation are sufficiently realistic for baseline evaluation, as a network trained on real-world data successfully detected the synthetic target.
+Under daylight conditions (Fig. \ref{fig:benchmark_daylight}), the model demonstrates consistent player detection. The confidence contour map indicates sustained detections across majority of the orbital grid, highlighting peak probability zones at steep pitch angles between 50$^\circ$ and 80$^\circ$. This spatial bias is expected given that the VisDrone training dataset consists primarily of high-altitude aerial perspectives. The classification plot confirms this trend, displaying a ring of True Positives around the outer edge. Consequently, the model performs well when looking down at the target from above. This also suggests that the lighting and geometric properties of the Unity simulation are sufficiently realistic for baseline evaluation, as a network trained on real-world data successfully detected the synthetic target.
 
 
 \begin{figure}[htbp]
@@ -1825,7 +1826,7 @@ To evaluate the synthetic model, we conducted a low-light orbital benchmark that
 
 The results for the synthetic model are visualised in Fig. \ref{fig:benchmark_synthetic_lowlight}. The confidence score distribution (Fig. \ref{fig:benchmark_synthetic_lowlight_confidence}) indicates consistent detection, maintaining confidence levels above 0.85 across the majority of yaw and pitch angles. However, a slight degradation occurs at extreme pitch angles. 
 
-This stability is supported by the TP/FP/FN categorisation (Fig. \ref{fig:benchmark_synthetic_lowlight_classification}). The synthetic model records zero False Negatives (FN) across the hemisphere and a few False Positives (FP) at a high pitch angle between $135^\circ$ and $180^\circ$ yaw. When contrasted with the VisDrone model, the synthetic model performs significantly better in low light conditions and is therefore more reliable in identifying the target under arena-specific illumination.
+This stability is supported by the TP/FP/FN categorisation (Fig. \ref{fig:benchmark_synthetic_lowlight_classification}). The synthetic model records zero False Negatives (FN) across the hemisphere and a few False Positives (FP) at a high pitch angle between 135$^\circ$ and 180$^\circ$ yaw. When contrasted with the VisDrone model, the synthetic model performs significantly better in low light conditions and is therefore more reliable in identifying the target under arena-specific illumination.
 
 \newpage 
 
@@ -2018,7 +2019,7 @@ When the perception pipeline returns a valid \gls{yolo} detection, the update ph
 
 In the arena, walls and barricades frequently occlude the target, causing the \gls{yolo} model to drop the measurement vector ($Z_k$). During total occlusion, the filter skips the update phase and relies on the constant velocity predict phase ($\hat{X}_{k+1|k}$). As visualised in Fig. \ref{fig:kalman_prediction}, this projects the target's trajectory behind cover, allowing the drone to anticipate where the player will re-emerge.
 
-However, a purely kinematic prediction becomes invalid if the player stops moving to hide behind cover. To prevent the tracking algorithm from projecting the target indefinitely, a timeout threshold ($t_{timeout}$) is implemented. If the duration of the occlusion exceeds $t_{timeout}$, the filter halts the constant velocity assumption. The velocity states are zeroed, and the position state reverts to the last verified Cartesian coordinate before line-of-sight was lost (Fig. \ref{fig:last_known_position}). This ensures the camera remains directed at the location where the system last had high confidence of the player's exact position.
+However, a purely kinematic prediction becomes invalid if the player stops moving to hide behind cover. To prevent the tracking algorithm from projecting the target indefinitely, a timeout threshold ($t_\text{timeout}$) is implemented. If the duration of the occlusion exceeds $t_\text{timeout}$, the filter halts the constant velocity assumption. The velocity states are zeroed, and the position state reverts to the last verified Cartesian coordinate before line-of-sight was lost (Fig. \ref{fig:last_known_position}). This ensures the camera remains directed at the location where the system last had high confidence of the player's exact position.
 
 \newpage
 
