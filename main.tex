@@ -466,7 +466,7 @@ where \(\eta_{\text{rpm}}\) represents the fraction of no-load speed achieved un
 \end{tabular}
 \end{table}
 
-As there was no given exact thrust coefficients, therefore we tested using 0.100, 0.125, and 0.150
+As there was no given exact thrust coefficients, we tested using a range of realistic values.
 
 \begin{table}[htbp]
 \centering
@@ -605,7 +605,7 @@ This suggests that the battery is theoretically capable of supplying the require
 
 \paragraph{Power distribution}
 
-We require a component for power distribution used to route the main battery output to the four \gls{esc}s safely and with enough current margin. Since each motor is driven by a separate \gls{esc}, a \gls{pdb} be able to supply the combined current demand of all propulsion channels.
+We require a component for power distribution used to route the main battery output to the four \gls{esc}s safely and with enough current margin. Since each motor is driven by a separate \gls{esc}, a \gls{pdb} should be able to supply the combined current demand of all propulsion channels.
 
 Given the \gls{esc}s are rated \(40~\text{A}\) each, the combined theoretical maximum \gls{esc} demand is: $4\times40=160\text{A}$. We require a high-current \gls{pdb}, which was chosen to be the Holybro Power Distribution Board 300A. Shown in Table~\ref{tab:pdb_specifications}, it is specified with a \(300~\text{A}\) continuous current rating, \(1000~\text{A}\) burst rating, \(10~\text{oz}\) copper PCB design, and XT90/XT30 connector options. The \(300~\text{A}\) continuous rating gives a clear margin above the theoretical maximum \gls{esc} demand.
 
@@ -683,9 +683,10 @@ The final power system is as shown in Fig.~\ref{fig:Power_Systems}, it is divide
 \subsubsection{Onboard Computing and Communication}
 \label{sec:Onboard Computing and Communication}
 
-Before investigating deeper into the topic of onboard computing and communication, it is vital to define its role within the overall drone system. Each drone is required to have a local processing unit that handles specific tasks that needed to happen directly on the drone, such as sensor processing, low-to mid-level control, and execution of pre-trained control or perception models during game-play. This includes responding to sensor inputs, player tracking, and carrying out motion commands in real time.
+Before investigating deeper into the topic of onboard computing and communication, it is vital to define its role within the overall drone system.
+Each drone is required to have a local processing unit that handles their respective onboard tasks, such as sensor processing, low-to mid-level control, and execution of pre-trained control or perception models during game-play. This includes responding to sensor inputs, player tracking, and carrying out motion commands in real time.
 
-However, as explained in other sections, the drone is not intended to make all these decisions independently onboard. High-level control (i.e. game logic and drone coordination) will be handled via a central server housed outside the arena. The onboard computer would therefore be required to communicate drone states, sensor data, and status updates to the server while simultaneously receiving instructions. This meant that the onboard companion computer needed to provide more capability than a simple micro-controller, while still remaining light, compact and inexpensive.
+However, as explained in other sections, the drone is not intended to make all decisions independently onboard. High-level control (i.e. game logic and drone coordination) will be handled via a central server housed outside the arena. The onboard computer would therefore be required to communicate drone states, sensor data, and status updates to the server while simultaneously receiving instructions. This meant that the onboard companion computer needed to provide more capability than a simple micro-controller, while still remaining light, compact and inexpensive.
 
 \paragraph{Onboard Computer}
 
@@ -797,7 +798,7 @@ VL53L5CX ToF sensors & Provides side obstacle awareness and short-range distance
 
 \paragraph{IR Tagging System}
 
-For game-specific components, the drone is required to have an \gls{ir} tagging system capable of tagging players and detecting when it has been tagged. Despite the project name, the physical hardware uses \gls{ir} rather than actual lasers. This is due to safety and regulatory reasons: laser products usage are subject to classification and safety requirements under UK regulations - such as the BS EN/IEC 60825-1 \cite{bsi_laser_safety_60825}, and guidance notes that laser radiation risks harm to eyes and skin \cite{ukhsa_laser_safety}. Using \gls{ir} based system is therefore more appropriate for indoor game-play, where players and drones operate near each other. In terms of hardware, we focus on how the IR components are physically installed into the overall drone design.
+For game-specific components, the drone is required to have an \gls{ir} tagging system capable of tagging players and detecting when it has been tagged. Universally, the physical hardware for general laser-tag gameplay uses \gls{ir} rather than visible lasers. This is due to safety and regulatory reasons: laser products usage is subject to classification and safety requirements under UK regulations - such as the BS EN/IEC 60825-1 \cite{bsi_laser_safety_60825}, and guidance notes that laser radiation risks harm to eyes and skin \cite{ukhsa_laser_safety}. Using \gls{ir} based system is therefore more appropriate for indoor game-play, where players and drones operate near each other. In terms of hardware, we focus on how the IR components are physically installed into the overall drone design.
 
 \textbf{IR emitter} - Mounted on the gimbal/turret alongside the camera so tagging direction is aligned with the aiming direction. The emitter is housed in a compact cylindrical mount - around 10mm in diameter. 
 
@@ -805,7 +806,7 @@ For game-specific components, the drone is required to have an \gls{ir} tagging 
 
 \subsection{Mechanical Design Development}
 
-After investigating and selecting the main electronics, the mechanical design aims to transform the selected components into a physical drone layout. Most modelling and assembly designs was carried out in Fusion 360, while standard component models such as motors, batteries, sensors, and other components were either simplified into representative objects based on specified dimensions or downloaded from online libraries to save time. The goal is to define how the components are mounted, protected, and accessed while also ensuring easily manufacturable and cheap parts that are simple to assemble. 
+After investigating and selecting the main electronics, the mechanical design aims to transform the selected components into a physical drone layout. Most modelling and assembly designs were carried out in Fusion 360, while standard component models such as motors, batteries, sensors, and other components were either simplified into representative objects based on specified dimensions or downloaded from online libraries to save time. The goal is to define how the components are mounted, protected, and accessed while also ensuring easily manufacturable and cheap parts that are simple to assemble. 
 
 \subsubsection{Early Design Concepts} \label{drone dimensions}
 
@@ -893,7 +894,7 @@ Bottom hull + landing gear & 234.00 & 418.65 & 144.90 \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:main_body_dimensions} shows the max \gls{cad} dimensions of the main body components, all of which is shown to be within 600mm in size as required.
+Table~\ref{tab:main_body_dimensions} shows the max \gls{cad} dimensions of the main body components, all of which are shown to be within 600mm in size as required.
 
 \subsubsection{Rotor Arm and Motor Mount Design}
 
@@ -954,7 +955,7 @@ The \textbf{coupler} forms the main connection between the yaw actuator and the 
 
 The \textbf{gimbal installation plate} is positioned below the coupler and is used to close up the interface between the gimbal and the drone body. It also secures the lower part of the installation interface which keeps the yaw mechanism aligned and provide tighter space for wires to help reduce entanglement issues. 
 
-The \textbf{square axial component} supports the pitch-axis motor and provides the structural frame for the upper gimbal mechanisms. It is directly installed to the yaw mechanism allowing the overall gimbal to move in yaw motion - it is only in contact with the servomotor output. The pitch motion is produced by mounting a gimbal motor onto the square axial component, with the motor output connected to the gimbal pitch axis component. This allows camera and IR emitter to tile upward and downward.
+The \textbf{square axial component} supports the pitch-axis motor and provides the structural frame for the upper gimbal mechanisms. It is directly installed to the yaw mechanism allowing the overall gimbal to move in yaw motion - it is only in contact with the servomotor output. The pitch motion is produced by mounting a gimbal motor onto the square axial component, with the motor output connected to the gimbal pitch axis component. This allows camera and IR emitter to tilt upward and downward.
 
 The \textbf{gimbal pitch axis component} acts as the moving structure for pitch stage and provides roll-axis motor mount. The roll motion is produced by mounting the roll gimbal motor onto the pitch axis component, with the motor output connected to the gimbal roll axis component. This creates a second controlled axis above the yaw and pitch stages.
 
@@ -1050,7 +1051,7 @@ The structural assessment focused on two components most exposed to loading and 
 \end{figure}
 
 \paragraph{Rotor Arm Simulation}
-The first simulation assessed the joint between the rotor arm and the electronics basket, as this connection transfers the motor thrust load back into the main body. This area was important as any failure would affect propulsion support and the integrity of the overall airframe. A static load represent the thrust force acting through the motor and rotor arm - the applied load was above 20N, which is close to the estimated maximum thrust per motor used in the propulsion analysis.
+The first simulation assessed the joint between the rotor arm and the electronics basket, as this connection transfers the motor thrust load back into the main body. This area was important as any failure would affect propulsion support and the integrity of the overall airframe. A static load represents the thrust force acting through the motor and rotor arm - the applied load was above 20N, which is close to the estimated maximum thrust per motor used in the propulsion analysis.
 
 The simulation showed that the highest stress occurred near the handle area of the electronic basket, which was expected because this is where the rotor-arm load is transferred into the central structure. Most of the rotor arm remained in the lower-stress blue/green region - which suggests that the rotor arm geometry was not the limiting factor. The minimum safety factor was approximately 2.23, as shown in Fig. ~\ref{fig:Rotor Arm Sim}, meaning the component remained above the failure threshold for the load case.
 
@@ -1092,7 +1093,7 @@ The final \gls{cad} model was simplified for use in Unity. Given the full Fusion
 \subsection{Player Hardware Design}
 \label{player_hardware}
 
-The player hardware shows how human players would interact with the multiagent laser tag system. These components were not developed in detail compared with the drone hardware, and therefore will only focus on representative and illustrative models, as shown in Fig.~\ref{fig:Player Vest and Helmet}.
+The player hardware shows how human players would interact with the multiagent laser tag system. These components were not developed in great detail compared to the drone hardware, and therefore we will only focus on illustrative models to represent their general way of operation, as shown in Fig.~\ref{fig:Player Vest and Helmet}.
 
 \begin{figure}[htbp]
     \centering
