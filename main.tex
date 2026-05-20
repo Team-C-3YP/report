@@ -175,8 +175,6 @@ For continuity throughout our project, we decided to design an exact map layout 
     \label{fig:wallMatrixDemo}
 \end{figure}
 
-\newpage % REPLACE WITH IMAGE 
-
 \subsection{Map Separation}
 In order to make the maze a safe environment for the players and drones to occupy at the same time and interact with each other, we decided to implement a safety net above the players to separate the drones from the players and mitigate injuries due to a drone falling onto a player during a malfunction. This safety net will run throughout the whole maze and we will have the home base of the drones and players on opposite sides with half walls connecting the net to the floor or ceiling for the drone and player home bases respectively. This completely separates the drones from the players with a physical barrier at all times, greatly reducing the risk of a human-drone collision incident. This separation between players and drones also allows us to customise each section independently so that we can have obstacles, doorways and windows in the player area while keeping the drone area free of obstructions. This setup allows us to have a more interesting arena for the players while minimising the chance of collision for the drones.
 
@@ -207,7 +205,6 @@ We plan to use industrial safety nets to separate the players from the drones as
         Energy Absorption Safety Factor & 20.4              & 1.6               & 5.1               \\
         \hline
     \end{tabular}
-    \label{tab:net}
 \end{table}
 
 \newpage
@@ -2143,15 +2140,85 @@ We implemented a curriculum that progressively increases the maximum trajectory 
 \subsubsection{Environment Parameters}
 For deployment on our drone, the policy would ideally be trained using our drone model. However, due to technical issues that prevented our drone model from being loaded into Isaac Lab, we instead used the Crazyflie drone model used in the Isaac Lab quadcopter demonstration environment \cite{IsaacLabQuadcopter}. This serves as a proof of concept to demonstrate that the \gls{rl} policy is capable of producing the fast responses required for this mode.
 
-As training and evaluation were not performed using our exact drone model, we introduced several control measures to ensure the training environment was as representative as possible. The Isaac Lab demonstration environment uses a 1.9 thrust-to-weight ratio which is comparable to that of our drone which is 2, and hence this is already representative. The width of the Crazyflie drone \cite{CrazyflieDatasheet} is 80mm, whereas that of our drone is 420mm, (detailed in Section~\ref{drone dimensions}), as such, our drone is approximately 5 times larger than the Crazyflie drone. To compensate for this, we reduced the grid cell dimensions by in the Isaac lab policy by 5 times such that the grid cells are 0.4m square rather than 2m square. The diagonal length of the Crazyflie drone is 92mm, so the out of bounds buffer must be at least 46mm, however we set this to 80mm to ensure there is a minimum separation between the drone and wall of 34mm. Since the Isaac Lab environment is scaled down, this corresponds to 170mm in our full scale environment.
+As training and evaluation were not performed using our exact drone model, we introduced several control measures to ensure the training environment was as representative as possible. The Isaac Lab demonstration environment uses a 1.9 thrust-to-weight ratio which is comparable to that of our drone which is 2, and hence this is already representative. The width of the Crazyflie drone \cite{CrazyflieDatasheet} is 80mm, whereas that of our drone is 420mm, (detailed in Section~\ref{drone dimensions}), as such, our drone is approximately 5 times larger than the Crazyflie drone. To compensate for this, we reduced the grid cell dimensions by in the Isaac lab policy by 5 times such that the grid cells are 0.4m square rather than 2m square. The diagonal length of the Crazyflie drone is 92mm, so the out of bounds buffer must be at least 46mm, however we set this to 80mm to ensure there is a minimum separation between the drone and wall of 34mm. Since the Isaac Lab environment is scaled down, this corresponds to 170mm in our full scale environment. We also placed the z limits of the bounds region 80mm above the net and below the ceiling.
 
-Having compensated for the size disparity, we set the remaining parameters accordingly. For the curriculum, we set the starting number of checkpoints to 3 and the initial training period to 400 steps and the interval steps to 30. The predefined limit for the maximum trajectory length was set to 50, however the longest path between two cells in our map spans 36 cells, and hence this was the limiting factor. The remaining parameters we set were the timeout termination interval of 20s, and the policy frequency of 50Hz. 
+Having compensated for the size disparity, we set the remaining parameters accordingly. For the curriculum, we set the starting number of checkpoints to 3 and the initial training period to 400 steps and the interval steps to 30. The predefined limit for the maximum trajectory length was set to 50, however the longest path between two cells in our map spans 35 cells, and hence this was the limiting factor. For the rewards, we set $\mathrm{std}$ in Eq.\ref{equ:RL_tanh_reward} to $0.1\mathrm{m}$, for both the final checkpoint distance reward and proximity to wall penalty, and we set the threshold distance for the time penalty to $0.1\mathrm{m}$. The remaining parameters we set were the timeout termination interval of 15s, and the policy frequency of 50Hz. Finally, the policy was trained using an actor-critic architecture, where both networks consisted of two hidden layers of 64 units each and ELU activation.
 
 % For the policy that is deployed on our drone, we would have to train the policy using our drone model. Unfortunately, we were not able to load our drone model into Isaac Lab, due to technical issues, so instead we used the Crazyflie drone model, used in the Isaac Lab quadcopter demonstration environment, to train this policy as a proof of concept, to show that this RL policy can provide the fast results required for this mode. As we are not using the same drone to train the policy, we put the following control measures in place to make the environment as close as possible to training our drone in our map. 
 
 \subsubsection{Reward Weighting}
 
-\newpage
+Using the environment setup detailed in the sections above, we then refined the policy by tuning the reward weightings. This process involved approximately setting these values based on previous experience setting up the other environments and intuition, before fine tuning them by analysing the learned behaviour. Table \ref{RLRewards} below details the reward weightings for our final trained policy.
+
+\begin{table}[htbp] 
+    \centering
+    \caption{Final RL policy rewards}
+    \label{RLRewards}
+    \begin{tabular}{|c|c|}
+        \hline
+        \textbf{Reward} & \textbf{Weight}\\
+        \hline 
+        Checkpoint Progress & 1.5 \\
+        \hline
+        Checkpoint Passed & 20.0 \\
+        \hline
+        Final Checkpoint Distance & 5.0 \\
+        \hline
+        Termination Penalty & -100.0 \\
+        \hline
+        Proximity to Wall Penalty & -0.1 \\
+        \hline
+        Distance from Path Penalty & -0.1 \\
+        \hline
+        Time Penalty & -0.3 \\
+        \hline
+        Linear Velocity Penalty & -0.01 \\
+        \hline
+        Angular Velocity Penalty & -0.01 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsubsection{Testing and Evaluation}
+In order to evaluate and compare policies, we created a test script which runs the policy while recording data about each episode. This script records the outcome (success if the final checkpoint is reached), the time taken to reach the final checkpoint (if successful), and the number of checkpoints. From this data we can calculate the success rate of the policy, the average time taken per checkpoint across all successful episodes, and the maximum time taken for any trajectory in our map. The script also allows us to define the number of episodes to record, set the random seed, and save the recorded data to a .csv file to aid with analysis.
+
+We evaluated the final policy using 5 random seeds, with 20,000 episodes per seed, for a total of 100,000 episodes to produce the results in Table \ref{RLResults}.
+
+\begin{table}[htbp] 
+    \centering
+    \caption{Final RL policy results}
+    \label{RLResults}
+    \begin{tabular}{|c|ccc|}
+        \hline
+        \textbf{Seed} & \textbf{Success Rate} & \textbf{Avg Time per Checkpoint [s]} & \textbf{Max Time Taken [s]}\\
+        \hline 
+        1 & 0.967 & 0.368 & 13.70 \\
+        \hline
+        2 & 0.971 & 0.368 & 13.66 \\
+        \hline
+        3 & 0.969 & 0.367 & 13.64 \\
+        \hline
+        4 & 0.968 & 0.368 & 13.50 \\
+        \hline
+        5 & 0.970 & 0.368 & 13.58 \\
+        \hline
+        Average & 0.969 & 0.368 & 13.62 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+As seen above, the final policy has a success rate of around 97\%, meaning it does not reach the goal 3\% of the time. This is most likely all from out of bounds terminations rather than the episode timing out without the final checkpoint being reached, so this policy will crash $3\%$ of the time. This is an acceptable level because our collision avoidance mode should prevent these collisions occuring. The average time per checkpoint is 0.368s. If we assume this would also be the case for deployment on our drone, then we can approximate the average speed by dividing the grid cell length by this time, producing $2/0.368 = 5.43 \mathrm{ms}^{-1}$. Finally the maximum time taken to get between any two grid cells in our map averaged at 13.62s over all 5 random seeds. These results show that the policy can quickly and safely traverse the map as intended.
+
+\begin{figure}[htbp]
+    \centering
+
+    \includegraphics[width=0.95\textwidth]{figs/RL_policy_demo.png}
+    
+    \caption[Isaac Lab RL policy execution (Video demonstration: https://drive.google.com/file/d/1umioNgEqnodq8t856qSPWmN7H8eW6Oeu/view?usp=drive\_link)] {Isaac Lab RL policy execution (Video demonstration\footnotemark: https://drive.google.com/file/d/1umioNgEqnodq8t856qSPWmN7H8eW6Oeu/view?usp=drive\_link)}
+    \label{fig:RLPolicy}
+\end{figure}
+
+\footnotetext{Policy execution is at half speed due to rendering constraints, play the demonstration at 2x speed for real time playback}
 
 \subsection{Collision Avoidance Mode} \label{collision avoidance mode} % Tommy
 \fancyhead[C]{Thomas August}
