@@ -112,6 +112,7 @@ Sustainability, ethics, and safety concerns are considered, and the technical pe
 \newacronym{dfs}{DFS}{Depth First Search}
 \newacronym{elu}{ELU}{Exponential Linear Unit}
 \newacronym{apf}{APF}{Artificial Potential Field}
+\newacronym{ui}{UI}{User Interface}
 \newacronym{ml}{ML}{Machine Learning}
 \newacronym{pwm}{PWM}{Pulse-Width Modulation}
 \newacronym{gpio}{GPIO}{General Purpose Input/Output}
@@ -156,17 +157,17 @@ In addition to the technical deployment, user retention is driven by a companion
     \label{fig:gameplay}
 \end{figure}
 \subsection{Overview}
-Players are equipped with laser guns (\gls{ir} emitters that transmit encoded data), and helmets and vests containing \gls{ir} sensors. The drones are equipped with \gls{ir} sensors as well as turrets which emit \gls{ir} radiation (see Section \ref{Turret}). When not flying, they are dormant in a standby location where employees can replace their batteries. If a player is hit, they must navigate to a designated \say{timeout area} of the maze, in which they are safe from drones, and wait for 10 seconds. The drones, guns, helmets and vests connect via Wi-Fi to a central server, so, when hit, the player's gun is disabled until their timeout ends (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at 3 m height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
+Players are equipped with laser guns (\gls{ir} emitters that transmit encoded data), and helmets and vests, both containing \gls{ir} sensors. The drones are equipped with \gls{ir} sensors as well as turrets which emit \gls{ir} radiation (see Section \ref{Turret}). When not flying, they are dormant in a standby location in which employees can replace their batteries. If a player is hit, they must navigate to a designated \say{timeout area} of the maze, where they are safe from drones, and wait for 10 seconds. The drones, guns, helmets and vests connect via Wi-Fi to a central server, so, when hit, the player's gun is disabled until their timeout ends (triggered by the player shooting a receiver in the timeout zone twice, more than 10 seconds apart). Play takes place in a maze built with 5 metre high felt-covered ply-wood walls in a converted warehouse. The drones fly overhead (separated from players by a net at 3 m height for safety, to be detailed in Section \ref{risk-assessment}). The players play cooperatively, against the drones.\newline
 
 \noindent Two game modes have been designed: \say{Wave Mode} and \say{Objective Mode}. These are summarised in the following sections.
 \subsection{Wave Mode}
 In \say{Wave Mode}, the players \say{fight} a number of drones, released in an order designed to be both challenging and engaging. When hit, the drones return to their standby location, where they will remain. If all of the players time out simultaneously, they lose. If all of the drones have been hit, they win. This constitutes a single wave. The players can choose from a catalogue of waves (in future accessible through the companion app, see Section \ref{app}), ranging in difficulty. Each level will be given a difficulty rating. This allows a team to end a game with a clear metric of their performance: the difficulty rating of the hardest wave completed. This will also allow a team to track their improvement. In future, this will be displayed in the companion app, allowing players to compare scores with friends.
 
 \subsection{Objective Mode}
-In \say{Objective Mode}, the players must navigate the maze to complete objectives, such as \say{Hold this button for 5 seconds}, or \say{Shoot this target on the wall}, which are communicated via speakers. They must complete all objectives within a time limit to \say{pass} the level. The other mechanics of the game are the same as in \say{Wave Mode}, other than that the drones return after a short timeout when hit. If they complete all objectives, they win. If they win, they will progress to a harder level. Just as in \say{Wave Mode}, the levels will be designed and play-tested to be both challenging and engaging; a catalogue of levels marked with a numerical difficulty can be selected in-app.\newline
+In \say{Objective Mode}, the players must navigate the maze to complete objectives, such as \say{Hold this button for 5 seconds}, or \say{Shoot this target on the wall}, which are communicated via speakers. They must complete all objectives within a time limit to pass the level. The other mechanics of the game are the same as in \say{Wave Mode}, other than that the drones return after a short timeout when hit. If they complete all objectives, they win. If they win, they will be encouraged to attempt a harder level. Just as in \say{Wave Mode}, the levels will be designed and play-tested to be both challenging and engaging; a catalogue of levels marked with a numerical difficulty can be selected in-app.\newline
 
 \subsection{Difficulty Scaling}
-Since the levels increase in difficulty, there is little need to scale difficulty according to a players' skill: if the players are inexperienced, they will only play easy levels, and there will be levels to suit players of all skill levels. However, the difficulty of the level needs to change according to the number of players in a team. This can be achieved in a number of ways. For example, the number of drones could be adjusted, their top speed could be capped, or artificial inaccuracy could be added to their shooting.\newline
+Since the levels increase in difficulty, there is little need to scale difficulty according to a players' skill: if the players are inexperienced, they will only play easy levels, and there will be levels to suit players of all abilities. However, the difficulty of the level needs to change according to the number of players in a team. This can be achieved in a number of ways. For example, the number of drones could be adjusted, their top speed could be capped, or artificial inaccuracy could be added to their shooting.\newline
 
 \noindent It is very difficult to know which methods of adjusting difficulty will result in a game that is both enjoyable and balanced for a range of numbers of people. Hence, deciding exactly how to perform this adjustment will require play-testing, once the arena has been built.
 \newpage
@@ -1304,9 +1305,9 @@ where $\mathbf{a}_{m,k}$ is the model predicted acceleration calculated using Eq
 Network and communications are not strictly necessary for a single wave of the game. Without them, each drone would act according to the information that it had gathered (location of the players, location of other drones etc.), and would not have access to the information that other drones had gathered. Advantages of this approach include: 
 \begin{itemize}
     \item Perceived Fairness: the drones will not have access to information they have not gathered themselves, just like the human players.
-    \item Robustness: if each drone acts individually, there is no single thing that can go wrong that would entirely derail the game (the way a central server crash would).
+    \item Robustness: if each drone acts individually, there is no single point of failure that would entirely derail the game (the way a central server crash would).
 \end{itemize}
-Alternatively, a central server could be used to give drones high-level instructions, and to share information pertaining to the state of the game. This method of handling information also has some advantages:
+Alternatively, a central server could be used to give drones high-level instructions, and to share information pertaining to the state of the game. Advantages of this approach include: 
 \begin{itemize}
     \item Reduced Complexity: coordinating the movement of many drones is much easier when all information is available centrally.
     \item Hardware Costs: if the central high-level decision making is performed in a central server, rather than locally on the processer of each drone, not only will a lower-powered processor be needed in the drone, but a smaller battery will be needed to power it, so less powerful motors will be required to lift the battery, and so on, decreasing hardware costs.
@@ -1316,20 +1317,20 @@ Considering the pros and cons listed above, it was decided that a central server
 \subsection{Bluetooth}
 Bluetooth is a short-range wireless communication system, designed for low-power device-to-device communication. It uses 79 channels, 1MHz apart, from 2.402 to 2.480 GHz. Data is encoded by changes in frequency. Classic Bluetooth uses Frequency Hopping Spread Spectrum (FHSS), switching between frequency channels to reduce interference, with Gaussian Frequency Shift Keying (GFSK) modulation. In a connection, one device acts as a \say{main}, and up to seven devices act as \say{followers}. Time-Division-Duplexing is used to avoid collisions. Time is divided into 625 \(\mu\)s divisions. The main communicates in even slots, and the followers communicate in odd slots.
 
-\(\)\newline A Bluetooth connection uses very little power. However, it has a lower bitrate than a Wi-Fi connection (1-3 Mbps). It also has a shorter intended range than a Wi-Fi connection. Furthermore, the maximum number of seven followers connected to a single main will pose a problem since it will be necessary for up to 10 drones to be connected to the server at a time, requiring an additional main, to manage communication for some drones. This would be possible, but inconvenient and less robust.
+\(\)\newline A Bluetooth connection uses very little power. However, it has a lower bitrate than a Wi-Fi connection (1-3 Mbps). It also has a shorter intended range than a Wi-Fi connection. Furthermore, the maximum number of seven followers connected to a single main would pose a problem since it will be necessary for up to 10 drones to be connected to the server at a time, requiring an additional main, to manage communication for some drones. This would be possible, but inconvenient and less robust.
 
 \subsection{Wi-Fi}
 Wi-Fi is a medium-range wireless communication system, designed for fast and reliable server-to-device communication. It typically operates at \(\textasciitilde\)2.4 GHz, \(\textasciitilde\)5 GHz or \(\textasciitilde\)6 GHz, transferring data over multiple (up to 60) non-overlapping channels of bandwidth 20 MHz, modulated using Orthogonal Frequency Division Multiplexing (OFDM).
 
-\(\) \newline A Wi-Fi connection typically has a lower latency and a much higher maximum bitrate than Bluetooth. However, the required data rate is small enough that this will not be important. Wi-Fi is generally more reliable than Bluetooth, and this is especially true at distances above ten meters; Bluetooth was designed for low bitrate, low power, short-range communication between a small number of devices, whereas Wi-Fi was designed for higher bandwidth connections between many devices.
+\(\) \newline A Wi-Fi connection typically has a lower latency than a Bluetooth connection. It also has a much higher maximum bitrate, however the required data rate is small enough that this will not be important. Wi-Fi is generally more reliable than Bluetooth, especially at distances above ten meters; Bluetooth was designed for low bitrate, low power, short-range communication between a small number of devices, whereas Wi-Fi was designed for higher bandwidth connections between many devices.
 
-\(\)\newline For these reasons, Wi-Fi was selected as the networking medium between the drones and the server. The server will be a desktop computer (with Wi-Fi capability), and the drones, helmets and vests all contain a Raspberry Pi 4, with Wi-Fi capability.
+\(\)\newline For these reasons, Wi-Fi was selected as the networking medium between the drones and the server. The server will be a desktop computer (with Wi-Fi capability), and the drones, helmets and vests all contain a Raspberry Pi 4, which has Wi-Fi capability (discussed in section~\ref{comms}).
 
 \newpage
 \section{High Level Control} \label{high level control} % Ritchie
 \fancyhead[C]{Richard Usherwood} % Ritchie
 \subsection{Context}
-The objective of the High Level Control Protocol is to define algorithms that take game states (positions of human players, positions of drones, etc.) as their inputs, and give a high-level behaviour of a drone as their output. This is achieved by splitting the drones' behaviour into several \say{modes}, in which some information and computation is performed in the server, and transmitted to the drones via Wi-Fi, and some information storage and computing is performed onboard the drone.
+The objective of the High Level Control Protocol is to define algorithms that take game states (positions of human players, positions of drones, etc.) as their inputs, and give a high-level behaviour of a drone as their output. This is achieved by splitting the drones' behaviour into several \say{modes}, in which some information storage and computation is performed in the server, and transmitted to the drones via Wi-Fi, and some information storage and computing is performed onboard the drone.
 
 
 \subsection{Drone Modes}
@@ -1347,9 +1348,9 @@ A set of drone \say{modes} or \say{states}, describing the drone's high-level be
 \noindent An overview of the purpose of each state is given below.
 
 \subsubsection{Dormant Mode}
-This is the default mode of the drones, designed for waiting between rounds or games on standby, when not actively involved in the game. This mode is triggered by the end of a round, or by the powering on of the drone.
+This is the default mode of the drones, designed for waiting between rounds or games on standby, when not actively involved in the game. This mode is activated when a round end, or when the drone is powered on.
 \subsubsection{Search Mode}
-This is the initial mode of a drone upon entering a game. In this mode, the drone is exploring an area of the map decided by the central server, looking for a target. The flow diagram describing the conditions under which the drone will change out of Search Mode is shown below, in Fig.~\ref{fig:FlowSearch}.
+This is the initial mode of a drone entering a game. In this mode, the drone explores an area of the map decided by the central server, looking for a target. The flow diagram describing the conditions under which the drone will change out of Search Mode is shown below, in Fig.~\ref{fig:FlowSearch}.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.5\linewidth]{figs/High-Level/SearchMode19.png}
@@ -1365,7 +1366,7 @@ The drone enters this mode when it has seen a human player who is not within sho
     \label{fig:FlowTrack}
 \end{figure}
 \subsubsection{Shoot Mode}
-This is the mode the drone is in when it has identified a player within its shooting range. In this mode, the drone will try to shoot the player. The flow diagram describing the conditions under which the drone will change out of Shoot Mode is shown below, in Fig. \ref{fig:FlowShoot}.
+This is the mode the drone is in when a player is within its shooting range. In this mode, the drone will try to shoot the player. The flow diagram describing the conditions under which the drone will change out of Shoot Mode is shown below, in Fig. \ref{fig:FlowShoot}.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.5\linewidth]{figs/High-Level/ShootMode19.png}
@@ -1373,7 +1374,7 @@ This is the mode the drone is in when it has identified a player within its shoo
     \label{fig:FlowShoot}
 \end{figure}
 \subsubsection{Movement Mode}
-This is the mode the drone is in when it has been \say{called for help} - something that happens when a drone detects that more than one player is within shooting range of itself. This mode can only be reached from Search Mode.
+This is the mode the drone is in when it has been \say{called for help}. A \say{call for help} is generated when a drone detects that more than one player is within its shooting range. This mode can only be reached from Search Mode.
 \subsubsection{Collision Avoidance Mode}
 This mode is triggered either when the drone detects it is about to collide into a wall, the ceiling or the safety net, or when the server detects it is about to collide into another drone. This mode can be accessed from any mode (except Dormant Mode).
 
@@ -2385,7 +2386,7 @@ From fast-food restaurants to road cycling, apps are everywhere. As reported in 
 Companion apps encourage user-engagement by allowing users to track their progress through points and leaderboards, track achievements, and connect with friends. For example, the popular birdwatching app \say{Birda} allows users to log bird sightings. It rewards users with achievement badges when they complete objectives (for example, logging ten different species), and integrates monthly challenges. It also connects birdwatchers through the \say{community} feature, allowing users to view their friends' activity and local sightings. 
 
 \paragraph{Functionality} \(\) \newline
-Companion apps also serve a functional purpose. Since effectively everyone in the UK owns and uses a smartphone, they can be directly implemented into existing products. For example, budget UK pub chain JD Wetherspoon uses a companion app to allow patrons to order drinks and food directly to their table, without requiring them to break conversation and queue at a busy bar. 
+Companion apps also serve a functional purpose. Since effectively everyone in the UK owns and uses a smartphone, they can be directly implemented into existing products. For example, the budget UK pub chain JD Wetherspoon uses a companion app to allow patrons to order drinks and food directly to their table, without requiring them to break conversation and queue at a busy bar. 
 
 \subsection{Overview}
 When opened for the first time, the app prompts the user sign in using a username and password. When completed, the app displays the first of five screens that are navigated using a bottom panel: the \say{Profile} screen, the \say{Leaderboard} screen, the \say{Achievements and Challenges} screen, the \say{Community} screen, and the \say{Play in Person} screen. As an example, the \say{Leaderboard} screen is shown in Fig. \ref{fig:lea-screen}. The app user can toggle between viewing a global leaderboard and a leaderboard of only their friends.
@@ -2418,7 +2419,7 @@ Tracking progress encourages user engagement by giving users a sense of achievem
 \begin{itemize}
     \item The user's total score is displayed under their profile, allowing them easily to track progress.
     \item The user can track their progress against their friends in the Leaderboard screen.
-    \item Achievements are defined in the app, and players are rewarded with a notification when one has been completed. Added to this are monthly challenges, giving satisfaction from short-term progress.
+    \item Achievements are implemented, and players are rewarded with a notification when one has been completed. Added to this are monthly challenges, giving users satisfaction from short-term progress.
 \end{itemize}
 \subsubsection{Friends}
 Connecting friends and integrating social features encourages user engagement by allowing users to see their friends' progress. The app achieves this in many ways:
@@ -2427,11 +2428,11 @@ Connecting friends and integrating social features encourages user engagement by
     \item The Community screen allows players to see their friends' recent activity, as well as to send and accept/decline friend requests.
 \end{itemize}
 \subsubsection{Notifications and reminders}
-Integrating Notifications and reminders prompts users to engage regularly with the app. Notifications are delivered to the phone's operating system notification bar for the following reasons:
+Integrating notifications and reminders prompts users to engage regularly with the app. Notifications are delivered to the phone's operating system notification bar for the following reasons:
 \begin{itemize}
     \item The user has completed an achievement/monthly challenge.
     \item The user has overtaken/been overtaken by a friend in the Leaderboard.
-    \item The user has a new friend request.
+    \item The user has received a friend request.
 \end{itemize}
 
 
@@ -2439,8 +2440,8 @@ Integrating Notifications and reminders prompts users to engage regularly with t
 The user experience of playing the game in the centre, using the app, is outlined below.
 \begin{itemize}
     \item The user signs in to the app (or create an account if this has not already been done). The Login screen is shown in Fig.~\ref{fig:userstory}(\subref{fig:userstory1}).
-    \item The app displays the Profile Screen. Using the bottom panel, shown in Fig.~\ref{fig:App-Panel}, the user navigates to the \say{Play in Person} Screen. The Profile Screen is shown in Fig.~\ref{fig:userstory}(\subref{fig:userstory2}).
-    \item The player uses the \say{Play in Person} screen to scan QR codes on the gun and the helmet given to them by the centre. The Play in Person screen is shown in Fig.~\ref{fig:userstory}(\subref{fig:userstory3}).
+    \item The app displays the Profile Screen, shown in Fig.~\ref{fig:userstory}(\subref{fig:userstory2}). Using the bottom panel, shown in Fig.~\ref{fig:App-Panel}, the user navigates to the \say{Play in Person} Screen.
+    \item The player uses the \say{Play in Person} screen to scan QR codes on the gun and the helmet given to them by the centre, shown in Fig.~\ref{fig:userstory}(\subref{fig:userstory3}).
     
 \end{itemize}
 \begin{figure}[htbp]
@@ -2473,7 +2474,7 @@ This allows the server to attribute the correct number of kills and deaths (\gls
 \subsection{Usability Design Choices}
 In 2010, Lee et al \cite{LEE201090} identified several \say{Principles for General System Design}, with respect to complex 3D architectural design and engineering tools. While this use case is not identical to that of Lee et al, the principles are still relevant. The following are examples of these principles:
 \subsubsection{Visibility}
-Lee et al describe the use of visibility in UI design as \say{Making relevant information conspicuous and easily detectable to the user}. This has been achieved by the large panel at the bottom of the app, visible at all times, as shown in Fig. \ref{fig:App-Panel}. Furthermore, the open-source React icons encourage faster visual recognition by the user, improving visibility of the relevant information (in this case the purpose of each screen).
+Lee et al describe the use of visibility in \gls{ui} design as \say{Making relevant information conspicuous and easily detectable to the user}. This has been achieved by the large panel at the bottom of the app, visible at all times, as shown in Fig. \ref{fig:App-Panel}. Furthermore, the open-source React icons encourage faster visual recognition by the user, improving visibility of the relevant information (in this case the purpose of each screen).
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{figs/App_Screenshots/Bottom_Panel.png}
@@ -2481,7 +2482,7 @@ Lee et al describe the use of visibility in UI design as \say{Making relevant in
     \label{fig:App-Panel}
 \end{figure}
 \subsubsection{Feedback}
-Lee et al describe the use of feedback in UI design as \say{Response of the system to the user’s actions in order to provide information regarding the internal state of the system}. As an example of this principle in the design of this app, the icon in the bottom panel corresponding to the current screen is filled in and coloured red. When the user changes screen, the \say{internal state} of the app is reflected by the change of icon displayed in red. As another example, when a friend request is made, the user receiving the request sees a box with two buttons: \say{Accept} and \say{Decline}, as shown in Fig. \ref{fig:App-Friend_Request}. When the user selects one of these options, the box disappears. While this is not required for the functionality of the system, the change to the external state of the app (the box disappearing) instinctively reinforces to the user of a change to the internal state of the app (the friends associated with a player in the database). 
+Lee et al describe the use of feedback in \gls{ui} design as \say{Response of the system to the user’s actions in order to provide information regarding the internal state of the system}. As an example of this principle in the design of this app, the icon in the bottom panel corresponding to the current screen is filled in and coloured red, shown in Fig.~\ref{fig:App-Panel}. When the user changes screen, the \say{internal state} of the app is reflected by the change of icon displayed in red. As another example, when a friend request is made, the user receiving the request sees a box with two buttons: \say{Accept} and \say{Decline}, as shown in Fig. \ref{fig:App-Friend_Request}. When the user selects one of these options, the box disappears. While this is not required for the functionality of the system, the change to the external state of the app (the box disappearing) instinctively conveyes to the user a change to the internal state of the app (the friends associated with a player in the database). 
 
 \begin{figure}[H]
     \centering
@@ -2490,7 +2491,7 @@ Lee et al describe the use of feedback in UI design as \say{Response of the syst
     \label{fig:App-Friend_Request}
 \end{figure}
 \subsubsection{Consistency}
-Lee et al describe the use of consistency in UI design as \say{Uniformity of system semantics across similar situations}. In this context, \say{system semantics} refers to the method the user is expected to use when interacting with the UI. As an example, the app uses a dark grey and red colour scheme. Throughout the app, red is used to mean \say{active/on} and dark grey is used to mean \say{passive/off}. This is seen in the bottom panel (Fig. \ref{fig:App-Panel}) and top panel in the achievements (Fig.~\ref{fig:RemainingAppSS}(\subref{fig:RemainingAppSS-ach-lif}, \subref{fig:RemainingAppSS-ach-mon})) and community (Fig.~\ref{fig:RemainingAppSS}(\subref{fig:RemainingAppSS-com-fri}, \subref{fig:RemainingAppSS-com-sen})) screens, in which the screen being displayed in shown in red. It is also seen in the login (Fig.~\ref{fig:userstory}(\subref{fig:userstory1})) and player profile (Fig.~\ref{fig:userstory}(\subref{fig:userstory2})) screens, in which the Login/Logout buttons are coloured red. It is shown in the box displayed when receiving a friend request (Fig. \ref{fig:App-Friend_Request}) in which the \say{Accept} button, which changes the user's list of friends, is coloured red, and the \say{Decline} button, which leaves the user's list of friends as it is, is shown in dark grey.
+Lee et al describe the use of consistency in \gls{ui} design as \say{Uniformity of system semantics across similar situations}. In this context, \say{system semantics} refers to the method the user is expected to use when interacting with the \gls{ui}. As an example, the app uses a dark grey and red colour scheme. Throughout the app, red is used to mean \say{active/on} and dark grey is used to mean \say{passive/off}. This is seen in the bottom panel (Fig. \ref{fig:App-Panel}) and top panel in the achievements (Fig.~\ref{fig:RemainingAppSS}(\subref{fig:RemainingAppSS-ach-lif}, \subref{fig:RemainingAppSS-ach-mon})) and community (Fig.~\ref{fig:RemainingAppSS}(\subref{fig:RemainingAppSS-com-fri}, \subref{fig:RemainingAppSS-com-sen})) screens, in which the screen being displayed in shown in red. It is also seen in the login (Fig.~\ref{fig:userstory}(\subref{fig:userstory1})) and player profile (Fig.~\ref{fig:userstory}(\subref{fig:userstory2})) screens, in which the Login/Logout buttons are coloured red. It is shown in the box displayed when receiving a friend request (Fig. \ref{fig:App-Friend_Request}) in which the \say{Accept} button, which changes the user's list of friends, is coloured red, and the \say{Decline} button, which leaves the user's list of friends as it is, is shown in dark grey.
 \begin{figure}[htbp]
      \centering
      \begin{subfigure}[b]{0.24\textwidth}
@@ -2529,13 +2530,13 @@ Lee et al describe the use of consistency in UI design as \say{Uniformity of sys
 \subsubsection{Overview}
 The app was created using Expo, a development environment used to create React Native apps. React Native is a framework that allows mobile apps to be built using React, which is a JavaScript library designed for user interface design.
 \subsubsection{Project Structure}
-When the app is run, it opens a \say{package.json} file which sets the rest of the app in motion. From here, it executes index.js which imports App.js, which opens MainContainer.js. MainContainer.js serves as the app's navigation hub. MainContainer.js decides which \say{navigation flow} to show, based on whether the app is in state \say{Auth} or \say{Main} (whether the user is signed in or not). From here, MainContainer.js accesses each of the displayed screens, each of which has a dedicated JavaScript file in the \say{screens} subfolder.
+When the app is run, it opens a \say{package.json} file which sets the rest of the app in motion. From here, it exectutes index.js, importing App.js, which opens MainContainer.js. MainContainer.js serves as the app's navigation hub. MainContainer.js decides which \say{navigation flow} to show, based on whether the app is in state \say{Auth} or \say{Main} (whether or not the user is signed in). From here, MainContainer.js accesses the displayed screens, each of which has a dedicated JavaScript file in the \say{screens} subfolder.
 \subsubsection{State Management}
-The app uses a hybrid state management strategy, meaning that not all states are stored centrally (fully global), and not all states are managed independently by an individual screen (fully local). The React Context including AuthContext (whether or not a user is logged in) and DataContext (cached API data) are stored centrally. However each screen also stores its own data, such as the data of the user's last game (in profile screen) and friend requests a user may have (in community screen) etc. This hybrid style of state management has several advantages. For example, the fact that low-level data is stored in the JavaScript file corresponding to the screen it is needed in allows for good \say{separation of concerns}, meaning that, if the project were bigger than it is now, several developers could be editing different parts of the software without interfering. Additionally, by having some data stored separately, such as API cached data, each screen can \say{reach in} to this file and get what it needs, rather than the same data having to be stored in many different places.
+The app uses a hybrid state management strategy, meaning that not all states are stored centrally (fully global), and not all states are managed independently by an individual screen (fully local). The React Context including AuthContext (whether or not a user is logged in) and DataContext (cached API data) are stored centrally. However each screen also stores its own data, such as the data of the user's last game (in profile screen) and friend requests a user may have (in community screen) etc. This hybrid style of state management has several advantages. For example, the fact that low-level data is stored in the JavaScript file corresponding to the screen it is needed in allows for good \say{separation of concerns}, meaning that, if the project were bigger than it is now, several developers could be editing different parts of the software without interfering. Additionally, by having some data stored centrally, such as API cached data, each screen can \say{reach in} to this file and get what it needs, rather than the same data being stored in many different places.
 \subsubsection{API Integration}
-The App uses Supabase as its backend platform, to access a PostgreSQL database. Database access is handled through a single client in \say{db.js} - after the app is loaded, the data is cached in datacache.js to avoid unnecessary loading times, especially when being used with poor internet connections. A screenshot of the database is included in the appendix.
+The App uses Supabase as its backend platform, to access a PostgreSQL database. Database access is handled through a single client in \say{db.js} - after the app is loaded, the data is cached in datacache.js to avoid unnecessary loading times, especially when being used with poor internet connections.
 
-\(\)\newline A specific format had to be created for this data to be stored. For example, Game Data is stored in a format (A, B, C, \dots),(D, E, F, \dots),(G, H, I, \dots). This game data is equivalent to \say{Players A, B, C, ... played a game in which they got D, E, F, ... kills and died G, H, I, ... times, respectively}. Furthermore the \say{score} is defined as \say{number of kills squared divided by number of deaths} in a game, and the friend requests are stored as CSVs. When a change to the data is made in the app (for example sending or accepting a friend request), the database is automatically through API calls. However, the database must also be updated after every game. In the real system, this would be integrated into a system that processes communications with drones and helmets, and updates the database automatically. However, for now it is handled by a script that allows the user to input the results of the game (who was playing, how many kills they got, how many times they died etc.), and updates the database accordingly. 
+\(\)\newline A specific format had to be created for this data to be stored. For example, Game Data is stored in a format (A, B, C, \dots),(D, E, F, \dots),(G, H, I, \dots). This game data is equivalent to \say{Players A, B, C, ... played a game in which they got D, E, F, ... kills and died G, H, I, ... times, respectively}. Furthermore the \say{score} is defined as \say{number of kills squared divided by number of deaths} in a game, and the friend requests are stored as CSVs. When a change to the data is made in the app (for example sending or accepting a friend request), the database is automatically updated through API calls. Additionally, the database must also be updated after every game. In the real system, this would be integrated into a system that processes communications with drones and helmets, and updates the database automatically. However, for now it is handled by a script that allows a \say{super user} to input the results of the game (who was playing, how many kills they got, how many times they died etc.), and updates the database accordingly. 
 
 \newpage
 \section{Risk Assessment and Safety Management}
@@ -2590,10 +2591,10 @@ A quantitative risk assessment has been completed, and is shown in Table \ref{ta
 \section{Commercialisation and Financial Modelling}
 \label{commercialisation}
 \subsection{Setup}
-A discounted cash flow model was created. The model was used to track cash flow, apply a discount rate to future revenue, and to calculate the \gls{npv} of a company providing the game as a commercial enterprise.
+A discounted cash flow model was created. The model was used to track cash flow, apply a discount rate to future revenue, and calculate the \gls{npv} of a company providing the game as a commercial enterprise.
 \subsection{Numerical Estimations} \label{num-est}
 \subsubsection{Utility}
-It is assumed that the first year (Year 0) will be spent producing hardware, advertising the business, and decorating the playing area (a warehouse). Year 0 is therefore assumed to generate no revenue from gameplay. As the business becomes more established, its utility (games per year) is modelled to increase up to a plateau in Year 3. The modelled increase in utility is shown in Table \ref{tab:utilityandemployees}. The maximum number of games per year was assumed to be 2000, corresponding to 10 hour-long games on Saturday and Sunday, and four hour-long games on weekdays, for 50 weeks per year. Note that this \say{maximum utility} refers to the value at which utility plateaus, not a fundamental limit. The effect of a variation in utility is analysed in Section \ref{PriceAnal}.
+It is assumed that the first year (Year 0) will be spent producing hardware, advertising the business, and decorating the playing area (a warehouse). Year 0 is therefore assumed to generate no revenue from gameplay. As the business becomes more established, its utility (games per year) is modelled to increase up to a plateau in Year 3. The modelled increase in utility is shown in Table \ref{tab:utilityandemployees}. The maximum number of games per year was assumed to be 2000, corresponding to 10 hour-long games on Saturday and Sunday, and four hour-long games on weekdays, for 50 weeks per year. Note that this \say{maximum utility} refers to the value at which utility plateaus, not a fundamental limit, which is referred to as a \say{utility capacity} (discussed in section \ref{PriceAnal}). The effect of a variation in utility is analysed in Section \ref{PriceAnal}.
 
 
 
@@ -2618,7 +2619,7 @@ Full-Time employees & \qquad 2 & \quad 2 & \quad 3 & \quad 4 & \quad 4 \\
 \subsubsection{Warehouse Hiring}
 The game is assumed to be played in a converted warehouse. The size of warehouse required for the game was thought to be comparable to that of a large school hall (circa. 5000 square feet). Including space for a reception area, a small office and a break room for staff, between 6000 and 7000 square feet was thought to be an appropriate size. The warehouse should be within a short drive of a large city. A 6800 square foot warehouse in London was identified at £2000 pcm \cite{rightmoveCheckThis}. The cost of hiring the warehouse is therefore estimated at £25000 per annum.
 \subsubsection{Advertising}
-The advertising budget is large, because early revenue has a disproportionate affect on \gls{npv} due to the large discount rate. It is therefore desirable to invest heavily in advertising initially, spending as little time as possible operating below maximum utility. Advertising will continue even when maximum utility has been reached. This is necessary to keep the business reaching new audiences and to advertise new features. It is assumed that advertising costs are constant throughout operation. This may be unrealistic, but produces a conservative estimate. After conversations with Global (the advertising agency responsible for Transport for London), the cost of a \say{small-scale advertising campaign} involving one-to-two posters in several small, outer-London underground stations and a small presence in carriage poster advertising is around £2000 per month. The cost of 1000 views for a social media advertising campaign is around £10 for Facebook, Instagram, and TikTok \cite{mediaperformancePaidSocial}. So, for £500 per month, 50000 views of social media advertising can be bought. These can be localised so only users in London will be shown advertising. \newline
+The advertising budget is large, because early revenue has a disproportionate effect on \gls{npv} due to the large discount rate. It is therefore desirable to invest heavily in advertising initially, spending as little time as possible operating below maximum utility. Advertising will continue even when maximum utility has been reached. This is necessary to keep the business reaching new audiences and to advertise new features. It is assumed that advertising costs are constant throughout operation. This may be unrealistic, but produces a conservative estimate. After conversations with Global (the advertising agency responsible for Transport for London), the cost of a \say{small-scale advertising campaign} involving one-to-two posters in several small, outer-London underground stations and a small presence in carriage poster advertising is around £2000 per month. The cost of 1000 views for a social media advertising campaign is around £10 for Facebook, Instagram, and TikTok \cite{mediaperformancePaidSocial}. So, for £500 per month, 50000 views of social media advertising can be bought. These can be localised so only users in London will be shown advertising. \newline
 
 \noindent Therefore, the projected required advertising budget is given by Eq. \ref{equ:advertising}.
 \begin{equation}
@@ -2651,13 +2652,13 @@ Floor & 0.18 & 0.54 \\
 \end{tabular}
 \label{tab:U-Values}
 \end{table} \newline
-\noindent Assuming the air changes completely every two hour-long games (\(\text{ACH}=0.5\)), the height of the warehouse is \(6\text{ m}\), and a the footprint is square:
+\noindent Assuming the air changes completely every two hour-long games (ACH=0.5), the height of the warehouse is 6 m, and the footprint is square:
     \begin{align}
         &\text{Total Wall Area}=4 \times \sqrt{632}\text{ m} \times 6\text{ m}=603\text{ m}^2 \\
         &\text{Floor Area}=\text{Roof Area}=6800 \text{ ft}^2=632\text{ m}^2 \\
         &\text{Total Volume}=632\text{ m}^2 \times 6\text{ m}=3792\text{ m}^3
     \end{align}
-\noindent Assuming average daytime temperature is \(10 ^\circ C\), and the desired temperature is \(20^\circ C\), \(\Delta T=10^\circ C\):
+\noindent Assuming average daytime temperature is 10\(^\circ\)C, and the desired temperature is 20\(^\circ\)C, \(\Delta T=\)10\(^\circ\)C:
 \begin{equation}
 \dot Q_\text{heating}=0.78\times603\times10+0.48\times632\times10+0.54\times632\times10+0.5\cdot \frac{1.225\times1005\times3792\times10}{3600}=17.6\text{ kW}
 \end{equation}
@@ -2667,7 +2668,7 @@ Floor & 0.18 & 0.54 \\
 To calculate the lighting costs, it is assumed the warehouse requires fifty 100~W equivalent LEDs, each drawing 15~W of power, to avoid dark shadows in the maze corners. However, since the game is played in (relative) darkness, the lights will only be required in between play sessions. Each game lasts 45 minutes, separated by 15 minute breaks, so the lights will only be turned on one quarter of the time. Therefore the effective power of the lighting is given by \(\dot Q_\text{lighting} = \frac 14 \times 50\times100\text{ W} = 1.3\text{ kW}\).
 
 \paragraph{Batteries} \(\) \newline
-Batteries in drones and laptops used by employees both must be charged. Both are assumed to be charged by standard \(65W\) chargers. There are assumed to be 20 batteries in total, and it is assumed they are all charging whenever the centre is open. The effective power draw of charging batteries is estimated at \(\dot Q_\text{batteries}=20\times 65\text{ W}=1.3\text{ kW}\).
+Batteries in drones and laptops used by employees both must be charged. Both are assumed to be charged by standard 65 W chargers. There are assumed to be 20 batteries in total, and it is assumed they are all charging whenever the centre is open. The effective power draw of charging batteries is estimated at \(\dot Q_\text{batteries}=20\times 65\text{ W}=1.3\text{ kW}\).
 
 \paragraph{Total Power} \(\) \newline
 Under the assumptions outlined above, the total power draw of the operational warehouse is approximated to \(17.6\text{ kW}+1.3\text{ kW}+1.3\text{ kW}=20.2\text{ kW}\).
@@ -2767,7 +2768,7 @@ Another approach is to weight the bank loan interest rate \(r_d\) and the equity
 \begin{equation}
     \text{WACC}=\frac{D}{D+E}r_d+\frac{E}{D+E}r_e
 \end{equation}
-where \(D\) is the initial capital of the bank loan, and \(E\) is the capital investment from equity financing. Using \gls{wacc}, it is not necessary to model the loan an the debt repayments as cash flows , or the remaining balance as a liability; these are all captured by the use of \gls{wacc}. According to venture finance consultancy Phoenix Strategy, a realistic value of the cost of debt is \(r_d\approx 8\textendash 15\%\)~\cite{CostOfDebt}.\newline
+where \(D\) is the initial capital of the bank loan, and \(E\) is the capital investment from equity financing. Using \gls{wacc}, it is not necessary to model the loan and debt repayments as cash flows, or the remaining balance as a liability; these are all captured by the use of \gls{wacc}. According to venture finance consultancy Phoenix Strategy, a realistic value of the cost of debt is \(r_d\approx 8\textendash 15\%\)~\cite{CostOfDebt}.\newline
 
 \noindent Therefore, for the sake of simplicity, and conservatism, \gls{wacc} is used in this model, with rates:
 \begin{equation}
@@ -2809,7 +2810,7 @@ Tax is modelled under UK corporation tax laws. For a given year, the taxable inc
     \end{cases}
 \end{equation}
 
-\noindent UK corporation tax law also allows losses in one year to be carried over to the next. For example, if a business makes a loss of £20000 in Year \(n\), and makes a profit of £60000 in Year \(n+1\), its taxable income in Year \(n+1\) is £40000. Losses can be carried over indefinitely.
+\noindent UK corporation tax law also allows losses in one year to be carried over to the next. For example, if a business makes a loss of £20,000 in Year \(n\), and makes a profit of £60,000 in Year \(n+1\), its taxable income in Year \(n+1\) is £40,000. Losses can be carried over indefinitely.
 
 \subsection{Net Present Value}
 A running total cash flow is tabulated. This is discounted according to the year in which the money is made. The \gls{npv} at a given year is given by the discounted cumulative cash flow up to that year added to the discounted terminal value. In future years, once cash flow (including tax) stabilises, \gls{npv} remains constant. In the following sections, \say{\gls{npv}} refers to this stabilised value.
@@ -2860,7 +2861,7 @@ Discounted CCF& -215&-219&-194&-148&-109&-79.0&-56.8&-37.9& \dots \\
 \label{tab:model}
 \end{table}
 
-\noindent The Discounted Cumulative Cash Flow turns positive in Year 10 (payback; section \ref{DPS}).\newline
+\noindent The Discounted Cumulative Cash Flow turns positive in Year 10 (payback is discussed in section \ref{DPS}).\newline
 
 
 \noindent It is found that the \gls{npv} is £68669. Hence, the business is viable under these assumptions.
@@ -2869,7 +2870,7 @@ Discounted CCF& -215&-219&-194&-148&-109&-79.0&-56.8&-37.9& \dots \\
 Using Apps Script, Google Sheets' equivalent of Excel macros, the following analyses were performed. In general, one variable was changed and another was observed, while all others were held constant according to the assumptions stated above.
 \subsubsection{\gls{npv} Profile}
 \label{NPVProfile}
-A common measure of a business' viability is the effect of changing the discount rate on \gls{npv}, and analysis of the \gls{npv}-Discount Rate graph that this analysis produces, as shown in Fig. \ref{fig:NPV-Profile}.
+A common measure of a business' viability is the effect of a variation in the discount rate on \gls{npv}, and analysis of the \gls{npv}-Discount Rate graph that this analysis produces, as shown in Fig. \ref{fig:NPV-Profile}.
 
 \begin{figure}[H]
     \centering
@@ -2891,7 +2892,7 @@ It is also useful to investigate how payback (the time at which the cumulative d
     \label{fig:dis-pay-sen}
 \end{figure}
 
-\noindent Payback increases with Discount Rate. However, Payback only decreases a little over the realistic values of Discount Rate, only increasing from 9 to 13 years as Discount Rate increases from 15\% to 20\%. This suggests slight errors in numerical assumptions does not hugely affect the projected business performance.
+\noindent Payback increases with Discount Rate. However, Payback only decreases a little over the realistic values of Discount Rate, only increasing from 9 to 13 years as Discount Rate increases from 15\% to 20\%. This suggests slight errors in numerical assumptions do not hugely affect the projected business performance.
 
 \subsubsection{Pricing}
 \label{PriceAnal}
@@ -2918,11 +2919,11 @@ As above, it was assumed that, a price of £200 per game corresponds to a maximu
 % \begin{equation}
 %     Q_d=2000-\varepsilon\frac QP(200-P)
 % \end{equation}
-\noindent In a linear model, \(\varepsilon\) is not constant. Therefore, a reference value of elasticity \(\varepsilon'\) will be taken at \((Q_d=2000, P=200\)), and the gradient held constant. Hence, the demand-price curve reduces to:
+\noindent In a linear model, \(\varepsilon\) is not constant. Therefore, a reference value of elasticity, \(\varepsilon'\), will be taken at \((Q_d=2000, P=200\)), and the gradient held constant. Hence, the demand-price curve reduces to:
 \begin{equation}
     Q_d=2000-10\varepsilon'(200-P)
 \end{equation}
-However, this model implies no limit on utility. In reality, only one game can be played at a time. This upper limit is modelled as 3000 games/year (corresponding to around 59 hour-long games per week, excluding public holidays), given a final demand-price curve of:
+However, this model implies no limit on utility, or \say{utility capacity}. In reality, only one game can be played at a time. The capacity is modelled as 3000 games/year (corresponding to around 59 hour-long games per week, excluding public holidays), given a final demand-price curve of:
 
 \begin{equation}
     Q_d=\min\{2000-10\varepsilon'(200-P), 3000\}
