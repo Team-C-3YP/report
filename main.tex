@@ -57,7 +57,7 @@
 Laser tag remains a popular and commercially successful game within the UK leisure industry, but its core mechanics have seen minimal innovation since its introduction in 1984 despite growing consumer demand for highly interactive leisure experiences. This report details the design and simulation of a novel iteration of the game in which human players compete against a multiagent autonomous drone system.
 To ensure safe operation within a confined arena, the system utilises a custom modular quadrotor airframe physically segregated from players by industrial netting. Player detection and predictive 3D tracking rely on passive stereoscopic vision, a YOLOv8 nano model trained on synthetic Unity data, and a Linear Kalman Filter. A central server governs coordination over wireless networking, dynamically transitioning drones through distinct operational modes.
 Subsystem navigation integrates \acrfull{bfs} for area scanning, \acrfull{rl} policies trained in Isaac Lab for flight control, and Artificial Potential Fields for collision avoidance.
-Sustainability, ethics, and safety concerns are considered, and the technical performance of the project is demonstrated through simulation analysis. Commercial viability is supported by a companion app designed to encourage user engagement and validated through financial modelling yielding a business with a \acrfull{npv} of approximately £69,000. This establishes the concept as a viable and innovative evolution of the laser tag industry.
+Sustainability, ethics, and safety concerns are considered, and the technical performance of the project is demonstrated through simulation analysis. Commercial viability is supported by a companion app designed to encourage user engagement and validated through financial modelling yielding a business with a \acrfull{npv} of approximately £69,000. This establishes the concept as a viable and innovative evolution to the laser tag industry.
 
 
 \newpage
@@ -113,6 +113,11 @@ Sustainability, ethics, and safety concerns are considered, and the technical pe
 \newacronym{elu}{ELU}{Exponential Linear Unit}
 \newacronym{apf}{APF}{Artificial Potential Field}
 \newacronym{ui}{UI}{User Interface}
+\newacronym{ml}{ML}{Machine Learning}
+\newacronym{pwm}{PWM}{Pulse-Width Modulation}
+\newacronym{gpio}{GPIO}{General Purpose Input/Output}
+\newacronym{usb}{USB}{Universal Serial Bus}
+\newacronym{led}{LED}{Light-Emitting Diode}
 \printglossaries
 \newpage
 
@@ -128,17 +133,17 @@ The UK leisure market is currently defined by a distinct consumer trend: a fruga
 
 Since its introduction in 1984~\cite{LaserTagHistory}, the core mechanics of laser tag have remained largely unchanged. An estimated 76 million games are played every year~\cite{trutneeLaserTag}. This suggests that innovation within the laser tag industry has significant demand and commercial potential.
 
-To meet this demand, we present a novel laser tag game in which human players cooperate to compete against a team of autonomous drones. From a user perspective, the system aims to provide an engaging, safe, and highly interactive experience defined by specific gameplay modes and dynamic objectives (Section \ref{gameplay}). To complete these objectives, players navigate through a purpose-built indoor maze constructed from 5-metre high walls (Section \ref{map}). The project is governed by strict physical safety boundaries to ensure a low-risk environment; the arena features a dividing net that separates the drones flying overhead from the human players below. Designed with a 1200J energy absorption capacity, this industrial netting provides a safety factor of 5.1 against a 4kg drone flying at full thrust downwards. As a result, this mitigates the risk of human-drone collisions without diminishing game immersion.
+To meet this demand, we present a novel laser tag game in which human players cooperate to compete against a team of autonomous drones. From a user perspective, the system aims to provide an engaging, safe, and highly interactive experience defined by specific gameplay modes and dynamic objectives (Section \ref{gameplay}). To complete these objectives, players navigate through a purpose-built indoor maze constructed from 5-metre high walls (Section \ref{map}). The project is governed by strict physical safety boundaries to ensure a low-risk environment; the arena features a dividing net that separates the drones flying overhead from the human players below. Designed with a 1200 J energy absorption capacity, this industrial netting provides a safety factor of 5.1 against a 4 kg drone flying at full thrust downwards. As a result, this mitigates the risk of human-drone collisions without diminishing game immersion.
 
-From a drone perspective, the primary goal is to achieve autonomy and coordinated teamwork within a confined environment. Since off-the-shelf platforms lack the necessary flexibility, payload integration, and component protection for such close-proximity indoor operations, a custom modular quadrotor airframe was developed (Section \ref{hardware}). The \gls{abs} 3D-printed chassis features integrated blade guards to ensure operational continuity during minor wall collisions. To satisfy a 2:1 thrust-to-weight ratio for a 4kg maximum takeoff mass, the propulsion system utilises BrotherHobby Avenger 2806.5 1300KV brushless motors paired with 8x4x3 polycarbonate propellers, driven by a 4S 5000mAh Lithium Polymer battery to sustain approximately 10 minutes of active flight endurance. Dedicated player hardware, including sensor-equipped helmets and vests, then integrate into this ecosystem (Section \ref{player_hardware}).
+From a drone perspective, the primary goal is to achieve autonomy and coordinated teamwork within a confined environment. Since off-the-shelf platforms lack the necessary flexibility, payload integration, and component protection for such close-proximity indoor operations, a custom modular quadrotor airframe was developed (Section \ref{hardware}). The \gls{abs} 3D-printed chassis features integrated blade guards to ensure operational continuity during minor wall collisions. To satisfy a 2:1 thrust-to-weight ratio for a 4kg maximum takeoff mass, the propulsion system utilises BrotherHobby Avenger 2806.5 1300KV brushless motors paired with 8x4x3 polycarbonate propellers, driven by a 4S 5000 mAh Lithium Polymer battery to sustain approximately 10 minutes of active flight endurance. Dedicated player hardware, including sensor-equipped helmets and vests, then integrate into this ecosystem (Section \ref{player_hardware}).
 
-For multi-agent coordination, the system relies on an IEEE 802.11ac Wi-Fi communications framework (Section \ref{network}) linking the onboard drone hardware to a central server. The server manages the high-level game logic, evaluating the global state to dynamically transition individual drones through specific operational modes such as Search, Track, Shoot, and Movement (Section \ref{high level control}). 
+For multi-agent coordination, the system relies on an IEEE 802.11ac Wi-Fi communications framework (Section \ref{network}) linking the onboard drone hardware to a central server. The server manages the high-level game logic, evaluating the global state to transition individual drones dynamically through specific operational modes such as Search, Track, Shoot, and Movement (Section \ref{high level control}). 
 
 To inform these high-level decisions, each drone is equipped with an OAK-D Lite passive stereoscopic camera mounted on a custom 3-axis tracking gimbal, which kinematically decouples the camera from the drone’s flight attitude to maintain continuous target lock. Visual data is ingested by a YOLOv8-nano (YOLOv8n) convolutional neural network (Section \ref{visual_perception}). To overcome the domain gap caused by the arena's low-light conditions and frequent target occlusions, this model was trained on a synthetic dataset created within Unity. Because active visual sensors would interfere with the game's \gls{ir} mechanics, and monocular depth estimation fails when a human target alters their posture, target depth is extracted passively via stereoscopic horizontal pixel disparity. This raw spatial data is smoothed using a Linear Kalman Filter, operating on a Discrete White Noise Acceleration (DWNA) model, to provide continuous, predictive 3D state estimations of the players. 
 
 These estimated player coordinates update the central server's global state, which in turn dictates the high-level navigational objectives assigned to each drone. Search mode utilises a hybrid \gls{bfs} region-allocation and lawnmower trajectory algorithm to systematically scan the arena (Section \ref{search mode}). When rapid transit is required, flight control is handed over to a \gls{rl} policy trained offline in the Isaac Lab physics simulator, outputting body thrust and moment commands (Section \ref{movement mode}). Furthermore, an Artificial Potential Field (APF) controller handles real-time collision avoidance by computing repulsive gradients from walls and other agents, converting them into evasive manoeuvres (Section \ref{collision avoidance mode}).
 
-In addition to the technical deployment, user retention is driven by a companion mobile application that tracks performance metrics, leaderboards, and achievements to foster community engagement (Section \ref{app}). The technical development is supported by an evaluation of broader engineering considerations. These are validated by a quantitative risk assessment (Section \ref{risk-assessment}) and a financial model (Section \ref{commercialisation}), which confirms the commercial feasibility of the enterprise by projecting a Net Present Value of £68,669 at an optimal price of £200 per game. Finally, the report assesses triple-bottom-line sustainability (Section \ref{sustainability}) and outlines a technology strategy using a House of Quality and SWOT analysis (Section \ref{technology_strategy}).
+In addition to the technical deployment, user retention is driven by a companion mobile application that tracks performance metrics, leaderboards, and achievements to foster community engagement (Section \ref{app}). The technical development is supported by an evaluation of broader engineering considerations. These are validated by a quantitative risk assessment (Section \ref{risk-assessment}) and a financial model (Section \ref{commercialisation}), which confirms the commercial feasibility of the enterprise by projecting a \acrfull{npv} of £68,669 at an optimal price of £200 per game. Finally, the report assesses triple-bottom-line sustainability (Section \ref{sustainability}) and outlines a technology strategy using a House of Quality and \acrfull{swot} analysis (Section \ref{technology_strategy}).
 \newpage
 
 \section{Proposed Gameplay for Drone-Based Laser Tag} % Ritchie
@@ -269,7 +274,7 @@ As the drone is intended to operate indoors in relative proximity to players dur
 \begin{itemize}
     \item \textbf{Indoor Movement: } Contrary to the safety requirement, the drone must also be a capable opponent rather than a still target. This means the design must be able to allow for navigation and some form of evasive movement. This poses as a tradeoff between game-play and safety.
     \item \textbf{Visibility and challenge: } The drone had to be large and visible enough for players to clearly recognise the target during game-play, while still being agile enough to move around. A design too small would be difficult to engage while a design too large or too slow would reduce game-play quality.
-    \item \textbf{Supporting game systems and battery: } The drone needs to carry additional hardware required for game-play, such as IR transmitters and receivers, cameras, sensors, and onboard computing. These systems add weight and take up internal space. In addition, the design needs to allow for enough operating time for meaningful game-play.
+    \item \textbf{Supporting game systems and battery: } The drone needs to carry additional hardware required for game-play, such as \gls{ir} transmitters and receivers, cameras, sensors, and onboard computing. These systems add weight and take up internal space. In addition, the design needs to allow for enough operating time for meaningful game-play.
     \item \textbf{Easy maintenance and replace-ability: } Given the game is a multiagent system rather than a single platform, the design needs to remain practical to maintain, to repair, and to replace. Minor damage during operation should not require a whole drone to be rebuilt, so replaceable parts and a maintainable layout becomes an important constraint.
 \end{itemize}
 
@@ -358,7 +363,7 @@ Cell compatibility & 4--6S LiPo & required battery range\\
 \hline
 Bolt & M3, 19 mm $\times$ 19 mm & Defines mounting interface \\
 \hline
-Wire specification & 18 AWG, 20 cm &  ESC and wiring  \\
+Wire specification & 18 AWG, 20 cm &  \gls{esc} and wiring  \\
 \hline
 Target thrust per motor & $\approx 19.6$ N & 4 motors provides 78.5 N \\
 \hline
@@ -466,7 +471,7 @@ where \(\eta_{\text{rpm}}\) represents the fraction of no-load speed achieved un
 \end{tabular}
 \end{table}
 
-As there was no given exact thrust coefficients, therefore we tested using 0.100, 0.125, and 0.150
+As there was no given exact thrust coefficients, we tested using a range of realistic values.
 
 \begin{table}[htbp]
 \centering
@@ -490,7 +495,7 @@ This suggests that the target max thrust of \(19.6~\text{N}\) is theoretically p
 
 However, the target max value is not the same as minimum thrust required for flight. Given the total max weight is approximately \(39.2~\text{N}\), the hover thrust required per motor is \(9.8~\text{N}\) for a quadrotor configuration. This means the selected propulsion configuration has a massive theoretical margin above the hover requirement. Even if the real thrust is lower than the assumed \(19.6~\text{N}\), the drone should still perform admirably, though additional margin would be needed for manoeuvring, disturbance rejection, and stable control. However, this proves that the 2:1 thrust-to-weight ratio gives a large and safe tolerance.
 
-\paragraph{ESC (Electronic Speed Controller) Selection}
+\paragraph{\gls{esc} Selection}
 
 The \gls{esc} is used to control the speed of each motor and provide fast response to throttle commands from the flight controller. Since the propulsion system uses four motors, the design requires one \gls{esc} per motor. The selected \gls{esc} was the LittleBee Spring 40A. As shown in the Table~\ref{tab:esc_specifications}, the available LittleBee Spring 40A specifications list \(2-6~\text{S}\) LiPo input, \(40~\text{A}\) continuous current, with compact dimensions.
 
@@ -605,15 +610,9 @@ This suggests that the battery is theoretically capable of supplying the require
 
 \paragraph{Power distribution}
 
-We require a component for power distribution used to route the main battery output to the four \gls{esc}s safely and with enough current margin. Since each motor is driven by a separate \gls{esc}, a \gls{pdb} be able to supply the combined current demand of all propulsion channels.
+We require a component for power distribution used to route the main battery output to the four \gls{esc}s safely and with enough current margin. Since each motor is driven by a separate \gls{esc}, a \gls{pdb} should be able to supply the combined current demand of all propulsion channels.
 
-Given the \gls{esc}s are rated \(40~\text{A}\) each, the combined theoretical maximum \gls{esc} demand is:
-
-\[
-4\times40=160\text{A}
-\]
-
-We require a high-current \gls{pdb}, which was chosen to be the Holybro Power Distribution Board 300A. Shown in Table~\ref{tab:pdb_specifications}, it is specified with a \(300~\text{A}\) continuous current rating, \(1000~\text{A}\) burst rating, \(10~\text{oz}\) copper PCB design, and XT90/XT30 connector options. The \(300~\text{A}\) continuous rating gives a clear margin above the theoretical maximum \gls{esc} demand.
+Given the \gls{esc}s are rated \(40~\text{A}\) each, the combined theoretical maximum \gls{esc} demand is: $4\times40=160\text{A}$. We require a high-current \gls{pdb}, which was chosen to be the Holybro Power Distribution Board 300A. Shown in Table~\ref{tab:pdb_specifications}, it is specified with a \(300~\text{A}\) continuous current rating, \(1000~\text{A}\) burst rating, \(10~\text{oz}\) copper PCB design, and XT90/XT30 connector options. The \(300~\text{A}\) continuous rating gives a clear margin above the theoretical maximum \gls{esc} demand.
 
 \begin{table}[htbp]
 \centering
@@ -687,11 +686,12 @@ The final power system is as shown in Fig.~\ref{fig:Power_Systems}, it is divide
 \end{figure}
 
 \subsubsection{Onboard Computing and Communication}
-\label{comms}
+\label{sec:Onboard Computing and Communication}
 
-Before investigating deeper into the topic of onboard computing and communication, it is vital to define its role within the overall drone system. Each drone is required to have a local processing unit that handles specific tasks that needed to happen directly on the drone, such as sensor processing, low-to mid-level control, and execution of pre-trained control or perception models during game-play. This includes responding to sensor inputs, player tracking, and carrying out motion commands in real time.
+Before investigating deeper into the topic of onboard computing and communication, it is vital to define its role within the overall drone system.
+Each drone is required to have a local processing unit that handles their respective onboard tasks, such as sensor processing, low-to mid-level control, and execution of pre-trained control or perception models during game-play. This includes responding to sensor inputs, player tracking, and carrying out motion commands in real time.
 
-However, as explained in other sections, the drone is not intended to make all these decisions independently onboard. High-level control (i.e. game logic and drone coordination) will be handled via a central server housed outside the arena. The onboard computer would therefore be required to communicate drone states, sensor data, and status updates to the server while simultaneously receiving instructions. This meant that the onboard companion computer needed to provide more capability than a simple micro-controller, while still remaining light, compact and inexpensive.
+However, as explained in other sections, the drone is not intended to make all decisions independently onboard. High-level control (i.e. game logic and drone coordination) will be handled via a central server housed outside the arena. The onboard computer would therefore be required to communicate drone states, sensor data, and status updates to the server while simultaneously receiving instructions. This meant that the onboard companion computer needed to provide more capability than a simple micro-controller, while still remaining light, compact and inexpensive.
 
 \paragraph{Onboard Computer}
 
@@ -701,7 +701,7 @@ A two-board Arduino setup was considered, where one board would handle lower-lev
 
 Two main Raspberry Pi single-board computers were considered, the Raspberry Pi 4 Model B and the Raspberry Pi 5 - comparison is shown in Table~\ref{tab:raspberrypi_comparison}.
 
-Despite the strong performance offered by the Raspberry Pi 5, its additional computing capabilities were not considered important as the project was using pre-trained models rather than training onboard. The \textbf{Raspberry Pi 4 Model B} (shown in Fig.~\ref{fig:Raspberry Pi 4 Model B}) was chosen as the onboard computer as it provided a good balance between processing, cost and integration. In addition, it provided the required Wi-Fi, GPIO, USB, and camera interfaces, while being easier to power and package inside the drone.
+Despite the strong performance offered by the Raspberry Pi 5, its additional computing capabilities were not considered important as the project was using pre-trained models rather than training onboard. The \textbf{Raspberry Pi 4 Model B} (shown in Fig.~\ref{fig:Raspberry Pi 4 Model B}) was chosen as the onboard computer as it provided a good balance between processing, cost and integration. In addition, it provided the required Wi-Fi, \gls{gpio}, \gls{usb}, and camera interfaces, while being easier to power and package inside the drone.
 
 \begin{table}[htbp]
 \centering
@@ -723,11 +723,11 @@ Wireless LAN & 2.4 GHz and 5.0 GHz IEEE 802.11ac Wi-Fi & Dual-band 802.11ac Wi-F
 \hline
 Bluetooth & Bluetooth 5.0, BLE & Bluetooth 5.0, BLE \\
 \hline
-GPIO & Raspberry Pi standard 40-pin GPIO header & Raspberry Pi standard 40-pin GPIO header \\
+\gls{gpio} & Raspberry Pi standard 40-pin GPIO header & Raspberry Pi standard 40-pin \gls{gpio} header \\
 \hline
 Camera interface & 2-lane MIPI CSI camera port & 2 $\times$ 4-lane MIPI camera/display transceivers \\
 \hline
-USB & 2 $\times$ USB 3.0, 2 $\times$ USB 2.0 & 2 $\times$ USB 3.0, 2 $\times$ USB 2.0 \\
+\gls{usb} & 2 $\times$ USB 3.0, 2 $\times$ USB 2.0 & 2 $\times$ USB 3.0, 2 $\times$ \gls{usb} 2.0 \\
 \hline
 Approximate cost & From \pounds35, depending on RAM option & From \pounds45, depending on RAM option \\
 
@@ -750,13 +750,13 @@ From a hardware point of view, the main communication requirement was that the d
 
 \paragraph{Interface with Sensors and Control Hardware}
 
-Drone electronics will connect to the onboard computer via the GPIO, serial, USB, and camera-related interfaces. The camera would connect to the Raspberry Pi through USB, allowing the Raspberry Pi to receive camera, depth, and other processed visual data from the camera module. Sensors such as the IMU and ToF would connect through standard buses which allows the Raspberry Pi to read data during flight operations. The IR receivers would connect to GPIO pins while the IR emitter would be controlled through a GPIO output signal. The gimbal/turret servos would be driven using PWM control signals, allowing onboard system to aim the camera and IR emitter simultaneously. \gls{esc}s would receive power directly from the battery via the \gls{pdb}, while the Raspberry Pi would command motor speeds. The Raspberry Pi, as mentioned previously, will be powered from via the regulated 5V voltage.
+Drone electronics will connect to the onboard computer via the \gls{gpio}, serial, \gls{usb}, and camera-related interfaces. The camera would connect to the Raspberry Pi through \gls{usb}, allowing the Raspberry Pi to receive camera, depth, and other processed visual data from the camera module. Sensors such as the \gls{imu} and \gls{tof} would connect through standard buses which allows the Raspberry Pi to read data during flight operations. The \gls{ir} receivers would connect to \gls{gpio} pins while the \gls{ir} emitter would be controlled through a \gls{gpio} output signal. The gimbal/turret servos would be driven using \gls{pwm} control signals, allowing onboard system to aim the camera and \gls{ir} emitter simultaneously. \gls{esc}s would receive power directly from the battery via the \gls{pdb}, while the Raspberry Pi would command motor speeds. The Raspberry Pi, as mentioned previously, will be powered from via the regulated 5V voltage.
 
 \subsubsection{Sensors and Game-Specific Electronics} \label{sensorArray}
 
 \paragraph{Camera}
 
-The camera selected by the visual perception work-stream was the OAK-D Lite (shown in Fig.~\ref{fig:Camera}) used for player detection and tracking. In this hardware section, the camera is considered from an integration point of view. The OAK-D Lite connects to the Raspberry Pi through USB hence the drone body must be designed to ensure both the USB connection and cable routing are practical inside the drone body. Its power draw also need to be included in the 5V electronics power budget. Mechanically, the camera must be placed with a clear field of view - placed in line with the IR emitter inside a gimbal/turret where they can move simultaneously. There should be no obstruction by the airframe, turret structure, or wiring. More detailed reasoning behind the camera choice can be found in the visual detection pipeline covered separately under Section~\ref{Sensor Selection}.
+The camera selected by the visual perception work-stream was the OAK-D Lite (shown in Fig.~\ref{fig:Camera}) used for player detection and tracking. In this hardware section, the camera is considered from an integration point of view. The OAK-D Lite connects to the Raspberry Pi through \gls{usb} hence the drone body must be designed to ensure both the \gls{usb} connection and cable routing are practical inside the drone body. Its power draw also need to be included in the 5V electronics power budget. Mechanically, the camera must be placed with a clear field of view - placed in line with the \gls{ir} emitter inside a gimbal/turret where they can move simultaneously. There should be no obstruction by the airframe, turret structure, or wiring. More detailed reasoning behind the camera choice can be found in the visual detection pipeline covered separately under Section~\ref{Sensor Selection}.
 
 \begin{figure}[htbp]
     \centering
@@ -767,13 +767,13 @@ The camera selected by the visual perception work-stream was the OAK-D Lite (sho
 
 \paragraph{Flight Control Sensors}
 
-Suitable flight control sensors were needed to give the drone basic state information required for basic motion and awareness. Chosen sensors were intended to provide local state information that could support stabilisation, height referencing, and obstacle awareness during indoor operations: the IMU measured body motion, the ToF sensor provided ceiling-distance and side distance information for nearby obstacles.
+Suitable flight control sensors were needed to give the drone basic state information required for basic motion and awareness. Chosen sensors were intended to provide local state information that could support stabilisation, height referencing, and obstacle awareness during indoor operations: the \gls{imu} measured body motion, the \gls{tof} sensor provided ceiling-distance and side distance information for nearby obstacles.
 
-A barometer was not selected as a height sensor despite being commonly used in drones for altitude estimation. Given the indoor environment and close proximity between walls and ceilings, pressure-based height estimation is less reliable. Instead, an upward-facing ToF sensor was considered more appropriate for indoor environment, where the ceiling height can be known in advance.
+A barometer was not selected as a height sensor despite being commonly used in drones for altitude estimation. Given the indoor environment and close proximity between walls and ceilings, pressure-based height estimation is less reliable. Instead, an upward-facing \gls{tof} sensor was considered more appropriate for indoor environment, where the ceiling height can be known in advance.
 
-The SparkFun ICM-20948 IMU (shown in Fig.~\ref{fig:IMU}) provides local motion and orientation feedback. It is housed inside the drone, near the center of the drone body, where it can measure acceleration, angular-rate, and magnetic-field measurements representative of the airframe while simultaneously protected from impact.
+The SparkFun ICM-20948 \gls{imu} (shown in Fig.~\ref{fig:IMU}) provides local motion and orientation feedback. It is housed inside the drone, near the center of the drone body, where it can measure acceleration, angular-rate, and magnetic-field measurements representative of the airframe while simultaneously protected from impact.
 
-The VL53L1X and VL53L5CX ToF sensors are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained \gls{rl} control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
+The VL53L1X and VL53L5CX \gls{tof} sensors are included based on the requirements from the control development work. These sensors provide compact distance measurements for the pre-trained \gls{rl} control policy and local navigation assumptions. In the hardware design, the VL53L1X is placed at the top of the drone, facing directly upward to provide distance measurements from the ceiling. Meanwhile, the VL53L5CX sensors are placed around the drone exterior to provide awareness to side obstacles.
 
 A Consolidated summarisation of the flight-control sensors are shown in Table~\ref{tab:flight_control_sensors} below.
 
@@ -785,11 +785,11 @@ A Consolidated summarisation of the flight-control sensors are shown in Table~\r
 \hline
 \textbf{Sensor} & \textbf{Role} & \textbf{Placement / Orientation} & \textbf{Key Specification} \\
 \hline
-SparkFun ICM-20948 IMU & Measures drone motion and orientation/state & Housed inside hull, near the centre & 9-axis IMU: 3-axis accelerometer, 3-axis gyroscope, 3-axis magnetometer; I\textsuperscript{2}C/SPI support \\
+SparkFun ICM-20948 \gls{imu} & Measures drone motion and orientation/state & Housed inside hull, near the centre & 9-axis \gls{imu}: 3-axis accelerometer, 3-axis gyroscope, 3-axis magnetometer; I\textsuperscript{2}C/SPI support \\
 \hline
-VL53L1X ToF sensor & Provides vertical distance reference & Mounted pointing upwards & ToF ranging up to approximately 4 m; up to 50 Hz ranging frequency \\
+VL53L1X \gls{tof} sensor & Provides vertical distance reference & Mounted pointing upwards & \gls{tof} ranging up to approximately 4 m; up to 50 Hz ranging frequency \\
 \hline
-VL53L5CX ToF sensors & Provides side obstacle awareness and short-range distance sensing & Mounted facing outwards on multiple sides of the drone & 8$\times$8 multizone ToF sensing; up to 4 m range; \\
+VL53L5CX \gls{tof} sensors & Provides side obstacle awareness and short-range distance sensing & Mounted facing outwards on multiple sides of the drone & 8$\times$8 multizone \gls{tof} sensing; up to 4 m range; \\
 \hline
 \end{tabularx}
 \end{table}
@@ -797,21 +797,21 @@ VL53L5CX ToF sensors & Provides side obstacle awareness and short-range distance
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.3\textwidth]{Hardware/Sparkfun IMU.png}
-    \caption{SparkFun IMU}
+    \caption{SparkFun \gls{imu}}
     \label{fig:IMU}
 \end{figure}
 
-\paragraph{IR Tagging System}
+\paragraph{\gls{ir} Tagging System}
 
-For game-specific components, the drone is required to have an \gls{ir} tagging system capable of tagging players and detecting when it has been tagged. Despite the project name, the physical hardware uses \gls{ir} rather than actual lasers. This is due to safety and regulatory reasons: laser products usage are subject to classification and safety requirements under UK regulations - such as the BS EN/IEC 60825-1 \cite{bsi_laser_safety_60825}, and guidance notes that laser radiation risks harm to eyes and skin \cite{ukhsa_laser_safety}. Using \gls{ir} based system is therefore more appropriate for indoor game-play, where players and drones operate near each other. In terms of hardware, we focus on how the IR components are physically installed into the overall drone design.
+For game-specific components, the drone is required to have an \gls{ir} tagging system capable of tagging players and detecting when it has been tagged. Universally, the physical hardware for general laser-tag gameplay uses \gls{ir} rather than visible lasers. This is due to safety and regulatory reasons: laser products usage is subject to classification and safety requirements under UK regulations - such as the BS EN/IEC 60825-1 \cite{bsi_laser_safety_60825}, and guidance notes that laser radiation risks harm to eyes and skin \cite{ukhsa_laser_safety}. Using \gls{ir} based system is therefore more appropriate for indoor game-play, where players and drones operate near each other. In terms of hardware, we focus on how the \gls{ir} components are physically installed into the overall drone design.
 
-\textbf{IR emitter} - Mounted on the gimbal/turret alongside the camera so tagging direction is aligned with the aiming direction. The emitter is housed in a compact cylindrical mount - around 10mm in diameter. 
+\textbf{\gls{ir} emitter} - Mounted on the gimbal/turret alongside the camera so tagging direction is aligned with the aiming direction. The emitter is housed in a compact cylindrical mount - around 10mm in diameter. 
 
-\textbf{IR receiver} - These IR sensors should be distributed around the drone hull where they should be exposed enough to detect incoming IR signals. The receiver spacing should also be dense enough to ensure reliable hit registration during game-play, so players can have an easier time shooting at the drones.
+\textbf{\gls{ir} receiver} - These \gls{ir} sensors should be distributed around the drone hull where they should be exposed enough to detect incoming \gls{ir} signals. The receiver spacing should also be dense enough to ensure reliable hit registration during game-play, so players can have an easier time shooting at the drones.
 
 \subsection{Mechanical Design Development}
 
-After investigating and selecting the main electronics, the mechanical design aims to transform the selected components into a physical drone layout. Most modelling and assembly designs was carried out in Fusion 360, while standard component models such as motors, batteries, sensors, and other components were either simplified into representative objects based on specified dimensions or downloaded from online libraries to save time. The goal is to define how the components are mounted, protected, and accessed while also ensuring easily manufacturable and cheap parts that are simple to assemble. 
+After investigating and selecting the main electronics, the mechanical design aims to transform the selected components into a physical drone layout. Most modelling and assembly designs were carried out in Fusion 360, while standard component models such as motors, batteries, sensors, and other components were either simplified into representative objects based on specified dimensions or downloaded from online libraries to save time. The goal is to define how the components are mounted, protected, and accessed while also ensuring easily manufacturable and cheap parts that are simple to assemble. 
 
 \subsubsection{Early Design Concepts} \label{drone dimensions}
 
@@ -873,11 +873,11 @@ The values in Table~\ref{tab:main_body_mass_estimate} were estimated from the Fu
 \label{tab:main_body_mass_estimate}
 \begin{tabular}{|c|c|c|c|}
 \hline
-\textbf{Component} & \textbf{Solid \gls{cad} Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
+\textbf{Component} & \textbf{Solid \gls{cad} Mass(g)} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass(g)} \\
 \hline
-Top hull & 764.457 g & 20\% & 152.9 g \\
-Bottom hull + landing gear & 1163.830 g & 25\% & 291.0 g \\
-Electronics basket & 604.322 g & 30\% & 181.3 g \\
+Top hull & 764.457 & 20\% & 152.9 \\
+Bottom hull + landing gear & 1163.830 & 25\% & 291.0 \\
+Electronics basket & 604.322 & 30\% & 181.3 \\
 \hline
 \textbf{Total main body assembly} & \textbf{2532.609 g} & -- & \textbf{625.1 g} \\
 \hline
@@ -899,7 +899,7 @@ Bottom hull + landing gear & 234.00 & 418.65 & 144.90 \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:main_body_dimensions} shows the max \gls{cad} dimensions of the main body components, all of which is shown to be within 600mm in size as required.
+Table~\ref{tab:main_body_dimensions} shows the max \gls{cad} dimensions of the main body components, all of which are shown to be within 600mm in size as required.
 
 \subsubsection{Rotor Arm and Motor Mount Design}
 
@@ -914,7 +914,7 @@ The rotor-arm assembly (shown in Fig.~\ref{fig:Rotor}) is made up of the front a
 
 The \textbf{rotor arms} support the motor and positions them away from the central body to provide clearance for the propellers. The motor mounts are already integrated to the overall part, so the motor can be fixed directly to the arm. The front and rear arms have slightly different geometries.
 
-The \textbf{blade guards} surround the propeller area and acts as a protective structure against minor collisions. The main purpose is to reduce the chance of propeller collisions and prevent immediately disabling the drone. They can be directly attached to the rotor arms. Further detail on the structural analysis of the blade guards will be within the section on \say{Preliminary Engineering Evaluation} % add reference to section?.
+The \textbf{blade guards} surround the propeller area and acts as a protective structure against minor collisions. The main purpose is to reduce the chance of propeller collisions and prevent immediately disabling the drone. They can be directly attached to the rotor arms. Further detail on the structural analysis of the blade guards will be within Section~\ref{sec:Engineering Evaluation}.
 
 The \textbf{linkage parts} connect the rotor arms to the electronics basket. These small parts allow the arms to be assembled separately from the main body and are secured using bolt fasteners. This type of assembly allows damaged arm or linkage to be replaced without rebuilding the full drone body. As these parts transfer load between arms and body, they are treated as vital structural components and will use higher infill compared to the rest of the body.
 
@@ -927,25 +927,25 @@ The values in Table~\ref{tab:rotor_arm_mass_estimate} were estimated from the Fu
 \renewcommand{\arraystretch}{1.15}
 \begin{tabular}{|c|c|c|c|}
 \toprule
-\textbf{Component} & \textbf{Solid \gls{cad} Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
+\textbf{Component} & \textbf{Solid \gls{cad} Mass(g)} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass(g)} \\
 \hline
-Rear blade guard & 91.2 g & 35\% & 31.9 g \\
-Front blade guard & 86.3 g & 35\% & 30.2 g \\
-Rear rotor arm & 129.1 g & 60\% & 77.5 g \\
-Rear upper linkage & 3.8 g & 80\% & 3.0 g \\
-Rear lower linkage & 3.8 g & 80\% & 3.0 g \\
-Front rotor arm & 171.5 g & 60\% & 102.9 g \\
-Front upper linkage & 3.7 g & 80\% & 3.0 g \\
-Front lower linkage & 3.7 g & 80\% & 3.0 g \\
+Rear blade guard & 91.2 & 35\% & 31.9 \\
+Front blade guard & 86.3 & 35\% & 30.2 \\
+Rear rotor arm & 129.1 & 60\% & 77.5 \\
+Rear upper linkage & 3.8 & 80\% & 3.0 \\
+Rear lower linkage & 3.8 & 80\% & 3.0 \\
+Front rotor arm & 171.5 & 60\% & 102.9 \\
+Front upper linkage & 3.7 & 80\% & 3.0 \\
+Front lower linkage & 3.7 & 80\% & 3.0 \\
 \hline
-\textbf{Total one-side assembly} & \textbf{493.1 g} & -- & \textbf{254.5 g} \\
+\textbf{Total one-side assembly} & \textbf{493.1} & -- & \textbf{254.5} \\
 \hline
 \end{tabular}
 \end{table}
 
 \subsubsection{Turret/Gimbal Design}
 \label{Turret}
-The design of the gimbal turret (shown in Fig.~\ref{fig:Gimbal}) included requirements of the visual learning process, where the camera was required to roll, pitch and yaw - its range of motion is demonstrated via this \href{https://drive.google.com/file/d/16lPV_-VS57LZUX7-dhvgIS6Q2sYhDQis/view?usp=sharing}{video}. The design took inspiration from traditional industrial two-axis gimbals, but with an additional yaw axis that provided 3-axis movement. The camera and IR emitter needed to remain aligned to ensure aiming and tagging were performed in the same direction. The OAK D Lite camera was used as a reference in designing the dimensions of the gimbal. (The complete gimbal assembly is shown in Fig.~\ref{fig:Gimbal2})
+The design of the gimbal turret (shown in Fig.~\ref{fig:Gimbal}) included requirements of the visual learning process, where the camera was required to roll, pitch and yaw - its range of motion is demonstrated via this \href{https://drive.google.com/file/d/16lPV_-VS57LZUX7-dhvgIS6Q2sYhDQis/view?usp=sharing}{video}. The design took inspiration from traditional industrial two-axis gimbals, but with an additional yaw axis that provided 3-axis movement. The camera and \gls{ir} emitter needed to remain aligned to ensure aiming and tagging were performed in the same direction. The OAK D Lite camera was used as a reference in designing the dimensions of the gimbal. (The complete gimbal assembly is shown in Fig.~\ref{fig:Gimbal2})
 
 Mechanically, the gimbal has full $360^{\circ}$ range for both yaw and pitch - but would be advised not to go beyond $360^{\circ}$ during operation in order to prevent wire entanglement. The roll motion only allows $\pm50^{\circ}$ range of motion. The gimbal is mounted through the central opening in the bottom hull. 
 
@@ -960,11 +960,11 @@ The \textbf{coupler} forms the main connection between the yaw actuator and the 
 
 The \textbf{gimbal installation plate} is positioned below the coupler and is used to close up the interface between the gimbal and the drone body. It also secures the lower part of the installation interface which keeps the yaw mechanism aligned and provide tighter space for wires to help reduce entanglement issues. 
 
-The \textbf{square axial component} supports the pitch-axis motor and provides the structural frame for the upper gimbal mechanisms. It is directly installed to the yaw mechanism allowing the overall gimbal to move in yaw motion - it is only in contact with the servomotor output. The pitch motion is produced by mounting a gimbal motor onto the square axial component, with the motor output connected to the gimbal pitch axis component. This allows camera and IR emitter to tile upward and downward.
+The \textbf{square axial component} supports the pitch-axis motor and provides the structural frame for the upper gimbal mechanisms. It is directly installed to the yaw mechanism allowing the overall gimbal to move in yaw motion - it is only in contact with the servomotor output. The pitch motion is produced by mounting a gimbal motor onto the square axial component, with the motor output connected to the gimbal pitch axis component. This allows camera and \gls{ir} emitter to tilt upward and downward.
 
 The \textbf{gimbal pitch axis component} acts as the moving structure for pitch stage and provides roll-axis motor mount. The roll motion is produced by mounting the roll gimbal motor onto the pitch axis component, with the motor output connected to the gimbal roll axis component. This creates a second controlled axis above the yaw and pitch stages.
 
-The \textbf{gimbal roll axis component} provides the mounting location for the OAK-D Lite camera and IR emitter. As the camera and IR emitter are mounted on the same final axis, the visual tracking direction and IR tagging direction remain aligned.
+The \textbf{gimbal roll axis component} provides the mounting location for the OAK-D Lite camera and \gls{ir} emitter. As the camera and \gls{ir} emitter are mounted on the same final axis, the visual tracking direction and \gls{ir} tagging direction remain aligned.
 
 Together, the yaw servo, pitch motor, and roll motor allow the turret to achieve 3-axis movement.
 
@@ -982,26 +982,26 @@ Together, the yaw servo, pitch motor, and roll motor allow the turret to achieve
 \renewcommand{\arraystretch}{1.15}
 \begin{tabular}{|c|c|c|c|}
 \hline
-\textbf{Component} & \textbf{Solid \gls{cad} Mass} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass} \\
+\textbf{Component} & \textbf{Solid \gls{cad} Mass(g)} & \textbf{Infill Assumption} & \textbf{Estimated Printed Mass(g)} \\
 \hline
-Gimbal installation plate & 21.58 g & 50\% & 10.8 g \\
-Square axial component & 12.23 g & 70\% & 8.6 g \\
-Gimbal pitch axis component & 6.65 g & 70\% & 4.7 g \\
-Gimbal roll axis component & 5.21 g & 70\% & 3.6 g \\
-Coupler & 20.89 g & 80\% & 16.7 g \\
+Gimbal installation plate & 21.58  & 50\% & 10.8  \\
+Square axial component & 12.23  & 70\% & 8.6  \\
+Gimbal pitch axis component & 6.65  & 70\% & 4.7  \\
+Gimbal roll axis component & 5.21  & 70\% & 3.6  \\
+Coupler & 20.89  & 80\% & 16.7  \\
 \hline
-\textbf{Total gimbal assembly} & \textbf{66.55 g} & -- & \textbf{44.4 g} \\
+\textbf{Total gimbal assembly} & \textbf{66.55} & -- & \textbf{44.4} \\
 \hline
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:gimbal_mass_estimate} shows the mass of the solid body from Fusion 360 using assigned \gls{abs} material properties. Estimations were made, shown in Table~\ref{tab:gimbal_mass_estimate}, using infill assumptions for each component which reduced the final mass from 66.55g to 44.4g - excluding the camera, IR emitter, gimbal motors and servo. 
+Table~\ref{tab:gimbal_mass_estimate} shows the mass of the solid body from Fusion 360 using assigned \gls{abs} material properties. Estimations were made, shown in Table~\ref{tab:gimbal_mass_estimate}, using infill assumptions for each component which reduced the final mass from 66.55g to 44.4g - excluding the camera, \gls{ir} emitter, gimbal motors and servo. 
 
 \paragraph{Servomotor and Gimbal Motor}
 
 The gimbal turret uses two actuator types as mentioned previously. The MG90S servo is used for the yaw axis, while the Quanum 2208 brushless gimbal motors are used for the pitch and roll axes. Servo was used for the Yaw stage in order to provide compact rotation at the base, while the pitch and roll may be better with smoother gimbal-style motion. 
 
-The MG90S is suitable for the yaw stage as it fits within the turret base region inside the electronic basket. The operating speed is sufficient for controlled left-right aiming at 0.10 s/60$^\circ$ at 4.8 V or 0.08 s/60$^\circ$ at 6 V. The gimbal motors are used for pitch and roll control as they are generally designed for smoother movement. They are specified for payloads in 100-200g range which fits the weight requirements for the OAK-D Lite (61g) along with the IR emitter and gimbal parts. The suggested GBM2208 dimensions are approximately 28 x 22 mm which fits the clearance for the motor mount locations. Actuator specifications are summarised in Table~\ref{tab:gimbal_actuator_specs}.
+The MG90S is suitable for the yaw stage as it fits within the turret base region inside the electronic basket. The operating speed is sufficient for controlled left-right aiming at 0.10 s/60$^\circ$ at 4.8 V or 0.08 s/60$^\circ$ at 6 V. The gimbal motors are used for pitch and roll control as they are generally designed for smoother movement. They are specified for payloads in 100-200g range which fits the weight requirements for the OAK-D Lite (61g) along with the \gls{ir} emitter and gimbal parts. The suggested GBM2208 dimensions are approximately 28 x 22 mm which fits the clearance for the motor mount locations. Actuator specifications are summarised in Table~\ref{tab:gimbal_actuator_specs}.
 
 \begin{table}[htbp]
 \centering
@@ -1010,13 +1010,13 @@ The MG90S is suitable for the yaw stage as it fits within the turret base region
 \renewcommand{\arraystretch}{1.15}
 \begin{tabular}{|c|c|c|}
 \hline
-\textbf{Axis} & \textbf{Suggested Actuator} & \textbf{Size / Weight}\\
+\textbf{Axis} & \textbf{Suggested Actuator} & \textbf{Size(mm)/ Weight(g)}\\
 \hline
-Yaw & MG90S servo & 22.8 mm $\times$ 12.2 mm $\times$ 28.5 mm;  13.4 g\\
+Yaw & MG90S servo & 22.8  $\times$ 12.2  $\times$ 28.5 /  13.4 \\
 
-Pitch & Quanum/GBM2208 brushless gimbal motor & 28 mm $\times$ 22 mm;  43 g\\
+Pitch & Quanum/GBM2208 brushless gimbal motor & 28  $\times$ 22 /  43 \\
 
-Roll & Quanum/GBM2208 brushless gimbal motor & 28 mm $\times$ 22 mm;  43 g\\
+Roll & Quanum/GBM2208 brushless gimbal motor & 28  $\times$ 22 /  43 \\
 \hline
 \end{tabular}
 \end{table}
@@ -1032,13 +1032,14 @@ Roll & Quanum/GBM2208 brushless gimbal motor & 28 mm $\times$ 22 mm;  43 g\\
     \label{fig:Complete Assembly}
 \end{figure}
 
-The final airframe configuration (shown in Fig.~\ref{fig:Complete Assembly}) brings the separate subsystem assemblies together into a single integrated drone assembly, shown in Fig. ~\ref{fig:Complete Assembly}. The design uses a modular central body with detachable rotor-arm, integrated with propeller protection and helicopter-based landing gears, along with a centrally mounted 3-axis gimbal turret. This layout suits the electronics, propulsion, sensors, camera, and IR-tagging system while keeping key parts accessible for maintenance. Rather than one-piece shell, all parts are designed to be separate yet connected, replaceable, and cheap making it practical for manufacture and repair.
+The final airframe configuration (shown in Fig.~\ref{fig:Complete Assembly}) brings the separate subsystem assemblies together into a single integrated drone assembly, shown in Fig.~\ref{fig:Complete Assembly}. The design uses a modular central body with detachable rotor-arm, integrated with propeller protection and helicopter-based landing gears, along with a centrally mounted 3-axis gimbal turret. This layout suits the electronics, propulsion, sensors, camera, and \gls{ir}-tagging system while keeping key parts accessible for maintenance. Rather than one-piece shell, all parts are designed to be separate yet connected, replaceable, and cheap making it practical for manufacture and repair.
 
 \paragraph{Component Layout}
 
-The drone parts are designed with reference to the chosen internal electronics. Most of the components will be housed in the electronics basket - including the Raspberry Pi, \gls{esc}s, voltage regulator, IMU sensor, battery, and wiring. The OAK-D Lite camera and IR emitter will be mounted externally on the gimbal turret, with their wiring routed back into the central body opening. The motor and propellers will be mounted in the motor arms.
+The drone parts are designed with reference to the chosen internal electronics. Most of the components will be housed in the electronics basket - including the Raspberry Pi, \gls{esc}s, voltage regulator, \gls{imu} sensor, battery, and wiring. The OAK-D Lite camera and \gls{ir} emitter will be mounted externally on the gimbal turret, with their wiring routed back into the central body opening. The motor and propellers will be mounted in the motor arms.
 
 \subsection{Preliminary Engineering Evaluation}
+\label{sec:Engineering Evaluation}
 
 \paragraph{Context} A preliminary design evaluation was conducted to assess how realistic the final hardware design was. Since the drone was developed through \gls{cad} modelling and component research, the evaluation focuses on whether the proposed airframe is practical and suitable for manufacture. The main areas considered here are structural behaviour and feasibility of modular assembly. Electronic components and power choices were already assessed through calculations in the section ~\ref{sec:electronics_design} - such as the propulsion feasibility check in section ~\ref{sec:propulsion_system}, battery endurance in section ~\ref{sec:power_system} and other certain power-distribution analysis. 
 
@@ -1055,7 +1056,7 @@ The structural assessment focused on two components most exposed to loading and 
 \end{figure}
 
 \paragraph{Rotor Arm Simulation}
-The first simulation assessed the joint between the rotor arm and the electronics basket, as this connection transfers the motor thrust load back into the main body. This area was important as any failure would affect propulsion support and the integrity of the overall airframe. A static load represent the thrust force acting through the motor and rotor arm - the applied load was above 20 N, which is close to the estimated maximum thrust per motor used in the propulsion analysis.
+The first simulation assessed the joint between the rotor arm and the electronics basket, as this connection transfers the motor thrust load back into the main body. This area was important as any failure would affect propulsion support and the integrity of the overall airframe. A static load represents the thrust force acting through the motor and rotor arm - the applied load was above 20N, which is close to the estimated maximum thrust per motor used in the propulsion analysis.
 
 The simulation showed that the highest stress occurred near the handle area of the electronic basket, which was expected because this is where the rotor-arm load is transferred into the central structure. Most of the rotor arm remained in the lower-stress blue/green region - which suggests that the rotor arm geometry was not the limiting factor. The minimum safety factor was approximately 2.23, as shown in Fig. ~\ref{fig:Rotor Arm Sim}, meaning the component remained above the failure threshold for the load case.
 
@@ -1097,7 +1098,7 @@ The final \gls{cad} model was simplified for use in Unity. Given the full Fusion
 \subsection{Player Hardware Design}
 \label{player_hardware}
 
-The player hardware shows how human players would interact with the multiagent laser tag system. These components were not developed in detail compared with the drone hardware, and therefore will only focus on representative and illustrative models, as shown in Fig.~\ref{fig:Player Vest and Helmet}.
+The player hardware shows how human players would interact with the multiagent laser tag system. These components were not developed in great detail compared to the drone hardware, and therefore we will only focus on illustrative models to represent their general way of operation, as shown in Fig.~\ref{fig:Player Vest and Helmet}.
 
 \begin{figure}[htbp]
     \centering
@@ -1108,15 +1109,15 @@ The player hardware shows how human players would interact with the multiagent l
 
 \paragraph{Vest}
 
-The vest is used as the main hit-detection surface for the player. The intended design is to have IR receiver modules positioned throughout the vest in high density so the drone can target. The receivers would be distributed across the front, back, and sides of the vest so that hits can be detected from multiple directions during game-play. The vest should be lightweight but also ideally provide some protection against potential physical impacts such as player collisions. A compartment acting as an electronics box may house all required electronics including micro-controller, wiring, and wireless modules. A small display or LED indicator area can be included to show simple feedback such as team status and player status.
+The vest is used as the main hit-detection surface for the player. The intended design is to have \gls{ir} receiver modules positioned throughout the vest in high density so the drone can target. The receivers would be distributed across the front, back, and sides of the vest so that hits can be detected from multiple directions during game-play. The vest should be lightweight but also ideally provide some protection against potential physical impacts such as player collisions. A compartment acting as an electronics box may house all required electronics including micro-controller, wiring, and wireless modules. A small display or \gls{led} indicator area can be included to show simple feedback such as team status and player status.
 
 \paragraph{Helmet}
 
-The helmet provides an upper-body hit detection area and improved IR coverage around the player. Similar to the vest, IR receivers will be positioned around the helmet surface so the signals can be detected. Again, a compartment will house all the required electronics and circuitry for the hit-detection and status updates. The helmet also acts as an additional protective element, alongside the overhead net, against falling drones and other collisions.
+The helmet provides an upper-body hit detection area and improved \gls{ir} coverage around the player. Similar to the vest, \gls{ir} receivers will be positioned around the helmet surface so the signals can be detected. Again, a compartment will house all the required electronics and circuitry for the hit-detection and status updates. The helmet also acts as an additional protective element, alongside the overhead net, against falling drones and other collisions.
 
 \paragraph{Laser Tagging Device}
 
-The equipment for tagging used by players is proposed to be a handheld IR tagging device. Its purpose would be to allow players to tag drones with a trigger. The device would likely contain a compartment with all required electronics just as the other player hardware. As stated before, all tagging systems will be using \gls{ir} rather than actual lasers for safety and regulatory reasons.
+The equipment for tagging used by players is proposed to be a handheld \gls{ir} tagging device. Its purpose would be to allow players to tag drones with a trigger. The device would likely contain a compartment with all required electronics just as the other player hardware. As stated before, all tagging systems will be using \gls{ir} rather than actual lasers for safety and regulatory reasons.
 
 %%%%%%%%%----------------end of Hardware---------------%%%%%%%%%
 
@@ -1141,7 +1142,7 @@ In order to determine the best method for estimating the state of our drones, we
 For the sensors, we chose to use an \gls{imu} with \gls{tof} sensors. We chose these because the \gls{imu} provides accurate angular velocity and acceleration data which can be used to infer the motion of the drone and the \gls{tof} sensors provide map geometry data to correct for drift in the \gls{imu} estimations. In this situation, it is common to use an \gls{imu}, however, there are many different sensors that can provide the map geometry data. We also considered using cameras and \gls{lidar} instead of the \gls{tof} sensors, however, as mentioned in the previous paragraph, the cameras will likely have poor performance in our dark lighting conditions, and \gls{lidar} sensors would be heavy and bulky, so we chose \gls{tof} sensors as a compromise between weight and accuracy. 
 
 \subsection{Sensor Measurements}
-\paragraph{\gls{imu}} Our chosen \gls{imu}, the SparkFun ICM-20948 IMU \cite{sparkfun_icm20948}, includes a 3-axis accelerometer, a 3-axis gyroscope, and a 3-axis magnetometer. Due to our arena being in a warehouse, there will likely be significant distortion of the earths magnetic field, and hence we will use the \gls{imu} in mode 6, Accel + Gyro Mode, which saves power by turning the magnetometer off. This means that our \gls{imu} will output 3-axis angular velocity from the gyroscope, and 3-axis acceleration from the accelerometer. Additionally, the gyroscope and accelerometer each have their own operational modes, and we have chosen to run them both in low noise mode with the digital low pass filter activated (GYRO\_FCHOICE=1 and ACCEL\_FCHOICE=1). We will tune configuration of the digital low pass filter cut-off frequencies (GYRO\_DLPFCFG and ACCEL\_DLPFCFG) experimentally to achieve the optimal noise and response trade-off. These modes both have a base \gls{dor} of 1.125kHz, however, to reduce computational load, we set the sample rate division parameters to 1 (GYRO\_SMPLRT\_DIV=1 and ACCEL\_SMPLRT\_DIV=1) in order to reduce the \gls{dor} to 562.5Hz using Eq.\ref{equ:EstSMPLRT_DIV} below. This allows us to reduce the computational load while still keeping the \gls{dor} much higher than our state estimation \gls{dor} of 50Hz. 
+\paragraph{\gls{imu}} Our chosen \gls{imu}, the SparkFun ICM-20948 \gls{imu} \cite{sparkfun_icm20948}, includes a 3-axis accelerometer, a 3-axis gyroscope, and a 3-axis magnetometer. Due to our arena being in a warehouse, there will likely be significant distortion of the earths magnetic field, and hence we will use the \gls{imu} in mode 6, Accel + Gyro Mode, which saves power by turning the magnetometer off. This means that our \gls{imu} will output 3-axis angular velocity from the gyroscope, and 3-axis acceleration from the accelerometer. Additionally, the gyroscope and accelerometer each have their own operational modes, and we have chosen to run them both in low noise mode with the digital low pass filter activated (GYRO\_FCHOICE=1 and ACCEL\_FCHOICE=1). We will tune configuration of the digital low pass filter cut-off frequencies (GYRO\_DLPFCFG and ACCEL\_DLPFCFG) experimentally to achieve the optimal noise and response trade-off. These modes both have a base \gls{dor} of 1.125kHz, however, to reduce computational load, we set the sample rate division parameters to 1 (GYRO\_SMPLRT\_DIV=1 and ACCEL\_SMPLRT\_DIV=1) in order to reduce the \gls{dor} to 562.5Hz using Eq.\ref{equ:EstSMPLRT_DIV} below. This allows us to reduce the computational load while still keeping the \gls{dor} much higher than our state estimation \gls{dor} of 50Hz. 
 
 \begin{equation} \label{equ:EstSMPLRT_DIV}
     \mathrm{DOR} = \frac{1125}{1 + \mathrm{SMPLRT\_DIV}}
@@ -1391,9 +1392,9 @@ The fundamental objective of the autonomous multiagent system is to compete acti
 
 This section details the design and implementation of this perception system. To achieve these operational requirements, the subsystem is engineered around three core objectives:
 \begin{itemize}
-    \item Reliably distinguishing a human player from background obstacles and other drones to ensure that the system locks onto the correct target.
-    \item Calculating the target's 3D Cartesian coordinates relative to the drone's local frame.
-    \item Maintaining a continuous state estimate of the target's trajectory to handle temporary line-of-sight occlusions caused by walls and obstacles.
+    \item Reliably distinguishing a human player from background obstacles and other drones to ensure that the system locks onto the correct target
+    \item Calculating the target's 3D Cartesian coordinates relative to the drone's local frame
+    \item Maintaining a continuous state estimate of the target's trajectory to handle temporary line-of-sight occlusions caused by walls and obstacles
 \end{itemize}
 
 \subsection{Sensor Selection} % Rishabh
@@ -1437,25 +1438,25 @@ With the camera isolated from the drone's tilt, the next step is to select the s
 
 While \gls{lidar} and active \gls{rgbd} cameras provide accurate native depth data, they were rejected due to their interference with the laser tag scoring system. 
 
-Both camera systems operate by emitting \gls{ir} light into the environment. For example, the Orbbec Astra Mini Pro is a structured light system and relies on an onboard \gls{ir} projector to cast a dense grid pattern across the room to calculate depth. The laser tag scoring system relies on detecting specific IR pulses between the drones and players. In a confined maze environment, any \gls{ir} projection from the cameras will likely reflect off walls (multipath interference) and also flood the players' hit receivers with noise and cause false registrations. Therefore, we deemed that any active payload would be incompatible with the game mechanics. 
+Both camera systems operate by emitting \gls{ir} light into the environment. For example, the Orbbec Astra Mini Pro is a structured light system and relies on an onboard \gls{ir} projector to cast a dense grid pattern across the room to calculate depth. The laser tag scoring system relies on detecting specific \gls{ir} pulses between the drones and players. In a confined maze environment, any \gls{ir} projection from the cameras will likely reflect off walls (multipath interference) and also flood the players' hit receivers with noise and cause false registrations. Therefore, we deemed that any active payload would be incompatible with the game mechanics. 
 
 The decision between Monocular RGB and Passive Stereo requires a trade-off between \gls{swapc} efficiency and depth accuracy. 
 
-A monocular camera (for example, the Raspberry Pi AI Camera) offers the best \gls{swapc} profile since it weighs 24g and draws less than 1.5W. This means that it has a negligible impact on the quadcopter's flight dynamics. However, a single lens cannot natively measure depth and to extract 3D coordinates from a 2D feed, the system must rely on a geometric prior. This can be done by assuming a standard geometric height for a human or similarly the area of the bounding box (which can then be fine tuned during implementation). A standard method assumes the physical cross-sectional area of the human target ($A_{prior}$) is constant. The distance $Z$ is then calculated using the focal length ($f$) and the pixel area of the bounding box ($A_{px}$):
+A monocular camera (for example, the Raspberry Pi AI Camera) offers the best \gls{swapc} profile since it weighs 24~g and draws less than 1.5~W. This means that it has a negligible impact on the quadcopter's flight dynamics. However, a single lens cannot natively measure depth and to extract 3D coordinates from a 2D feed, the system must rely on a geometric prior. This can be done by assuming a standard geometric height for a human or similarly the area of the bounding box (which can then be fine tuned during implementation). A standard method assumes the physical cross-sectional area of the human target ($A_\text{prior}$) is constant. The distance $Z$ is then calculated using the focal length ($f$) and the pixel area of the bounding box ($A_\text{px}$):
 \begin{equation}
-    Z = f \cdot \sqrt{\frac{A_{prior}}{A_{px}}}.
+    Z = f \cdot \sqrt{\frac{A_\text{prior}}{A_\text{px}}}.
 \end{equation}
-Whilst this is computationally inexpensive, this method is fragile in dynamic environments. Since we have assumed a geometric prior, if the player crouches or turns sideways, their bounding box area ($A_{px}$) shrinks while their physical distance from the camera remains identical. This means that this will be misinterpreted as the player moving further away and cause the drone to accelerate forwards.
+Whilst this is computationally inexpensive, this method is fragile in dynamic environments. Since we have assumed a geometric prior, if the player crouches or turns sideways, their bounding box area ($A_\text{px}$) shrinks while their physical distance from the camera remains identical. This means that this will be misinterpreted as the player moving further away and cause the drone to accelerate forwards.
 
-It is worth noting that machine learning (ML) architectures can estimate depth from a monocular feed without relying on geometric priors. However these methods are rejected due to \gls{swapc} limitations as running real-time inference whilst achieving a high frame rate incurs a high computational cost. Moreover, these models typically output relative depth rather than the absolute depth that is required.
+It is worth noting that \gls{ml} architectures can estimate depth from a monocular feed without relying on geometric priors. However these methods are rejected due to \gls{swapc} limitations as running real-time inference whilst achieving a high frame rate incurs a high computational cost. Moreover, these models typically output relative depth rather than the absolute depth that is required.
 
 On the other hand, a passive stereoscopic system, such as the Luxonis OAK-D Lite, resolves this posture vulnerability by extracting depth natively through pixel disparity. The camera uses two lenses separated by a known baseline distance $B$. When the system detects a player, it registers a specific visual feature (such as the centroid of the bounding box) on both the left and right image sensors. As the lenses are physically offset, this feature appears at slightly different horizontal pixel coordinates on each sensor. This horizontal shift is the disparity ($d$). The system then calculates the absolute depth ($Z$) using the camera's focal length ($f$) with the equation:
 \begin{equation}
     Z = \frac{f \cdot B}{d}.
 \end{equation}
-Geometrically, as the target moves closer to the sensors, the viewing angle from each lens becomes more acute. This leads to the feature shifting further apart horizontally across the two image planes and hence $d$ increases. Since this calculation relies entirely on the horizontal parallax of a specific coordinate rather than the total pixel area of the bounding box ($A_{px}$), the depth estimation remains stable even if the player turns sideways. Furthermore, since this disparity mapping relies purely on ambient light, it ensures that there is no \gls{ir} interference with the game mechanics.
+Geometrically, as the target moves closer to the sensors, the viewing angle from each lens becomes more acute. This leads to the feature shifting further apart horizontally across the two image planes and hence $d$ increases. Since this calculation relies entirely on the horizontal parallax of a specific coordinate rather than the total pixel area of the bounding box ($A_\text{px}$), the depth estimation remains stable even if the player turns sideways. Furthermore, since this disparity mapping relies purely on ambient light, it ensures that there is no \gls{ir} interference with the game mechanics.
 
-To compare the performance of monocular and stereo depth estimation under geometric transformations, we constructed a simulation environment of the proposed hardware in Unity. The cameras were configured with a 1920x1080 resolution, with a $60^\circ$ \gls{fov}, a focal length of 935.31px, and a stereo baseline of 0.075m. We used a cuboid measuring 0.5m wide, 1.8m tall, and 0.2m deep to represent an average player. The objective was to observe how both camera architectures respond to changes in the target across three scenarios.
+To compare the performance of monocular and stereo depth estimation under geometric transformations, we constructed a simulation environment of the proposed hardware in Unity. The cameras were configured with a 1920x1080 resolution, with a 60$^\circ$ \gls{fov}, a focal length of 935.31~px, and a stereo baseline of 0.075~m. We used a cuboid measuring 0.5~m wide, 1.8~m tall, and 0.2~m deep to represent an average player. The objective was to observe how both camera architectures respond to changes in the target across three scenarios.
 
 \newpage
 
@@ -1469,27 +1470,27 @@ To compare the performance of monocular and stereo depth estimation under geomet
 
 \textbf{(i) Linear Movement}
 
-We began with a baseline calibration and translated the target linearly from 5m to 15m along the Z-axis. Within this scenario, the target's physical dimensions and orientation remained fixed. As demonstrated in Fig. \ref{fig:linear_translation}, both the monocular camera system and stereo camera system accurately map the physical ground truth. This establishes that both approaches are viable for tracking rigid bodies under ideal conditions.
+We began with a baseline calibration and translated the target linearly from 5~m to 15~m along the Z-axis. Within this scenario, the target's physical dimensions and orientation remained fixed. As demonstrated in Fig. \ref{fig:linear_translation}, both the monocular camera system and stereo camera system accurately map the physical ground truth. This establishes that both approaches are viable for tracking rigid bodies under ideal conditions.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.4\linewidth]{figs/LinearTranslation_Plot.png}
-    \caption{Comparison of monocular and stereo depth estimation against physical ground truth during linear translation from 5m to 15m}
+    \caption{Comparison of monocular and stereo depth estimation against physical ground truth during linear translation from 5~m to 15~m}
     \label{fig:linear_translation}
 \end{figure}
 
 \textbf{(ii) Changes in Target Orientation}
 
-In a practical laser tag environment, players are unlikely to follow linear trajectories. To evaluate how the depth tracking systems handle changes in orientation, we simulate a player turning sideways by rotating the target from $0^\circ$ to $90^\circ$ on its yaw axis. As the target rotates around its 5.1m centroid, the physical ground truth, which is represented by the closest physical surface, shifts from 5.0m down to 4.85m. 
+In a practical laser tag environment, players are unlikely to follow linear trajectories. To evaluate how the depth tracking systems handle changes in orientation, we simulated a player turning sideways by rotating the target from 0$^\circ$ to 90$^\circ$ on its yaw axis. As the target rotates around its 5.1~m centroid, the physical ground truth, which is represented by the closest physical surface, shifts from 5.0~m down to 4.85~m. 
 
-As illustrated in Fig. \ref{fig:yaw_rotation}, there is a slight discrepancy between the physical ground truth and the stereo estimation during the turn. While the ground truth tracks the foremost surface, the stereo algorithm calculates the depth based on the centroid of the 2D bounding box. This means that during the rotation, the stereo estimate settles at the 5.1m centre of mass and as the rotation reaches $90^\circ$, the camera's view is restricted to the 0.2m side profile and this causes the stereo centroid calculation to fall to the 4.85m ground truth. 
+As illustrated in Fig. \ref{fig:yaw_rotation}, there is a slight discrepancy between the physical ground truth and the stereo estimation during the turn. While the ground truth tracks the foremost surface, the stereo algorithm calculates the depth based on the centroid of the 2D bounding box. This means that during the rotation, the stereo estimate settles at the 5.1~m centre of mass and as the rotation reaches 90$^\circ$, the camera's view is restricted to the 0.2~m side profile and this causes the stereo centroid calculation to fall to the 4.85~m ground truth. 
 
 As the target turns, its 2D profile narrows and the monocular algorithm, which is reliant on the pixel area, misinterprets this narrowing as the target moving further away.  This means that the depth estimate from the monocular camera diverges from the ground truth. This specific scenario highlights a limitation of the monocular approach, as the system cannot distinguish between a change in the target's orientation and its actual distance. 
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.85\linewidth]{figs/YawRotation_Plot.png}
-    \caption{Comparison of depth estimation models during target yaw rotation from $0^\circ$ to $90^\circ$ at a nominal 5.0 m depth.}
+    \caption{Comparison of depth estimation models during target yaw rotation from 0$^\circ$ to 90$^\circ$ at a nominal 5~m depth.}
     \label{fig:yaw_rotation}
 \end{figure}
 
@@ -1596,7 +1597,7 @@ The VisDrone dataset contains numerous additional classes such as vehicles and b
 % For future physical development, this pipeline can be transitioned from synthetic data to empirical data. Rather than relying on Unity generation, the physical drone could be flown manually through the laser tag area to record video footage. Frames extracted from this footage would be labelled to capture the ambient lighting, wall geometry and physical equipment worn by the players. Performing this final fine-tuning pass essentially brings the simulation closer to the real world and guarantees that the network is calibrated to the operational environment.
 
 \subsection{Model Training and Deployment}
-Following data preparation, the pre-trained YOLOv8n model was fine-tuned on the filtered VisDrone dataset. Training was conducted via Google Colab, utilising an NVIDIA T4 Tensor Core GPU. The training phase was configured using a $640 \times 640$ pixel input resolution to ensure a balance between the detail necessary for target detection and maintaining low-latency inference on the drone's onboard hardware.
+Following data preparation, the pre-trained YOLOv8n model was fine-tuned on the filtered VisDrone dataset. Training was conducted via Google Colab, utilising an NVIDIA T4 Tensor Core GPU. The training phase was configured using a 640 $\times$ 640 pixel input resolution to ensure a balance between the detail necessary for target detection and maintaining low-latency inference on the drone's onboard hardware.
 
 Once the network had converged, the final weights were exported to the \gls{onnx} format that allowed the model trained in Python to be imported directly into Unity. Within the simulation, the model is executed using Unity Sentis~\cite{unity_sentis}, a tensor engine used to run neural networks natively within the simulated environment.
 
@@ -1646,20 +1647,20 @@ While an F1 score of 0.53 and an mAP50 of 0.49 are lower than typical detection 
         & Batch Size & 32 \\
         & Optimiser & AdamW \\
         & Initial Learning Rate & 0.000714 \\
-        & Hardware / GPU & NVIDIA Tesla T4 (15GB VRAM) \\
+        & Hardware / GPU & NVIDIA Tesla T4 (15~GB VRAM) \\
         \midrule
         \textbf{Validation Results} & Precision (P) & 0.636 \\
         & Recall (R) & 0.450 \\
         & Mean Average Precision (mAP@50) & 0.492 \\
         & Mean Average Precision (mAP@50-95) & 0.190 \\
-        & Average Inference Time & 2.9 ms \\
+        & Average Inference Time & 2.9~ms \\
         \bottomrule
     \end{tabular}
 \end{table}
 
 \subsection{Baseline Evaluation}
 
-To evaluate the operational viability of the VisDrone trained model against the system's design requirements, an automated orbital benchmark script was developed for the Unity simulation. The script positioned a virtual camera in a spherical coordinate system around a human target, sweeping through a series of yaw angles ($0^\circ$ to $360^\circ$) and pitch angles ($0^\circ$ to $80^\circ$). At each coordinate, the network's prediction was compared to the Ground Truth bounding box (derived from the target's vertex projections) to classify the result as a True Positive (TP), False Positive (FP), or False Negative (FN) based on standard Intersection over Union (IoU) and confidence thresholds.
+To evaluate the operational viability of the VisDrone trained model against the system's design requirements, an automated orbital benchmark script was developed for the Unity simulation. The script positioned a virtual camera in a spherical coordinate system around a human target, sweeping through a series of yaw angles (0$^\circ$ to 360$^\circ$) and pitch angles (0$^\circ$ to 80$^\circ$). At each coordinate, the network's prediction was compared to the Ground Truth bounding box (derived from the target's vertex projections) to classify the result as a True Positive (TP), False Positive (FP), or False Negative (FN) based on standard Intersection over Union (IoU) and confidence thresholds.
 
 The benchmark was executed on two distinct simulation conditions:
 \begin{enumerate}
@@ -1690,7 +1691,7 @@ The benchmark was executed on two distinct simulation conditions:
     \label{fig:orbital_benchmarks}
 \end{figure}
 
-The following 2D graphs flatten the 3D hemispherical sweeps shown in Fig. \ref{fig:orbital_benchmarks}. The polar axis represents the drone's yaw and the radial axis represents the camera's pitch. The centre point ($0^\circ$) denotes a horizontal, eye-level view while the outer edge ($80^\circ$) represents a top-down perspective. 
+The following 2D graphs flatten the 3D hemispherical sweeps shown in Fig. \ref{fig:orbital_benchmarks}. The polar axis represents the drone's yaw and the radial axis represents the camera's pitch. The centre point (0$^\circ$) denotes a horizontal, eye-level view while the outer edge (80$^\circ$) represents a top-down perspective. 
 
 \begin{figure}[htbp]
     \centering
@@ -1712,7 +1713,7 @@ The following 2D graphs flatten the 3D hemispherical sweeps shown in Fig. \ref{f
     \label{fig:benchmark_daylight}
 \end{figure}
 
-Under daylight conditions (Fig. \ref{fig:benchmark_daylight}), the model demonstrates consistent player detection. The confidence contour map indicates sustained detections across majority of the orbital grid, highlighting peak probability zones at steep pitch angles between $50^\circ$ and $80^\circ$. This spatial bias is expected given that the VisDrone training dataset consists primarily of high-altitude aerial perspectives. The classification plot confirms this trend, displaying a ring of True Positives around the outer edge. Consequently, the model performs well when looking down at the target from above. This also suggests that the lighting and geometric properties of the Unity simulation are sufficiently realistic for baseline evaluation, as a network trained on real-world data successfully detected the synthetic target.
+Under daylight conditions (Fig. \ref{fig:benchmark_daylight}), the model demonstrates consistent player detection. The confidence contour map indicates sustained detections across majority of the orbital grid, highlighting peak probability zones at steep pitch angles between 50$^\circ$ and 80$^\circ$. This spatial bias is expected given that the VisDrone training dataset consists primarily of high-altitude aerial perspectives. The classification plot confirms this trend, displaying a ring of True Positives around the outer edge. Consequently, the model performs well when looking down at the target from above. This also suggests that the lighting and geometric properties of the Unity simulation are sufficiently realistic for baseline evaluation, as a network trained on real-world data successfully detected the synthetic target.
 
 
 \begin{figure}[htbp]
@@ -1752,7 +1753,7 @@ To resolve the domain gap identified during baseline evaluation, an automated da
 To prevent the model from overfitting to specific synthetic visual patterns, domain randomisation was applied to every frame. The data generation script dynamically alters spatial, kinematic, and environmental variables prior to each capture:
 
 \begin{itemize}
-    \item \textbf{Camera Positioning:} The virtual camera was spawned at a random coordinate within a 3.0 to 8.0-metre radius of the target, with an altitude between 1.0 and 5.0 metres.
+    \item \textbf{Camera Positioning:} The virtual camera was spawned at a random coordinate within a 3.0 to 8.0-metre radius of the target, with an altitude between 1.0 and 5.0~metres.
     \item \textbf{Target Kinematics:} The player model was randomly rotated and given a spatial offset. To ensure a diverse dataset of physical poses, the model was also placed in a discrete animation state (e.g., aiming, sprinting, or transitioning to prone).
     \item \textbf{Environmental Conditions:} To replicate the target arena, ambient lighting was minimised. The primary directional light was scaled to a relative intensity between 20\% and 60\% of standard simulated daylight. Furthermore, different materials and textures were dynamically applied to the surrounding walls and props.
 \end{itemize}
@@ -1831,7 +1832,7 @@ To evaluate the synthetic model, we conducted a low-light orbital benchmark that
 
 The results for the synthetic model are visualised in Fig. \ref{fig:benchmark_synthetic_lowlight}. The confidence score distribution (Fig. \ref{fig:benchmark_synthetic_lowlight_confidence}) indicates consistent detection, maintaining confidence levels above 0.85 across the majority of yaw and pitch angles. However, a slight degradation occurs at extreme pitch angles. 
 
-This stability is supported by the TP/FP/FN categorisation (Fig. \ref{fig:benchmark_synthetic_lowlight_classification}). The synthetic model records zero False Negatives (FN) across the hemisphere and a few False Positives (FP) at a high pitch angle between $135^\circ$ and $180^\circ$ yaw. When contrasted with the VisDrone model, the synthetic model performs significantly better in low light conditions and is therefore more reliable in identifying the target under arena-specific illumination.
+This stability is supported by the TP/FP/FN categorisation (Fig. \ref{fig:benchmark_synthetic_lowlight_classification}). The synthetic model records zero False Negatives (FN) across the hemisphere and a few False Positives (FP) at a high pitch angle between 135$^\circ$ and 180$^\circ$ yaw. When contrasted with the VisDrone model, the synthetic model performs significantly better in low light conditions and is therefore more reliable in identifying the target under arena-specific illumination.
 
 \newpage 
 
@@ -2024,7 +2025,7 @@ When the perception pipeline returns a valid \gls{yolo} detection, the update ph
 
 In the arena, walls and barricades frequently occlude the target, causing the \gls{yolo} model to drop the measurement vector ($Z_k$). During total occlusion, the filter skips the update phase and relies on the constant velocity predict phase ($\hat{X}_{k+1|k}$). As visualised in Fig. \ref{fig:kalman_prediction}, this projects the target's trajectory behind cover, allowing the drone to anticipate where the player will re-emerge.
 
-However, a purely kinematic prediction becomes invalid if the player stops moving to hide behind cover. To prevent the tracking algorithm from projecting the target indefinitely, a timeout threshold ($t_{timeout}$) is implemented. If the duration of the occlusion exceeds $t_{timeout}$, the filter halts the constant velocity assumption. The velocity states are zeroed, and the position state reverts to the last verified Cartesian coordinate before line-of-sight was lost (Fig. \ref{fig:last_known_position}). This ensures the camera remains directed at the location where the system last had high confidence of the player's exact position.
+However, a purely kinematic prediction becomes invalid if the player stops moving to hide behind cover. To prevent the tracking algorithm from projecting the target indefinitely, a timeout threshold ($t_\text{timeout}$) is implemented. If the duration of the occlusion exceeds $t_\text{timeout}$, the filter halts the constant velocity assumption. The velocity states are zeroed, and the position state reverts to the last verified Cartesian coordinate before line-of-sight was lost (Fig. \ref{fig:last_known_position}). This ensures the camera remains directed at the location where the system last had high confidence of the player's exact position.
 
 \newpage
 
@@ -2052,7 +2053,7 @@ An evaluation of the current perception system highlights key design limitations
 \end{itemize}
 
 \subsection{Conclusion}
-This section presented a three-stage visual perception pipeline designed to provide relative 3D spatial data within the broader multiagent drone system. Selecting a passive stereo camera establishes a method for tracking target depth independent of posture while avoiding infrared interference with the laser tag scoring mechanics. Tracking vulnerabilities under low-light or occluded conditions were mitigated by implementing an automated synthetic data generation pipeline to train the object detection model. Fusing 2D bounding boxes with stereoscopic depth via a Linear Kalman filter provides smoothed 3D coordinates and trajectory prediction during temporary occlusions. The simulation results indicate that the pipeline delivers a workable spatial tracking interface suitable for integration with the high-level logic and flight controller.
+This section presented a three-stage visual perception pipeline designed to provide relative 3D spatial data within the broader multiagent drone system. Selecting a passive stereo camera establishes a method for tracking target depth independent of posture while avoiding infrared interference with the laser tag scoring mechanics. Tracking vulnerabilities under low-light or occluded conditions were mitigated by implementing an automated synthetic data generation pipeline to train the object detection model. Fusing 2D bounding boxes with stereoscopic depth via a Linear Kalman Filter provides smoothed 3D coordinates and trajectory prediction during temporary occlusions. The simulation results indicate that the pipeline delivers a workable spatial tracking interface suitable for integration with the high-level logic and flight controller.
 
 
 \newpage
@@ -2262,7 +2263,7 @@ As seen above, the final policy has a success rate of around 97\%, meaning it do
 
     \includegraphics[width=0.95\textwidth]{figs/RL_policy_demo.png}
     
-    \caption[Isaac Lab \gls{rl} policy execution (Video demonstration: https://drive.google.com/file/d/1umioNgEqnodq8t856qSPWmN7H8eW6Oeu/view?usp=drive\_link)] {Isaac Lab RL policy execution (Video demonstration\footnotemark: https://drive.google.com/file/d/1umioNgEqnodq8t856qSPWmN7H8eW6Oeu/view?usp=drive\_link)}
+    \caption[Isaac Lab \gls{rl} policy execution (Video demonstration: \url{https://youtu.be/1mnYx0IYGyg})] {Isaac Lab RL policy execution (Video demonstration\footnotemark: \url{https://youtu.be/1mnYx0IYGyg})}
     \label{fig:RLPolicy}
 \end{figure}
 
@@ -2435,7 +2436,7 @@ Integrating notifications and reminders prompts users to engage regularly with t
 \end{itemize}
 
 
-\subsubsection{Functionality}
+\subsection{Functionality}
 The user experience of playing the game in the centre, using the app, is outlined below.
 \begin{itemize}
     \item The user signs in to the app (or create an account if this has not already been done). The Login screen is shown in Fig.~\ref{fig:userstory}(\subref{fig:userstory1}).
@@ -2743,7 +2744,7 @@ The equity-only discount rate is used by investors to assess the viability of a 
 \label{DiscountRate}
 A numerical value of discount rate, \(d\), must be chosen. Two common approaches to model discount rate are: Equity-Only Discount Rate, and \gls{wacc}.
 \paragraph{Equity-Only Discount Rate} \(\)\newline
-Using an Equity-Only Discount Rate, the discount rate \(r_e\) applied to future cash flows is set by investors. For a small, high-risk start-up, \(r_e=20\%\) alligns with the estimates of business advisors~\cite{EquityDiscountRate}. This ignores debt interest from the bank, so the Year 0 capital injection from the bank loan \(P\) and the annual debt repayments \(A\) in subsequent years must be included in the cash flow, and the remaining balance after \(t\) years \(B_t\) on the bank loan must be considered as a liability in the terminal value (discussed in section \ref{TermValue}). These are determined by the amortisation formula, shown in Eq. \ref{equ:amortisation}.
+Using an Equity-Only Discount Rate, the discount rate \(r_e\) applied to future cash flows is set by investors. For a small, high-risk start-up, \(r_e=20\%\) aligns with the estimates of business advisors~\cite{EquityDiscountRate}. This ignores debt interest from the bank, so the Year 0 capital injection from the bank loan \(P\) and the annual debt repayments \(A\) in subsequent years must be included in the cash flow, and the remaining balance after \(t\) years \(B_t\) on the bank loan must be considered as a liability in the terminal value (discussed in section \ref{TermValue}). These are determined by the amortisation formula, shown in Eq. \ref{equ:amortisation}.
 
 \begin{equation}
     A=\frac{Pr_d}{1-(1+r_d)^{-N}}, \qquad\qquad B_t=P(1+r_d)^t-A\frac{(1+r_d)^t-1}{r_d}
@@ -2971,7 +2972,7 @@ This process was repeated for reference elasticity \(\varepsilon'\) between -0.5
 \noindent Elasticity is likely to be between -0.8 and -1.5. It is observed that, over this range of reference elasticity, the optimal cost is almost constant, and very close to £200 per game.
 
 \subsubsection{Limitations}
-The discount rate was assumed to be constant with time, which is unrealistic. This was done for the sake of simplicity, as well as conservatism. Furthermore, the analysis was conducted by changing one or more variables and observing another, while all others were held constant.. By changing all variables at once to create a multi-dimensional surface, optima of \gls{npv} may be found that were missed in the above analysis, either by brute force or multi-dimensional gradient descent.
+The discount rate was assumed to be constant with time, which is unrealistic. This was done for the sake of simplicity, as well as conservatism. Furthermore, the analysis was conducted by changing one or more variables and observing another, while all others were held constant. By changing all variables at once to create a multi-dimensional surface, optima of \gls{npv} may be found that were missed in the above analysis, either by brute force or multi-dimensional gradient descent.
 
 \subsection{Conclusions}
 Under the conservative assumptions laid out above, the value of a theoretical business offering a drone-based laser tag experience was found to be approximately £69,000. From the analyses carried out in Section \ref{anal}, it was found that:
